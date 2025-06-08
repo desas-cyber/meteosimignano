@@ -1,0 +1,103 @@
+<!-- get-meteoalarm-warning-inc: begin ./cache/meteoalarm-details.html -->
+<!-- Fetch Status:
+Loaded warning data from './cache/meteoalarm.arr'. Updated:29/03/2025 13:38
+
+ -->
+<script type="text/javascript">
+// <![CDATA[
+
+if(typeof document.createStyleSheet === "undefined") {
+    document.createStyleSheet = (function() {
+     function createStyleSheet(href) {
+      if(typeof href !== "undefined") {
+       var element = document.createElement("link");
+       element.type = "text/css";
+       element.rel = "stylesheet";
+       element.href = href;}
+      else {
+       var element = document.createElement("style");
+       element.type = "text/css";}
+      document.getElementsByTagName("head")[0].appendChild(element);
+      var sheet = document.styleSheets[document.styleSheets.length - 1];
+      if(typeof sheet.addRule === "undefined")
+      { sheet.addRule = addRule;}
+      if(typeof sheet.removeRule === "undefined")
+      { sheet.removeRule = sheet.deleteRule;}
+      return sheet;
+     }
+     function addRule(selectorText, cssText, index) {
+      if(typeof index === "undefined") { index = this.cssRules.length;}
+      this.insertRule(selectorText + " {" + cssText + "}", index);
+     }
+     return createStyleSheet;
+    })();
+}
+var sheet = document.createStyleSheet();
+sheet.addRule(".tab","overflow: hidden; display: block; border: 0px solid #ccc; background-color: white; text-align: left; margin:  4px; margin-left: 0px;");
+sheet.addRule(".tab span","text-align: left; margin:  4px;");
+sheet.addRule(".tab label","float: left; border-radius: 4px; background-color: #ccc; border: 1px solid #ddd; cursor: pointer; margin: 3px; margin-bottom: 0px; padding: 3px; ");
+sheet.addRule(".tab label:hover","background-color: white;");
+sheet.addRule(".tab label.active","border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; background-color: transparent; border: 1px solid black; border-bottom: 1px solid white;");
+sheet.addRule(".tabcontent","display: none; border-top: none;");
+sheet.addRule(".tab a"," text-decoration: underline; color:blue !important;");
+function openTab(evt, block,  spanName) {
+  var i, tabcontent, tablinks;
+  var clssnm    = block+"tabcontent";
+  tabcontent = document.getElementsByClassName(clssnm);
+  
+  for (i = 0; i < tabcontent.length; i++) 
+   {tabcontent[i].style.display = "none";}
+   
+  
+  tablinks = document.getElementsByClassName(block+"tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(spanName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+// ]]>
+</script>
+<table style="width: 100%; border-collapse: collapse; margin-top: 8px; " >
+<tr style="background-color: #FFDB23">
+<td colspan="2"><a name="alert1" id="alert1"></a><span style="margin-left: 5px; float: left;"><b>Wind Warning&nbsp;&nbsp;&nbsp;Toscana</b> <small>(IT009)</small></span><span style="float: right; margin-right:5px;"><b>Verifica:&nbsp;</b>29/03/2025 02:00&nbsp;&nbsp;-&nbsp;&nbsp;30/03/2025 11:59</span></td>
+</tr>
+<tr style="background-color: #FFDB23">
+<td style="vertical-align: top; width: 110px;"><img src="./ajax-images/meteoalarm_000.svg" style="margin: 4px; width: 100px; max-width: 128px; " alt="./ajax-images/meteoalarm_000.svg" title="Vento"/></td>
+<td style="text-align: left;">
+<span class="tab" style="">
+<label class="t1tablinks tablinks active"  style="margin-left: 20px;" onclick="openTab(event,'t1', 't1-1')" id="en-GB1">&nbsp;English&nbsp;</label> 
+<label class="t1tablinks tablinks "  style="" onclick="openTab(event,'t1', 't1-2')" id="it-IT1">&nbsp;Italiano&nbsp;</label> 
+<label class="t1tablinks tablinks "  style="" onclick="openTab(event,'t1', 't1-3')" id="info1">&nbsp;<img src="./ajax-images/meteoalarm_info.svg" alt="info" title="info"/>&nbsp;</label> 
+<span id="t1-1" class="t1tabcontent tabcontent" style="clear: left; display: block;">
+<b style="text-align: center; width: 100%; display: block;">Yellow Wind Warning for Italy - Toscana<br /></b>
+<br />
+No Special Awareness Required<br /> (DISCLAIMER: "Information provided on METEOALARM for Italy regard only the intensity and recurrence of the phenomena, further details can be found at www.meteoam.it. METEOALARM information do not provide the assessment of impact on the territory and they do not represent the Official Alerts messages that are issued by the National Civil Protection Service https://www.protezionecivile.gov.it")<br />
+<br />BE AWARE, keep up to date with the latest weather forecast. Expect some minor disruption to outdoor activities<br />
+</span>
+<span id="t1-2" class="t1tabcontent tabcontent" style="clear: left; display: none;">
+<b style="text-align: center; width: 100%; display: block;">Allerta Vento Giallo per l'Italia - Toscana<br /></b>
+<br />
+Nessun Avviso<br /> (DISCLAIMER: "Le informazioni fornite su METEOALARM per l'Italia riguardano esclusivamente l'intensità e la ricorrenza dei fenomeni, maggiori dettagli sono disponibili su www.meteoam.it. Le informazioni METEOALARM non forniscono la valutazione di impatto sul territorio e non rappresentano i messaggi di Allerta Ufficiali che vengono emessi dal Servizio Nazionale di Protezione Civile https://www.protezionecivile.gov.it")<br />
+<br />STARE (RIMANERE) ATTENTI. Tenersi aggiornati con le previsioni del tempo più recenti. Aspettarsi alcuni disagi minori per le attività all'aria aperta.<br />
+</span>
+<span id="t1-3" class="t1tabcontent tabcontent" style="clear: left; display: none;">
+<b style="text-align: center; width: 100%; display: block;">Information<br />
+</b>
+<br />
+Originator: <a href="https://meteoalarm.org/" target="_blank">Italian Air Force National Meteorological Service</a><br/>
+Issued:   <b>29/03/2025 03:15</b><br/>
+</span>
+</span></td>
+</tr>
+<tr><td>&nbsp;</td></tr>
+
+</table>
+<p style="width: 100%; margin: 8px auto; padding-bottom: 5px; background-color: #DCDCDC;text-align: center; border: 1px solid black;">This warning data is courtesy of and is Copyright &copy; by EUMETNET-METEOalarm (http://www.meteoalarm.org/) and respective National Meteorological Services.<br/>
+Used with permission per www.meteoalarm.org <a href="https://meteoalarm.org/page/terms-and-conditions" target="_blank">Terms &amp; Conditions of Reuse</a>.<br/>
+Time delays between this website and the www.meteoalarm.org website are possible.<br/>
+For the most up to date information about alert levels as published by the participating National Meteorological Services please use <a href="https://www.meteoalarm.org/">www.meteoalarm.org</a>.
+<br />
+<small>get-meteoalarm-warning-inc.php - V3.16 - 08-Mar-2023<br/>adapted by <a href="https://saratoga-weather.org/wxtemplates/" target="_blank">Saratoga-Weather.org</a> with permission from wrnWarningEU-CAP.php script in <a href="https://pwsdashboard.com" target="_blank">pwsdashboard.com</a>.</small></p>
+<!--  get-meteoalarm-warning-inc: end  ./cache/meteoalarm-details.html -->
+

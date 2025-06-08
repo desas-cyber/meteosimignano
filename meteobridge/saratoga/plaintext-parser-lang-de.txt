@@ -1,0 +1,213 @@
+# Language file for plaintext-parser.php program
+# Version: 1.1 06-Nov-2007
+# translation - Deutsch by Fredi Bachmann http://www.abc-laboratory.com
+#
+#dateformat|d/m/Y H:i|   // Euro format 03/31/2006 14:03
+dateformat|d.m.Y H:i|
+#
+lang|Cloudy in the morning|Am Morgen bewölkt|
+lang| becoming | Änderung: |
+lang|dense overcast|stark bedeckt|
+lang|Chance of precipitation|Niederschlagwahrscheinlichkeit|
+lang|Snow accumulation|Gesamtschneehöhe |
+lang|Snow likely|Schneefall wahrscheinlich|
+lang|Snow or ice|Schnee oder Eis|
+lang|then a mix of snow and rain likely after midnight|nach Mitternacht Schneeeregen wahrscheinlich|
+lang|A chance of a mix of snow and rain in the evening|Risiko für Schneeregen am Abend|
+lang|A slight chance of a mix of rain and snow|Schwaches Risiko für Schneeregen|
+lang|A mix of rain and snow likely|Schneeregen wahrscheinlich|
+lang|a mix of rain and snow|Schneeregen|
+lang|Little if any freezing rain accumulation|Little if any freezing rain accumulation!|
+lang|A slight chance of a mix of freezing rain and sleet|Schwaches Risiko für überfrierender Regen und Graupel|
+lang|Thunderstotrms likely, some possibly severe|Mögliche Gewitter, teilweise heftig|
+lang|Thunderstorms likely, some possibly severe|Mögliche Gewitter, teilweise heftig|
+lang|Some thunder possible.|Einige Gewitter möglich. |
+lang|Some thunderstotrms likely|Einige Gewitter möglich|
+lang|Some thunderstorms likely|Einige Gewitter möglich|
+lang|showery of intermittent|intermittierender Schauer|
+lang|Showery of intermittent|Intermittierender Schauer|
+lang|Precipitation showery or intermittent|Intermittierender bis schauerartiger Niederschlag|
+lang|Rain very likely|Regen sehr wahrscheinlich|
+lang|Rain likely|Regen wahrscheinlich|
+lang|rain likely|Regen wahrscheinlich|
+lang|Fair|Mittelmässig|
+lang|UV index up to|UV index bis|
+lang|UV index more than|UV index über|
+lang|afternoon|Nachmittag|
+lang|cloudy|bewölkt|
+lang|Patchy|ungleichmässige|
+lang| slight | schwache |
+lang| light | fallend |
+lang|fog|Nebel|
+lang|Partly|Teilweise|
+lang|Wind |Wind: |
+lang|chill|gefühlte Temperatur|
+lang|gusting to |mit Böen zu |
+lang|mostly|grösstenteils|
+lang|midnight|Mitternacht|
+lang|morning|Morgen|
+lang|Mostly|Grösstenteils|
+lang|partly|teilweise|
+lang|Light|Fallend|
+lang| moderate | mässig |
+lang|evening|Abend|
+lang|Dense|Dicht|
+lang|overcast|bedeckt|
+lang|Moderate|Mässig|
+lang|dense|dicht|
+lang|sunny|sonnig|
+lang| rain| Regen|
+lang| Rain| Regen|
+lang|chance of|Chance für|
+lang|likely|wahrscheinliche|
+lang|clear|klar|
+lang|High|Maximum:|
+lang|Low|Minimum:|
+lang|very|sehr|
+lang|temperatures falling|fallende temperatur|
+lang|temperatures rising|steigende temperatur|
+lang|northeast|Nordost|
+lang|northwest|Nordwest|
+lang|southeast|Südost|
+lang|southwest|Südwest|
+lang|north-|Nord-|
+lang|east-|Ost-|
+lang|west-|West-|
+lang|south-|Süd-|
+lang| east | Ost |
+lang| north | Nord |
+lang| south | Süd |
+lang| west | West |
+lang|down |sinkend |
+lang|around|um|
+lang|kph|km/h|
+lang|mps|m/s|
+lang|near|nahezu|
+lang|percent|prozent|
+lang|less than|weniger als|
+lang|Precipitation (liquid equivalent)|Niederschlag (flüssiges equivalent)|
+lang| then | dann |
+lang| the |  |
+lang| in | am |
+lang| of | für |
+lang| to | bis |
+lang| after | nach |
+lang| but | ober |
+lang|A |Eine |
+lang| a | eine |
+lang| no | kein |
+lang| between | zwischen |
+lang| and | und |
+lang| or | oder |
+lang|Precipitation|Niederschlag|
+lang|accumulation expected|erwartet|
+lang|Little|Wenig|
+lang|snow|Schnee|
+lang|Snow |Schnee |
+lang|about|um|
+lang| one | 1 |
+lang|showery|schauerartig|
+lang|No |Kein |
+lang|fair|mittelmässig|
+lang|Cloudy|Bewölkt|
+lang| calm| Windstill|
+lang|Clear|Klar|
+lang| clear | klar |
+lang|Sunny|Sonnig|
+lang| ice | Eis |
+lang|freezing|gefrierender|
+lang|Freezing|gefrierender|
+lang|sleet|Graupel|
+lang|a mix of|untermischt mit|
+lang|if any|falls vorhanden|
+lang|on ground|am Boden|
+lang|patchy|teilweise|
+lang|of an inch|ein inch|
+lang|half an inch|1/2inch|
+lang| inch| inch|
+lang| chance | Risiko |
+lang|some|einige|
+lang|Some|Einige|
+lang|thunderstorms|Gewitter|
+lang|cloudiness|Bewölkung|
+lang|high|hohe| 
+#
+# Translation of headings, periods and short conditions statements
+# headings
+#
+langlookup|WXSIM Forecast for:|Lokale Wetterprognose für:|
+langlookup|Issued by:|Ausgegeben von:|
+langlookup|Updated:|Aktualisiert:|
+langlookup|High:|Max|
+langlookup|Low:|Min|
+#
+langlookup|Sunday|Sonntag|
+langlookup|Monday|Montag|
+langlookup|Tuesday|Dienstag|
+langlookup|Wednesday|Mittwoch|
+langlookup|Thursday|Donnerstag|
+langlookup|Friday|Freitag|
+langlookup|Saturday|Samstag|
+langlookup|Sunday night|Sonntag Nacht|
+langlookup|Monday night|Montag Nacht|
+langlookup|Tuesday night|Dienstag Nacht|
+langlookup|Wednesday night|Mittwoch Nacht|
+langlookup|Thursday night|Donnerstag Nacht|
+langlookup|Friday night|Freitag Nacht|
+langlookup|Saturday night|Samstag Nacht|
+langlookup|Today|Heute|
+langlookup|Tonight|Heute Abend|
+langlookup|This afternoon|Heute Nachmittag|
+langlookup|Rest of tonight|übrige Nacht|
+# UV Index words
+langlookup|Low|Niedrig|
+langlookup|Medium|Mittel|
+langlookup|High|Hoch|
+langlookup|Very&nbsp;High|Sehr&nbsp;Hoch|
+langlookup|Extreme|Extrem|
+# Summary conditions lookup
+langlookup|Severe storm|Heftiger Sturm|
+langlookup|Showers storms|Stürmischer Regen|
+langlookup|Thunder storm|Gewitter|
+langlookup|Rain Sleet|Graupel/Regen|
+langlookup|FrzgRn Snow|Schnee/Überfrierender Regen|
+langlookup|Rain and Snow|Schneeregen|
+langlookup|Freezing Rain|Überfrierender Regen|
+langlookup|Rain likely|Regen möglich|
+langlookup|Chance rain|Regenrisiko|
+langlookup|Mix|Blandat|
+langlookup|Sleet|Graupel|
+langlookup|Snow|Schnee|
+langlookup|Fog a.m.|Am Morgen Nebel|
+langlookup|Fog late|Später Nebel|
+langlookup|Fog|Nebel|
+langlookup|Very Cold|Sehr kalt|
+langlookup|Very Hot|Sehr heiss|
+langlookup|Partly Cloudy|Teilweise bewölkt|
+langlookup|Mostly Cloudy|Grösstenteils bewölkt|
+langlookup|Cloudy|Bewölkt|
+langlookup|Overcast|Bedeckt|
+langlookup|Partly Sunny|Teilweise sonnig|
+langlookup|Mostly Sunny|Grösstenteils sonnig|
+langlookup|Mostly Clear|Grösstenteils klar|
+langlookup|Sunny|Sonnig|
+langlookup|Clear|Klar|
+langlookup|Fair|Mittelmässig|
+langlookup|Variable Clouds|Veränderliche Wolken|
+langlookup|NESW|NOSW|
+# translation for Beaufort Wind Force
+langlookup|Calm|Windstill|
+langlookup|Light air|Nahezu Windstill|
+langlookup|Light breeze|Leichte Briese|
+langlookup|Gentle breeze|Mässige Briese|
+langlookup|Moderate breeze|Mittlere Briese|
+langlookup|Fresh breeze|Auffrischende Briese|
+langlookup|Strong breeze|Starke Briese|
+langlookup|Near gale|Steifer Wind|
+langlookup|Gale|Stürmischer Wind|
+langlookup|Strong gale|Stark Stürmisch|
+langlookup|Storm|Sturm|
+langlookup|Violent storm|Kräftiger Sturm|
+langlookup|Hurricane|Orkan|
+#
+# --- end of language file ------

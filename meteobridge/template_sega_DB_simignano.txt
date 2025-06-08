@@ -1,0 +1,8 @@
+https://www.meteosimignano.it/meteobridge/tabella_meteo_DB_simignano.php?temp=[DD]/[MM]/[YYYY],[hh]:[mm],
+[th0temp-act],
+[th0hum-act],
+[th0dew-act],
+{*[thb0press-act]+ 50*1},
+{*[wind0avgwind-act] * 3.6 *1},
+[wind0dir-act],
+[sol0rad-act],

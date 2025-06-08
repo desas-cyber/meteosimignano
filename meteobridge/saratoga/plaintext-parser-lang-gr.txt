@@ -1,0 +1,220 @@
+﻿# Language file for plaintext-parser.php program 
+# Version 0.16
+# translation - Greek by Brian Ellis  http://www.cypenv.org/weather
+#
+lang|Mostly cloudy to cloudy in the evening|Σχεδόν νεφελώδης σε νεφελώδη το βράδυ|
+#lang|cloudy in|nuageux| (the 'in' depends on context)
+#
+#THIS SECTION WILL TRANSLATE SENTENCES TO A MORE NATURAL (LESS SYNTHETIC) LANGUAGE
+#
+lang|Cloudy in the morning|Νεφελώδης το πρωί|
+lang|Patchy light fog after midnight|Κατά τόπους ελαφρά ομίχλη μετά τα μεσάνυχτα|
+lang|Mostly cloudy to cloudy|Σχεδόν νεφελώδης προς νεφελώδη|
+lang| mostly cloudy to cloudy| σχεδόν νεφελώδης προς νεφελώδη|
+lang|Mostly cloudy|Σχεδόν νεφελώδης|
+lang|Dense overcast|Πλήρης, πυκνή νεφοκάλυψη|
+lang|Partly to mostly cloudy|Μερικώς νεφελώδης προς σχεδόν νεφελώδη|
+lang|Fair to partly cloudy|Αίθριος προς μερικώς νεφελώδη|
+lang|becoming partly to mostly|μεταβαλλόμενος μερικώς σε σχεδόν|
+lang|Precipitation mostly less than|Υετός σχεδόν λιγότερο από|
+lang|in the evening|το βράδυ|
+lang|less than|λιγότερο από|
+lang|mostly around|σχεδόν περίπου|
+lang|No snow accumulation expected|Δεν ανεμένεται συσσώρευση χιονιού|
+lang|Snow accumulation |Συσσώρευση χιονιού |
+#
+#TEMP FIX (MORE TESTING NEEDED)
+lang|in the|στο|
+lang|wind chill|αίσθηση ψύχρας|
+lang|Wind chill|αίσθηση ψύχρας|
+
+#
+lang|Chance of precipitation|Πιθανότητα υετού|
+lang|becoming|μεταβάλλόμενος σε|
+lang|dense overcast|πλήρης, πυκνή νεφοκάλυψη|
+lang| then | τότε |
+
+lang|afternoon|απόγευμα|
+lang|cloudy|νεφελώδης|
+lang|Patchy|Κατά τόπους|
+lang| slight | μικρή |
+lang| light | ασθενής |
+lang| fog | ομίχλη |
+lang| fog.| ομίχλη.|
+lang|Partly|Μερικώς|
+lang| to | σε |
+#lang| up | plus haut, jusque, jusqu'à, jusqu'au, etc. |
+lang|gusting|ριπαίος|
+lang| mostly| σχεδόν|
+lang|after|μετά από|
+lang|likely|πιθανόν|
+lang|midnight|μεσάνυχτα|
+lang|morning|πρωί|
+lang|Mostly|Σχεδόν|
+lang| mostly| σχεδόν|
+lang|partly|εν μέρει|
+lang|Light|Ασθενές|
+lang|moderate|μέτριος|
+lang|evening|βραδινός|
+lang|Dense|Πυκνό|
+lang|overcast|πλήρης νεφοκάλυψη|
+lang|Moderate|Μέτρια|
+lang|dense|πυκνό|
+lang|sunny|ηλιόλουστος|
+lang|Rain likely|Πιθανή βροχή|
+lang|rain|βροχή|
+#lang|A |Qualche | ********* temp removed *********
+lang|A |Ένα |
+lang| a | ένα |
+lang|chance of|πιθανότητα|
+lang|High|Μέγ.|
+lang|Low|Ελάχ.|
+lang| but | αλλά |
+lang|temperatures falling|πτώση θερμοκρασιών|
+lang|temperatures rising|αύξηση θερμοκρασιών|
+#lang|noralast|NordEst|  ?????
+lang|Wind east-|Άνεμος ανατολικός-|
+lang|Wind west-|Άνεμος δυτικός-|
+lang|Wind east |Άνεμος ανατολικός|
+lang|Wind west |Άνεμος δυτικός |
+lang|Wind north-|Άνεμος βόρειος-|
+lang|Wind north |Άνεμος βόρειος|
+lang|Wind south-|Άνεμος νότιος-|
+lang|Wind south |Άνεμος νότιος |
+ 
+lang|northeast|βορειοανατολικός|
+lang|northwest|βορειοδυτικός|
+lang|southeast|νοτιοανατολικός|
+lang|southwest|νοτιοδυτικός|
+lang|north-|βόρειος-|
+lang|east-|ανατολικός-|
+lang|south-|νότιος-|
+lang|west-|δυτικός-|
+lang|north |βόρειος |
+lang|east |ανατολικός |
+lang|south |νότιος |
+lang|west |δυτικός |
+lang|the|το|
+
+lang|down |κάτω |
+lang| or | ή |
+lang|around|περίπου|
+lang|kph|km/h|
+lang|mps|m/s|
+lang| near | κοντά |
+lang| percent| τοις εκατό|
+lang|less than|λιγότερο από|
+lang| snow| χιόνι|
+lang|Precipitation (liquid equivalent)|Υετός (ισοδύναμο υγρού)|
+lang| between | μεταξύ |
+lang| and | και |
+lang|Precipitation|Υετός|
+
+lang|accumulation expected|αναμενόμενη συσσώρευση|
+lang|Little|Λίγο|
+lang|snow |χιόνι |
+lang|Snow |Χιόνι |
+lang|Snow accumulation|Συσσώρευση χιονιού|
+lang|about|περίπου|
+lang| no | όχι |
+lang| one | ένα |
+lang|showery or intermittent|βροχερός κατά περιόδους|
+lang|Rain|Βροχή|
+lang|Fair|Αίθριος|
+lang|fair|αίθριος|
+lang|Cloudy|Συννεφιασμένος|
+lang|calm|ήρεμος|
+lang|Clear|Καθαρός|
+lang|clear|καθαρός|
+lang|Sunny|Ηλιόλουστος|
+lang| ice | πάγος |
+lang|freezing|παγωμένο|
+lang|sleet|χιονόνερο|
+lang|a mix of|ένα μίγμα από|
+lang|mix of|μίγμα από|
+lang|if any|εάν οποιοδήποτε|
+lang|on ground|στο έδαφος|
+lang|patchy|κατά τόπους|
+lang|Thunderstorms likely, some possibly severe|Πιθανές καταιγίδες, ίσως έντονες|
+lang|Some thunder possible.|Πιθανή εκδήλωση ηλεκτρικών φαινομένων.|
+lang|Some thunderstorms likely|Μάλλον εκδήλωση καταιγίδων|
+lang|quarter |τέταρτο |
+lang|tenth |δέκατο |
+lang|of an inch|μιας ίντσας|
+lang|half an inch|μισή ίντσα|
+lang| inch| ίντσα|
+lang|UV index|Δείκτης υπεριώδους|
+#lang| a a ||
+# ---=== Mario's added translation ===---
+lang|Wind|άνεμος|
+#
+# Translation of headings, periods and short conditions statements
+# headings
+#
+langlookup|WXSIM Forecast for:|Πρόγνωση από WXSIM για:|
+langlookup|Issued by:|Εκδόθηκέ από:|
+langlookup|Updated:|Ενημερώθηκε :|
+langlookup|High:|Μέγ.:|
+langlookup|Low:|Ελάχ.:|
+#
+# I presume following at beginning of sentence, otherwise initial letter lower case)
+langlookup|Sunday|Κυριακή|
+langlookup|Monday|Δευτέρα|
+langlookup|Tuesday|Τρίτη|
+langlookup|Wednesday|Τετάρτη|
+langlookup|Thursday|Πέμπτη|
+langlookup|Friday|Παρασκευή|
+langlookup|Saturday|Σάββατο|
+langlookup|Sunday night|Κυριακή νύχτα|
+langlookup|Monday night|Δευτέρα νύχτα|
+langlookup|Tuesday night|Τρίτη νύχτα|
+langlookup|Wednesday night|Τετάρτη νύχτα|
+langlookup|Thursday night|Πέμπτη νύχτα|
+langlookup|Friday night|Παρασκευή νύχτα|
+langlookup|Saturday night|Σάββατο νύχτα|
+langlookup|Today|Σήμερα|
+langlookup|Tonight|Απόψε|
+langlookup|Rest of tonight|Υπόλοιπο απόψε|
+langlookup|This afternoon|Αυτό το απόγευμα|
+# UV Index words
+langlookup|Low|Χαμηλό|
+langlookup|Medium|Μεσαίο|
+langlookup|High|Υψηλό|
+langlookup|Very&nbsp;High|Πολύ υψηλό|
+langlookup|Extreme|Ακραίο|
+# Summary conditions lookup
+langlookup|Severe storm|Έντονη θύελλα|
+langlookup|Showers storms|Θύελλες με ραγδαία βροχή|
+langlookup|Thunder storm|Καταιγίδα|
+langlookup|Rain Sleet|Βροχή-χιονόλυτο|
+langlookup|FrzgRn Snow|Παγωμένο χιόνι|
+langlookup|Rain and Snow|Χιονόνερο|
+langlookup|Freezing Rain|Παγωμένη βροχή|
+langlookup|Rain likely|Πιθανή βροχή|
+langlookup|Chance rain|Πιθανότητα βροχής|
+langlookup|Mix|Μίγμα|
+langlookup|Mosfiloti|Μοσφιλωτή
+
+langlookup|Sleet|χιονόλυτο|
+langlookup|Snow|Χιόνι|
+langlookup|Fog a.m.|Πρωινή ομίχλη|
+langlookup|Fog late|Ομίχλη αργότερα|
+langlookup|Fog|Ομίχλη|
+langlookup|Very Cold|Πολύ κρύο|
+langlookup|Very Hot|Πολύ ζέστη|
+langlookup|Partly Cloudy|Εν μέρει νεφελώδης|
+langlookup|Mostly Cloudy|Σχεδόν νεφελώδης|
+langlookup|Cloudy|Συννεφιασμένος|
+langlookup|Overcast|Πλήρης νεφοκάλυψη|
+langlookup|Partly Sunny|Εν μέρει ηλιόλουστος|
+langlookup|Mostly Sunny|Σχεδόν ηλιόλουστος|
+langlookup|Mostly Clear|Σχεδόν Αίθριος|
+langlookup|Sunny|Ηλιόλουστος|
+langlookup|Clear|Καθαρός|
+langlookup|Fair|Αίθριος|
+langlookup|Variable Clouds|Μεταβλητά σύννεφα|
+langlookup|Clear|Καθαρός|
+# translation for cardinal wind directions must be in North-East-South-West order
+#langlookup|NESW|ΒΑΝΔ| <-- doesn't work
+#
+# --- end of language file ------

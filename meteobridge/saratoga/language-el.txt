@@ -1,0 +1,362 @@
+# Greek language plugin for Carterlake/WD/AJAX/PHP template set
+# Ken True - http://saratoga-weather.org/template/
+# Translation: Athanasios Tsioukanaras - http://www.meteothes.gr/weather/
+#
+# Version 1.00 - 15-Apr-2008 - initial release
+# Version 1.01 - 12-Sep-2012 - added wxquake/quake-json translations
+#
+charset|iso-8859-7|
+#
+# ajax-dashboard and ajax-gizmo language strings
+#
+langlookup|Enable JavaScript for live updates|Ενεργοποιήστε τη Javascript για ζωντανή ενημέρωση|
+langlookup|Updated|Ενημερώθηκε|
+langlookup|updated|ενημερώθηκε|
+langlookup|sec ago|δευτ. πριν|
+langlookup|next update at|επόμενη ενημέρωση στις|
+# thermometer language
+langlookup|Temperature|Θερμοκρασία|
+langlookup|Currently|Τώρα|
+langlookup|Max|Μέγ|
+langlookup|Min|Ελάχ|
+# rising/falling arrows text
+langlookup|Warmer|Θερμότερη|
+langlookup|Colder|Ψυχρότερη|
+langlookup|Rising|Αυξάνουσα|
+langlookup|Falling|Φθίνουσα|
+langlookup|Increased|Αυξήθηκε|
+langlookup|Decreased|Μειώθηκε|
+langlookup|than last hour|από τελευταία ώρα|
+langlookup|since last hour|από την τελευταία ώρα|
+langlookup|than yesterday at this time|από χθες την ίδια ώρα|
+langlookup|Humidity|Υγρασία|
+langlookup|Dew Point|Σημείο Δρόσου|
+langlookup|Barometer|Βαρόμετρο|
+langlookup|Baro Trend|Τάση Βαρόμ|
+langlookup|Feels like|Αίσθηση σαν|
+langlookup|24-hr difference|διαφορά 24ώρου|
+langlookup|Today|Σήμερα|
+langlookup|Yesterday|Χθες|
+langlookup|High:|Μέγιστη:|
+langlookup|Low:|Ελάχιστη:|
+langlookup|Wind from|Ανεμος από|
+langlookup|Gust|Ριπή|
+langlookup|Gust Month|Ριπή Μήνα|
+langlookup|UV Index|Δείκτης UV|
+langlookup|UV Index Forecast|Πρόγνωση Δείκτη UV|
+langlookup|Solar Radiation|Ηλιακή Ακτινοβολία|
+langlookup|Summary|Περίληψη|
+langlookup|Wind|Ανεμος|
+langlookup|Rain|Βροχή|
+langlookup|Outlook|Προοπτική|
+langlookup|Rain Today|Σήμερα|
+langlookup|Rain Rate|Ραγδαιότητα|
+langlookup|Rain Yesterday|Χθες|
+langlookup|Storm Rain|Συνεχόμενη|
+langlookup|This Month|Μήνα|
+langlookup|Season Total|Ετους|
+langlookup|day since last rain|μέρα από την τελευταία βροχή|
+langlookup|days since last rain|μέρες από την τελευταία βροχή|
+langlookup|rain day in|μέρα βροχής τον|
+langlookup|rain days in|μέρες βροχής τον|
+langlookup|Snow|Χιόνι|
+langlookup|Snow Today|Χιόνι Σήμερα|
+langlookup|Snow Yesterday|Χιόνι Χθες|
+langlookup|Snow Depth|Βάθος Χιονιού|
+langlookup|snow day in|Μέρα χινόπτωσης τον|
+langlookup|snow days in|Μέρες χιονόπτωσης τον|
+langlookup|Almanac|Ημερολόγιο|
+langlookup|Sun&nbsp;|Ηλιος|
+langlookup|Moon|Σελήνη|
+langlookup|Sunrise|Ανατολή|
+langlookup|Sunset|Δύση|
+langlookup|Moonrise|Ανατολή Σελήνης|
+langlookup|Moonset|Δύση Σελήνης|
+langlookup|Illuminated|Φωτεινότητα|
+langlookup|Weather Forecast|Πρόγνωση Καιρού|
+langlookup|forecast|πρόγνωση|
+#
+# UV Index words - note: leave &nbsp; where shown for proper lookup
+langlookup|None|Μηδέν|
+langlookup|Low|Χαμηλός|
+langlookup|Medium|Μεσαίος|
+langlookup|High|Υψηλός|
+langlookup|Very&nbsp;High|Πολύ&nbsp;Υψηλός|
+langlookup|Extreme|Ακραίος|
+#
+# Moon words
+#
+langlookup|New Moon|Νέα Σελήνη|
+langlookup|Waxing Crescent|Αυξάνουσα Σελήνη|
+langlookup|Waxing Crescent Moon|Αυξάνουσα Σελήνη|
+langlookup|First Quarter|Πρώτο Τέταρτο|
+langlookup|First Quarter Moon|Πρώτο Τέταρτο|
+langlookup|Waxing Gibbous|Αυξάνουσα Σελήνη|
+langlookup|Waxing Gibbous Moon|Αυξάνουσα Σελήνη|
+langlookup|Full Moon|Πανσέληνος|
+langlookup|Waning Gibbous|Φθίνουσα Σελήνη|
+langlookup|Waning Gibbous Moon|Φθίνουσα Σελήνη|
+langlookup|Last Quarter|Τελευταίο Τέταρτο|
+langlookup|Last Quarter Moon|Τελευταίο Τέταρτο|
+langlookup|Waning Crescent|Φθίνουσα Σελήνη|
+langlookup|Waning Crescent Moon|Φθίνουσα Σελήνη|
+#
+# WU-Forecast.php replacement text
+#
+langlookup|Chance of precipitation|Πιθανότητα υετού|
+#
+# footer.php
+#
+langlookup|Top|Αρχή|
+langlookup|Contact Us|Επικοινωνία|
+langlookup|Bookmark Page|Βάλτε Σελιδοδείκτη|
+langlookup|Valid|Εγκυρο|
+langlookup|Never base important decisions on this or any weather information obtained from the Internet|Ποτέ μη βασίζετε κρίσιμες αποφάσεις σ'αυτές ή οποιεσδήποτε πληροφορίες καιρού από το Internet|
+#
+# menubar.php
+#
+langlookup|Navigation|Περιεχόμενα|
+langlookup|External Links|Σύνδεσμοι|
+langlookup|Home|Αρχική|
+langlookup|Forecast|Πρόγνωση|
+langlookup|WXSIM Forecast|Πρόγνωση WXSIM|
+langlookup|Radar|Ραντάρ|
+langlookup|Advisories|Προειδοποιήσεις|
+langlookup|Live Weather|Live Weather|
+langlookup|Live Mesomap|Live MesoMap|
+langlookup|Daily Stats|Στατιστικά Ημέρας|
+langlookup|Graphs|Γραφήματα|
+langlookup|Station Data by Month|Μηνιαία Δεδομένα|
+langlookup|Astronomy|Αστρονομία|
+langlookup|Links|Σύνδεσμοι|
+langlookup|About|Σχετικά|
+langlookup|About Us|Σχετικά με μας|
+langlookup|Live|Απευθείας|
+langlookup|Weather-Display Live|Weather-Display Live|
+langlookup|Local Radar|Τοπικό Ραντάρ|
+langlookup|Mesomap|MesoMap|
+langlookup|MesoMap Live|MesoMap Live|
+langlookup|Forecast &amp; Advisories|Πρόγνωση &amp; Προειδοποιήσεις|
+langlookup|Forecast details|Λεπτομέρειες Πρόγνωσης|
+langlookup|WXSIM Forecast details|Λεπτομέρειες Πρόγνωσης WXSIM|
+langlookup|Weather Trends|Τάσεις Καιρού|
+langlookup|Station Graphs|Γραφικά Σταθμού|
+langlookup|Station Monthly Reports|Μηνιαίες Αναφορές|
+langlookup|Sun/Moon Almanac|Ημερολόγιο Ηλιου/Σελήνης|
+langlookup|Earthquake activity|Σεισμική δραστηριότητα|
+langlookup|Website Map|Χάρτoγράφηση|
+#
+# include-style-switcher.php
+#
+langlookup|Style Options|Επιλογές Στυλ|
+langlookup|Style|Στύλ|
+langlookup|Widescreen|Ευρεία Οθόνη|
+langlookup|On|ναι|
+langlookup|Off|όχι|
+langlookup|Set|Επιλογή|
+langlookup|Language|Γλώσσα|
+#
+#Listbox colour options
+#
+langlookup|Black|Μαύρο|
+langlookup|Blue|Μπλε|
+langlookup|Dark|Σκοτεινό|
+langlookup|Fall|Φθινόπωρο|
+langlookup|Green|Πράσινο|
+langlookup|Ice Tea|Καφέ|
+langlookup|Mocha|Μόκα|
+langlookup|Orange|Πορτοκαλί|
+langlookup|Pastel|Απαλό|
+langlookup|Purple|Μωβ|
+langlookup|Red|Κόκκινο|
+langlookup|Salmon|Σομόν|
+langlookup|Silver|Ασημί|
+langlookup|Spring|Ανοιξη|
+langlookup|Taupe|Τιρκουάζ|
+langlookup|Teal|Κυπαρισσί|
+#
+# wxastronomy.php items (solar/lunar words are specified above)
+#
+langlookup|Daylight|Φώς ημέρας|
+langlookup|Vernal Equinox|Εαρινή Ισημερία|
+langlookup|Start of Spring|Αρχή Ανοιξης|
+langlookup|Summer Solstice|Θερινό Ηλιοστάσιο|
+langlookup|Start of Summer|Αρχή Θέρους|
+langlookup|Autumn Equinox|Φθινοπωρινή Ισημερία|
+langlookup|Start of Fall|Αρχή Φθινοπώρου|
+langlookup|Winter Solstice|Χειμερινό Ηλιοστάσιο|
+langlookup|Start of Winter|Αρχή Χειμώνα|
+#
+# wxgraphs.php items
+#
+langlookup|Weather Trend Graphs|Γραφήματα Τάσης Καιρού|
+langlookup|Last 24 Hours|Τελευταίο 24ωρο|
+langlookup|Last 72 Hours|Τελευταίες 72 ώρες|
+langlookup|Month to Date|Μήνα έως σήμερα|
+#
+# V1.01 - trends-inc.php native PHP conversion translation items
+#
+langlookup|Trends as of|Τάσεις στις|
+langlookup|TIME|ΩΡΑ|
+langlookup|TEMP|ΘΕΡΜ|
+langlookup|WIND SPEED|ΤΑΧΥΤΗΤΑ ΑΝΕΜΟΥ|
+langlookup|WIND GUST|ΡΙΠΗ ΑΝΕΜΟΥ|
+langlookup|WIND DIR|ΔΙΕΥΘ. ΑΝΕΜΟΥ|
+langlookup|HUMIDITY|ΥΓΡΑΣΙΑ|
+langlookup|PRESSURE|ΠΙΕΣΗ|
+langlookup|RAIN|ΒΡΟΧΗ|
+#
+langlookup|Current|Τώρα|
+langlookup|CURRENT|ΤΡΕΧΟΝΤΑ|
+langlookup|Now|Τώρα|
+langlookup|Records and Stats|Ρεκόρ και Στατιστικά|
+langlookup|5 minutes ago|5 λεπτά πριν|
+langlookup|10 minutes ago|10 λεπτά πριν|
+langlookup|15 minutes ago|15 λεπτά πριν|
+langlookup|20 minutes ago|20 λεπτά πριν|
+langlookup|30 minutes ago|30 λεπτά πριν|
+langlookup|45 minutes ago|45 λεπτά πριν|
+langlookup|60 minutes ago|60 λεπτά πριν|
+langlookup|75 minutes ago|75 λεπτά πριν|
+langlookup|90 minutes ago|90 λεπτά πριν|
+langlookup|105 minutes ago|105 λεπτά πριν|
+langlookup|120 minutes ago|120 λεπτά πριν|
+# following two entries are used for <condition> on <date> and <condition> at <time>
+langlookup|on|τον|
+langlookup|at|στις|
+langlookup|from|στις| as in '14 mph from 315 °(NW)'
+#
+langlookup|last hour|τελευταία ώρα|
+langlookup|over last 7 days|τις τελευταίες 7 μέρες|
+langlookup|last month|προηγούμενο μήνα|
+#
+langlookup|Today|Σήμερα|
+langlookup|Yest.|Χθες|
+langlookup|Week|Εβδομάδα|
+langlookup|Month|Μήνας|
+langlookup|Year|Ετος|
+langlookup|Gust/hr|Ριπή/ώρα|
+#
+langlookup|RAIN HISTORY|ΙΣΤΟΡΙΚΟ ΥΕΤΟΥ|
+langlookup|day since last rain on|μέρα από τελευτ. βροχή τον|
+langlookup|days since last rain on|μέρες από τελευτ. βροχή τον|
+langlookup|rain day this month|βροχή αυτόν τον μήνα|
+langlookup|rain days this month|μέρες βροχής μήνα|
+langlookup|rain day this year|μέρα βροχής έτους|
+langlookup|rain days this year|μέρες βροχής μήνα|
+langlookup|total last year at this time|σύνολο μήνα πέρυσι|
+
+langlookup|TEMPERATURE HIGHS|ΜΕΓΙΣΤΕΣ ΤΙΜΕΣ ΘΕΡΜΟΚΡΑΣΙΑΣ|
+langlookup|HOT DAYS THIS MONTH|ΖΕΣΤΕΣ ΜΕΡΕΣ ΜΗΝΑ|
+langlookup|days|μέρες|
+langlookup|day|μέρα|
+langlookup|Warmest day|Θερμότερη μέρα|
+langlookup|Warmest night|Θερμότερη νύχτα|
+
+langlookup|TEMPERATURE LOWS|ΕΛΑΧΙΣΤΕΣ ΤΙΜΕΣ ΘΕΡΜΟΚΡΑΣΙΑΣ|
+langlookup|COLD DAYS THIS MONTH|ΨΥΧΡΕΣ ΜΕΡΕΣ ΜΗΝΑ|
+langlookup|Coldest day|Ψυχρότερη μέρα|
+langlookup|Coldest night|Ψυχρότερη νύχτα|
+
+langlookup|BAROMETER HIGHS|ΜΕΓΙΣΤΕΣ ΤΙΜΕΣ ΒΑΡΟΜΕΤΡΟΥ|
+langlookup|WIND CHILL LOWS|ΕΛΑΧΙΣΤΕΣ ΔΕΙΚΤΗ ΨΥΧΡΑΣ|
+langlookup|EVAPOTRANSPIRATION|ΕΞΑΤΜΙΣΗ|
+langlookup|SOLAR HIGHS|ΜΕΓΙΣΤΕΣ ΗΛΙΑΚΗΣ ΕΝΕΡΓΕΙΑΣ|
+langlookup|UV HIGHS|ΜΕΓΙΣΤΕΣ ΔΕΙΚΤΗ UV|
+langlookup|Wind Data|Στοιχεία Ανέμου|
+langlookup|WIND GUST HIGHS|ΜΕΓΙΣΤΕΣ ΤΙΜΕΣ ΡΙΠΩΝ ΑΝΕΜΟΥ|
+langlookup|WIND GUST AVERAGE HIGHS|ΜΕΓΙΣΤΕΣ ΜΕΣΕΣ ΤΙΜΕΣ ΡΙΠΩΝ ΑΝΕΜΟΥ|
+langlookup|WIND RUN|ΔΙΑΝΥΘΕΙΣΑ ΑΠΟΣΤΑΣΗ ΑΝΕΜΟΥ|
+# --- end of new trends-inc.php translations
+#
+# include-wxhistory.php translations
+#
+langlookup|Daily / Monthly Weather History From This Station|Ημερήσιο / Μηνιαίο Ιστορικό Καιρού Σταθμού|
+langlookup|Select a report and click submit|Επιλέξτε μια αναφορά και πιέστε επιλογή|
+langlookup|submit|επιλογή|
+langlookup|Daily Report for the month of|Ημερήσια αναφορά μήνα|
+langlookup|Average and Extremes|Μέσες και Ακραίες τιμές|
+langlookup|Average and Extremes for Month of|Μέσες και Ακραίες τιμές μήνα|
+langlookup|up to day|μέχρι την μέρα|
+langlookup|Click here to toggle the 24 Hour Graph of this day|Πιέστε εδώ για το 24ωρο γράφημα της ημέρας|
+langlookup|Day, Sunshine Hours, ET, Max Solar, UV|Μέρα, Ωρες Ηλιοφάνειας, ET, Μεγ Ηλιακή Ενέργεια, UV|
+langlookup|Daily Rain Totals|Σύνολο Ημερήσιου Υετού|
+langlookup|Average temperature|Μέση θερμοκρασία|
+langlookup|Average humidity|Μέση υγρασία|
+langlookup|Average dewpoint|Μέσο σημείο δρόσου|
+langlookup|Average barometer|Μέσο βαρόμετρο|
+langlookup|Average windspeed|Μέση ταχύτητα ανέμου|
+langlookup|Average gustspeed|Μέση ταχύτητα ριπών|
+langlookup|Average direction|Μέση διεύθυνση|
+langlookup|Rainfall for month|Υετός μήνα|
+langlookup|Rainfall for year|Υετός έτους|
+langlookup|Maximum rain per minute|Μέγιστη ραγδαιότητα ανά λεπτό|
+langlookup|Maximum temperature|Μέγιστη θερμοκρασία|
+langlookup|Minimum temperature|Ελάχιστη θερμοκρασία|
+langlookup|Maximum humidity|Μέγιστη υγρασία|
+langlookup|Minimum humidity|Ελάχιστη υγρασία|
+langlookup|Maximum pressure|Μέγιστη πίεση|
+langlookup|Minimum pressure|Ελάχιστη πίεση|
+langlookup|Maximum windspeed|Μέγιστη ταχύτητα ανέμου|
+langlookup|Maximum gust speed|Μέγιστη ταχύτητα ριπών ανέμου|
+langlookup|Maximum heat index|Μέγιστος δείκτης δυσφορίας|
+langlookup|Sunshine hours month to date|Ωρες ηλιοφάνειες μήνα μέχρι σήμερα|
+langlookup|Sunshine hours year to date|Ωρες ηλιοφάνειας έτους μέχρι σήμερα|
+langlookup|hrs|ώρες|
+#
+# --- end of include-wxhistory.php translations
+#
+# Conditions (%Currentsolardescription% and clientraw[49])
+#
+conditions|begin||
+langlookup|Dry|Στεγνός|
+langlookup|Light rain|Ασθενής βροχή|
+langlookup|Moderate drizzle|Μέτριο ψιλόβροχο|
+langlookup|Moderate rain|Μέτρια βροχή|
+langlookup|Heavy rain|Εντονη βροχή|
+langlookup|Stopped raining|Παύση βροχής|
+# conditions time
+langlookup|Dawn|Χάραμα|
+langlookup|Dusk|Σούρουπο|
+langlookup|Night time|Νύχτα|
+# Clouds (sky)
+langlookup|Clear|Αίθριος|
+langlookup|Sunny|Ηλιοφάνεια|
+langlookup|Clear skies|Αίθριος|
+langlookup|Mostly sunny|Κυρίως ηλιοφάνεια|
+langlookup|A few clouds|Διάσπαρτα νέφη|
+langlookup|Sc|Μερικώς νεφελώδης|
+langlookup|Scattered clouds|Μερικώς νεφελώδης|
+langlookup|Partly cloudy|Μερικώς νεφελώδης|
+langlookup|Mostly cloudy|Σχεδόν νεφελώδης|
+langlookup|Cloudy with clear p|Νεφελώδης με ανοίγματα|
+langlookup|Cloudy with clear patches|Νεφελώδης με ανοίγματα|
+langlookup|Overcast|Συννεφιά|
+conditions|end||
+#
+langlookup|Winter Total|Σύνολο Χειμώνα|
+#
+# wxguake.php (quake-json.php)
+langlookup|Update time|Ωρα Ενημέρωσης|
+langlookup|of|του|
+langlookup|No earthquakes of magnitude|Κανείς σεισμός μεγέθους|
+langlookup|or greater within|ή μεγαλύτερος μεταξύ|
+langlookup|reported in last 7 days|αναφέρθηκε τις τελευταίες 7 ημέρες|
+langlookup|Cluster - click to expand details|Δέσμη - πατήστε για ανάπτυξη λεπτομερειών|
+langlookup|Enable JavaScript to view the Google Map.|Ενεργοποιήστε τη Javascript για να δείτε το χάρτη Google.|
+langlookup|Earthquakes in the past 7 days of magnitude|Σεισμοί τις τελευταίες 7 ημέρες μεγέθους|
+langlookup|or greater within|ή μεγαλύτεροι μεταξύ|
+langlookup|Epicenter Near|Επίκεντρο κοντά|
+langlookup|Magnitude|Μέγεθος|
+langlookup|Distance to Epicenter|Απόσταση από Επίκεντρο|
+langlookup|Local Time|Τοπική Ωρα|
+langlookup|Link|Σύνδεσμος|
+langlookup|map|χάρτης|
+langlookup|Note: Click on column heading marked with|Προσοχή: Πατήστε στην επικεφαλίδα της στήλης με επισήμανση|
+langlookup|to sort column contents.|για να ταξινομήσετε τα περιεχόμενα της στήλης.|
+langlookup|earthquakes found. Click on location or map links for more details from the <a href="http://earthquake.usgs.gov/earthquakes/map/">USGS</a>|σεισμοί βρέθηκαν. Πατήστε στην τοποθεσία ή τους συνδέσμους στο χάρτη για περισσότερες λεπτομέρειες από τη <a href="http://earthquake.usgs.gov/earthquakes/map/">USGS</a>|
+langlookup|Depth|Βάθος|
+langlookup|Distance to epicenter|Απόσταση από επίκεντρο|
+langlookup|Map and data courtesy of|Χάρτης και δεδομένα ευγενική προσφορά από|
+langlookup|United States Geological Survey|Γεωλογικό Παρατηρητήριο Ηνωμένων Πολιτειών|
+#

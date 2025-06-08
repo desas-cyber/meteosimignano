@@ -1,0 +1,541 @@
+# SLOVENIAN language plugin for Carterlake/WD/AJAX/PHP template set
+# Ken True - http://saratoga-weather.org/template/
+# Slovenian text by Marko of http://www.okroglovreme.com
+# Version 1.01 - 1-Feb-2011 - initial release
+# 
+# English and Western European use ISO-8859-1 character sets
+#
+charset|ISO-8859-2|
+#
+# Slovenian should use ISO-8859-2 character set for compatibility with plaintext-parser-lang-si.txt
+#
+#charset|ISO-8859-2|
+#
+# Note:  the langlookup entries are for EXACT replacements including spaces and capitalization.
+#  
+# format is 'langlookup|<english-to-find>|<replacement-string>|
+#
+# Don't change the first field <english-to-find>  because it matches what is in the 
+# langtrans/langtransstr() calls embedded in various scripts in the template set.  
+# Only change the second field <replacement-string> for your language.
+#
+# You can add new langlookup entries to handle additions to your website.  Be sure to add the
+# same langlookup entry to the other language-LL.txt files for all the languages you support on your site.
+#
+# ajax-dashboard and ajax-gizmo language strings
+#
+langlookup|Enable JavaScript for live updates|Za podatke v realnem èasu je potrebno omogoèiti Javascript|
+langlookup|Updated|Podatki zajeti|
+langlookup|updated|posodobljeno pred|
+langlookup|sec ago|sekundami|
+langlookup|next update at|naslednja posodobitev|
+# thermometer language
+langlookup|Temperature|Temperatura|
+langlookup|Currently|Trenutno|
+langlookup|Max|Max|
+langlookup|Min|Min|
+# rising/falling arrows text
+langlookup|Warmer|Topleje|
+langlookup|Colder|Hladneje|
+langlookup|Rising|Nara¹èa|
+langlookup|Falling|Pada|
+langlookup|Increased|Poveèan|
+langlookup|Decreased|Zmanj¹an|
+langlookup|than last hour|kot pred eno uro|
+langlookup|since last hour|v eni uri|
+langlookup|than yesterday at this time|kot vèeraj ob tem èasu|
+#
+langlookup|Feels like|Se èuti kot|
+langlookup|24-hr difference|Sprememba v 24 urah|
+langlookup|Today|Danes|
+langlookup|Yesterday|Vèeraj|
+langlookup|High:|Max:|
+langlookup|Low:|Min:|
+langlookup|Wind from|Smer vetra|
+langlookup|Gust|Sunek vetra|
+langlookup|Gust Month|Ta mesec|
+langlookup|UV Index|UV Index|
+langlookup|UV Index Forecast|Napoved UV Indexa|
+langlookup|Solar Radiation|Sonèno obsevanje|
+langlookup|Summary|Stanje|
+langlookup|Humidity|Vla¾nost|
+langlookup|Dew Point|Rosi¹èe|
+langlookup|Barometer|Tlak|
+langlookup|Baro Trend|Tendenca tlaka|
+langlookup|Wind|Veter|
+langlookup|Rain|De¾|
+langlookup|Outlook|Napoved|
+langlookup|Rain Today|De¾ danes|
+langlookup|Rain Rate|Intenziteta|
+langlookup|Rain Yesterday|De¾ vèeraj|
+langlookup|Storm Rain|Nevihta|
+langlookup|This Month|V tem mesecu|
+langlookup|Season Total|Letos|
+langlookup|day since last rain|dan od zadnjega de¾ja|
+langlookup|days since last rain|dni od zadnjega de¾ja|
+langlookup|rain day in|de¾evni dan v|
+langlookup|rain days in|de¾evni dnevi v|
+langlookup|Snow|Sneg|
+langlookup|Snow Today|Sneg danes|
+langlookup|Snow Yesterday|Sneg vèeraj|
+langlookup|Snow Depth|Sne¾na odeja|
+langlookup|Winter Total|Skupaj v tej zimi|
+langlookup|snow day in|Sneg bo èez|
+langlookup|snow days in|Sneg bo èez|
+langlookup|Almanac|Almanah|
+langlookup|Sun&nbsp;|Sonce|
+langlookup|Moon|Luna|
+langlookup|Sunrise|Sonèni vzhod|
+langlookup|Sunset|Sonèni zahod|
+langlookup|Moonrise|Lunin vzhod|
+langlookup|Moonset|Lunin zahod|
+langlookup|Illuminated|Osvetljena|
+langlookup|Weather Forecast|Vremenska napoved|
+langlookup|forecast|napoved|
+#
+# UV Index words - note: leave &nbsp; where shown for proper lookup
+langlookup|None|Ni podatka|
+langlookup|Low|Nizek|
+langlookup|Medium|Srednji|
+langlookup|High|Visok|
+langlookup|Very&nbsp;High|Zelo&nbsp;Visok|
+langlookup|Extreme|Ekstremen|
+#
+# Moon words
+#
+langlookup|New Moon|Prazna luna - mlaj|
+langlookup|Waxing Crescent|Nara¹èajoèi krajec|
+langlookup|Waxing Crescent Moon|Nara¹èajoèi krajec|
+langlookup|First Quarter|Prvi krajec|
+langlookup|First Quarter Moon|Prvi krajec|
+langlookup|Waxing Gibbous|Nara¹èajoèa luna|
+langlookup|Waxing Gibbous Moon|Nara¹èajoèa luna|
+langlookup|Full Moon|Polna luna - ¹èip|
+langlookup|Waning Gibbous|Pojemajoèa luna|
+langlookup|Waning Gibbous Moon|Pojemajoèa luna|
+langlookup|Last Quarter|Zadnji krajec|
+langlookup|Last Quarter Moon|Zadnji krajec|
+langlookup|Waning Crescent|Pojemajoèi krajec|
+langlookup|Waning Crescent Moon|Pojemajoèi krajec|
+#
+#
+# WU-Forecast.php replacement text
+#
+langlookup|Chance of precipitation|Mo¾nost de¾ja|
+#
+# footer.php
+#
+langlookup|Top|Na vrh|
+langlookup|Contact Us|Kontakt|
+langlookup|Bookmark Page|Dodaj v zaznamke|
+langlookup|Valid|Preveri|
+langlookup|Never base important decisions on this or any weather information obtained from the Internet|Nikoli ne sprejemaj pomembnih odloèitev glede na to, oz. katerokoli vremensko informacijo na internetu|
+#
+# menubar.php and flyout-menu.xml entries
+#
+# Note: if using the flyout-menu, you can have individual language versions as
+# flyout-menu-LL.xml, flyout-menu-test-LL.xml using full native language which won't be translated.
+#
+# these settings below are for the English menubar.php $html section, and flyout-menu.xml/flyout-menu-test.xml
+#  which should be in English only.
+#
+langlookup|Navigation|Navigacija|
+langlookup|External Links|Zunanje povezave|
+langlookup|Home|Domov|
+langlookup|Forecast|Napovedi|
+langlookup|WXSIM Forecast|WXSIM Napoved|
+langlookup|Radar|Radar|
+langlookup|Windhoek Home|Windhoek Home|
+langlookup|Oranjemund Home|Oranjemund Home|
+langlookup|Auas Mountains Home|Auas Berge Home|
+langlookup|Other Stations|Druge postaje|
+langlookup|Advisories|Obvestila|
+langlookup|Live Weather|Podatki v ¾ivo|
+langlookup|Live Mesomap|Live MesoMap|
+langlookup|Daily Stats|Dnevni podatki|
+langlookup|Graphs|Grafi|
+langlookup|Station Data by Month|Podatki po mesecih|
+langlookup|Astronomy|Astronomija|
+langlookup|Links|Povezave|
+langlookup|About|Vizitka|
+langlookup|About Us|O nas|
+langlookup|Live|V ¾ivo|
+langlookup|WX Photos|Slike VP|
+langlookup|Weather-Display Live|Weather-Display Live|
+langlookup|Local Radar|Lokalni radar|
+langlookup|Mesomap|MesoMap|
+langlookup|MesoMap Live|MesoMap Live|
+langlookup|Forecast &amp; Advisories|Napovedi in obvestila|
+langlookup|Forecast details|7-dnevna napoved WU|
+langlookup|WXSIM Forecast details|Podrobna napoved WXSIM|
+langlookup|Weather Trends|Tendenca vremena|
+langlookup|Station Graphs|Grafi|
+langlookup|Station Monthly Reports|Meseèni podatki|
+langlookup|Sun/Moon Almanac|Sonce/Luna|
+langlookup|Earthquake activity|Potresi|
+langlookup|Website Map|Kazalo strani|
+langlookup|Weather outlook|Vremenske napovedi|
+langlookup|Station Records|Rekordne vrednosti te postaje|
+langlookup|Records|Rekordi|
+langlookup|Trends, Earthquakes|Tendenca, potresi|
+langlookup|WU Graphs|WU grafi|
+langlookup|Status of weather software|Stanje vremenske aplikacije|
+langlookup|/hr|/hr|
+langlookup|Local Weather Exchange Stations|Lokalne vremenske postaje|
+langlookup|Mesonet|Mesonet|
+langlookup|NOAA reports|Poroèila NOAA|
+#
+# include-style-switcher.php items
+#
+langlookup|Style Options|Izgled strani|
+langlookup|Style|Izgled|
+langlookup|Widescreen|©iroki zaslon|
+langlookup|On|Vklop|
+langlookup|Off|Izklop|
+langlookup|Set|Nastavi|
+langlookup|Language|Jezik|
+# Colors of templates for style-switcher
+langlookup|Black|Èrna|
+langlookup|Blue|Modra|
+langlookup|Dark|Temna|
+langlookup|Fall|Jesen|
+langlookup|Green|Zelena|
+langlookup|Ice Tea|Ledeni èaj|
+langlookup|Mocha|Rjava|
+langlookup|Orange|Oran¾na|
+langlookup|Pastel|Pastelna|
+langlookup|Purple|Vijolièna|
+langlookup|Red|Rdeèa|
+langlookup|Salmon|Losos|
+langlookup|Silver|Srebrna|
+langlookup|Spring|Pomlad|
+langlookup|Taupe|Be¾|
+langlookup|Teal|Sivo zelena|
+#
+# wxastronomy.php items (solar/lunar words are specified above)
+#
+langlookup|Daylight|Dol¾ina dneva|
+langlookup|Vernal Equinox|Pomladno enakonoèje|
+langlookup|Start of Spring|Zaèetek pomladi|
+langlookup|Summer Solstice|Poletni solsticij|
+langlookup|Start of Summer|Zaèetek poletja|
+langlookup|Autumn Equinox|Jesensko enakonoèje|
+langlookup|Start of Fall|Zaèetek jeseni|
+langlookup|Winter Solstice|Zimski solsticij|
+langlookup|Start of Winter|Zaèetek zime|
+#
+# wxgraphs.php items
+#
+langlookup|Weather Trend Graphs|Tendenca vremena - Grafi|
+langlookup|Last 24 Hours|Zadnjih 24 ur|
+langlookup|Last 72 Hours|Zadnjih 72 ur|
+langlookup|Month to Date|Zadnjih 30 dni|
+langlookup|Alltime Records|Rekordne vrednosti alltime|
+langlookup|Records this year|Rekordne vrednosti letos|
+#
+# V1.01 - trends-inc.php native PHP conversion translation items
+#
+langlookup|Trends as of|Tendenca od|
+langlookup|TIME|ÈAS|
+langlookup|TEMP|TEMPER-<br/>ATURA|
+langlookup|WIND SPEED|HITROST-<br/>VETRA|
+langlookup|WIND GUST|SUNEK VETRA|
+langlookup|WIND DIR|SMER-<br/>VETRA|
+langlookup|HUMIDITY|VLA®-<br/>NOST|
+langlookup|PRESSURE|TLAK|
+langlookup|RAIN|DE®|
+#
+langlookup|Current|Trenutno|
+langlookup|CURRENT|TRENUTNO|
+langlookup|Records and Stats|Rekordi in statistika|
+langlookup|Now|Zdaj|
+langlookup|5 minutes ago|pred 5-imi minutami|
+langlookup|10 minutes ago|pred 10-imi minutami|
+langlookup|15 minutes ago|pred 15-imi minutami|
+langlookup|20 minutes ago|pred 20-imi minutami|
+langlookup|30 minutes ago|pred 30-imi minutami|
+langlookup|45 minutes ago|pred 45-imi minutami|
+langlookup|60 minutes ago|pred 60-imi minutami|
+langlookup|75 minutes ago|pred 75-imi minutami|
+langlookup|90 minutes ago|pred 90-imi minutami|
+langlookup|105 minutes ago|pred 105-imi minutami|
+langlookup|120 minutes ago|pred 120-imi minutami|
+# following three entries are used for <condition> on <date> and <condition> at <time>
+langlookup|on||
+langlookup|at|ob|
+langlookup|from|iz smeri| as in '14 mph from 315 °(NW)'
+#
+langlookup|last hour|v zadnji uri|
+langlookup|over last 7 days|v zadnjih 7-ih dneh|
+langlookup|last month|v zadnjem mesecu|
+#
+langlookup|Today|Danes|
+langlookup|Yest.|Vèeraj|
+langlookup|Week|Tedensko|
+langlookup|Month|Meseèno|
+langlookup|Year|Letno|
+langlookup|Gust/hr|Sunek/uro|
+#
+langlookup|RAIN HISTORY|DE® - STATISTIKA|
+langlookup|day since last rain on|dan brez de¾ja|
+langlookup|days since last rain on|dni brez de¾ja|
+langlookup|rain day this month|de¾even dan v tem mesecu|
+langlookup|rain days this month|de¾evnih dni v tem mesecu|
+langlookup|rain day this year|de¾evni dan v tem letu|
+langlookup|rain days this year|de¾evnih dni v tem letu|
+langlookup|total last year at this time|lani ob tem èasu|
+
+langlookup|TEMPERATURE HIGHS|NAJVI©JE TEMPERATURE|
+langlookup|HOT DAYS THIS MONTH|Najtoplej¹i dan v mesecu|
+langlookup|days|dni|
+langlookup|day|dan|
+langlookup|Warmest day|Najtoplej¹i dan|
+langlookup|Warmest night|Najtoplej¹a noè|
+
+langlookup|TEMPERATURE LOWS|NAJNI®JE TEMPERATURE|
+langlookup|COLD DAYS THIS MONTH|Najhladnej¹i dan v mesecu|
+langlookup|Coldest day|Najhladnej¹i dan|
+langlookup|Coldest night|Najhladnej¹a noè|
+
+langlookup|BAROMETER HIGHS|NAJVI©JI TLAK|
+langlookup|WIND CHILL LOWS|NAJNI®JI OBÈUTEK MRAZA|
+langlookup|EVAPOTRANSPIRATION|EVAPOTRANSPIRACIJA|
+langlookup|SOLAR HIGHS|NAJVI©JE NOÈNO OBSEVANJE |
+langlookup|UV HIGHS|NAJVI©JI UV-INDEX|
+langlookup|Wind Data|Podatki o vetru|
+langlookup|WIND GUST HIGHS|NAJMOÈNEJ©I SUNEK VETRA|
+langlookup|WIND GUST AVERAGE HIGHS|NAJMOÈNEJ©I SUNKI - POVPREÈNO|
+langlookup|WIND RUN|POT VETRA|
+# --- end of new trends-inc.php translations
+#
+# include-wxhistory.php translations
+#
+langlookup|Daily / Monthly Weather History From This Station|Dnevna / Meseèna statistika |
+langlookup|Select a report and click submit|Izberi poroèilo in klikni po¹lji|
+langlookup|submit|po¹lji|
+langlookup|Daily Report for the month of|Dnevno poroèilo za mesec|
+langlookup|Average and Extremes|Povpreèja in ekstremi|
+langlookup|Average and Extremes for Month of|Povpreèja in ekstremi za mesec|
+langlookup|up to day|do danes|
+langlookup|Click here to toggle the 24 Hour Graph of this day|Klikni tukaj za prikaz 24-urnega grafa za ta dan|
+langlookup|Day, Sunshine Hours, ET, Max Solar, UV|Dan, Sonène ure, ET, Maksimalno sonèno obsevanje, UV|
+langlookup|Daily Rain Totals|De¾ po dnevih|
+langlookup|Average temperature|Povpreèna temperatura|
+langlookup|Average humidity|Povpreèna vla¾nost|
+langlookup|Average dewpoint|Povpreèna temperatura rosi¹èa|
+langlookup|Average barometer|Povpreèen tlak|
+langlookup|Average windspeed|Povpreèna hitrost vetra|
+langlookup|Average gustspeed|Povpraèna hitrost sunkov vetra|
+langlookup|Average direction|Povpreèna smer vetra|
+langlookup|Rainfall for month|De¾ - meseèno|
+langlookup|Rainfall for year|De¾ - letno|
+langlookup|Maximum rain per minute|Najveè de¾ja v minuti|
+langlookup|Maximum temperature|Najvi¹ja temperatura|
+langlookup|Minimum temperature|Najni¾ja temperatura|
+langlookup|Maximum humidity|Najvi¹ja vla¾nost|
+langlookup|Minimum humidity|Najni¾ja vla¾nost|
+langlookup|Maximum pressure|Najvi¹ji tlak|
+langlookup|Minimum pressure|Najni¾ji tlak|
+langlookup|Maximum windspeed|Najvi¹ja hitrost vetra|
+langlookup|Maximum gust speed|Najvi¹ja hitrost sunkov vetra|
+langlookup|Maximum heat index|Najvi¹ji toplotni index|
+langlookup|Sunshine hours month to date|Sonène ure v zadnjih 30-ih dneh|
+langlookup|Sunshine hours year to date|Sonène ure v zadnjih 365 dneh|
+langlookup|hrs|ure|
+#
+# --- end of include-wxhistory.php translations
+#
+# Weather records
+langlookup|Yesterday weather|Vreme vèeraj|
+langlookup|Lowest wind chill|Najni¾ja temperatura obèutka mraza|
+langlookup|Highest Rain Rate|Najveèja intenziteta|
+langlookup|Highest Hourly Rainfall|Najveè de¾ja v eni uri|
+langlookup|Highest Daily Rainfall|Najveè de¾ja v enem dnevu|
+langlookup|Highest Monthly Rainfall|Najveè de¾ja v enem mesecu|
+langlookup|Maximum wind speed average|Najvi¹ja povpreèna hitrost vetra|
+langlookup|Windrun|Pot vetra|
+langlookup|Extremes this month|Rekordne vrednosti ta mesec|
+langlookup|Extremes this year|Rekordne vrednosti v tem letu|
+langlookup|Extremes since start|Od zaèetka meritev|
+langlookup|Highest Minimum|Najvi¹ja, najni¾ja temperatura|
+langlookup|Lowest Maximum|Najni¾ja, najvi¹ja temperatura|
+langlookup|Records began on|Meritve se izvajajo od|
+langlookup|Here are the extremes recorded since then|Rekordne vrednosti, od tega datuma naprej so podane v spodnji tabeli|
+langlookup|Records Since|Rekordne vrednosti od|
+langlookup|All Records|Rekordi drugih VP|
+--------------------------
+langlookup|Today's &amp; Yesterday's Weather Data|Dana¹nji in vèeraj¹nji podatki|
+langlookup|at|ob|
+langlookup|on|na|
+langlookup|in|v|
+langlookup|midnight|polnoèi|
+langlookup|9am|09:00|
+langlookup|Weather data since|Podatki od|
+langlookup|Weather data for the 24 hours previous to|Vremenski podatki za 24 ur do|
+langlookup|High Temperature|Najvi¹ja temperatura|
+langlookup|Low Temperature|Najni¾ja temperatura|
+langlookup|High Humidity|Najvi¹ja vla¾nost|
+langlookup|Low Humidity|Najni¾ja vla¾nost|
+langlookup|Rainfall|De¾|
+langlookup|Today's Rain|De¾ danes|
+langlookup|Yesterday's Rain|De¾ vèeraj|
+langlookup|Rainfall Rate Max|Najveèja intenziteta|
+langlookup|Snowfall Today|Sneg danes|
+langlookup|Snow Accumulation|Akumulacija snega|
+langlookup|Highest Gust|Najmoènej¹i sunek|
+langlookup|High Speed|Najvi¹ja hitrost|
+langlookup|10 min avg|povpreèje 10 min.|
+langlookup|Wind Run|Pot vetra|
+langlookup|Barometric Pressure|Tlak|
+langlookup|sea level|nivo morja|
+langlookup|High Pressure|Najvi¹ji tlak|
+langlookup|Low Pressure|Najni¾ji tlak|
+langlookup|Extreme Weather Data This Year|Rekordne vrednosti letos|
+langlookup|Lowest Wind Chill|Najni¾ja temperatura obèutka mraza|
+langlookup|Highest Minimum Temperature|Najvi¹ja, najni¾ja temperatura|
+langlookup|Lowest Maximum Temperature|Najni¾ja, najvi¹ja temperatura|
+langlookup|Highest Wind Gust|Najmoènej¹i sunek vetra|
+langlookup|Highest Wind Speed Average|Najvi¹ja povpreèna hitrost vetra|
+langlookup|Highest Pressure|Najvi¹ji tlak|
+langlookup|Lowest Pressure|Najni¾ji tlak|
+langlookup|Weather Data Records|Absolutni vremenski rekordi|
+langlookup|Records history began on|Podatki se zbirajo od|
+langlookup|Highest Temperature|Najvi¹ja temperatura|
+langlookup|Lowest Temperature|Najni¾ja temperatura|
+#
+# Conditions (%Currentsolardescription% and clientraw[49])
+#
+conditions|begin||
+langlookup|Dry|Suho|
+langlookup|Drizzle|Rosi|
+langlookup|Light rain|Rahlo de¾uje|
+langlookup|Moderate drizzle|Zmerno rosi|
+langlookup|Moderate rain|Zmerno de¾uje|
+langlookup|Heavy rain|Moèno de¾uje|
+langlookup|Violent rain|Zelo moèno de¾uje|
+langlookup|Stopped raining|Obèasno de¾uje|
+langlookup|Light rain, overcast|Oblaèno, rahlo de¾uje|
+langlookup|Light rain, mostly cloudy|Prete¾no oblaèno, rahlo de¾uje|
+langlookup|Nearby showers, mostly cloudy|Prete¾no oblaèno, posamezne plohe|
+langlookup|Nearby showers|Posamezne plohe|
+langlookup|Rain showers|De¾uje|
+
+#
+# conditions time
+langlookup|Dawn|Zarja|
+langlookup|Dusk|Mrak|
+langlookup|Night time|Noè|
+langlookup|Night|Noè|
+# Clouds (sky)
+langlookup|Fine weather|Jasno|
+langlookup|Clear|Jasno|
+langlookup|Sunny|Sonèno|
+langlookup|Clear skies|Jasno|
+langlookup|Mostly sunny|Prete¾no jasno|
+langlookup|A few clouds|Rahlo oblaèno|
+langlookup|Few clouds|Rahlo oblaèno|
+langlookup|Sc|Delno oblaèno|
+langlookup|Scattered clouds|Razpr¹ena oblaènost|
+langlookup|Scattered|Razpr¹ena oblaènost|
+langlookup|Partly cloudy|Delno oblaèno|
+langlookup|Mostly cloudy|Prete¾no oblaèno|
+langlookup|Cloudy with clear p|Oblaèno z razjasnitvami|
+langlookup|Cloudy with clear patches|Oblaèno z razjasnitvami|
+langlookup|Overcast|Oblaèno|
+langlookup|Recent rain|Po de¾ju|
+langlookup|Snowing|Sne¾i|
+langlookup|Raining|De¾uje|
+langlookup|Thundershower|Plohe|
+langlookup|Thunderstorm|Nevihte|
+langlookup|Heavy thunderstorm|Moène nevihte|
+langlookup|Misty|Meglice|
+langlookup|Mist|Meglice|
+langlookup|Mist, shallow fog, partly cloudy|Meglice, megla po ni¾inah, delno oblaèno|
+langlookup|Shallow fog|Megla po ni¾inah|
+langlookup|Fog|Megla|
+langlookup|Cloudbase|Vi¹ina oblakov|
+langlookup|Light thunderstorm rain|Manj¹a nevihta, de¾uje|
+langlookup|Light thunderstorm rain, mostly cloudy|Prete¾no oblaèno, manj¹a nevihta|
+langlookup|mostly cloudy|Prete¾no oblaèno|
+langlookup|Mist, mostly cloudy| Meglice, prete¾no oblaèno|
+langlookup|Light rain, mist, mostly cloudy|Rahlo de¾uje, meglice, prete¾no oblaèno|
+langlookup|Thunderstorm rain, mist, mostly cloudy|Nevihta, meglice, prete¾no oblaèno|
+langlookup|Thunderstorm rain, mostly cloudy|Nevihta, prete¾no oblaèno|
+langlookup|Rain, mostly cloudy|De¾, prete¾no oblaèno|
+langlookup|Shallow fog, partly cloudy|Megla po ni¾inah, delno oblaèno|
+langlookup|Mist, partly cloudy|Meglice, delno oblaèno|
+langlookup|Mist, overcast|Meglice, oblaèno|
+langlookup|Patches of fog|Megla v pasovih|
+langlookup|Freezing Fog|Megla, zmrzuje|
+langlookup|Light freezing rain|Rahel de¾ ki zmrzuje|
+langlookup|Light snow|Rahel sneg|
+langlookup|Light Drizzle Mist|Rahlo rosi, meglice|
+langlookup|Light drizzle|Rahlo rosi|
+langlookup|Freezing mist|Ivje|
+conditions|end||
+
+# text display
+langlookup|Date/Time|Datum/Ura|
+langlookup|nighttime|noè|
+langlookup|daytime|dan|
+langlookup|Conditions|Stanje|
+langlookup|Cloud Base|Vi¹ina oblakov|
+langlookup|meters|metrov|
+langlookup|feet|èevljev|
+## Above Sea Level == Au-dessus du niveau de la mer
+langlookup|ASL|mnv|
+## Above Ground Level == Au-dessus du niveau du sol
+langlookup|AGL|nad pov¹jem|
+langlookup|hours|ur|
+langlookup|Background Image|Slika ozadja|
+langlookup|Moon Age|Starost lune|
+langlookup|Server Time|Èas serverja|
+conditions|end||
+#
+# Annual Data Summary
+langlookup|Annual Data Summary|Dnevni podatki od zaèetka meritev|
+langlookup|Data Summary|Dnevni podatki|
+#
+# Status page
+langlookup|Weather Station Status|Stanje vremenske postaje|
+langlookup|Station system up for|Neprekinjeno delovanje operacijskega sistema|
+langlookup|Station system free memory|Prosti pomnilnik operacijskega sistema|
+langlookup|This website uses|Spletna stran uporablja|
+langlookup|for weather conditions reporting|za procesiranje vremenskih podatkov|
+langlookup|This website uses|Spletna stran uporablja|
+langlookup|for weather conditions reporting|za procesiranje vremenskih podatkov|
+langlookup|Status|Stanje|
+langlookup|Status of weather software|Status vremenske aplikacije|
+langlookup|NOT Current|Ni posodobljen|
+langlookup|Current|Posodobljen|
+langlookup|NOAA report|NOAA poroèila|
+langlookup|It was last started|Nazadnji zagon sistema|
+langlookup|Component|Komponenta|
+langlookup|Age|Pretekli èas|
+langlookup|Latest update time as of|Nazadnje posodobljeno|
+#
+# wxmetar.php
+langlookup|METAR|METAR|
+langlookup|Nearby METAR Reports|METAR v bli¾ini|
+langlookup|Distance from station|Oddaljenost od postaje|
+langlookup|Wind Chill|Obèutek mraza zaradi vetra|
+langlookup|Heat Index|Toplotni indeks|
+langlookup|Clouds|Oblaènost|
+langlookup|Visibility|Vidljivost|
+langlookup|Wind from|Veter iz smeri|
+langlookup|Cloud details|Podrobnosti o oblakih|
+langlookup|varies|spremenljiv|
+langlookup|Few clouds|Rahlo oblaèno|
+langlookup|greater than|veèja od|
+langlookup|Nearby Thunderstorm|Nevihte v okolici|
+langlookup|Nearby thunderstorm|Nevihte v okolici|
+langlookup|Nearby Fog|Megla v okolici|
+langlookup|Nearby fog|Megla v okolici|
+#
+# wxnoaaclimatereports.php
+langlookup|NOAA-Style Climate Reports|NOAA-Style klimatska poroèila|
+langlookup|Select a Year or Month report|Izberi meseèna ali letna poroèila|
+langlookup|Report for|Poroèilo za|
+#
+
+

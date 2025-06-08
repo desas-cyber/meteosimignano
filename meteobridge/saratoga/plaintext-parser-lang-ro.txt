@@ -1,0 +1,233 @@
+# Language file for plaintext-parser.php program 
+# Version 0.20
+# translation - Romanian by Marian Peteanu  http://www.celin-web.com/wdisplay1/wxindex4.php
+#
+# 
+charset|ISO-8859-2|
+#
+lang|Mostly cloudy to cloudy in the evening|Înorat mai spre searã|
+#lang|cloudy in| Înorat| 
+#
+#THIS SECTION WILL TRANSLATE SENTENCES TO A MORE NATURAL (LESS SYNTHETIC) LANGUAGE
+#
+lang|Cloudy in the morning|Înorat dimineaþa|
+lang|Patchy light fog after midnight|Ceaþã rarã dupã miezul nopþii|
+lang|Mostly cloudy to cloudy|Cer predominant noros spre noros|
+lang| mostly cloudy to cloudy| cer predominant noros spre noros|
+lang|Mostly cloudy|Cer în mare parte înorat|
+lang|Dense overcast|Cer compact acoperit|
+lang|Partly to mostly cloudy|Cer în parte mare acoperit|
+lang|Fair to partly cloudy|Cer senin spre parþial înorat|
+lang|becoming partly to mostly|Cerul devine parþial acoperit|
+lang|Precipitation mostly less than|Precipitaþii mai mici decât|
+lang|in the evening|desearã|
+lang|less than|mai puþin ca|
+lang|mostly around|mai ales în jurul a|
+lang|No snow accumulation expected|Nu se aºteaptã zãpadã|
+lang|Snow accumulation |Zãpadã acumulatã|
+#
+#TEMP FIX (MORE TESTING NEEDED)
+lang|in the| |
+lang|wind chill|indice rãcire|
+lang|Wind chill|Indice rãcire|
+#
+lang|Chance of precipitation|ªanse de precipitaþii|
+lang|becoming|se schimbã în|
+lang|dense overcast|acoperire densã|
+lang| then | apoi | 
+lang|A slight chance of|ªanse mici de|
+lang|afternoon|dupã amiazã|
+lang|cloudy|înorat|
+lang|Patchy|Pe alocuri |
+lang| slight | neînsemnate |
+lang| light | uºor |
+lang| fog | ceaþã |
+lang| fog.| ceaþã.|
+lang|Partly|Parþial|
+lang| up to| pânã la|
+lang| to | spre |
+#lang| up | în sus |
+lang|gusting|în rafale|
+lang| mostly| principal|
+lang|after|mai tîrziu|
+lang|likely|probabil|
+lang|midnight| la miezul nopþii|
+lang|morning|dimineaþa|
+lang|Mostly|Mai ales|
+lang| mostly| mai ales|
+lang|partly|parþial|
+lang|Light|Lejer|
+lang|moderate|moderat|
+lang|evening|seara|
+lang|Dense|Dens|
+lang|overcast|acoperit|
+lang|Moderate|Moderat|
+lang|dense|dens|
+lang|sunny|însorit|
+lang|Rain likely|Posibil ploaie|
+lang|rain|ploaie|
+#lang|A |Qualche | ********* temp removed *********
+lang|A | | 
+lang| a | de |
+lang|chance of|ºanse de|
+lang|High|Maxim|
+lang|Low|Minim|
+lang| but | doar |
+lang|temperatures falling|temperatura în scãdere|
+lang|temperatures rising|temperatura în creºtere|
+#lang|noralast|NordEst|
+lang|Wind east-|Vînt dela est -|
+lang|Wind west-|Vînt dela vest-|
+lang|Wind east |Vînt de est |
+lang|Wind west |Vînt de vest |
+lang|Wind north-|Vînt de nord- |
+lang|Wind north |Vînt de nord |
+lang|Wind south-|Vînt de sud-|
+lang|Wind south |Vînt de sud |
+lang|northeast|nord-est|
+lang|northwest|nord-vest|
+lang|southeast|sud-est|
+lang|southwest|sud-vest|
+lang|north-|nord-|
+lang|east-|est -|
+lang|south-|sud -|
+lang|west-|vest-|
+lang|north |nord |
+lang|east |est |
+lang|south |sud |
+lang|west |vest |
+lang|the| |
+lang|down |jos |
+lang| or | sau |
+lang|around|peste tot|
+lang|kph|km/h|
+lang|mps|m/s|
+lang| near | apropiat |
+lang| percent| % |
+lang|less than|mai mic decât|
+lang| snow| zãpadã|
+lang|Precipitation (liquid equivalent)|Precipitaþii(echivalent lichid)|
+lang| between | între |
+lang| and | ºi |
+lang|Precipitation|Precipitaþii|
+lang|accumulation expected|se asteaptã acumulari|
+lang|Little|Puþin|
+lang|snow |zãpadã |
+lang|Snow |Zãpadã |
+lang|Snow accumulation|Zãpadã acumulatã|
+lang|about|în jur de|
+lang| no | niciun |
+lang| one | 1 |
+lang|showery or intermittent|ploaie intermitentã|
+lang|Rain|Ploaie|
+lang|Fair|Frumos|
+lang|fair|frumos|
+lang|Cloudy|Înorat|
+lang|calm|calm|
+lang|Clear|Cer senin|
+lang|clear|cer senin|
+lang|Sunny|Însorit|
+lang| ice | ghiaþã |
+lang|freezing|îngheþat|
+lang|sleet|lapoviþã|
+lang|a mix of|un amestec de|
+lang|mix of|amestec de|
+lang|if any|dacã e vreunul|
+lang|on ground|la sol|
+lang|patchy|neuniform|
+lang|Thunderstorms likely, some possibly severe|Probabilitate de furtunã, posibil violentã|
+lang|Some thunder possible.|Posibile tunete|
+lang|Some thunderstorms likely|Posibile furtuni|
+lang|quarter |sfert |
+lang|tenth |zecime |
+lang|of an inch|din inch| 
+lang|half an inch|jumatate de inch|
+lang| inch| inch|
+lang|UV index|indice UV|
+#lang| a a |    |
+# ---=== added translation ===---
+lang|Wind|Vânt|
+#
+# Translation of headings, periods and short conditions statements
+# headings
+#
+langlookup|WXSIM Forecast for:|Prognoza WX-SIM pentru:|
+langlookup|Issued by:|Publicatã de: Marian C. Peteanu, |
+langlookup|Updated:|Actualizatã:|
+langlookup|High:|Max|
+langlookup|Low:|Min|
+#
+# I presume following at beginning of sentence, otherwise initial letter lower case)
+langlookup|Sunday|Duminicã|
+langlookup|Monday|Luni|
+langlookup|Tuesday|Marþi|
+langlookup|Wednesday|Miercuri|
+langlookup|Thursday|Joi|
+langlookup|Friday|Vineri|
+langlookup|Saturday|Sâmbãtã|
+langlookup|Sunday night|Duminicã noaptea|
+langlookup|Monday night|Luni noaptea|
+langlookup|Tuesday night|Marþi noaptea|
+langlookup|Wednesday night|Miercuri noaptea|
+langlookup|Thursday night|Joi noaptea|
+langlookup|Friday night|Vineri noaptea|
+langlookup|Saturday night|Sâmbãtã noaptea|
+langlookup|Today|Azi|
+langlookup|Tonight|La noapte|
+langlookup|Rest of tonight|Restul nopþii|
+langlookup|This afternoon|în aceastã dupãmasã|
+# UV Index words
+langlookup|Low|Slab|
+langlookup|Medium|Mediu|
+langlookup|High|Ridicat|
+langlookup|Very&nbsp;High|Foarte&nbsp;ridicat|
+langlookup|Extreme|Extrem|
+# Summary conditions lookup
+langlookup|Severe storm|Furtuni violente|
+langlookup|Showers storms|Ploi locale|
+langlookup|Thunder storm|Furtunã|
+langlookup|Rain Sleet|Lapoviþã|
+langlookup|FrzgRn Snow|Zapadã îngheþatã|
+langlookup|Rain and Snow|Ploaie si zãpadã|
+langlookup|Freezing Rain|Ploaie îngheþatã|
+langlookup|Rain likely|Posibile ploi|
+langlookup|Chance rain|ªanse de ploaie|
+langlookup|Mix|Amestec|
+langlookup|Sleet|Lapoviþã|
+langlookup|Snow|Zãpadã|
+langlookup|Fog a.m.|Ceaþã dimineaþa|
+langlookup|Fog late|Ceaþã mai tîziu|
+langlookup|Fog|Ceaþã|
+langlookup|Very Cold|Foarte rece|
+langlookup|Very Hot|Foarte cald|
+langlookup|Partly Cloudy|Parþial înorat|
+langlookup|Mostly Cloudy|Predominant înorat|
+langlookup| mostly cloudy| predominant înorat|
+langlookup|Cloudy|Înorat|
+langlookup|Overcast|Acoperit|
+langlookup|Partly Sunny|Parþial însorit|
+langlookup|Mostly Sunny|Predominant însorit|
+langlookup|Mostly Clear|Cer mai mult senin|
+langlookup|Sunny|Însorit|
+langlookup|Clear|Cer senin|
+langlookup|Fair|Frumos|
+langlookup|Variable Clouds|Nori variabili|
+langlookup|Clear|Cer senin|
+# translation for cardinal wind directions must be in North-East-South-West order
+langlookup|NESW|NESV|
+# translation for Beaufort Wind Force
+langlookup|Calm|Calm|
+langlookup|Light air|Adiere uºoarã|
+langlookup|Light breeze|Brizã uºoarã|
+langlookup|Gentle breeze|Vânt slab|
+langlookup|Moderate breeze|Vânt moderat|
+langlookup|Fresh breeze|Vânt tare|
+langlookup|Strong breeze|Vânt foarte tare|
+langlookup|Near gale|Vânt puternic|
+langlookup|Gale|Vânt foarte puternic|
+langlookup|Strong gale|Furtunã|
+langlookup|Storm|Furtunã puternicã|
+langlookup|Violent storm|Furtunã violentã|
+langlookup|Hurricane|Uragan|
+#
+# --- end of language file ------

@@ -1,0 +1,610 @@
+# Language file for plaintext-parser.php program
+# Version 1.07 - 06-Oct-2011
+# translation - Dutch by Oebel at Weerstation Marsdijk Assen  http://www.Weerstation-Marsdijk.nl/
+
+#New in V.4
+langlookup|Move the mouse over the values for info.|Beweeg de muis over de waarden voor meer info.|
+langlookup|Gusting to|Windvlagen tot|
+langlookup|Overview|Overzicht|
+langlookup|Detailed|Gedetailleerd|
+langlookup|hrs|uur|
+langlookup|No UV Index|Geen UV Index|
+langlookup|Daylength|Daglengte|
+langlookup|Visibility|Zicht|
+langlookup|Cloud cover|Bewolking|
+langlookup|Tomorrow|Morgen|
+langlookup|No precip|Geen neerslag|
+langlookup|Low temperature|Min. temperatuur|
+langlookup|High temperature|Max. temperatuur|
+langlookup|Next update|volgende update|
+
+langlookup|east-southeast|EZE|
+langlookup|southeast|ZE|
+langlookup|south-southeast|ZZE|
+langlookup|south|Z|
+langlookup|south-southwest|ZZW|
+langlookup|southwest|ZW|
+langlookup|west-southwest|WZW|
+
+
+# Thunder
+
+langlookup|Thunderstorm probability|Onweer kans|
+lang|probability|kans|
+lang|possibly severe|mogelijk zwaar|
+lang|Light showers. They can contain lightning.|Lichte buien. Ze kunnen onweer bevatten|
+lang|Light showers but thunder unlikely|Lichte buien, maar onweer is onwaarschijnlijk|
+lang|Light showers with scattered thundershowers possible|Lichte buien met hier en daar mogelijk onweersbuien|
+lang|Light showers with thunder possible|Lichte buien met mogelijk onweer|
+lang|Light showers with thundershowers possible|Lichte buien met onweersbuien mogelijk|
+lang|Light showers with scattered thunderstorms likely|Lichte buien met hier en daar kans op onweersbuien|
+lang|Light showers with scattered heavy or severe thunderstorms|Lichte buien met verspreid zware of zeer zware onweersbuien|
+lang|Light showers but few with thunder|Lichte buien waarvan meer een paar met onweer|
+lang|Light showers with numerous thunderstorms, some possible heavy|Lichte buien met talrijke onweersbuien, waarvan enkele mogelijk zwaar|
+lang|Light showers with numerous thunderstorms, some heavy or severe|Lichte buien met talrijke onweersbuien, waarvan enkele mogelijk zwaar of zeer zwaar|
+lang|Light showers with numerous thunderstorms, some severe|Lichte buien met talrijke onweersbuien, waarvan enkele mogelijk zeer zwaar|
+lang|Light showers with numerous thunderstorms, many severe|Lichte buien met talrijke onweersbuien, waarvan vele zeer zwaar|
+
+lang|Moderate showers. They can contain lightning.|Matige buien. Ze kunnen onweer bevatten|
+lang|Moderate showers but thunder unlikely|Matige buien, maar onweer is onwaarschijnlijk|
+lang|Moderate showers with scattered thundershowers possible|Matige buien met hier en daar mogelijk onweersbuien|
+lang|Moderate showers with thunder possible|Matige buien met mogelijk onweer|
+lang|Moderate showers with thundershowers possible|Matige buien met onweersbuien mogelijk|
+lang|Moderate showers with scattered thunderstorms likely|Matige buien met hier en daar kans op onweersbuien|
+lang|Moderate showers with scattered heavy or severe thunderstorms|Matige buien met verspreid zware of zeer zware onweersbuien|
+lang|Moderate showers but few with thunder|Matige buien waarvan meer een paar met onweer|
+lang|Moderate showers with numerous thunderstorms, some possible heavy|Matige buien met talrijke onweersbuien, waarvan enkele mogelijk zwaar|
+lang|Moderate showers with numerous thunderstorms, some heavy or severe|Matige buien met talrijke onweersbuien, waarvan enkele mogelijk zwaar of zeer zwaar|
+lang|Moderate showers with numerous thunderstorms, some severe|Matige buien met talrijke onweersbuien, waarvan enkele mogelijk zeer zwaar|
+lang|Moderate showers with numerous thunderstorms, many severe|Matige buien met talrijke onweersbuien, waarvan vele zeer zwaar|
+
+lang|Heavy showers. They can contain lightning.|Zware buien. Ze kunnen onweer bevatten|
+lang|Heavy showers but thunder unlikely|Zware buien, maar onweer is onwaarschijnlijk|
+lang|Heavy showers with scattered thundershowers possible|Zware buien met hier en daar mogelijk onweersbuien|
+lang|Heavy showers with thunder possible|Zware buien met mogelijk onweer|
+lang|Heavy showers with thundershowers possible|Zware buien met hier en daar kans op onweersbuien|
+lang|Heavy showers with scattered thunderstorms likely|Zware buien met hier en daar onweersbuien|
+lang|Heavy showers with scattered heavy or severe thunderstorms|Zware buien met verspreid zware of zeer zware onweersbuien|
+lang|Heavy showers but few with thunder|Zware buien waarvan meer een paar met onweer|
+lang|Heavy showers with numerous thunderstorms, some possible heavy|Zware buien met talrijke onweersbuien, waarvan enkele mogelijk zwaar|
+lang|Heavy showers with numerous thunderstorms, some heavy or severe|Zware buien met talrijke onweersbuien, waarvan enkele mogelijk zwaar of zeer zwaar|
+lang|Heavy showers with numerous thunderstorms, some severe|Zware buien met talrijke onweersbuien, waarvan enkele mogelijk zeer zwaar|
+lang|Heavy showers with numerous thunderstorms, many severe|Zware buien met talrijke onweersbuien, waarvan vele zeer zwaar|
+
+# PLAINTEXT
+lang|Some thunder possible.|Kans op onweer.|
+lang|Some thunderstorms likely.|Onweersbuien mogelijk.|
+lang|Thunderstorms likely, some possibly severe.|Kans op onweersbuien, waarvan enkele mogelijk zwaar|
+lang|Thunderstorms very likely, some possibly severe.|Grote kans op onweersbuien, waarvan enkele mogelijk zwaar|
+lang|Thunderstorms very likely, some severe.|Grote kans op onweersbuien, waarvan enkele zwaar|
+lang|Severe thunderstorms likely, with possible tornados.|Zware onweersbuien mogelijk met mogelijk tornados.|
+lang|High risk of severe thunderstorms and possible tornados|Grote kans op onweersbuien en zware windstoten|
+lang|Some thunderstorms likely.|Onweersbuien mogelijk.|
+
+# lastret cont.
+lang|Showers unlikely, but could contain lightning if they occur.|Buien onwaarschijnlijk, maar ze kunnen onweer bevatten wanneer ze plaatsvinden.|
+lang|Scattered showers likely, with thunder possible|Verspreid kans op buien. met mogelijk onweer|
+lang|Scattered showers possible, but thunder unlikely|Verspreid buien mogelijk, maar onweer is onwaarschijnlijk|
+lang|Scattered thundershowers possible|Verspreid onweersbuien mogelijk|
+lang|Scattered showers and thundershowers possible|Verspreid buien en onweersbuien mogelijk|
+lang|Scattered thunderstorms likely|Verspreid kans op onweersbuien|
+lang|Scattered thunderstorms likely, some heavy or severe|Verspreid kans op onweersbuien, waarvan enkele zwaar tot zeer zwaar |
+lang|Numerous showers likely, but few with thunder|Kans op talrijke buien, waarvan maar een paar met onweer|
+lang|Numerous thundershowers likely, some possible heavy|Kans op talrijke onweersbuien, waarvan enkele mogelijk zwaar|
+lang|Numerous thunderstorms likely, some heavy or severe|Kans op talrijke onweersbuien, waarvan enkele zwaar tot zeer zwaar|
+lang|Numerous thunderstorms likely, some severe|Kans op talrijke onweersbuien, waarvan enkele zeer zwaar|
+lang|Numerous thunderstorms likely, many severe|Kans op talrijke onweerbuien, waarvan vele zeer zwaar|
+lang|Except for higher amounts of precipitation within thunderstorms|Alleen tijdens onweersbuien zijn grotere hoeveelheden neerslag mogelijk| 
+
+lang|They can contain lightning.|Ze kunnen onweer bevatten|
+lang|but thunder unlikely|, maar onweer is onwaarschijnlijk|
+lang|scattered thundershowers possible|en verspreide onweersbuien mogelijk|
+lang|thunder possible|mogelijk onweer|
+lang|thundershowers possible|mogelijk onweersbuien|
+lang|scattered thunderstorms likely|verspreid kans op onweersbuien|
+lang|scattered heavy or severe thunderstorms|verspreid zware of zeer zware onweersbuien|
+lang|but few with thunder|maar enkele met onweer|
+lang|numerous thunderstorms, some possible heavy|talrijke onweersbuien, waarvan enkele mogelijk zwaar|
+lang|numerous thunderstorms, some heavy or severe|talrijke onweersbuien, waarvan enkele mogelijk zwaar tot zeer zwaar|
+lang|numerous thunderstorms, some severe|talrijke onweersbuien, enkele mogelijk zeer zwaar|
+lang|numerous thunderstorms, many severe|talrijke onweersbuien, waarvan vele zwaar|
+
+
+langlookup|probably|waarschijnlijk|
+lang|probably|waarschijnlijk|
+langlookup|Windgust|windvlaag|
+langlookup|Show|Tonen|
+langlookup|Thunder|Onweer|
+langlookup|Thunder storm|Onweer|
+lang|ranging|variërend|
+lang|probality|kans|
+lang|probability|kans|
+lang|Probability|Kans|
+langlookup|probality|kans|
+lang|within|binnen|
+lang|from|van|
+lang|Some|Enkele|
+lang|showery|buiïg|
+lang|intermittent|met tussenpozen|
+lang|showers|buien|
+lang|possible|mogelijk|
+langlookup|within 80km from|binnen een straal van 80km van|
+
+lang|Light showers|Lichte buien|
+lang|Moderate showers|Matige buien|
+lang|Heavy showers|Zware buien|
+lang|Light rain|Lichte regen|
+lang|Moderate rain|Matige regen|
+lang|Heavy rain|Zware regen|
+lang|Visibility|Zicht|
+
+
+# Snowdepth
+lang|Snow accumulation about|Sneeuw ophoping ongeveer|
+lang| Snow accumulation about| Sneeuw ophoping ongeveer|
+lang|Little or no snow or ice (on ground) accumulation expected|Weinig of geen sneeuw of ijs ophoping (op de grond) verwacht|
+lang|Little or no snow accumulation expected|Weinig tot geen sneeuw ophoping verwacht|
+lang| Little or no snow accumulation expected| Weinig tot geen sneeuw ophoping verwacht|
+lang|Little if any freezing rain accumulation|Weinig tot geen ijzel ophoping|
+lang|No snow accumulation expected|Geen sneeuw ophoping verwacht|
+lang|No ice (on ground) accumulation expected|Geen ijs ophoping (op de grond) verwacht|
+lang|Above-ground freezing rain accumulation|IJzel ophoping boven de grond|
+lang|No snow or ice (on ground) accumulation expected|Geen sneeuw of ijs ophoping (op de grond) verwacht|
+lang|Snow or ice (on ground) accumulation|Sneeuw of ijs (op de grond) ophoping|
+lang|Freezing rain accumulation up to |IJzel ophoping meer dan|
+lang|about a cm|ongeveer 1 cm|
+lang|Above-ground|Boven de grond|
+lang|a mix of snow and rain|een mix van regen en sneeuw|
+lang|Snow accumulation about a cm|Sneeuw ophoping ongeveer 1 cm|
+
+
+# Frost & Windchill
+lang|Windchill colder than|Gevoelstemperatuur kouder dan|
+lang|Windchill down to|Gevoelstemperatuur lager dan|
+lang|Scattered frost.|Verspreid vorst.|
+lang|Frost.|Vorst.|
+lang|scattered light frost possible|Verspreid lichte vorst mogelijk|
+lang|areas of light frost likely|Gebieden met lichte vorst|
+lang|light to moderate frost|Lichte tot matige vorst|
+lang|moderate to heavy frost|Matige tot strenge vorst|
+
+# New descriptions
+lang|Relatively|Relatief|
+lang|relatively|relatief|
+lang|Breezy|Winderig|
+lang|Windy|Winderig|
+lang|Cold|Koud|
+lang|cold|koud|
+lang|cool|koel|
+lang|Cool|Koel|
+lang|warm|warm|
+lang|Warm|Warm|
+lang|warmth|warmte|
+lang|mild|mild|
+lang|Mild|Mild|
+lang|hot|heet|
+lang|Very windy|Erg winderig|
+lang|Very hot|Erg heet|
+lang|Very cold|Erg koud|
+lang|Relatively cool|Relatief koel|
+lang|Relatively mild|Relatief mild|
+lang|Unusually warm|Ongewoon warm|
+lang|Unusually mild|Ongewoon mild|
+lang|Unusually cold|Ongewoon koud|
+lang|Unusually cool|Ongewoon koel|
+lang|Unusually hot|Ongewoon heet|
+lang|unusually|ongewoon|
+lang|Unusually|Ongewoon|
+lang|exceptionally|uitzonderlijk|
+lang|Exceptionally|Uitzonderlijk|
+lang|Exceptionally warm|Uitzonderlijk warm|
+lang|Exceptionally mild|Uitzonderlijk mild|
+lang|Exceptionally cold|Uitzonderlijk koud|
+lang|Exceptionally cool|Uitzonderlijk koel|
+lang|Exceptionally hot|Uitzonderlijk heet|
+lang|Extremely cold|Extreem koud|
+lang|Extremely hot|Extreem heet|
+lang|near|dichtbij|
+lang|Near|Dichtbij|
+lang|Near record warmth|Dichtbij record warmte|
+lang|Near record cold|Dichtbij record koude|
+lang|Near record warmth|Dichtbij record warmte|
+lang|Near record heat|Dichtbij record hitte|
+lang|Near record low temperatures|Dichtbij record lage temperatuur|
+lang|Near record cool temperatures|Dichtbij record koele temperatuur|
+
+# Precip
+lang|Light rain shower|Lichte regenbui|
+lang|Moderate rain shower|Matige regenbui|
+lang|Heavy rain shower|Zware regenbui|
+lang|Light sleet shower|Lichte natte sneeuwbui|
+lang|Moderate sleet shower|Matige natte sneeuwbui|
+lang|Heavy sleet shower|Zware natte sneeuwbui|
+lang|Light snow shower|Lichte sneeuwbui|
+lang|Moderate snow shower|Matige sneeuwbui|
+lang|Heavy snow shower|Zware sneeuwbui|
+lang|Light rain|Lichte regen|
+lang|Moderate rain|Matige regen|
+lang|Heavy rain|Zware regen|
+lang|Light sleet|Lichte natte sneeuw|
+lang|Moderate sleet|Lichte natte sneeuw|
+lang|Heavy sleet|Zware natte sneeuw|
+lang|Light snow|Lichte sneeuw|
+lang|Moderate snow|Matige sneeuw|
+lang|Heavy snow|Zware sneeuw|
+lang|Precipitation|Neerslag|
+lang|liquid equivalent|gesmolten|
+lang|Precipitation showery or intermittent|Neerslag in de vorm van buien|
+
+# Misc
+langlookup|Pressure|Luchtdruk|
+langlookup|Solar radiation|Zonkracht|
+langlookup|ET|Verdamping|
+langlookup|Grass temperature|Temperatuur +10 cm|
+langlookup|Surface temperature|Oppervlakte temperatuur|
+langlookup|Grass & Soil|Gras & Grond|
+langlookup|Soil|Grond|
+langlookup|Moisture|Vocht|
+langlookup|mm/h|mm/ht|
+langlookup|night|nacht|
+langlookup|Windgust|Windvlaag|
+langlookup|Windch.|Windch.|
+langlookup|Heat.|Hitte.|
+langlookup|Thunderstorm|Onweersbuien|
+langlookup|probability|kans|
+lang|ranging from|variërend van|
+lang|as low as|gelijk aan|
+
+lang|<b>Made by:</b> Weerstation Marsdijk Assen|<b>Opgemaakt door:</b> Weerstation Marsdijk Assen
+lang|chance of rain|kans op regen|
+lang|mostly around|overwegen rond|
+lang|mostly less than|overwegend minder dan|
+lang|mostly between|overwegend tussen|
+lang|mostly cloudy to cloudy|overwegend bewolkt tot bewolkt|
+lang|Mostly cloudy to cloudy|Overwegend bewolkt tot bewolkt|
+lang|partly to mostly cloudy|gedeeltelijk tot overwegend bewolkt|
+lang|Partly to mostly cloudy|Gedeeltelijk tot overwegend bewolkt|
+lang|a few wispy clouds|een paar wolkenslierten|
+lang|except for|behalve voor|
+lang|Partly to mostly sunny|Gedeeltelijk tot overwegend zonnig|
+lang|mostly fair|overwegend helder|
+lang|some high cloudiness|enkele hoge wolken|
+lang|with just a few high thin clouds|met maar een paar hoge dunne wolken|
+lang|with just a few wispy clouds|met maar een paar wolkenslierten|
+lang|Rain very likely|Grote kans op regen|
+lang|partly to mostly sunny|gedeeltelijk tot overwegend zonnig|
+lang|Partly cloudy|Gedeeltelijk bewolkt|
+lang|A mix of snow and rain likely in the morning|Kans op een mix van regen en sneeuw in de morgen|
+lang|A mix of snow and rain likely|Kans op een mix van regen en sneeuw|
+lang|then a slight chance of snow|dan een kleine kans op sneeuw|
+lang|Rain and Snow|Regen en sneeuw|
+
+lang|A slight chance of a mix of freezing rain and sleet|Een kleine kans op een mix van ijzel en natte sneeuw|
+lang|then a mix of snow and rain likely|dan kans op een mix van sneeuw en regen|
+lang|A chance of a mix of snow and rain in the evening|Een kans op een mix van sneeuw en regen in de avond|
+lang| a mix of rain and snow likely| kans op een mix van regen en sneeuw|
+lang| a mix of rain, sleet, snow, and freezing rain likely| kans op een mix van regen, natte sneeuw, sneeuw en ijzel|
+lang|A mix of sleet, snow, and freezing rain likely|Kans op een mix van natte sneeuw, sneeuw en ijzel|
+lang|A mix of freezing rain, sleet, and snow likely|Kans op een mix van ijzel, natte sneeuw en sneeuw|
+lang|A mix of freezing rain, rain, and sleet likely|kans op een mix van ijzel, regen en natte sneeuw| 
+lang| A mix of sleet, snow, freezing rain, and rain likely|Kans op een mix van natte sneeuw, sneeuw, ijzel en regen| 
+lang|a mix of rain, snow, and sleet likely|kans op een mix van regen, sneeuw en natte sneeuw|
+lang|a mix of snow and sleet likely|kans op een mix van sneeuw en natte sneeuw|
+lang|A mix of rain and snow likely|Kans op een mix van regen en sneeuw|
+lang|a mix of snow and rain likely|kans op een mix van sneeuw en regen|
+lang|A mix of snow and rain likely|Kans op een mix van sneeuw en regen| 
+lang|A mix of snow and sleet likely|Kans op een mix van sneeuw en natte sneeuw|
+lang|Precipitation showery or intermittent|Neerslag in de vorm van buien of regenachtig|
+lang|snow likely|kans op sneeuw|
+lang|A slight chance of a mix of rain and snow|Een kleine kans op een mix van regen en sneeuw|
+lang|a mix of rain and snow|een mix van regen en sneeuw|
+lang|A slight chance of a mix of snow and rain|Een kleine kans op een mix van sneeuw en regen|
+lang|Snow likely|Kans op sneeuw|
+lang|A slight chance of snow|Een kleine kans op sneeuw|
+lang|, in the evening|, in de avond|
+lang|, in the morning|, in de morgen|
+lang|, with just|, met maar|
+lang|Rain likely|Kans op regen|
+lang|unlikely|onwaarschijnlijk|
+lang|likely|waarschijnlijk|
+lang|Overcast|Zwaar bewolkt|
+lang|Cloudy|Bewolkt|
+lang|Fog|Mist|
+lang|Chance rain|Kans op regen|
+# Dutch clauses end
+
+lang|freezing rain likely|kans op ijzel|
+lang|Freezing rain|IJzel|
+lang|freezing rain|ijzel
+lang|scattered light frost possible|verspreid mogelijk lichte vorst|
+lang|Scattered frost|Verspreid vorst|
+lang|scattered frost| verspreid vorst|
+lang|Scattered light frost|Verspreid lichte vorst|
+lang|scattered light frost|verspreid lichte vorst|
+lang|Frost scattered light|Verspreid lichte vorst|
+lang|Areas of|Gebieden met|
+lang|areas of light frost likely|kans op gebieden met lichte vorst|
+lang|light to moderate frost|lichte tot matige vorst|
+lang|Light to moderate frost|Lichte tot matige vorst|
+lang|moderate to heavy frost|matige tot strenge vorst|
+lang|probably|waarschijnlijk|
+lang|Probably|Waarschijnlijk|
+lang|Cloudy in the morning|Bewolkt in de morgen|
+lang| wispy clouds | wolkenslierten |
+lang|becoming|overgaand in |
+lang|dense overcast|dichte bewolking|
+lang| some high thin clouds | enkele hoge dunne wolken |
+lang| a few high thin clouds | een paar hoge dunne wolken |
+lang| with just a few high thin clouds | met maar een paar hoge dunne wolken|
+lang| some high cloudiness | enkele hoge wolken |
+lang|but some high cloudiness in the morning|maar enkele hoge wolken in de morgen|
+lang|high thin clouds|hoge dunne wolken|
+lang|some | enkele |
+lang|UV index up to|UV index tot aan|
+lang|afternoon|middag|
+lang|cloudy|bewolkt|
+lang| clouds | wolken
+lang|Patchy|Gedeeltelijk|
+lang| thin | dunne |
+lang|fog|nevel of mist|
+lang| snow| sneeuw|
+lang|Little or less snow accumulation expected|Weinig tot geen sneeuw ophoping verwacht|
+lang|shower|buien|
+lang|Partly|Gedeeltelijk|
+lang|gusting|windvlagen|
+lang|Flurry|Kans op een (natte) sneeuwbui, geen ophoping verwacht|
+lang|mostly|overwegend|
+lang|after|na|
+lang| after | na |
+lang|areas of|gebieden met|
+lang|midnight|middernacht|
+lang|morning|morgen|
+lang| nighttime |
+lang|Mostly|Overwegend|
+lang|partly|gedeeltelijk|
+lang|Light frost|Lichte vorst|
+lang|light frost|lichte vorst|
+lang| slight | kleine |
+lang|Frost|Vorst|
+lang|frost|vorst|
+lang|Wind chill|Gevoelstemperatuur|
+lang|moderate|matige|
+lang|heavy|strenge|
+lang|evening|avond|
+lang|Dense|Dichte|
+lang|overcast|bewolking|
+lang|Moderate|Matige|
+lang|dense|dichte|
+lang|sunny|zonnig|
+lang|Rain likely|Kans op regen|
+lang|rain likely|kans op regen|
+lang|Rain very likely| Grote kans op regen|
+lang|rain very likely| grote kans op regen|
+lang|a chance of rain|een kans op regen|
+lang|rain|regen|
+lang|chance of|kans op|
+lang|Snow likely|Kans op sneeuw|
+lang|sleet likely|kans op natte sneeuw|
+lang| light | lichte |
+lang|Light|Lichte|
+lang|Heavy|Zware|
+lang|High|Maximum:|
+lang|Low|Minimum:|
+lang|but|maar|
+lang|few|paar|
+lang| a few | een paar |
+lang|temperatures falling|temperatuur daalt|
+lang|temperatures rising|temperatuur stijgt|
+lang|northeast|noordoost|
+lang|northwest|noordoost|
+lang|southeast|zuidoost|
+lang|southwest|zuidwest|
+lang|north-|noord-|
+lang|east-|oost-|
+lang|south-|zuid-|
+#lang|west-|west-|
+lang|north |noord |
+lang|east |oost |
+lang|south |zuid |
+#lang|west |west |
+lang|down |daalt |
+lang|around|rond|
+lang|kph|km/uur|
+lang|Chance of precipitation|Kans op neerslag|
+lang|near|bijna|
+lang|percent|procent|
+lang|less than|minder dan|
+lang|than|dan|
+lang|Precipitation (liquid equivalent)|Neerslag (gesmolten)|
+lang|between|tussen|
+lang|up to|tot|
+lang|about|ongeveer|
+lang|showery or intermittent|afwisselend droog met buien|
+lang|except for|behalve|
+lang|Fair| Overwegend helder|
+lang| fair| overwegend helder|
+lang|Cloudy|Bewolkt|
+lang|Overcast|Zwaar bewolkt|
+lang|wispy clouds|dunne wolken |
+lang|calm|kalm|
+lang|Clear|Helder|
+lang|clear|helder|
+lang|Sunny|Zonnig|
+lang|sunny|zonnig|
+lang| ice | ijs |
+lang|sleet|natte sneeuw|
+lang|a mix of|een mix van|
+lang|if any|tot geen|
+lang|on ground|op de grond|
+lang|patchy|gedeeltelijk|
+lang|of an inch|van een duim|
+lang|half an inch|helft van duim|
+lang| possible | mogelijk |
+lang| then | dan |
+lang| with | met |
+lang| just | maar |
+lang| the | de |
+lang| to | tot |
+lang| and | en |
+lang| no | geen |
+
+lang|No |Geen |
+lang| one | 1 |
+lang| or | of |
+lang|A |Een |
+lang| a | een |
+lang| inch| duim| Strange thing, INCH IS INCH
+lang|cm|cm|
+lang|Cold|Koud|
+lang|Very cold|Erg koud|
+lang|Extremely cold|Extreem koud|
+
+
+#
+# Translation of headings, periods and short conditions statements
+# headings
+#
+langlookup|WXSIM Forecast for:|WXSIM weersverwachting voor:|
+langlookup|Issued by:|opgemaakt door:|					afgegeven op:
+langlookup|Updated:|laatste update:|					we also use updated
+langlookup|High:|Maximum|
+langlookup|Low:|Minimum|
+#
+langlookup|Sunday|Zondag|
+langlookup|Monday|Maandag|
+langlookup|Tuesday|Dinsdag|
+langlookup|Wednesday|Woensdag|
+langlookup|Thursday|Donderdag|
+langlookup|Friday|Vrijdag|
+langlookup|Saturday|Zaterdag|
+langlookup|Sunday night|Zondag nacht|
+langlookup|Monday night|Maandag nacht|
+langlookup|Tuesday night|Dinsdag nacht|
+langlookup|Wednesday night|Woensdag nacht|
+langlookup|Thursday night|Donderdag nacht|
+langlookup|Friday night|Vrijdag nacht|
+langlookup|Saturday night|Zaterdag nacht|
+langlookup|Today|Vandaag|
+langlookup|night|nacht|
+langlookup|Night|Nacht|
+langlookup|Tonight|Vannacht|
+langlookup|midnight|middernacht
+langlookup|This afternoon|Vanmiddag|
+langlookup|Rest of tonight|Middernacht|
+#
+langlookup|Jan|Jan|
+langlookup|Feb|Feb|
+langlookup|Mar|Maart|
+langlookup|Apr|April|
+langlookup|May|Mei|
+langlookup|Jun|Juni|
+langlookup|Jul|Juli|
+langlookup|Aug|Aug|
+langlookup|Sep|Sep|
+langlookup|Oct|Okt|
+langlookup|Now|Nov|
+langlookup|Dec|Dec|
+#
+# UV Index words
+langlookup|Low|Laag|
+langlookup|Medium|Matig|
+langlookup|High|Hoog|
+langlookup|Very&nbsp;High|Zeer&nbsp;Hoog|
+langlookup|Extreme|Extreem|
+#
+# Summary conditions lookup
+langlookup|Windchill colder than|Gevoelstemperatuur kouder dan|
+langlookup|possible|mogelijk|
+langlookup|unlikely|onwaarschijnlijk|
+langlookup|likely|waarschijnlijk|
+langlookup|severe|grote|
+langlookup|some|enkele|
+langlookup|high|hoog|
+langlookup|Show|Toon|
+langlookup|Thunder|Onweer|
+langlookup|Thunderstorm|Onweer|
+langlookup|Thunderstorm probality|Onweerkans|
+langlookup| thin clouds |dunne bewolking|
+langlookup| high thin clouds | hoge dunne wolken|
+langlookup| a few high thin clouds | een paar hoge dunne wolken |
+langlookup|areas of light frost|gebieden met lichte vorst|
+langlookup|Areas of light frost|Gebieden met lichte vorst|
+langlookup|Thunderstorm probality|Onweer kans|
+langlookup|Snowdepth|Sneeuwhoogte|
+langlookup|Snow accumulation about|Sneeuw ophoping ongeveer|
+langlookup|Windchill|Gevoelstemperatuur|
+langlookup|Windch.|Gevoelstemperatuur|
+langlookup|Dewpoint|Dauwpunt|
+langlookup|Heat index|Hitte index|
+langlookup|PoP|Kans op neerslag|
+langlookup|Probably|Waarschijnlijk|
+langlookup|Temperature|Temperatuur|
+langlookup|Wind|Wind|
+langlookup|Precipitation|Neerslag|
+langlookup|Snow|Sneeuw|
+langlookup|shower|buien|
+langlookup|Description and notes|Beschrijving en uitleg|
+langlookup|Conditions|Condities|
+langlookup|Detailed forecast|Gedetailleerde weersverwachting|
+langlookup|some high thin clouds | enkele hoge dunne wolken |
+langlookup|Hour-by-hour|Verwachting per 3 uur|
+langlookup|Meteogram|Meteogram|
+langlookup|Grass & Soil|Gras & Grond|
+langlookup|Moisture|Vocht|
+langlookup|Soil|Grond|
+langlookup|Pressure|Luchtdruk|
+langlookup|Grass temperature|Temperatuur + 10cm|
+langlookup|Surface temperature|Oppervlakte temperatuur|
+langlookup|Graphs coming soon|Meteogram komt spoedig.|
+langlookup|Severe storm|Zware storm|
+langlookup|Showers storms|Onweersbuien|
+langlookup|Thunderstorm|Onweer|
+langlookup|Rain likely|Kans op regen|
+langlookup|Rain Sleet|Natte sneeuw|
+langlookup|FrzgRn Snow|IJzel/sneeuw|
+langlookup|Rain and Snow|Natte sneeuwbuien|
+langlookup|Freezing Rain|IJzel|
+langlookup|Chance rain|Kans op regen|
+langlookup|Mix|IJzel/sneeuw|
+langlookup|Sleet|Natte sneeuw|
+langlookup|Snow|Sneeuw|
+langlookup|Fog a.m.|Ochtend Mist|
+langlookup|Fog late|Laat Mist|
+langlookup|Fog|Nevel of Mist|
+langlookup|Very Cold|Erg koud
+langlookup|Cold!|Koud!
+langlookup|WCh|GvT
+langlookup|Very Hot|Erg warm
+langlookup|Partly Cloudy|Gedeeltelijk bewolkt
+langlookup| with just a few high thin clouds | met maar een paar hoge dunne wolken 
+langlookup|Mostly Cloudy|Overwegend bewolkt
+langlookup|Cloudy|Bewolkt
+langlookup|fair|onbewolkt
+langlookup|Overcast|Bewolkt
+langlookup|wispy clouds|dunne wolken
+langlookup|Partly Sunny|Gedeeltelijk zonnig
+langlookup|Mostly Sunny|Overwegend zonnig
+langlookup|Mostly Clear|Overwegend helder
+langlookup|Sunny|Zonnig
+langlookup|Clear|Helder
+langlookup|Fair|Overwegend helder
+langlookup|Variable Clouds|Half bewolkt
+# translation for cardinal wind directions must be in North-East-South-West order
+langlookup|NESW|NOZW|
+
+# translation for Beaufort Wind Force
+langlookup|Calm|Windstil|
+langlookup|Light air|Zwakke wind|
+langlookup|Light breeze|Zwakke wind|
+langlookup|Gentle breeze|Matige wind|
+langlookup|Moderate breeze|Matige wind|
+langlookup|Fresh breeze|Vrij krachtige wind|
+langlookup|Strong breeze|Krachtige wind|
+langlookup|Near gale|Harde wind|
+langlookup|Gale|Stormachtige wind|
+langlookup|Strong gale|Storm|
+langlookup|Storm|Zware storm|
+langlookup|Violent storm|Zeer zware storm|
+langlookup|Hurricane|Orkaan|
+#
+# --- end of language file ------

@@ -1,0 +1,340 @@
+# Swedish language plugin for Carterlake/WD/AJAX/PHP template set
+# Ken True - http://saratoga-weather.org/template/
+#
+# Version 1.00 - 15-Apr-2008 - initial release
+#
+charset|iso-8859-1|
+#
+# ajax-dashboard and ajax-gizmo language strings
+#
+langlookup|Watches, Warnings, and Advisories|Vädervarningar|
+langlookup|Enable JavaScript for live updates|Slå på JavaScript för live uppdateringar|
+langlookup|Updated|Uppdaterad|
+langlookup|updated|uppdaterad|
+langlookup|sec ago|sek sedan|
+langlookup|next update at|nästa uppdatering vid|
+# thermometer language
+langlookup|Temperature|Temperatur|
+langlookup|Currently|Nu|
+langlookup|Max|Max|
+langlookup|Min|Min|
+# rising/falling arrows text
+langlookup|Warmer|Varmare|
+langlookup|Colder|Kallare|
+langlookup|Rising|Stigande|
+langlookup|Falling|Fallande|
+langlookup|Increased|Ökade|
+langlookup|Decreased|Minskade|
+langlookup|than last hour|senaste timmen|
+langlookup|since last hour|sedan den senaste timmen|
+langlookup|than yesterday at this time|än i går vid denna tid|
+langlookup|Humidity|Luftfuktighet|
+langlookup|Dew Point|Daggpunkt|
+langlookup|Barometer|Barometer|
+langlookup|Baro Trend|Baro Tendens|
+langlookup|Feels like|Känns som|
+langlookup|24-hr difference|24h skillnad|
+langlookup|Today|Idag|
+langlookup|Yesterday|Igår|
+langlookup|High:|Max:|
+langlookup|Low:|Min:|
+langlookup|Wind from|Vind från|
+langlookup|Gust|Vindby|
+langlookup|Gust Month|Vindby månad|
+langlookup|UV Index|UV Index|
+langlookup|UV Index Forecast|UV Index Prognos|
+langlookup|Solar Radiation|Solenergi|
+langlookup|Summary|Summering|
+langlookup|Wind|Vind|
+langlookup|Rain|Regn|
+langlookup|Outlook|Utsikt|
+langlookup|Rain Today|Regn idag|
+langlookup|Rain Rate|Regn intens.|
+langlookup|Rain Yesterday|Regn igår|
+langlookup|Storm Rain|Ovädrets regn|
+langlookup|This Month|Denna månad|
+langlookup|Season Total|Denna säsong|
+langlookup|day since last rain|dag sedan sista regnet|
+langlookup|days since last rain|dagar sedan sista regnet|
+langlookup|rain day in|regndag i|
+langlookup|rain days in|regndagar i|
+langlookup|Snow|Snö|
+langlookup|Snow Today|Idag|
+langlookup|Snow Yesterday|Igår|
+langlookup|Snow Depth|Snödjup|
+langlookup|Winter Total|Vinter totalt|
+langlookup|snow day in|snödag i|
+langlookup|snow days in|snödagar i|
+langlookup|Almanac|Almanacka|
+langlookup|Sun&nbsp;|Solen|
+langlookup|Moon|Månen|
+langlookup|Sunrise|Soluppgång|
+langlookup|Sunset|Solnedgång|
+langlookup|Moonrise|Månen upp|
+langlookup|Moonset|Månen ner|
+langlookup|Illuminated|Upplyst|
+langlookup|Weather Forecast|Väderprognos|
+langlookup|forecast|prognos|
+#
+# UV Index words - note: leave &nbsp; where shown for proper lookup
+langlookup|None|Ingen|
+langlookup|Low|Låg|
+langlookup|Medium|Medel|
+langlookup|High|Hög|
+langlookup|Very&nbsp;High|Mycket&nbsp;Högt|
+langlookup|Extreme|Extremt|
+#
+# Moon words
+#
+langlookup|New Moon|Nymåne|
+langlookup|Waxing Crescent|Kommande måne| 
+langlookup|Waxing Crescent Moon|Kommande måne| 
+langlookup|First Quarter|Första kvarteret| 
+langlookup|First Quarter Moon|Första kvarterets måne| 
+langlookup|Waxing Gibbous|Mellan första kv och full|
+langlookup|Waxing Gibbous Moon|Mellan första kv och full|
+langlookup|Full Moon|Fullmåne|
+langlookup|Waning Gibbous|Mellan full och tredje kv| 
+langlookup|Waning Gibbous Moon|Mellan full och tredje kv| 
+langlookup|Last Quarter|Sista kvarteret| 
+langlookup|Last Quarter Moon|Sista kvarterets måne| 
+langlookup|Waning Crescent|Avtagande måne| 
+langlookup|Waning Crescent Moon|Avtagande måne| 
+#
+#
+# footer.php
+#
+langlookup|Top|Top|
+langlookup|Contact Us|Kontakta oss|
+langlookup|Bookmark Page|Bokmärke|
+langlookup|Valid|Giltlig|
+langlookup|Never base important decisions on this or any weather information obtained from the Internet|Basera aldrig viktiga beslut på grundval av denna väderstation eller väderinformation från Internet|
+#
+# menubar.php
+#
+langlookup|Navigation|Navigering|
+langlookup|External Links|Externa länkar|
+langlookup|Home|Hem|
+langlookup|Forecast|Prognos|
+langlookup|WXSIM Forecast|WXSIM Prognos|
+langlookup|Radar|Radar|
+langlookup|Advisories|Varningar|
+langlookup|Live Weather|Live Weather|
+langlookup|Live Mesomap|Live MesoMap|
+langlookup|Daily Stats|Daglig statistik|
+langlookup|Graphs|Grafer|
+langlookup|Station Data by Month|Stationsdata per månad|
+langlookup|Astronomy|Astronomi|
+langlookup|Links|Länkar|
+langlookup|About|Om|
+langlookup|About Us|Om oss|
+langlookup|Live|Live|
+langlookup|Weather-Display Live|Weather-Display Live|
+langlookup|Local Radar|Lokal Radar|
+langlookup|Mesomap|MesoMap|
+langlookup|MesoMap Live|MesoMap Live|
+langlookup|Forecast &amp; Advisories|Prognos &amp; Varningar|
+langlookup|Forecast details|Detaljerad prognos|
+langlookup|WXSIM Forecast details|WXSIM detaljerad prognos|
+langlookup|Weather Trends|Vädertrender|
+langlookup|Station Graphs|Grafer från väderstationen|
+langlookup|Station Monthly Reports|Månadsrapport från väderstationen|
+langlookup|Sun/Moon Almanac|Sol/Måne almanacka|
+langlookup|Earthquake activity|Jordbävnings aktivitet|
+langlookup|Website Map|Websida karta|
+#
+# include-style-switcher.php
+#
+langlookup|Style Options|Stilvals möjligheter|
+langlookup|Style|Stil|
+langlookup|Widescreen|Bred skärm|
+langlookup|On|På|
+langlookup|Off|Av|
+langlookup|Set|Sätt|
+langlookup|Language|Språk|
+# Colors of templates for style-switcher
+langlookup|Black|Svart|
+langlookup|Blue|Blå|
+langlookup|Dark|Mörk|
+langlookup|Fall|Höst|
+langlookup|Green|Grön|
+langlookup|Ice Tea|Is Te|
+langlookup|Mocha|Mocka|
+langlookup|Orange|Orange|
+langlookup|Pastel|Pastell|
+langlookup|Purple|Lila|
+langlookup|Red|Röd|
+langlookup|Salmon|Lax|
+langlookup|Silver|Silver|
+langlookup|Spring|Vår|
+langlookup|Taupe|Taupe|
+langlookup|Teal|Teal|
+#
+# wxastronomy.php items (solar/lunar words are specified above)
+#
+langlookup|Daylight|Dagsljus|
+langlookup|Vernal Equinox|Vårdagjämning|
+langlookup|Start of Spring|Start på våren|
+langlookup|Summer Solstice|Sommarsolstånd|
+langlookup|Start of Summer|Start på sommaren|
+langlookup|Autumn Equinox|Höstdagjämning|
+langlookup|Start of Fall|Start på hösten|
+langlookup|Winter Solstice|Vintersolstånd|
+langlookup|Start of Winter|Start på vintern|
+#
+# wxgraphs.php items
+#
+langlookup|Weather Trend Graphs|Väder Trend Grafer|
+langlookup|Last 24 Hours|Sista 24 Timmarna|
+langlookup|Last 72 Hours|Sista 72 Timmarna|
+langlookup|Month to Date|Månad tills idag|
+#
+# WU-forcast.php items
+#
+langlookup|Chance of precipitation|Sannolikhet för nederbörd|
+langlookup|water equivalent of|mätt i vatten|
+langlookup|trace amounts|knappt märkbart|
+#
+# V1.01 - trends-inc.php native PHP conversion translation items
+#
+langlookup|Trends as of|Trender från|
+langlookup|TIME|TID|
+langlookup|TEMP|TEMP|
+langlookup|WIND SPEED|VINDHASTIGHET|
+langlookup|WIND GUST|VINDBY|
+langlookup|WIND DIR|VINDRIKTNING|
+langlookup|HUMIDITY|FUKTIGHET|
+langlookup|PRESSURE|BAROMETER|
+langlookup|RAIN|REGN|
+#
+langlookup|Current|Nuvarande|
+langlookup|CURRENT|NUVARANDE|
+langlookup|Now|Nu|
+langlookup|Records and Stats|Rekord och Statistik|
+langlookup|1 minute ago|1 minut sedan|
+langlookup|5 minutes ago|5 minuter sedan|
+langlookup|10 minutes ago|10 minuter sedan|
+langlookup|15 minutes ago|15 minuter sedan|
+langlookup|20 minutes ago|20 minuter sedan|
+langlookup|30 minutes ago|30 minuter sedan|
+langlookup|45 minutes ago|45 minuter sedan|
+langlookup|60 minutes ago|60 minuter sedan|
+langlookup|75 minutes ago|75 minuter sedan|
+langlookup|90 minutes ago|90 minuter sedan|
+langlookup|105 minutes ago|105 minuter sedan|
+langlookup|120 minutes ago|120 minuter sedan|
+# following three entries are used for <condition> on <date> and <condition> at <time>
+langlookup|on|den|
+langlookup|at|kl.|
+langlookup|from|från| as in '14 mph from 315 °(NW)'
+#
+langlookup|last hour|sista timmen|
+langlookup|over last 7 days|de senaste 7 dagarna|
+langlookup|last month|senaste månaden|
+#
+langlookup|Today|Idag|
+langlookup|Yest.|Igår|
+langlookup|Week|Vecka|
+langlookup|Month|Månad|
+langlookup|Year|År|
+langlookup|Gust/hr|Vindby/tim|
+#
+langlookup|RAIN HISTORY|REGN HISTORIK|
+langlookup|day since last rain on|dag sedan senaste regn den|
+langlookup|days since last rain on|dagar sedan senaste regn den|
+langlookup|rain day this month|regndag denne månad|
+langlookup|rain days this month|regndagar denne månad|
+langlookup|rain day this year|regndag detta år|
+langlookup|rain days this year|regndagar detta år|
+langlookup|total last year at this time|totalt förra året vid denna tid|
+
+langlookup|TEMPERATURE HIGHS|TEMPERATUR MAX.|
+langlookup|HOT DAYS THIS MONTH|VARMA DAGAR DENNA MÅNAD|
+langlookup|days|dagar|
+langlookup|day|dag|
+langlookup|Warmest day|Varmaste dag|
+langlookup|Warmest night|Varmatste natt|
+
+langlookup|TEMPERATURE LOWS|TEMPERATUR MIN.|
+langlookup|COLD DAYS THIS MONTH|KALLA DAGAR DENNA MÅNAD|
+langlookup|Coldest day|Kallaste dag|
+langlookup|Coldest night|Kallaste natt|
+
+langlookup|BAROMETER HIGHS|BAROMETER MAX.|
+langlookup|WIND CHILL LOWS|VINDAVKYLNING MIN.|
+langlookup|EVAPOTRANSPIRATION|EVAPOTRANSPIRATION|
+langlookup|SOLAR HIGHS|SOL MAX.|
+langlookup|UV HIGHS|UV MAX.|
+langlookup|Wind Data|Vind information|
+langlookup|WIND GUST HIGHS|VINDBY MAX.|
+langlookup|WIND GUST AVERAGE HIGHS|VINDBY MEDEL MAX.|
+langlookup|WIND RUN|VIND RUN|
+# --- end of new trends-inc.php translations
+#
+# include-wxhistory.php translations
+#
+langlookup|Daily / Monthly Weather History From This Station|Daglig / Månatlig väderhistorik från denna station|
+langlookup|Select a report and click submit|Välj rapport och tryck OK|
+langlookup|submit|OK|
+langlookup|Daily Report for the month of|Daglig rapport för månad|
+langlookup|Average and Extremes|Genomsnitt och exstremer|
+langlookup|Average and Extremes for Month of|Genomsnitt och extremer för månad|
+langlookup|up to day|fram till idag|
+langlookup|Click here to toggle the 24 Hour Graph of this day|Klicka här för att öppna 24-timmars graf för denna dag|
+langlookup|Day, Sunshine Hours, ET, Max Solar, UV|Dag, Solskenstimmar, ET, Max Sol, UV|
+langlookup|Daily Rain Totals|Totalt dagligt regn|
+langlookup|Average temperature|Medeltemperatur|
+langlookup|Average humidity|Genomsnittlig fuktighet|
+langlookup|Average dewpoint|Genomsnittlig daggpunkt|
+langlookup|Average barometer|Genomsnittlig barometer|
+langlookup|Average windspeed|Genomsnittlig vindhastighet|
+langlookup|Average gustspeed|Genomsnittlig vindby|
+langlookup|Average direction|Genomsnittlig vindriktning|
+langlookup|Rainfall for month|Regn för denna månad|
+langlookup|Rainfall for year|Regn för detta år|
+langlookup|Maximum rain per minute|Maximum regn per minut|
+langlookup|Maximum temperature|Maximum temperatur|
+langlookup|Minimum temperature|Minimum temperatur|
+langlookup|Maximum humidity|Maximum fuktighet|
+langlookup|Minimum humidity|Minimum fuktighet|
+langlookup|Maximum pressure|Maximum barometer|
+langlookup|Minimum pressure|Minimum barometer|
+langlookup|Maximum windspeed|Maximum vindhastighet|
+langlookup|Maximum gust speed|Maximum vindby|
+langlookup|Maximum heat index|Maximum värmeindex|
+langlookup|Sunshine hours month to date|Timmar med solsken denna månad till dags dato|
+langlookup|Sunshine hours year to date|Timmar med solsken detta år till dags dato|
+langlookup|hrs|tim|
+#
+# --- end of include-wxhistory.php translations
+#
+# Conditions (%Currentsolardescription% and clientraw[49])
+#
+conditions|begin||
+langlookup|Dry|Torrt|
+langlookup|Light rain|Lätt regn|
+langlookup|Moderate drizzle|Medelmåttigt duggregn|
+langlookup|Moderate rain|Medelmåttigt regn|
+langlookup|Heavy rain|Kraftigt regn|
+langlookup|Stopped raining|Slutat regna|
+# conditions time
+langlookup|Dawn|Gryning|
+langlookup|Dusk|Skymning|
+langlookup|Night time|Natt|
+# Clouds (sky)
+langlookup|Clear|Klart|
+langlookup|Sunny|Soligt|
+langlookup|Clear skies|Klar himmel|
+langlookup|Mostly sunny|Mest soligt|
+langlookup|A few clouds|Ett fåtal moln|
+langlookup|Sc|Delvis molnigt|
+langlookup|Scattered clouds|Delvis molnigt|
+langlookup|Partly cloudy|Delvis molnigt|
+langlookup|Mostly cloudy|Övervägande molnigt|
+langlookup|Cloudy with clear p|Mest molnigt|
+langlookup|Cloudy with clear patches|Mest molnigt|
+langlookup|Overcast|Genommulet|
+conditions|end||
+#
+
+

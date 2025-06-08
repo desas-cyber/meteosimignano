@@ -1,0 +1,215 @@
+# Language file for plaintext-parser.php program
+# Version: 1.00 - 16-Aug-2016
+# translation - Czech by Jachym of meteotemplate.org
+#
+charset|Windows-1250|
+#
+#dateformat|d/m/Y H:i|   // Euro format 03/31/2006 14:03
+dateformat|d.m.Y H:i|
+#
+lang|Cloudy in the morning|Ráno oblacno|
+lang| becoming | postupne: |
+lang|dense overcast|úplne zataženo|
+lang|Chance of precipitation|Možnost srážek|
+lang|Snow accumulation|Možnost snežení |
+lang|Snow likely|Pravdepodobné snežení|
+lang|Snow or ice|Snežení|
+lang|then a mix of snow and rain likely after midnight|následne pravdepodobnost snežení a srážek po pulnoci|
+lang|A chance of a mix of snow and rain in the evening|Riziko snežení a dešte vecer|
+lang|A slight chance of a mix of rain and snow|Mírné riziko snežení a dešte|
+lang|A mix of rain and snow likely|Pravdepodobné snežení s deštem|
+lang|a mix of rain and snow|Sníh s deštem|
+lang|Little if any freezing rain accumulation|Možnost namrzajícího dešte!|
+lang|A slight chance of a mix of freezing rain and sleet|Mírné riziko snežení a namrzajícího dešte|
+lang|Thunderstotrms likely, some possibly severe|Vysoká pravdepodobnost výskytu bourek|
+lang|Thunderstorms likely, some possibly severe|Vysoká pravdepodobnost výskytu bourek|
+lang|Some thunder possible.|Možnost výskytu bourek. |
+lang|Some thunderstotrms likely|Možnost výskytu bourek|
+lang|Some thunderstorms likely|Možnost výskytu bourek|
+lang|showery of intermittent|místy srážky|
+lang|Showery of intermittent|místy srážky|
+lang|Precipitation showery or intermittent|místy srážky|
+lang|Rain very likely|Vysoká pravdepodobnost srážek|
+lang|Rain likely|Pravdepodobnost srážek|
+lang|rain likely|Pravdepodobnost výskytu srážek|
+lang|Fair|Pekne|
+lang|UV index up to|UV index až|
+lang|UV index more than|UV index více než|
+lang|afternoon|odpoledne|
+lang|cloudy|oblacno|
+lang|Patchy|Místy|
+lang| slight | slabé |
+lang| light | slabe |
+lang|fog|Mlha|
+lang|Partly|Cástecne|
+lang|Wind |Vítr: |
+lang|chill|pocit|
+lang|gusting to |nárazy až |
+lang|mostly|prevážne|
+lang|midnight|pulnoc|
+lang|morning|ráno|
+lang|Mostly|prevážne|
+lang|partly|cástecne|
+lang|Light|Slabý|
+lang| moderate | strední |
+lang|evening|Vecer|
+lang|Dense|Hustý|
+lang|overcast|zataženo|
+lang|Moderate|Strední|
+lang|dense|hustý|
+lang|sunny|jasno|
+lang| rain| déšt|
+lang| Rain| Déšt|
+lang|chance of|Možnost|
+lang|likely|pravdepodobnost|
+lang|clear|jasno|
+lang|High|Maximum|
+lang|Low|Minimum|
+lang|very|velmi|
+lang|temperatures falling|pokles teploty|
+lang|temperatures rising|vzestup teploty|
+lang|northeast|severovýchodní|
+lang|northwest|severozápadní|
+lang|southeast|jihovýchodní|
+lang|southwest|jihozápadní|
+lang|north-|severo-|
+lang|east-|východo-|
+lang|west-|západo-|
+lang|south-|jiho-|
+lang| east | východ |
+lang| north | sever |
+lang| south | jih |
+lang| west | západ |
+lang|down |pokles |
+lang|around|okolo|
+lang|kph|km/h|
+lang|mps|m/s|
+lang|near|asi|
+lang|percent|procent|
+lang|less than|méne než|
+lang|Precipitation (liquid equivalent)|Srážky (kapalné)|
+lang| then | poté |
+lang| the |  |
+lang| in | v |
+lang| of | |
+lang| to | do |
+lang| after | potom |
+lang| but | ale |
+lang|A | |
+lang| a |  |
+lang| no | bez |
+lang| between | mezi |
+lang| and | a |
+lang| or | nebo |
+lang|Precipitation|Srážky|
+lang|accumulation expected|pravdepodobnost pretrvávání|
+lang|Little|Mírné|
+lang|snow|snežení|
+lang|Snow |Snežení |
+lang|about|približne|
+lang| one | 1 |
+lang|showery|srážky|
+lang|No |Bez |
+lang|fair|jasno|
+lang|Cloudy|Oblacno|
+lang| calm| Bezvetrí|
+lang|Clear|Jasno|
+lang| clear | jasno |
+lang|Sunny|Jasno|
+lang| ice | led |
+lang|freezing|mráz|
+lang|Freezing|Mráz|
+lang|sleet|sníh s deštem|
+lang|a mix of|kombinace|
+lang|if any|pokud vubec|
+lang|on ground|na zemi|
+lang|patchy|místy|
+lang|of an inch|1 in|
+lang|half an inch|0.5 in|
+lang| inch| in|
+lang| chance | riziko |
+lang|some|možné|
+lang|Some|Možné|
+lang|thunderstorms|bourky|
+lang|cloudiness|oblacnost|
+lang|high|vysoký| 
+#
+# Translation of headings, periods and short conditions statements
+# headings
+#
+langlookup|Aerisweather Forecast for:|Aerisweather predpoved pro:|
+langlookup|Issued by:|Vydáno:|
+langlookup|Updated:|Aktualizováno:|
+langlookup|High:|Max|
+langlookup|Low:|Min|
+#
+langlookup|Sunday|Nedele|
+langlookup|Monday|Pondelí|
+langlookup|Tuesday|Úterý|
+langlookup|Wednesday|Streda|
+langlookup|Thursday|Ctvrtek|
+langlookup|Friday|Pátek|
+langlookup|Saturday|Sobota|
+langlookup|Sunday night|Nedele - noc|
+langlookup|Monday night|Pondelí - noc|
+langlookup|Tuesday night|Úterý - noc|
+langlookup|Wednesday night|Streda - noc|
+langlookup|Thursday night|Ctvrtek - noc|
+langlookup|Friday night|Pátek - noc|
+langlookup|Saturday night|Sobota - noc|
+langlookup|Today|Dnes|
+langlookup|Tonight|Dnes vecer|
+langlookup|This afternoon|Dnes odpoledne|
+langlookup|Rest of tonight|v noci|
+# UV Index words
+langlookup|Low|Nízký|
+langlookup|Medium|Strední|
+langlookup|High|Vysoký|
+langlookup|Very&nbsp;High|Velmi&nbsp;vysoký|
+langlookup|Extreme|Extrémní|
+# Summary conditions lookup
+langlookup|Severe storm|Silná bourka|
+langlookup|Showers storms|Silná bourka s deštem|
+langlookup|Thunder storm|Bourka|
+langlookup|Rain Sleet|Déšt se snehem|
+langlookup|FrzgRn Snow|Namrzající déšt se snehem|
+langlookup|Rain and Snow|Déšt se snehem|
+langlookup|Freezing Rain|Namrzající déšt|
+langlookup|Rain likely|Pravdepodobnost srážek|
+langlookup|Chance rain|Možnost srážek|
+langlookup|Mix|Kombinace|
+langlookup|Sleet|Déšt se snehem|
+langlookup|Snow|Snežení|
+langlookup|Fog a.m.|Ráno mlhy|
+langlookup|Fog late|Vecer mlhy|
+langlookup|Fog|Mlha|
+langlookup|Very Cold|Velmi chladno|
+langlookup|Very Hot|Velmi teplo|
+langlookup|Partly Cloudy|Cástecne oblacno|
+langlookup|Mostly Cloudy|Prevážne oblacno|
+langlookup|Cloudy|Oblacno|
+langlookup|Overcast|Zataženo|
+langlookup|Partly Sunny|Cástecne jasno|
+langlookup|Mostly Sunny|Prevážne jasno|
+langlookup|Mostly Clear|Prevážne jasno|
+langlookup|Sunny|Jasno|
+langlookup|Clear|Jasno|
+langlookup|Fair|Jasno|
+langlookup|Variable Clouds|Promenlivá oblacnost|
+langlookup|NESW|SVJZ|
+# translation for Beaufort Wind Force
+langlookup|Calm|Bezvetrí|
+langlookup|Light air|Vánek|
+langlookup|Light breeze|Slabý vetrík|
+langlookup|Gentle breeze|Mírný vetrík|
+langlookup|Moderate breeze|Mírný vítr|
+langlookup|Fresh breeze|Cerstvý vítr|
+langlookup|Strong breeze|Silný vítr|
+langlookup|Near gale|Vichr|
+langlookup|Gale|Silný vichr|
+langlookup|Strong gale|Velmi silný vichr|
+langlookup|Storm|Vichrice|
+langlookup|Violent storm|Silná vichrice|
+langlookup|Hurricane|Orkán|
+#
+# --- end of language file ------

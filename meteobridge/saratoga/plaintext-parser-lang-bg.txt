@@ -1,0 +1,228 @@
+# Language file for plaintext-parser.php program
+# Version: 1.00 - 26-Jan-2009
+# translation - Bulgarian by Radmil Pandev http://www.vremeto.org/
+#
+charset|ISO-8859-5|
+#
+# new for v.1.14
+lang|Maximum snow level|Макс. ниво на снега|
+lang|Minimum snow level|Мин. ниво на снега|
+lang|Maximum freezing level|Макс. ниво на замръзване|
+lang|Minimum freezing level|Мин. ниво на замръзване|
+lang|above sea level|над морското ниво|
+lang|above ground|на земната повърхност|
+lang|meters|метри|
+lang|feet|футове|
+#
+lang|Cloudy in the morning|Облачно сутрин|
+lang|High risk of severe thunderstorms and possible tornados|Висока вероятност от силни гръмотевични бури и вероятност за торнадо|
+lang| becoming | преминавайки в |
+lang|dense overcast|гъста облачност|
+lang|Chance of precipitation|Възможни превалявания|
+lang|Thunderstorms likely, some possibly severe|Вероятни гръмотевици, някои до силно интензивни|
+lang|Some thunder possible.|Възможни гръмотевици. |
+lang|Some thunderstorms likely|Вероятни гръмотевици|
+lang|some high cloudiness|висока облачност|
+lang|some high thin clouds|високи тънки облаци|
+lang|of an inch|един инч|
+lang|half an inch|0.5 инч|
+lang|UV index up to|UV index до|
+lang|UV index more than|UV index повече от|
+lang| mostly around | предимно около |
+lang| mostly less than | не повече от |
+lang|then a slight chance of rain|и малка вероятност за дъжд|
+lang|then rain likely|и дъжд вероятно|
+lang|Rain very likely|Дъжд много вероятно|
+lang|Precipitation showery or intermittent|Превалявания с прекъсвания| 
+lang|Precipitation (liquid equivalent)|Превалявания (течен еквивалент)|
+lang|showery or intermittent|превалявания или  с прекъсвания|
+lang|Precipitation|Превалявания|
+lang|Snow likely|Вероятност за снеговалеж|
+lang|Snow accumulation|Покривка образуване|
+lang|accumulation expected|покривка|
+lang|Wind chill down to|Усеща се като|
+lang| chance | вероятност |
+lang| likely | възможнo |
+lang| accumulation | натрупване |
+lang| cales | cali |
+lang|less than a tenth of an inch|по-малко от десета от инч|
+lang| a mix of | смесица |
+lang| then | след това |
+lang| the | |
+lang| in | през |
+lang| of | за |
+lang|Fair|Тихо|
+lang|afternoon|следобеда|
+lang|cloudy|облачно|
+lang|Patchy|Разкъсана облачност|
+lang| slight | Незначителна |
+lang| light | лека |
+lang| fog| мъгла|
+lang|Partly|Частично|
+lang| to | до |
+lang|Wind |Вятър |
+lang|gusting|с пориви|
+lang|mostly|предимно|
+lang| after | след |
+lang|midnight|полунощ|
+lang|morning|сутринта|
+lang|Mostly|Предимно|
+lang|partly|частично|
+lang|Light|Лека|
+lang| moderate | умерен |
+lang|evening|вечерта|
+lang|Dense|Гъста|
+lang|overcast|облачност|
+lang|Moderate|Умерена|
+lang|dense|гъста|
+lang|sunny|слънчево|
+lang|Rain likely|Дъжд предимно|
+lang| rain| дъжд|
+lang|A | |
+lang| a |  |
+lang|chance of|вероятност за|
+lang|High|Макс.t:|
+lang|Low|Мин.t:|
+lang| but | ,но |
+lang|temperatures falling|спадане на температурите|
+lang|temperatures rising|повишение на температурите|
+lang|northeast|СИ|
+lang|northwest|СЗ|
+lang|southeast|ЮИ|
+lang|southwest|ЮЗ|
+lang|north-|северо-|
+lang|east-|източно-|
+lang|west-|западно-|
+lang|south-|юго-|
+lang| east | изток |
+lang| north | север |
+lang| south | юг |
+lang| west | запад |
+lang|down |спадане |
+lang| or | или |
+lang|Rain|Дъжд|
+lang|up to|до|
+lang|Freezing|Замръзващ|
+lang|No snow|Без снежна|
+lang|no snow|без снежна|
+lang|accumulation about a quarter inch|с натрупване до 0.25 инча|
+lang|likely|вероятно|
+lang|less than a tenth of an inch|по-малко от една десета от инча|
+lang|around a tenth of an inch|около 0.1 инча|
+lang|between a quarter and half an inch|между 0.25 и 0.5 инча|
+lang|around a quarter of an inch|около 0.25 инча|
+lang|around|около|
+lang|kph|km/h|
+lang|mps|m/s|
+lang|near|около|
+lang|percent|%|
+lang|less than|по-малко от|
+lang| between | между |
+lang| and | и |
+lang|Little|Слаб|
+lang| no | не |
+lang| snow| сняг|
+lang| Snow| Сняг|
+lang|about|около|
+lang| one | 1 |
+lang|No |Не|
+lang| fair | ясно |
+lang|Cloudy|Облачно|
+lang| calm| тихо|
+lang|Clear|Ясно|
+lang|clear|ясно|
+lang|Sunny|Слънчево|
+lang| ice | лед |
+lang|freezing|замръзващ|
+lang|sleet|суграшица|
+lang|a mix of|смесица от|
+lang|if any|евентуално|
+lang|on ground|на повърхността|
+lang|patchy|разкъсана|
+lang| half | половин |
+lang| an | един |
+lang| quarter | 0.25 |
+lang| tenth | 0.1 |
+lang| inch| инч|
+#
+# Translation of headings, periods and short conditions statements
+# headings
+#
+langlookup|WXSIM Forecast for:|WXSIM Прогноза за:|
+langlookup|Issued by:|Публикувана от:|
+langlookup|Updated:|Актуализирана:|
+langlookup|High:|Max|
+langlookup|Low:|Min|
+#
+langlookup|Sunday|Неделя|
+langlookup|Monday|Понеделник|
+langlookup|Tuesday|Вторник|
+langlookup|Wednesday|Сряда|
+langlookup|Thursday|Четвъртък|
+langlookup|Friday|Петък|
+langlookup|Saturday|Събота|
+langlookup|Sunday night|Неделя вечер|
+langlookup|Monday night|Понеделник вечер|
+langlookup|Tuesday night|Вторник вечер|
+langlookup|Wednesday night|Сряда вечер|
+langlookup|Thursday night|Четвъртък вечер|
+langlookup|Friday night|Петък вечер|
+langlookup|Saturday night|Събота вечер|
+langlookup|Today|Днес|
+langlookup|Tonight|Довечера|
+langlookup|Rest of tonight|Останалата част от ноща|
+langlookup|This afternoon|Този следобед|
+# UV Index words
+langlookup|Low|Нисък|
+langlookup|Medium|Среден|
+langlookup|High|Висок|
+langlookup|Very High|Много висок|
+langlookup|Extreme|Екстремен|
+# Summary conditions lookup
+langlookup|Severe storm|Силна буря|
+langlookup|Showers storms|Силни преваляеания|
+langlookup|Thunder storm|Гръмотевична буря|
+langlookup|Rain Sleet|Дъжд, преминаващ в суграшица|
+langlookup|FrzgRn Snow|Град/ сняг|
+langlookup|Rain and Snow|Дъжд примесен със сняг|
+langlookup|Freezing Rain|Замръзващ дъжд|
+langlookup|Rain likely|Вероятност за дъжд|
+langlookup|Chance rain|Вероятен дъжд|
+langlookup|Mix|Дъжд и сняг|
+langlookup|Sleet|Суграшица|
+langlookup|Snow|Сняг|
+langlookup|Fog a.m.|Мъгла преди обяд|
+langlookup|Fog late|Мъгла по-късно|
+langlookup|Fog|Мъгла|
+langlookup|Very Cold|Много студено|
+langlookup|Very Hot|Много топло|
+langlookup|Partly Cloudy|Частична облачност|
+langlookup|Mostly Cloudy|Предимно облачно|
+langlookup|Cloudy|Облачно|
+langlookup|Overcast|Заоблачено|
+langlookup|Partly Sunny|Слънчево с облаци|
+langlookup|Mostly Sunny|Предимно слънчево|
+langlookup|Mostly Clear|Предимно ясно|
+langlookup|Sunny|Слънчево|
+langlookup|Clear|Ясно|
+langlookup|Fair|Тихо|
+langlookup|Variable Clouds|Разкъсана облачност|
+# translation for ordinal wind directions must be in North-East-South-West order
+# NOTE: comma format used here requires plaintext-parser.php V1.13 or above to process correctly
+langlookup|NESW|С,И,Ю,З|
+# translation for Beaufort Wind Force
+langlookup|Calm|Тихо|
+langlookup|Light air|Лек полъх|
+langlookup|Light breeze|Лек бриз|
+langlookup|Gentle breeze|Слаб бриз|
+langlookup|Moderate breeze|Умерен бриз|
+langlookup|Fresh breeze|Свеж бриз|
+langlookup|Strong breeze|Силен бриз|
+langlookup|Near gale|Засилен вятър|
+langlookup|Gale|Силен вятър|
+langlookup|Strong gale|Много силен вятър|
+langlookup|Storm|Буря|
+langlookup|Violent storm|Силна буря|
+langlookup|Hurricane|Ураган|
+#
+# --- end of language file ------

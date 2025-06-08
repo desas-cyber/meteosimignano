@@ -1,0 +1,44 @@
+[2025-04-14 21:51:05] 14/04/2025,23:51, 12.5, 97.0, 12.0, 1008.3, 7.9, 121.0, 0.0, 2176
+[2025-04-14 21:51:05] ❌ Errore DB: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'erbielqv_simignano_meteo_apr25.dati_meteo' doesn't exist
+[2025-04-14 21:52:08] 14/04/2025,23:52, 12.5, 97.0, 12.0, 1008.2, 7.2, 93.0, 0.0, 2176
+[2025-04-14 21:52:08] ❌ Errore DB: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'erbielqv_simignano_meteo_apr25.dati_meteo' doesn't exist
+[2025-04-14 21:53:11] 14/04/2025,23:53, 12.5, 97.0, 12.0, 1008.4, 7.6, 100.0, 0.0, 2176
+[2025-04-14 21:53:11] ❌ Errore DB: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'erbielqv_simignano_meteo_apr25.dati_meteo' doesn't exist
+[2025-04-14 21:54:14] 14/04/2025,23:54, 12.5, 97.0, 12.0, 1008.3, 9.0, 124.0, 0.0, 2176
+[2025-04-14 21:54:14] ❌ Errore DB: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'erbielqv_simignano_meteo_apr25.dati_meteo' doesn't exist
+[2025-04-14 21:55:17] 14/04/2025,23:55, 12.5, 97.0, 12.0, 1008.3, 7.2, 120.0, 0.0, 2176
+[2025-04-14 21:55:17] ❌ Errore DB: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'erbielqv_simignano_meteo_apr25.dati_meteo' doesn't exist
+[2025-04-14 21:56:20] 14/04/2025,23:56, 12.5, 97.0, 12.0, 1008.2, 6.5, 101.0, 0.0, 2176
+[2025-04-14 21:56:20] ❌ Errore DB: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'erbielqv_simignano_meteo_apr25.dati_meteo' doesn't exist
+[2025-04-14 21:56:50] 14/04/2025,23:56, 12.5, 97.0, 12.0, 1008.2, 5.4, 111.0, 0.0, 2176
+[2025-04-14 21:56:50] ❌ Errore DB: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'erbielqv_simignano_meteo_apr25.dati_meteo' doesn't exist
+[2025-04-14 21:57:23] 14/04/2025,23:57, 12.5, 97.0, 12.0, 1008.2, 2.2, 89.0, 0.0, 2176
+[2025-04-14 21:57:23] ❌ Errore DB: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'erbielqv_simignano_meteo_apr25.dati_meteo' doesn't exist
+[2025-04-14 21:58:26] 14/04/2025,23:58, 12.5, 97.0, 12.0, 1008.3, 9.4, 116.0, 0.0, 2176
+[2025-04-14 21:58:26] ❌ Errore DB: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'erbielqv_simignano_meteo_apr25.dati_meteo' doesn't exist
+[2025-04-14 21:59:29] 14/04/2025,23:59, 12.4, 97.0, 11.9, 1008.3, 6.5, 111.0, 0.0, 2176
+[2025-04-14 21:59:29] ❌ Errore DB: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'erbielqv_simignano_meteo_apr25.dati_meteo' doesn't exist
+[2025-04-14 22:00:31] 15/04/2025,00:00, 12.5, 97.0, 12.0, 1008.3, 4.7, 105.0, 0.0, 2176
+[2025-04-14 22:00:31] ❌ Errore DB: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'data_ora' in 'INSERT INTO'
+[2025-04-14 22:00:54] 15/04/2025,00:00, 12.5, 97.0, 12.0, 1008.3, 4.7, 105.0, 0.0, 2176
+[2025-04-14 22:00:54] ❌ Errore DB: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'data_ora' in 'INSERT INTO'
+[2025-04-14 22:01:35] 15/04/2025,00:01, 12.5, 97.0, 12.0, 1008.2, 7.2, 120.0, 0.0, 2176
+[2025-04-14 22:01:35] ❌ Errore DB: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'data_ora' in 'INSERT INTO'
+[2025-04-14 22:02:38] 15/04/2025,00:02, 12.4, 97.0, 11.9, 1007.9, 6.1, 110.0, 0.0, 2176
+[2025-04-14 22:02:38] ❌ Errore DB: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'data_ora' in 'INSERT INTO'
+[2025-04-14 22:03:41] 15/04/2025,00:03, 12.5, 97.0, 12.0, 1007.9, 5.8, 100.0, 0.0, 2176
+[2025-04-14 22:03:41] ❌ Errore DB: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'data_ora' in 'INSERT INTO'
+[2025-04-14 22:03:50] 15/04/2025,00:03, 12.5, 97.0, 12.0, 1007.9, 5.8, 100.0, 0.0, 2176
+[2025-04-14 22:03:50] ❌ Errore DB: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'temperatura' in 'INSERT INTO'
+[2025-04-14 22:04:44] 15/04/2025,00:04, 12.4, 97.0, 11.9, 1008.1, 4.7, 116.0, 0.0, 2176
+[2025-04-14 22:04:44] ❌ Errore DB: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'temperatura' in 'INSERT INTO'
+[2025-04-14 22:05:47] 15/04/2025,00:05, 12.4, 97.0, 11.9, 1008.1, 6.1, 108.0, 0.0, 2176
+[2025-04-14 22:05:47] ❌ Errore DB: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'temperatura' in 'INSERT INTO'
+[2025-04-14 22:06:50] 15/04/2025,00:06, 12.4, 97.0, 11.9, 1007.8, 6.1, 121.0, 0.0, 2176
+[2025-04-14 22:06:50] ❌ Errore DB: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'temperatura' in 'INSERT INTO'
+[2025-04-14 22:07:53] 15/04/2025,00:07, 12.4, 97.0, 11.9, 1007.8, 6.1, 113.0, 0.0, 2176
+[2025-04-14 22:07:53] ✅ Inserimento DB riuscito
+[2025-04-14 22:08:56] 15/04/2025,00:08, 12.4, 97.0, 11.9, 1008.0, 6.8, 81.0, 0.0, 2176
+[2025-04-14 22:08:56] ✅ Inserimento DB riuscito
+[2025-04-14 22:09:59] 15/04/2025,00:09, 12.4, 97.0, 11.9, 1007.9, 7.2, 128.0, 0.0, 2176
+[2025-04-14 22:09:59] ✅ Inserimento DB riuscito

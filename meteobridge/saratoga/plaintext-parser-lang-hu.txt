@@ -1,0 +1,290 @@
+# Language file for plaintext-parser.php program
+# Version 1.0 - 20-Sep-2011
+# Translation - Magyarország by Baranyi Attila - http://www.huweather.com
+#
+charset|ISO-8859-2||
+# new for v.1.14
+lang|Maximum snow level|Maximális hó magasság:|
+lang|Minimum snow level|Minimális hó magassága:|
+lang|Maximum freezing level|Maximális fagyáspont:|
+lang|Minimum freezing level|Minimális fagyáspont:|
+lang|above sea level|tengerszint felett|
+lang|above ground|a talajfelszín felett|
+lang|meters|Méter|
+#
+lang|Rain likely in the evening, then a slight chance of rain after midnight. Some thunderstorms likely.|Lehetséges esõ délután,de este kisebb a valószínûsége a csapadéknak. Egy egy vihar elõfordulhat.|
+lang|Rain likely in the evening, then a slight chance of rain after midnight.|Lehetséges esõ délután, este kisebb a valószínûsége a csapadéknak.|
+lang|Rain likely in the evening, then a chance of rain after midnight.|Esõ várható az esti órákban|
+lang|some high cloudiness|Egyes magas felhõzet|
+lang|A chance of rain. Thunderstorms likely|Lehetséges esõ de viharok is.|
+lang|A chance of rain. Some thunderstorms likely.|Lehetséges esõ és helyi viharok is.|
+lang|A slight chance of rain. Precipitation showery or intermittent.|Esõ, esõ helyben még erõsebb.|
+lang|A slight chance of rain in the evening, then a chance of rain after midnight.|Kevés a valószinûség esõre|
+lang|with just a few high thin clouds|néhány nagy felhõ|
+lang|but some high thin clouds|de néhány nagy felhõ|
+lang|with just a few wispy clouds|némi felhõzet|
+lang|A slight chance of a mix of rain and snow.|A csekély az esélye vegyesen esõ és a hó.|
+lang|A slight chance of a mix of rain, snow, and sleet.|Tiszta hó és jég.|
+lang|A chance of rain in the morning, then a slight chance of rain in the afternoon.|Lehetséges esõ reggel, majd egy kis esély esõ délután..|
+lang|A chance of rain. Precipitation showery or intermittent.|Az a lehetõség, alkalmi esõ is lehetséges helyben nagy záporesõ.|
+lang|No snow or ice (on ground) accumulation expected.|A felszínen a hó felhalmozódása várható, azaz. jég|
+lang|Clear in the evening, becoming mostly clear after midnight.|Tiszta este, részben felhõs éjszaka|
+lang|becoming mostly clear, with just a few high thin clouds after midnight.|akkor többnyire tiszta éjszaka, néhány magas felhõk.|
+lang|becoming partly to mostly sunny|részben többnyire napos|
+lang|becoming partly to mostly sunny in the afternoon|Ezután részben felhõs, délután|
+lang|Partly to mostly sunny|Részben a leginkább egyértelmû|
+lang|Little if any freezing rain accumulation.|Esõ, hogy lefagy -Jeges utak!|
+lang|Partly to mostly cloudy|Mérsékelt többnyire felhõs|
+lang|Precipitation showery or intermittent|Felhõs, helyi zivatarok|
+lang|Fair in the evening, becoming mostly clear after midnight.|Tiszta este, éjszaka fõként tiszta.|
+lang|, becoming partly to mostly cloudy| , Ezután részben felhõs, közepesen|
+lang|High risk of severe thunderstorms and possible tornados.|Nagy a kockázata a súlyos viharok és tornádóknak.|
+lang|Cloudy in the morning|Felhõs reggel|
+lang|Patchy light fog|Gyenge köd|
+lang|patchy light fog|Gyenge köd|
+lang|Rain likely. Some thunderstorms likely.|Lehetséges esõ és zivatar.|
+lang|Rain likely in the afternoon. Some thunderstorms likely.|Lehetséges esõ délután. Zivatar is lehetséges|
+lang|, some possibly severe.| , erõsebb esõ lehetséges.|
+lang|Partly cloudy|Felhõs|
+lang|Mostly cloudy to cloudy|Többnyire felhõs|
+lang|mostly cloudy to cloudy|többnyire felhõs|
+lang|Mostly cloudy|Többnyire felhõs|
+lang|mostly cloudy|többnyire felhõs|
+lang|Mostly sunny|Felhõs|
+lang|mostly sunny|felhõs|
+lang|Mostly clear|Felhõs|
+lang|becoming mostly clear|többnyire tiszta|
+lang|becoming fair to partly cloudy|részben felhõs|
+lang|mostly clear|felhõs|
+lang|Fair to partly cloudy|Részben felhõs|
+lang|. Precipitation mostly less than|. Csapadék többnyire kevesebb, mint|
+lang|. Precipitation mostly around|. Csapadék fõleg körül|
+lang|. Precipitation mostly between|. Csapadék fõleg között|
+lang|then a chance of|akkor esélye|
+lang|but temperatures falling|de hõmérséklet csökkenõ|
+lang|near calm|közelében nyugodt|
+lang|in the evening|este|
+lang|A mix of rain and snow|Havas esõ|
+lang|A mix of snow and rain|Havas esõ|
+lang|a mix of rain and snow|Havas esõ|
+lang|a mix of rain and sleet|esõ, hogy lefagy|
+lang|a mix of snow and rain likely|lehetõségét az esõ és a hó|
+lang|a mix of rain and snow likely|lehetõségét az esõ és a hó|
+lang|a mix of sleet, freezing rain, and snow|ónos esõ, fagyott esõ és hó|
+lang|a mix of sleet, rain, and snow| ónos esõ, fagyott esõ és hó|
+lang|a mix of snow, freezing rain, sleet, and rain likely|lehetséges hó, fagyott esõ, jég és az esõ|
+lang|A mix of snow, rain, and sleet likely|Lehetséges, hó, esõ és jég|
+lang|A mix of rain, snow, and sleet likely|Lehetséges, hó, esõ és jég|
+lang|a mix of rain, snow, and sleet|esõ, hó és ónos esõ|
+lang|a mix of snow, rain, and sleet|hó, esõ és ónos esõ|
+lang|A chance of snow|havazás|
+lang|A chance of rain|Esõ|
+lang|A chance of a mix of snow and rain|Lehetséges, esõ és a hó|
+lang|a mix of snow and rain|havas esõ|
+lang|, snow,|, Hó,|
+lang|A slight chance of a mix of rain and snow|Kevés az esély esõre és hóra|
+lang|a slight chance of a mix of rain and snow|kevés az esély esõre és hóra|
+lang|A slight chance of a mix of snow and rain|Kevés az esély esõre és hóra|
+lang|A slight chance of snow.| Kis Havazás.|
+lang|freezing rain|ónos esõ|
+lang|in the afternoon|délután|
+lang|less than|kevesebb, mint|
+lang|Light to moderate|Könnyû és közepes|
+lang|light to moderate| könnyû és közepes|
+lang|then moderate fog|ezután mérsékelt|
+lang|then a slight chance of|Ezután egy kis esély|
+lang|then rain likely|majd esõ valószínû|
+lang|Snow accumulation about a cm.|Egy cm hó valószínû|
+lang|Freezing rain accumulation up to 3 mm.|Ónos esõ maximum 3 mm.|
+lang|Snow or ice (on ground) accumulation about a cm.|Hó és jég körülbelül egy cm.|
+lang|Little or no snow accumulation expected|Nagyon kevés havazás várható|
+lang|No ice (on ground) accumulation expected.|Nincs jég (földi) felhalmozódása várható.|
+lang|Little or no snow or ice (on ground) accumulation expected.|Várható nagyon kevés hó vagy jég .|
+lang|No snow accumulation expected.|Nem várható,hó.|
+lang| in the |a|
+lang|Chance of precipitation|valószínûséggel|
+lang|dense overcast|felhõs|
+lang|Dense overcast|Felhõs|
+lang| then | majd|
+lang|the||
+lang|afternoon|délután|
+lang|cloudy|felhõs|
+lang|Patchy|egyenetlen|
+lang| slight | enyhe |
+lang| light | enyhe |
+lang|fog| köd|
+lang|, becoming |, egyre |
+lang| of |ból |
+lang| to | ig |
+lang|gusting|Széllökés|
+lang|mostly|többnyire|
+lang|after|után|
+lang|midnight|Éjfél|
+lang|morning|reggel|
+lang|Mostly|többnyire|
+lang|partly|részben|
+lang|Light|fény|
+lang|moderate|mérsékelt|
+lang|evening|este|
+lang|Dense|sûrû|
+lang|overcast|felhõs|
+lang|Moderate|mérsékelt|
+lang|dense|vastag|
+lang|sunny|napos|
+lang|. Rain likely|. Lehetséges esõ|
+lang|rain|esõ|
+lang|A ||
+lang|chance of|esélye|
+lang|High|Maximális hõmérséklet :|
+lang|Low|Minimális hõmérséklet:|
+lang| but | de |
+lang|temperatures falling|Csökkenõ hõmérséklet|
+lang|temperatures rising|Emelkedõ hõmérséklet|
+lang|northeast|északkeleti|
+lang|norast|Észak-Kelet|
+lang|nornelast|Észak-Kelet|
+lang|northeast|Észak-Kelet|
+lang|northwest|Észak-Kelet|
+lang|southeast|délkelet|
+lang|sounelast|délkelet|
+lang|southwest|délnyugat|
+lang|north-|észak-|
+lang|east-|keleti-|
+lang|south-|dél-|
+lang|west-|nyugati-|
+lang|north |észak |
+lang|east |kelet |
+lang|south |dél |
+lang|west |nyugat |
+lang|down |lent |
+lang| or | vagy |
+lang|around|körül|
+lang|kph|km/h|
+lang| near | közel |
+lang| percent|%|
+lang|less than|kevesebb, mint|
+lang|Snow accumulation|Hó mennyiség|
+lang| snow | hó |
+lang| Snow | hó |
+lang|Precipitation (liquid equivalent)|Csapadék (folyékony)|
+lang| between | között |
+lang| and | és |
+lang|Precipitation|csapadék|
+lang|accumulation expected|becsült mennyiség|
+lang|Little|kis|
+lang|snow |hó |
+lang|about|körülbelül|
+lang| one | 1 |
+lang|Fair|Fair|
+lang|fair|fair|
+lang|Cloudy|felhõs|
+lang|calm|szélcsend|
+lang|Clear|Tiszta|
+lang|clear|tiszta|
+lang|Sunny|napos|
+lang| ice | jég |
+lang|freezing|befagyás|
+lang|sleet|ónos esõ|
+lang|a mix of| keverék |
+lang|if any|ha van ilyen|
+lang|on ground|a földön|
+lang|patchy|egyenetlen|
+lang|Thunderstorms likely, some possibly severe|Lehetséges zivatar, lokálisan is erõsebb|
+lang|Some thunder possible.|Néhány mennydörgés lehetséges.|
+lang|. Some thunderstorms likely|. Egyéni viharok lehetségesek|
+lang|of an inch|en palec|
+lang|half an inch|fél hüvelyk|
+lang| inch| hüvelyk|
+lang|a tenth an|1 / 10 an|
+lang|UV index|UV Index|
+lang|up a|ig|
+lang|up to|ig|
+lang|Rain very|Sok esõ|
+lang|likely|valószínû|
+lang|Wind chill|Szélhûtés|
+lang|Wind|Szél|
+#
+# Translation of headings, periods and short conditions statements
+# headings
+#
+langlookup|WXSIM Forecast for:|WXSIM Elõrejelzés:|
+langlookup|Issued by:|Által kibocsátott:|
+langlookup|Updated:|Frissítve:|
+langlookup|High:|Max|
+langlookup|Low:|Min|
+#
+langlookup|Sunday|Vasárnap|
+langlookup|Monday|Hétfõ|
+langlookup|Tuesday|Kedd|
+langlookup|Wednesday|Szerda|
+langlookup|Thursday|Csütörtök|
+langlookup|Friday|Péntek|
+langlookup|Saturday|Szombat|
+langlookup|Sunday night|Vasárnap éjszaka|
+langlookup|Monday night|Hétfõ éjszaka|
+langlookup|Tuesday night|Kedd éjszaka|
+langlookup|Wednesday night|Szerda éjszaka|
+langlookup|Thursday night|Csütörtök éjszaka|
+langlookup|Friday night|Péntek éjszaka|
+langlookup|Saturday night|Szombat éjszaka|
+langlookup|Today|Ma|
+langlookup|Tonight|Ma este|
+langlookup|This afternoon|Ma délután|
+langlookup|Rest of tonight|a többi éjszaka|
+#
+# UV Index words
+langlookup|Low|Alacsony|
+langlookup|Medium|Normál|
+langlookup|High|Magas|
+langlookup|Very&nbsp;High|Nagyon&nbsp;Magas|
+langlookup|Extreme|Extrém|
+#
+# Summary conditions lookup
+langlookup|Severe storm|Erõs viharok
+langlookup|Showers storms|Záporok viharok
+langlookup|Thunder storm|zivatarok
+langlookup|Rain Sleet|Esõ Ónos esõ
+langlookup|FrzgRn Snow|Fagyott esõ / hó
+langlookup|Rain and Snow|Havas esõ
+langlookup|Freezing Rain|Ónos Esõ
+langlookup|Rain likely|Esõ várható
+langlookup|Chance rain|Esõ valószínû
+langlookup|Mix|keverék
+langlookup|Sleet|Ónos esõ
+langlookup|Snow|Hó
+langlookup|Fog a.m.|Ködös reggel
+langlookup|Fog late|Éjjel köd
+langlookup|Fog|Köd
+langlookup|Very Cold|Nagyon hideg
+langlookup|Very Hot|Nagyon meleg
+langlookup|Partly Cloudy|Felhõs
+langlookup|Mostly Cloudy|Többnyire felhõs
+langlookup|Cloudy|Felhõs
+langlookup|Overcast|Felhõs
+langlookup|Partly Sunny|részben napos
+langlookup|Mostly Sunny|Részben napos
+langlookup|Mostly Clear|Többnyire tiszta
+langlookup|Sunny|Napos
+langlookup|Clear|Tiszta
+langlookup|Fair|valós
+langlookup|Variable Clouds|Változóan felhõs
+langlookup|Clear|Tiszta
+# translation for cardinal wind directions must be in North-East-South-West order
+langlookup|NESW|ÉKDN|
+#
+# translation for Beaufort Wind Force
+langlookup|Calm|Szélcsend|
+langlookup|Light air|Fuvallat|
+langlookup|Light breeze|Szellõ|
+langlookup|Gentle breeze|Mérsékelt szél|
+langlookup|Moderate breeze|Erõsödõ szél|
+langlookup|Fresh breeze|Közepesen erõs szél|
+langlookup|Strong breeze|Erõs szél|
+langlookup|Near gale|Nagyon erõs szél|
+langlookup|Gale|Viharos szél|
+langlookup|Strong gale|Vihar|
+langlookup|Storm|Erõs vihar|
+langlookup|Violent storm|Szélvihar|
+langlookup|Hurricane|Orkán|
+#
+# --- end of language file ------

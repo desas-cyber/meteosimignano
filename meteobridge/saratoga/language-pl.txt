@@ -1,0 +1,359 @@
+# English language plugin for Carterlake/WD/AJAX/PHP template set
+# Ken True - http://saratoga-weather.org/template/
+#
+# Version 1.00 - 24-Apr-2008 - initial release
+# Version 1.01 - 24-Jun-2008 - added support for trends-inc.php conversion
+#
+# English and Western European use ISO-8859-1 character sets
+#
+charset|ISO-8859-2|
+#
+# Greek should use ISO-8859-7 character set for compatibility with plaintext-parser-lang-el.txt
+#
+#charset|ISO-8859-7|
+#
+# Note:  the langlookup entries are for EXACT replacements including spaces and capitalization.
+#  
+# format is 'langlookup|||
+#
+# Don't change the first field   because it matches what is in the 
+# langtrans/langtransstr() calls embedded in various scripts in the template set.  
+# Only change the second field  for your language.
+#
+# You can add new langlookup entries to handle additions to your website.  Be sure to add the
+# same langlookup entry to the other language-LL.txt files for all the languages you support on your site.
+#
+# ajax-dashboard and ajax-gizmo language strings
+#
+langlookup|Enable JavaScript for live updates|W³±cz obs³ugê JavaScript do bie¿±cych aktualizacji danych|
+langlookup|Updated|Aktualizacja|
+langlookup|updated|aktualizacja|
+langlookup|sec ago|sek temu|
+langlookup|next update at|kolejna aktualizacja o|
+# thermometer language
+langlookup|Temperature|Temperatura|
+langlookup|Currently|Aktualnie|
+langlookup|Max|Max|
+langlookup|Min|Min|
+# rising/falling arrows text
+langlookup|Warmer|Cieplej|
+langlookup|Colder|Ch³odniej|
+langlookup|Rising|Ro¶nie|
+langlookup|Falling|Spada|
+langlookup|Increased|Zwiêkszona|
+langlookup|Decreased|Zmniejszona|
+langlookup|than last hour|ni¿ w ostatniej godzinie|
+langlookup|since last hour|od ostatniej godziny|
+langlookup|than yesterday at this time|ni¿ wczoraj o tej godzinie|
+#
+langlookup|Feels like|Odczuwana jak|
+langlookup|24-hr difference|24-godzinna ró¿nica|
+langlookup|Today|Dzisiaj|
+langlookup|Yesterday|Wczoraj|
+langlookup|High:|High:|
+langlookup|Low:|Low:|
+langlookup|Wind from|Wiatr z|
+langlookup|Gust|Poryw|
+langlookup|Gust Month|Powiew Miesi±ca|
+langlookup|UV Index|UV Index|
+langlookup|UV Index Forecast|Prognoza UV Index|
+langlookup|Solar Radiation|Promieniowanie S³oneczne|
+langlookup|Summary|Podsumowanie|
+langlookup|Humidity|Wilgotno¶æ|
+langlookup|Dew Point|Punkt Rosy|
+langlookup|Barometer|Ci¶nienie|
+langlookup|Baro Trend|Trend Ci¶nienia|
+langlookup|Wind|Wiatr|
+langlookup|Rain|Deszcz|
+langlookup|Outlook|Prognoza|
+langlookup|Rain Today|Dzisiejszy Deszcz|
+langlookup|Rain Rate|Intensywno¶æ|
+langlookup|Rain Yesterday|Wczorajszy Deszcz|
+langlookup|Storm Rain|Burzowy Deszcz|
+langlookup|This Month|W tym miesi±cu|
+langlookup|Season Total|Razem w sezonie|
+langlookup|day since last rain|Dzieñ ostatniego deszczu|
+langlookup|days since last rain|Dni od ostatniego deszczu|
+langlookup|rain day in|dzieñ deszczu w|
+langlookup|rain days in|dni deszczu w|
+langlookup|Snow|¦nieg|
+langlookup|Snow Today|¦nieg dzisiaj|
+langlookup|Snow Yesterday|¦nieg wczoraj|
+langlookup|Snow Depth|Pokrywa ¶nie¿na|
+langlookup|Winter Total|Suma Zimowa|
+langlookup|snow day in|dzieñ ¶niegu w|
+langlookup|snow days in|dni ¶niegu w|
+langlookup|Almanac|Almanach|
+langlookup|Sun&nbsp;|S³oñce|
+langlookup|Moon|Ksiê¿yc|
+langlookup|Sunrise|Wschód S³oñca|
+langlookup|Sunset|Zachód S³oñca|
+langlookup|Moonrise|Wschód Ksiê¿yca|
+langlookup|Moonset|Zachód Ksiê¿yca|
+langlookup|Illuminated|Ods³oniêty|
+langlookup|Weather Forecast|Prognoza Pogody|
+langlookup|forecast|prognoza|
+#
+# UV Index words - note: leave   where shown for proper lookup
+langlookup|None|Brak|
+langlookup|Low|Niski|
+langlookup|Medium|¦redni|
+langlookup|High|Wysoki|
+langlookup|Very High|Bardzo Wysoki|
+langlookup|Extreme|Ekstremalny|
+#
+# Moon words
+#
+langlookup|New Moon|Nów|
+langlookup|Waxing Crescent|Wzrastaj±cy sierp|
+langlookup|Waxing Crescent Moon|Wzrastaj±cy sierp Ksiê¿yca|
+langlookup|First Quarter|Pierwsza kwadra|
+langlookup|First Quarter Moon|Pierwsza kwadara Ksiê¿yca|
+langlookup|Waxing Gibbous|Poszerzony Ksiê¿yc|
+langlookup|Waxing Gibbous Moon|Poszerzony Ksiê¿yc|
+langlookup|Full Moon|Pe³nia Ksiê¿yca|
+langlookup|Waning Gibbous|Garbaty Ksiê¿yc|
+langlookup|Waning Gibbous Moon|Garbaty Ksiê¿yc|
+langlookup|Last Quarter|Ostatnia kwadra|
+langlookup|Last Quarter Moon|Ostatnia kwadra Ksiê¿yca|
+langlookup|Waning Crescent|Ubywaj±cy sierp|
+langlookup|Waning Crescent Moon|Ubywaj±cy sierp Ksiê¿yca|
+#
+#
+# WU-Forecast.php replacement text
+#
+langlookup|Chance of precipitation|Mo¿liwe opady|
+#
+# footer.php
+#
+langlookup|Top|Góra|
+langlookup|Contact Us|Kontakty|
+langlookup|Bookmark Page|Dodaj do ulubionych|
+langlookup|Valid|Valid|
+langlookup|Never base important decisions on this or any weather information obtained from the Internet|Nigdy nie podejmuj wa¿nych decyzji na podstawie tych lub jakichkolwiek informacji uzyskanych z Internetu|
+#
+# menubar.php and flyout-menu.xml entries
+#
+# Note: if using the flyout-menu, you can have individual language versions as
+# flyout-menu-LL.xml, flyout-menu-test-LL.xml using full native language which won't be translated.
+#
+# these settings below are for the English menubar.php $html section, and flyout-menu.xml/flyout-menu-test.xml
+#  which should be in English only.
+#
+langlookup|Navigation|Nawigacja|
+langlookup|External Links|Zewnêtrzne Linki|
+langlookup|Home|Home|
+langlookup|Forecast|Prognoza|
+langlookup|WXSIM Forecast|Prognoza WXSIM|
+langlookup|Radar|Radar|
+langlookup|Advisories|Ostrze¿enia|
+langlookup|Live Weather|Pogoda Live|
+langlookup|Live Mesomap|Live Mesomap|
+langlookup|Daily Stats|Dzienne Statystyki|
+langlookup|Graphs|Wykresy|
+langlookup|Station Data by Month|Miesiêczne dane ze stacji|
+langlookup|Astronomy|Astronomia|
+langlookup|Links|Linki|
+langlookup|About|O stronie|
+langlookup|About Us|O Nas|
+langlookup|Live|Live|
+langlookup|Weather-Display Live|Weather-Display Live|
+langlookup|Local Radar|Local Radar|
+langlookup|Mesomap|Mesomap|
+langlookup|MesoMap Live|MesoMap Live|
+langlookup|Forecast &amp; Advisories|Prognozy &amp; Ostrze¿enia|
+langlookup|Forecast details|Szczegó³y Prognozy|
+langlookup|WXSIM Forecast details|Szczegó³y prognozy WXSIM|
+langlookup|Weather Trends|Trendy Pogodowe|
+langlookup|Station Graphs|Wykresy Stacji|
+langlookup|Station Monthly Reports|Miesiêczny Raport Stacji|
+langlookup|Sun/Moon Almanac|Almanach S³oñce/Ksiê¿yc|
+langlookup|Earthquake activity|Aktywno¶æ Sejsmiczna|
+langlookup|Website Map|Mapa Strony|
+#
+# include-style-switcher.php items
+#
+langlookup|Style Options|Opcje Styli|
+langlookup|Style|Styl|
+langlookup|Widescreen|Widescreen|
+langlookup|On|On|
+langlookup|Off|Off|
+langlookup|Set|Ustaw|
+langlookup|Language|Jêzyk|
+# Colors of templates for style-switcher
+langlookup|Black|Czarny|
+langlookup|Blue|Niebieski|
+langlookup|Dark|Ciemny|
+langlookup|Fall|Fall|
+langlookup|Green|Zielony|
+langlookup|Ice Tea|Ice Tea|
+langlookup|Mocha|Mocha|
+langlookup|Orange|Pomarañczowy|
+langlookup|Pastel|Pastelowy|
+langlookup|Purple|Purpurowy|
+langlookup|Red|Czerwony|
+langlookup|Salmon|Salmon|
+langlookup|Silver|Srebrny|
+langlookup|Spring|Spring|
+langlookup|Taupe|Taupe|
+langlookup|Teal|Teal|
+#
+# wxastronomy.php items (solar/lunar words are specified above)
+#
+langlookup|Daylight|¦wiat³o dzienne|
+langlookup|Vernal Equinox|Równonoc wiosenna|
+langlookup|Start of Spring|Pocz±tek Wiosny|
+langlookup|Summer Solstice|Przesilenie letnie|
+langlookup|Start of Summer|Pocz±tek lata|
+langlookup|Autumn Equinox|Równonoc Jesienna|
+langlookup|Start of Fall|Pocz±tek jesieni|
+langlookup|Winter Solstice|Przesilenie zimowe|
+langlookup|Start of Winter|Pocz±tek zimy|
+#
+# wxgraphs.php items
+#
+langlookup|Weather Trend Graphs|Wykres Trendu Pogody|
+langlookup|Last 24 Hours|Ostatnie 24 godziny|
+langlookup|Last 72 Hours|Ostatnie 72 godziny|
+langlookup|Month to Date|Miesi±c do daty|
+#
+# V1.01 - trends-inc.php native PHP conversion translation items
+#
+langlookup|Trends as of|Trendy jako|
+langlookup|TIME|CZAS|
+langlookup|TEMP|TEMP|
+langlookup|WIND SPEED|PRÊDKO¦Æ WIATRU|
+langlookup|WIND GUST|PORYW WIATRU|
+langlookup|WIND DIR|KIERUNEK WIATRU|
+langlookup|HUMIDITY|WILGOTNO¦Æ|
+langlookup|PRESSURE|CI¦NIENIE|
+langlookup|RAIN|DESZCZ|
+#
+langlookup|Current|Aktualny|
+langlookup|CURRENT|AKTUALNY|
+langlookup|Now|Teraz|
+langlookup|Records and Stats|Rekordy i Statystyki|
+langlookup|5 minutes ago|5 minut temu|
+langlookup|10 minutes ago|10 minut temu|
+langlookup|15 minutes ago|15 minut temu|
+langlookup|20 minutes ago|20 minut temu|
+langlookup|30 minutes ago|30 minut temu|
+langlookup|45 minutes ago|45 minut temu|
+langlookup|60 minutes ago|60 minut temu|
+langlookup|75 minutes ago|75 minut temu|
+langlookup|90 minutes ago|90 minut temu|
+langlookup|105 minutes ago|105 minut temu|
+langlookup|120 minutes ago|120 minut temu|
+# following three entries are used for  on  and  at 
+langlookup|on|w|
+langlookup|at|o|
+langlookup|from|azymut| as in '14 mph from 315 °(NW)'
+#
+langlookup|last hour|ostatnia godzina|
+langlookup|over last 7 days|w ci±gu ostatnich 7 dni|
+langlookup|last month|ostatni miesi±c|
+#
+langlookup|Today|Dzi¶|
+langlookup|Yest.|Wczoraj|
+langlookup|Week|Tydzieñ|
+langlookup|Month|Miesi±æ|
+langlookup|Year|Rok|
+langlookup|Gust/hr|Poryw/h|
+#
+langlookup|RAIN HISTORY|HISTORIA DESZCZU|
+langlookup|day since last rain on|dzieñ od ostatniego deszczu w|
+langlookup|days since last rain on|dni od ostatniego deszczu w|
+langlookup|rain day this month|desczowy dzieñ w tym miesi±cu|
+langlookup|rain days this month|deszczowych dni w tym miesi±cu|
+langlookup|rain day this year|deszczowy dzieñ w tym roku|
+langlookup|rain days this year|deszczowych dni w tym roku|
+langlookup|total last year at this time|ogó³em w ubieg³ym roku tego dnia|
+
+langlookup|TEMPERATURE HIGHS|MAKSYMALNE TEMPERATURY|
+langlookup|HOT DAYS THIS MONTH|GOR¡CE DNI W TYM MIESI¡CU|
+langlookup|days|dni|
+langlookup|day|dzieñ|
+langlookup|Warmest day|Najcieplejszy dzieñ|
+langlookup|Warmest night|Najcieplejsza noc|
+
+langlookup|TEMPERATURE LOWS|NAJNI¯SZE TEMPERATURY|
+langlookup|COLD DAYS THIS MONTH|ZIMNE DNI W TYM MIESI¡CU|
+langlookup|Coldest day|Najzimniejszy dzieñ|
+langlookup|Coldest night|Najzimniejsza noc|
+
+langlookup|BAROMETER HIGHS|NAJWY¯SZE CI¦NIENIE|
+langlookup|WIND CHILL LOWS|NAJNI¯SZY CZYNNIK CH£ODZ¡CY WIATRU (WIND CHILL)|
+langlookup|EVAPOTRANSPIRATION|EWAPOTRANSPIRACJA|
+langlookup|SOLAR HIGHS|NAJWY¯SZE NAS£ONECZNIENIE|
+langlookup|UV HIGHS|NAJWY¯SZY INDEX UV|
+langlookup|Wind Data|Dane Wiatru|
+langlookup|WIND GUST HIGHS|NAJWY¯SZE PORYWY WIATRU|
+langlookup|WIND GUST AVERAGE HIGHS|NAJWY¯SZE ¦REDNIE PORYWY WIATRU|
+langlookup|WIND RUN|RUCH WIATRU|
+# --- end of new trends-inc.php translations
+#
+# include-wxhistory.php translations
+#
+langlookup|Daily / Monthly Weather History From This Station|Dzienna / Miesiêczna Historia Pogody z Tej Stacji|
+langlookup|Select a report and click submit|Wybierz raport i kliknij Wy¶lij|
+langlookup|submit|Wy¶lij|
+langlookup|Daily Report for the month of|Dzienny raport za miesi±c|
+langlookup|Average and Extremes|¦rednia i Ekstrema|
+langlookup|Average and Extremes for Month of|¦rednia i Ekstrema na miesi±c|
+langlookup|up to day|na dzieñ|
+langlookup|Click here to toggle the 24 Hour Graph of this day|Kliknij tutaj, aby prze³±czyæ 24 godzinny wykres na ten dzieñ|
+langlookup|Day, Sunshine Hours, ET, Max Solar, UV|Dzieñ, Godziny s³oneczne, ET, Max. Nas³oonecznienie, Index UV|
+langlookup|Daily Rain Totals|Dzienny deszcz ogó³em|
+langlookup|Average temperature|¦rednia temperatura|
+langlookup|Average humidity|¦rednia wilgotno¶æ|
+langlookup|Average dewpoint|¦rednia temp. punktu rosy|
+langlookup|Average barometer|¦rednie ci¶nienie|
+langlookup|Average windspeed|¦rednia prêdko¶æ wiatru|
+langlookup|Average gustspeed|¦redni poryw wiatru|
+langlookup|Average direction|¦redni kierunek wiatru|
+langlookup|Rainfall for month|Opady deszczu za miesi±c|
+langlookup|Rainfall for year|Opady deszczu za rok|
+langlookup|Maximum rain per minute|Maksymalna deszcz na minutê|
+langlookup|Maximum temperature|Maksymalna temperatura|
+langlookup|Minimum temperature|Minimalna temperatura|
+langlookup|Maximum humidity|Maksymalna wilgotno¶æ|
+langlookup|Minimum humidity|Minimalna wilgotno¶æ|
+langlookup|Maximum pressure|Maksymalne ci¶nienie|
+langlookup|Minimum pressure|Minimalne ci¶nienie|
+langlookup|Maximum windspeed|Maksymalna prêdko¶æ wiatru|
+langlookup|Maximum gust speed|Maksymalna prêdko¶æ porywów|
+langlookup|Maximum heat index|Maksymalny wska¼nik ciep³a|
+langlookup|Sunshine hours month to date|S³oneczne godziny miesi±ca do daty|
+langlookup|Sunshine hours year to date|S³oneczne godziny roku do daty|
+langlookup|hrs|godziny|
+#
+# --- end of include-wxhistory.php translations
+#
+# Conditions (%Currentsolardescription% and clientraw[49])
+#
+conditions|begin||
+langlookup|Dry|Sucho|
+langlookup|Light rain|Lekki deszcz|
+langlookup|Moderate drizzle|Umiarkowane m¿awka|
+langlookup|Moderate rain|Umiarkowane opady deszczu|
+langlookup|Heavy rain|Gwa³towne opady deszczu|
+langlookup|Stopped raining|Przesta³o padaæ|
+# conditions time
+langlookup|Dawn|¦wit|
+langlookup|Dusk|Zmierzch|
+langlookup|Night time|Pora nocna|
+# Clouds (sky)
+langlookup|Clear|Bezchmurnie|
+langlookup|Sunny|S³onecznie|
+langlookup|Clear skies|Czyste niebo|
+langlookup|Mostly sunny|Przewa¿nie pogodnie|
+langlookup|A few clouds|Kilka chmur|
+langlookup|Sc|Czê¶ciowe zachmurzenie|
+langlookup|Scattered clouds|Rozproszone chmury|
+langlookup|Partly cloudy|Czê¶ciowe zachmurzenie|
+langlookup|Mostly cloudy|Przewa¿nie pochmurno|
+langlookup|Cloudy with clear p|Przewa¿nie pochmurno|
+langlookup|Cloudy with clear patches|Przewa¿nie pochmurno|
+langlookup|Overcast|Pochmurno|
+conditions|end||
+#

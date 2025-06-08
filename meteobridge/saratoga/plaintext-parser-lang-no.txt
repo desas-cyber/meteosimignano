@@ -1,0 +1,221 @@
+# Language file for plaintext-parser.php program
+# Version: 1.04 05-Apr-2007
+# translation - Norwegian by Ronny*  http://www.lynradar.no
+#
+#
+dateformat|d/m/Y H:i|   // Euro format 03/31/2006 14:03
+
+lang|a chance of a mix of rain, snow, and sleet after midnight|en miks av regn og sludd etter midnatt|
+lang|Cloudy in the morning|Skyet om morgenen|
+
+
+lang|A mix of snow and rain likely in the evening|En miks av regn og sludd sannsynlig om kvelden|
+lang|A mix of rain and snow very likely.|En miks av regn og snø sannsynlig.|
+lang| becoming | overgang til |
+lang|Mostly clear.|Stort sett klart.|
+lang|a mix of snow, rain, and sleet|en miks av snø, regn og sludd|
+lang|A chance of a mix of snow and rain in the evening|En sjanse for regn og sludd om kvelden|
+
+
+
+lang|dense overcast|kraftig overskyet|
+lang|Chance of precipitation|Sjanse for nedbør|
+lang| Wind chill | Følt temperatur (i vinden) |
+lang|Fair|Pent|
+lang|UV index up to|UV indeks opp til|
+lang|UV index more than|UV index mer enn|
+lang|a mix of rain and snow|en miks av regn og sludd|
+lang|a mix of rain and snow likely|en miks av regn og sludd sannsynlig|
+lang|A mix of snow  and rain likely|En miks av regn og sludd sannsynlig|
+lang|A mix of rain and snow|En miks av regn og sludd|
+lang|if any|hvis noe|
+lang|on ground|på bakken|
+lang|patchy|delvis|
+lang|Thunderstorms likely, some possibly severe|Tordenbyger sannsynlig, noen kan være kraftige|
+lang|Some thunder possible.|Tordenvær mulig. |
+lang|Some thunderstorms likely|Tordenvær sannsynlig|
+lang|of an inch|af en tomme|
+lang|half an inch|halv tomme|
+lang|tenth of an inch|tienedels tomme|
+lang| then | deretter |
+lang|a mix of|en miks av|
+lang| Wind chill | følt temperatur (i vinden) |
+lang|Rain likely|Regn sannsynlig|
+lang|chance of|Sjanse for|
+lang| the | |
+lang| in | om |
+lang| of | for |
+lang|afternoon|ettermiddagen|
+lang|cloudy|skyet|
+lang|Patchy|Delvis|
+lang| slight | liten |
+lang| light | lett |
+lang| fog | tåke |
+lang| fog.| tåke.|
+lang|Partly|Delvis|
+lang| to | til |
+lang|Wind |Vind |
+lang|gusting|vindkast|
+lang|mostly|stort sett|
+lang| after | etter |
+lang|midnight|midnatt|
+lang|morning|morgenen|
+lang|Mostly|Stort sett|
+lang|partly|delvis|
+lang|Light|Lett|
+lang| moderate | moderat |
+lang|evening|kvelden|
+lang|Dense|Kraftig|
+lang|overcast|overskyet|
+lang|Moderate|Moderat|
+lang|dense|kraftig|
+lang|sunny|sol|
+lang| rain| regn|
+lang|A |En |
+lang| a | en |
+lang| an | en |
+lang|likely|sannsynlig|
+lang|High|Maksimum:|
+lang|Low|Minimum:|
+lang| but | men |
+lang|temperatures falling|fallende temperatur|
+lang|temperatures rising|stigende temperatur|
+lang|northeast|nordøst|
+lang|northwest|nordvest|
+lang|southeast|sørøst|
+lang|southwest|sørvest|
+lang|north-|nord-|
+lang|east-|øst-|
+lang|west-|vest-|
+lang|south-|sør-|
+lang| east | øst |
+lang| north | nord |
+lang| south | sør |
+lang| west | vest |
+lang|down |fallende |
+lang| or | eller |
+lang|around|omkring|
+lang|kph|km/t|
+lang|mps|m/s|
+lang|mph|mph|
+lang|near|nær|
+lang|percent|prosent|
+lang|less than|mindre enn|
+lang|Precipitation (liquid equivalent)|Nedbør (smeltet)|
+lang| between | mellom |
+lang| and | og |
+lang|Precipitation|Nedbør|
+lang|accumulation expected|på bakken forventet|
+lang|Little|Litt|
+lang| no | ingen |
+lang| snow | snø |
+lang| snow.| snø.|
+lang|Snow accumulation|Snø i alt |
+lang|about|omtrent|
+lang| one | 1 |
+lang|overgaen|overgår|
+lang|soudoost|sydøst|
+lang|showery of intermittent|forbigående byger|
+lang|No |Ingen |
+lang| fair | pent |
+lang|Cloudy|Skyet|
+lang| calm| vindstille|
+lang|Clear|Klart|
+lang| clear | klart |
+lang|Sunny|Sol|
+lang| ice | is |
+lang|freezing|underkjølt|
+lang|sleet|sludd|
+
+lang| inch| tomme|
+lang| chance | sjanse |
+lang| chill | kjøling |
+lang| Snow likely.| Sannsynlig med snø.|
+lang|Litt hvis noe underkjølt regn accumulation|Lite hvis noe i det hele tatt underkjølt regn på bakken|
+lang|En sjanse for en mix for regn, snow, og sludd om morgenen|En sjanse for en miks av for regn og sludd om morgenen|
+lang|regn, snow, og sludd | regn og sludd |
+lang|En sjanse for en mix for snø og regn|En sjanse for sludd og regn|
+lang|en mix for snø og regn |en miks av sludd og regn |
+lang|en mix for regn og sludd|en miks av regn og sludd|
+
+#
+# Translation of headings, periods and short conditions statements
+# headings
+#
+langlookup|WXSIM Forecast for:|WXSIM Værvarsel for:|
+langlookup|Issued by:|Laget av:|
+langlookup|Updated:|Oppdatert:|
+langlookup|High:|Maks|
+langlookup|Low:|Min|
+#
+langlookup|Sunday|Søndag|
+langlookup|Monday|Mandag|
+langlookup|Tuesday|Tirsdag|
+langlookup|Wednesday|Onsdag|
+langlookup|Thursday|Torsdag|
+langlookup|Friday|Fredag|
+langlookup|Saturday|Lørdag|
+langlookup|Sunday night|Søndag natt|
+langlookup|Monday night|Mandag natt|
+langlookup|Tuesday night|Tirsdag natt|
+langlookup|Wednesday night|Onsdag natt|
+langlookup|Thursday night|Torsdag natt|
+langlookup|Friday night|Fredag natt|
+langlookup|Saturday night|Lørdag natt|
+langlookup|Rest of tonight|Resten av kvelden|
+langlookup|Today|I&nbsp;dag|
+langlookup|Tonight|I&nbsp;kveld|
+langlookup|This afternoon|I ettermiddag|
+# UV Index words
+langlookup|Low|Lav|
+langlookup|Medium|Moderat|
+langlookup|High|Høy|
+langlookup|Very&nbsp;High|Svært&nbsp;Høy|
+langlookup|Extreme|Ekstrem|
+# Summary conditions lookup
+langlookup|Severe storm|Kraftig storm
+langlookup|Showers storms|Regnstormer
+langlookup|Thunder storm|Tordenvær
+langlookup|Rain Sleet|Regn sludd
+langlookup|FrzgRn Snow|Underkjølt regn/snø
+langlookup|Rain and Snow|Sludd
+langlookup|Freezing Rain|Underkjølt regn
+langlookup|Rain likely|Regn sannsynlig
+langlookup|Chance rain|Sjanse for regn
+langlookup|Mix|Sludd/snø
+langlookup|Sleet|Sludd
+langlookup|Snow|Snø
+langlookup|Fog a.m.|Tåke om morgenen
+langlookup|Fog late|Tåke sent
+langlookup|Fog|Tåke
+langlookup|Very Cold|Meget kaldt
+langlookup|Very Hot|Meget varmt
+langlookup|Partly Cloudy|Delvis skyet
+langlookup|Mostly Cloudy|Stort sett skyet
+langlookup|Cloudy|Skyet
+langlookup|Overcast|Overskyet
+langlookup|Partly Sunny|Delvis sol
+langlookup|Mostly Sunny|Mest sol
+langlookup|Mostly Clear|Mest klart
+langlookup|Sunny|Sol
+langlookup|Clear|Klart
+langlookup|Fair|Pent
+langlookup|Variable Clouds|Forbigående skyer
+# translation for cardinal wind directions must be in North-East-South-West order
+langlookup|NESW|NØSV|
+# translation for Beaufort Wind Force
+langlookup|Calm|Stille|
+langlookup|Light air|Flau vind|
+langlookup|Light breeze|Svak vind|
+langlookup|Gentle breeze|Lett bris|
+langlookup|Moderate breeze|Laber bris|
+langlookup|Fresh breeze|Frisk bris|
+langlookup|Strong breeze|Liten kuling|
+langlookup|Near gale|Stiv kuling|
+langlookup|Gale|Sterk kuling|
+langlookup|Strong gale|Liten storm|
+langlookup|Storm|Full storm|
+langlookup|Violent storm|Sterk storm|
+langlookup|Hurricane|Orkan|
+#
+# --- end of language file ------

@@ -1,0 +1,228 @@
+# Language file for plaintext-parser.php program
+# Version: 0.2   18-Jun-2007
+# translation - Finnish by Henkka  http://www.nordicweather.net
+#
+#Finnish clauses
+lang|chance of rain|sateen mahdollisuus olemassa|
+lang|mostly around|noin|
+lang|mostly less than|vähemmän kuin|
+lang|mostly between|välillä|
+lang|mostly cloudy to cloudy|puolipilvistä tai pilvistä|
+lang|Mostly cloudy to cloudy|Puolipilvistä tai pilvistä|
+lang|partly to mostly cloudy|puolipilvistä tai melkein pilvistä|
+lang|Partly to mostly cloudy|Puolipilvistä tai melkein pilvistä|
+lang|few wispy clouds|ohutta pilviharsoa lukuunottamatta|
+lang|except for||
+lang|Partly to mostly sunny|Melko aurinkoista|
+lang|mostly fair|suurilta osin selkeätä|
+lang|some high cloudiness|vähäistä yläpivlisyyttä|
+lang|with just a few high thin clouds|ohutta yläpilvisyyttä|
+lang|Rain very likely|Erittäin todennäköisesti sadetta|
+lang|partly to mostly sunny|melko aurinkoista|
+lang|Partly cloudy|Puolipivistä|
+lang|No snow accumulation expected|Lunta ei odoteta kerääntyvän maahan|
+lang|Little or no snow accumulation expected|Lunta odotetaan mahdollisesti kerääntyvän maahan vähän|
+lang|Snow accumulation about a|Lunta odotetaan keräätyvän noin 1|
+lang|Snow accumulation about|Lunta odotetaan keräätyvän noin|
+lang|A slight chance of a mix of freezing rain and sleet|Pieni mahdollisuus jäätävään sateeseen tai räntäsateeseen|
+lang|No ice (on ground) accumulation expected|Ei odoteta jäävän maahan|
+lang|then a mix of snow and rain likely|Todennäköisesti lumi- tai vesisadetta|
+lang|A chance of a mix of snow and rain in the evening|Illalla pieni lumi- tai vesisateen mahdollisuus|
+lang|A slight chance of a mix of rain and snow|Pieni lumi- tai vesisateen mahdollisuus|
+lang|A mix of rain and snow likely|Todennäköisesti lumi- tai vesisadetta|
+lang|a mix of rain and snow|lumi- tai vesisadetta|
+lang|Little if any freezing rain accumulation|Satanut vesi voi jäätyä mikäli pakastuu|
+lang|Wind chill down to|Tuulen purevuus|
+#Finnish clauses end
+
+lang|clear|selkeätä|
+lang|Cloudy in the morning|Aamulla pilvistä|
+lang| becoming | |
+lang|dense overcast|runsaasta pilvisyyttä|
+lang|Chance of precipitation|Sateen todennäköisyys|
+lang|Fair|Poutaa|
+lang|UV index up to|UV indeksi:|
+lang|UV index more than|UV indeksi yli|
+lang| then | |
+lang| the | |
+lang| in | |
+lang| of | |
+lang|afternoon|iltapäivällä|
+lang|cloudy|pilvistä|
+lang|Patchy|Paikallista|
+lang| slight | pieni |
+lang| light | kevyttä |
+lang|fog|sumua|
+lang|Partly|Melko|
+lang| to | |
+lang|Wind |Tuuli |
+lang|chill|purevuus|
+lang|gusting|puuskissa|
+lang|mostly|melkein|
+lang| after | |
+lang|midnight|puolenyön jälkeen|
+lang|morning|aamulla|
+lang|Mostly|Enimmäkseen|
+lang|partly|melko|
+lang|Light|Kevyttä|
+lang| moderate | kohtalaista |
+lang|evening|illalla|
+lang|Dense|Rusasta|
+lang|overcast|pilvisyyttä|
+lang|Moderate|Kohtalaista|
+lang|dense|voimakasta|
+lang|sunny|aurinkoista|
+lang|Rain likely|Todennäköisesti sadetta|
+lang|rain likely|todennäköisesti sadetta|
+lang| rain| sadetta|
+lang|A | |
+lang| a | |
+lang|chance of|ehkä|
+lang|High|Ylin lämpötila:|
+lang|Low|Alin lämpötila:|
+lang| but | mutta |
+lang|temperatures falling|lämpötila laskee|
+lang|temperatures rising|lämpötila nousee|
+lang|northeast|koilisesta|
+lang|northwest|luoteesta|
+lang|southeast|kaakosta|
+lang|southwest|lounaasta|
+lang|north-|pohjois-|
+lang|east-|itä-|
+lang|west-|länsi-|
+lang|south-|etelä-|
+lang| east | idästä |
+lang| north | pohjoisesta |
+lang| south | etelästä |
+lang| west | lännestä |
+lang|down |laskeva |
+lang| or | tai |
+lang|around|noin|
+lang|kph|km/h|
+lang|mps|m/s|
+lang|near|lähellä|
+lang|percent|prosenttia|
+lang|less than|vähemmän kuin|
+lang|Precipitation (liquid equivalent)|Sade (vedeksi muutettuna)|
+lang| between | välillä |
+lang| and | ja |
+lang|Precipitation|Sadetta|
+lang|accumulation expected|odotetaan olevan samana|
+lang|Little|Vähän|
+lang| no | ei |
+lang|snow|lumisadetta|
+lang|Snow accumulation|Jäljelläoleva lumi |
+lang|about|noin|
+lang| one | 1 |
+lang|overgaen|muuttuen|
+lang|southeast|kaakosta|
+lang|showery of intermittent|ylimeneviä sadekuuroja|
+lang|No |Ei |
+lang|fair|poutaa|
+lang|Cloudy|Pilvistä|
+lang| calm| tyyntä|
+lang|Clear|Selkeää|
+lang| clear | selkeää |
+lang|Sunny|Aurinkoista|
+lang| ice | jää |
+lang|freezing|pakastuvaa|
+lang|sleet|räntää|
+lang|a mix of|Sekoitus|
+lang|if any|jos jotain|
+lang|on ground|maapinnalla|
+lang|patchy|osittain|
+lang|Thunderstorms likely, some possibly severe|Voimakkaat ukkoskuurot mahdollisia|
+lang|Some thunder possible.|Mahdollisesti ukkosta. |
+lang|Some thunderstorms likely|Todennäköisesti ukkosta|
+lang|of an inch|tuumasta|
+lang|half an inch|puoli tuumaa|
+lang| inch| tuuma|
+lang| chance | mahdollisesti |
+lang|some|eräitä|
+lang|cloudiness|pilviä|
+lang|high|korkeita| 
+#
+# Translation of headings, periods and short conditions statements
+# headings
+#
+langlookup|WXSIM Forecast for:|WXSIM ennuste :|
+langlookup|Issued by:|Ennusteen laatija:|
+langlookup|Updated:|Päivitetty:|
+langlookup|High:|Ylin|
+langlookup|Low:|Alin|
+#
+langlookup|Sunday|Sunnuntai|
+langlookup|Monday|Maanantai|
+langlookup|Tuesday|Tiistai|
+langlookup|Wednesday|Keskiviikko|
+langlookup|Thursday|Torstai|
+langlookup|Friday|Perjantai|
+langlookup|Saturday|Lauantai|
+langlookup|Sunday night|Sunnuntai yö|
+langlookup|Monday night|Maanantai yö|
+langlookup|Tuesday night|Tiistai yö|
+langlookup|Wednesday night|Keskiviikko yö|
+langlookup|Thursday night|Torstai yö|
+langlookup|Friday night|Perjantai yö|
+langlookup|Saturday night|Lauantai yö|
+langlookup|Today|Tänään|
+langlookup|Tonight|Tänä yönä|
+langlookup|This afternoon|Iltapäivällä|
+langlookup|Rest of tonight|Loppuyö|
+# UV Index words
+langlookup|Low|Matala|
+langlookup|Medium|Kohtalainen|
+langlookup|High|Korkea|
+langlookup|Very&nbsp;High|Erittäin korkea|
+langlookup|Extreme|Extreme|
+# Summary conditions lookup
+langlookup|Severe storm|Voimakasta myrskyä
+langlookup|Showers storms|Myrksyä
+langlookup|Thunder storm|Ukkosmyrskyä
+langlookup|Rain Sleet|Räntää
+langlookup|FrzgRn Snow|Jäätynyttä lunta
+langlookup|Rain and Snow|Sadetta ja lunta
+langlookup|Freezing Rain|Alijäähtynyttä sadetta
+langlookup|Rain likely|Toden. sadetta
+langlookup|Chance rain|Mahd. sadetta
+langlookup|Mix|Vaihtelevasti
+langlookup|Sleet|Räntää
+langlookup|Snow|Lumisadetta
+langlookup|Fog a.m.|Aamulla sumua
+langlookup|Fog late|Myöhään sumua
+langlookup|Fog|Sumua
+langlookup|Very Cold|Erittäin kylmää
+langlookup|Very Hot|Erittäin kuumaa
+langlookup|Partly Cloudy|Puolipilvistä
+langlookup|Mostly Cloudy|Melkein pilvistä
+langlookup|Cloudy|Pivlistä
+langlookup|Overcast|Pilvistä
+langlookup|Partly Sunny|Melko aurinkoista
+langlookup|Mostly Sunny|Melkein aurinkoista
+langlookup|Mostly Clear|Melkein selkeää
+langlookup|Sunny|Aurinkoista
+langlookup|Clear|Selkeää
+langlookup|Fair|Poutaa
+langlookup|Variable Clouds|Vaihtelevaa pilvisyyttä
+# translation for cardinal wind directions must be in North-East-South-West order
+#Choose one for directions more used multilingual or Finnish version
+#langlookup|NESW|NESW|
+#Finnish
+langlookup|NESW|PIEL|
+
+# translation for Beaufort Wind Force
+langlookup|Calm|Tyyntä|
+langlookup|Light air|Hyvin heikkoa tuulta|
+langlookup|Light breeze|Heikkoa tuulta|
+langlookup|Gentle breeze|Kohtalaista tuulta|
+langlookup|Moderate breeze|Kohtalaista tuulta|
+langlookup|Fresh breeze|Navakkaa tuulta|
+langlookup|Strong breeze|Navakkaa tuulta|
+langlookup|Near gale|Kovaa tuulta|
+langlookup|Gale|Kovaa tuulta|
+langlookup|Strong gale|Myrskyä|
+langlookup|Storm|Täyttä myrskyä|
+langlookup|Violent storm|Voimakasta myrskyä|
+langlookup|Hurricane|Hirmumyrskyä|
+
+# --- end of language file ------

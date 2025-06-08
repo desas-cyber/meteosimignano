@@ -1,0 +1,198 @@
+# Language file for plaintext-parser.php program
+# Version 1.10 - 22-Sep-2007
+# translation - Catalan by Casacota, http://www.casacota.cat/
+#
+lang|Cloudy in the morning|Ennuvolat al matí|
+lang| becoming | canviant a |
+lang|Dense overcast|Cobert|
+lang|dense overcast|cobert|
+lang| then | més tard |
+lang| the | la |
+lang|afternoon|tarda|
+lang|Mostly cloudy|Molt ennuvolat|
+lang|mostly cloudy|molt ennuvolat|
+lang|cloudy|ennuvolat|
+lang|Patchy|Núvols i clarianes, |
+lang|slight|suau|
+lang|light|lleugera|
+lang|fog|boira|
+lang|Partly|Parcialment|
+lang|UV index up to|Índex ultraviolat:|
+lang|UV index more than|Índex ultraviolat superior a|
+lang|down to|fins a|
+lang| to | o |
+lang|gusting|ratxejat|
+lang|Precipitation mostly|Precipitació|
+lang|mostly|bastant|
+lang|after|després de|
+lang|midnight|mitja nit|
+lang|morning|matí|
+lang|Mostly|Bastant|
+lang|partly|parcialment|
+lang|Light|Lleugera|
+lang|moderate|moderada|
+lang|evening|tarda|
+lang|Dense|Dens|
+lang|overcast|cobert|
+lang|Moderate|Moderada|
+lang|dense|dens|
+lang|sunny|assolellat|
+lang|Rain likely|Probabilitat de pluja|
+lang|rain likely|probabilitat de pluja|
+lang|Snow likely|Probabilitat de neu|
+lang|rain|pluja|
+lang|around|aproximadament|
+lang|slight|lleugera|
+lang|A | |
+lang|chance of|Possibilitat de|
+lang|High|Màxima:|
+lang|Low|Mínima:|
+lang|but|pero|
+lang|temperatures falling|temperatures en descens|
+lang|temperatures rising|temperatures en ascens|
+lang| light | lleugera |
+lang| in | per |
+lang|Wind chill|Sensació de fred per vent|
+lang|Wind|Vent del|
+lang|northeast|nordest|
+lang|northwest|nordoest|
+lang|southeast|sudest|
+lang|southwest|sudoest|
+lang|north-|nord-|
+lang|east-|est-|
+lang|south-|sud-|
+lang|west-|oest-|
+lang| north | nord |
+lang| east | est |
+lang| south | sud |
+lang| west | oest |
+lang|down |per sota |
+lang| or | o |
+lang|around|pels voltants de|
+lang|kph|km/h|
+lang|Chance of precipitation|Possibilitat de precipitació|
+lang|percent|%|
+lang| evening | vespre |
+lang|near|prop de|
+lang|less than|menys de|
+lang|snow|neu|
+lang|Precipitation (liquid equivalent)|Precipitació (equivalent líquid)|
+lang|between|entre|
+lang| and | i |
+lang|Precipitation|Precipitació|
+lang|No snow accumulation expected|No s'espera acumulació de neu|
+lang|accumulation expected|gruix previsible|
+lang|Little|Poc|
+lang| no | no |
+lang|snow |neu |
+lang|Snow accumulation|Acumulació de neu |
+lang|about|pels voltants de|
+lang| one | un |
+lang|showery of intermittent|ruixats intermitents|
+lang|No |No |
+lang|Fair |Poc ennuvolat |
+lang|fair |poc ennuvolat |
+lang|Cloudy|Ennuvolat|
+lang|calm|calma|
+lang|Clear|Serè|
+lang|clear|serè|
+lang|Sunny|Assolellat|
+lang| ice | gel |
+lang|freezing|gelant|
+lang|sleet|aiguaneu|
+lang|a mix of|barreja de|
+lang|if any|si n'hi ha|
+lang|on ground|al terra|
+lang|patchy|núvols i clarianes, |
+lang|Thunderstorms likely, some possibly severe|Possiblement tempestes, alguna d'intensa|
+lang|Some thunder possible.|Possible aparell elèctric.|
+lang|Some thunderstorms likely|Probabilitat de tempestes|
+lang|of an inch|de polzada|
+lang|half an inch|mitja polzada|
+lang|a quarter|un quart|
+lang|a tenth|un dècim|
+lang| inch| polzada|
+#
+# Translation of headings, periods and short conditions statements
+# headings
+#
+langlookup|WXSIM Forecast for:|Previsió WXSIM per a:|
+langlookup|Issued by:|Generat per:|					
+langlookup|Updated:|Actualitzat:|					
+langlookup|High:|Màx:|
+langlookup|Low:|Mín:|
+#
+langlookup|Sunday|Diumenge|
+langlookup|Monday|Dilluns|
+langlookup|Tuesday|Dimarts|
+langlookup|Wednesday|Dimecres|
+langlookup|Thursday|Dijous|
+langlookup|Friday|Divendres|
+langlookup|Saturday|Dissabte|
+langlookup|Sunday night|Diumenge a la nit|
+langlookup|Monday night|Dilluns a la nit|
+langlookup|Tuesday night|Dimarts a la nit|
+langlookup|Wednesday night|Dimecres a la nit|
+langlookup|Thursday night|Dijous a la nit|
+langlookup|Friday night|Divendres a la nit|
+langlookup|Saturday night|Dissabte a la nit|
+langlookup|Today|Avui|
+langlookup|Tonight|Aquesta nit|
+langlookup|This afternoon|Aquesta tarda|
+langlookup|Rest of tonight|Resta de&nbsp;la&nbsp;nit|
+# UV Index words
+langlookup|Low|Baix|
+langlookup|Medium|Mitjà|
+langlookup|High|Alt|
+langlookup|Very&nbsp;High|Molt&nbsp;alt|
+langlookup|Extreme|Extrem|
+# Summary conditions lookup
+langlookup|Severe storm|Tempesta severa
+langlookup|Showers storms|Tuixats
+langlookup|Thunder storm|Tempesta elèctrica
+langlookup|Rain Sleet|Aiguaneu
+langlookup|FrzgRn Snow|pluja gelant/neu
+langlookup|Rain and Snow|pluja i neu
+langlookup|Freezing Rain|pluja gelant
+langlookup|Rain likely|Probablement plujós
+langlookup|Chance rain|Possibilitat de pluja
+langlookup|Mix|Barreja
+langlookup|Sleet|Aiguaneu
+langlookup|Snow|Neu
+langlookup|Fog a.m.|Boires matinals
+langlookup|Fog late|Boires nocturnes
+langlookup|Fog|Boira
+langlookup|Very Cold|Molt fred
+langlookup|Very Hot|Molta calor
+langlookup|Partly Cloudy|Parcialment ennuvolat
+langlookup|Mostly Cloudy|Molt ennuvolat
+langlookup|Cloudy|Ennuvolat
+langlookup|Overcast|Cobert
+langlookup|Partly Sunny|Poc ennuvolat
+langlookup|Mostly Sunny|Molt poc ennuvolat
+langlookup|Mostly Clear|Pràcticament serè
+langlookup|Sunny|Assolellat
+langlookup|Clear|Serè
+langlookup|Fair|Poc ennuvolat
+langlookup|Variable Clouds|Nuvolositat variable
+# translation for cardinal wind directions must be in North-East-South-West order
+langlookup|NESW|NESO|
+#
+# translation for Beaufort Wind Force
+langlookup|Calm|Calma|
+langlookup|Light air|Ventet|
+langlookup|Light breeze|Vent fluixet|
+langlookup|Gentle breeze|Vent fluix|
+langlookup|Moderate breeze|Vent bonancenc|
+langlookup|Fresh breeze|Vent fresquet|
+langlookup|Strong breeze|Vent fresc|
+langlookup|Near gale|Vent frescot|
+langlookup|Gale|Vent fort|
+langlookup|Strong gale|Vent molt fort|
+langlookup|Storm|Tempesta|
+langlookup|Violent storm|Gran tempesta|
+langlookup|Hurricane|Huracà|
+#
+# --- end of language file ------
+
+

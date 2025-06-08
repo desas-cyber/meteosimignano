@@ -1,0 +1,288 @@
+# Language file for plaintext-parser.php program 
+# Version 1.15 | 17-JUL-2009
+# Translation - Italian by Alessandro Bardi - http://www.meteocarmignano.it
+#
+# ATTUALMENTE LO SCRIPT TRADUCE IL TERMINE 'FOG' CON 'FOSCHIA' ANZICHÈ 'NEBBIA'
+# EVENTUALMENTE MODIFICATELO IN BASE ALLE CARATTERISTICHE DELLA VOSTRA ZONA
+#
+# new for v.1.14
+lang|Maximum snow level|Massimo livello neve:|
+lang|Minimum snow level|Minimo livello neve:|
+lang|Maximum freezing level|Quota massima zero termico:|
+lang|Minimum freezing level|Quota minima zero termico:|
+lang|above sea level|s.l.m.|
+lang|above ground|da terra|
+lang|meters|metri|
+#
+lang|Rain likely in the evening, then a slight chance of rain after midnight. Some thunderstorms likely.|Probabili piogge e temporali in serata, in attenuazione dopo la mezzanotte.|
+lang|Rain likely in the evening, then a slight chance of rain after midnight.|Possibili piogge in serata in attenuazione dopo la mezzanotte.|
+lang|Rain likely in the evening, then a chance of rain after midnight.|Probabili piogge in serata in parziale attenuazione dopo la mezzanotte.|
+lang|some high cloudiness|qualche nube alta|
+lang|A chance of rain. Thunderstorms likely|Possibili piogge e temporali|
+lang|A chance of rain. Some thunderstorms likely.|Possibili piogge e locali temporali.|
+lang|A slight chance of rain. Precipitation showery or intermittent.|Possibilità di rovesci, a tratti intensi.|
+lang|A slight chance of rain in the evening, then a chance of rain after midnight.|Possibili piogge al mattino, in parziale dissolvimento nel pomeriggio.|
+lang|with just a few high thin clouds|qualche nube alta e sottile|
+lang|but some high thin clouds|nubi alte e stottili|
+lang|with just a few wispy clouds|poche nubi sottili|
+lang|A slight chance of a mix of rain and snow.|Possibilità di un misto di neve e pioggia.|
+lang|A slight chance of a mix of rain, snow, and sleet.|Scarse possibilità di un misto di pioggia, neve o nevischio.|
+lang|A chance of rain in the morning, then a slight chance of rain in the afternoon.|Possibili piogge al mattino, le probabilità di precipitazioni diminuiscono nel pomeriggio.|
+lang|A chance of rain. Precipitation showery or intermittent.|Probabili rovesci, a tratti anche intensi.|
+lang|No snow or ice (on ground) accumulation expected.|Non sono attesi accumuli di neve o ghiaccio (al suolo).|
+lang|Clear in the evening, becoming mostly clear after midnight.|Sereno con lieve aumento della nuvolosità dopo la mezzanotte|
+lang|becoming mostly clear, with just a few high thin clouds after midnight.|poco nuvoloso dopo mezzanotte per la presenza di nubi alte e sottili.|
+lang|becoming partly to mostly sunny|tendente a quasi sereno|
+lang|becoming partly to mostly sunny in the afternoon|tendente a quasi sereno nel pomeriggio|
+lang|Partly to mostly sunny|Prevalentemente soleggiato|
+lang|Little if any freezing rain accumulation.|Scarsi accumuli se pioggia ghiacciata.|
+lang|Partly to mostly cloudy|Nuvoloso o molto nuvoloso|
+lang|Precipitation showery or intermittent|Fenomeni a carattere di rovescio, sparsi|
+lang|Fair in the evening, becoming mostly clear after midnight.|Lieve nuvolosità in serata, miglioramento dopo la mezzanotte.|
+lang|, becoming partly to mostly cloudy| con tendenza ad aumento della nuvolosità|
+lang|High risk of severe thunderstorms and possible tornados.|Previste burrasche, anche di forte intensità.|
+lang|Cloudy in the morning|Cielo nuvoloso al mattino|
+lang|Patchy light fog|Banchi di nebbia|
+lang|patchy light fog|nebbia a banchi|
+lang|Rain likely. Some thunderstorms likely.|Possibili piogge e fenomeni temporaleschi.|
+lang|Rain likely in the afternoon. Some thunderstorms likely.|Possibili piogge e occasionali temporali nel pomeriggio.|
+lang|, some possibly severe.| di intensità fino a forte.|
+lang|Partly cloudy|Poco nuvoloso|
+lang|Mostly cloudy to cloudy|Nuvolosità irregolare|
+lang|mostly cloudy to cloudy|irregolarmente nuvoloso|
+lang|Mostly cloudy|Molto nuvoloso|
+lang|mostly cloudy|molto nuvoloso|
+lang|Mostly sunny|Prevalentemente soleggiato|
+lang|mostly sunny|prevalentemente soleggiato|
+lang|Mostly clear|Quasi sereno|
+lang|becoming mostly clear|tendenza a schiarite|
+lang|becoming fair to partly cloudy|tendente a poco nuvoloso|
+lang|mostly clear|quasi sereno|
+lang|Fair to partly cloudy|Poco nuvoloso|
+lang|. Precipitation mostly less than|, con quantitativi inferiori a|
+lang|. Precipitation mostly around|, con quantitativi attorno a|
+lang|. Precipitation mostly between|, con quantitativi tra|
+lang|then a chance of|in seguito possibilità di|
+lang|but temperatures falling|in diminuzione|
+lang|near calm|debole|
+lang|in the evening|in serata|
+lang|A mix of rain and snow|Un misto di pioggia e neve|
+lang|A mix of snow and rain|Un misto di pioggia e neve|
+lang|a mix of rain and snow|un misto di pioggia e neve|
+lang|a mix of rain and sleet|un misto di pioggia e nevischio|
+lang|a mix of snow and rain likely|probabile pioggia mista a neve|
+lang|a mix of rain and snow likely|probabile pioggia mista a neve|
+lang|a mix of sleet, freezing rain, and snow|un misto di nevischio, pioggia ghiacciata o neve|
+lang|a mix of sleet, rain, and snow|un misto di pioggia, neve o nevischio|
+lang|a mix of snow, freezing rain, sleet, and rain likely|possibilità di un misto di neve, nevischio, pioggia o pioggia ghiacciata| 
+lang|A mix of snow, rain, and sleet likely|Possibilità di un misto di pioggia, neve o nevischio|
+lang|A mix of rain, snow, and sleet likely|Possibilità di un misto di pioggia, neve o nevischio|
+lang|a mix of rain, snow, and sleet|un misto di pioggia, neve o nevischio|
+lang|a mix of snow, rain, and sleet|un misto di pioggia, neve o nevischio|
+lang|A chance of snow|Possibili nevicate|
+lang|A chance of a mix of snow and rain|Possibile un misto di pioggia e neve|
+lang|a mix of snow and rain|un misto di pioggia e neve|
+lang|, snow,|, neve,|
+lang|A slight chance of a mix of rain and snow|Scarse possibilità di un misto di pioggia e neve|
+lang|a slight chance of a mix of rain and snow|scarse possibilità di un misto di pioggia e neve|
+lang|A slight chance of a mix of snow and rain|Scarse possibilità di un misto di pioggia e neve|
+lang|A slight chance of snow.| Scarse possibilità di nevicate.|
+lang|freezing rain|pioggia gelata|
+lang|in the afternoon|nel pomeriggio|
+lang|less than|minore del|
+lang|Light to moderate|Un po' di|
+lang|light to moderate| leggera o moderata|
+lang|then moderate fog|in seguito moderata|
+lang|then a slight chance of|a seguire scarse possibilità di|
+lang|then rain likely|probabili piogge|
+lang|Snow accumulation about a cm.|Si prevodono accumuli di neve di circa un cm.|
+lang|Freezing rain accumulation up to 3 mm.|Si prevedono accumuli di pioggia ghiacciata superiori ai 3 mm.|
+lang|Snow or ice (on ground) accumulation about a cm.|Si prevedono accumuli di neve o ghiaccio di circa un cm.|
+lang|Little or no snow accumulation expected|Attesi accumuli nevosi scarsi o nulli|
+lang|No ice (on ground) accumulation expected.|Non si prevede formazione di ghiaccio (al suolo).|
+lang|Little or no snow or ice (on ground) accumulation expected.|Si prevedono accumuli di neve o ghiaccio (al suolo) di scarsa entità.|
+lang|No snow accumulation expected.|Non si prevedono accumuli di neve.|
+lang| in the | al |
+lang|Chance of precipitation|Probabilità di pioggia|
+lang|dense overcast|coperto|
+lang|Dense overcast|Cielo coperto|
+lang| then | in seguito |
+lang|the|nel|
+lang|afternoon|pomeriggio|
+lang|cloudy|nuvoloso|
+lang|Patchy|Irregolare|
+lang| slight | scarse |
+lang| light | lieve |
+lang|fog| nebbia|
+lang|, becoming |, tendente a |
+lang| of | di |
+lang| to | a |
+lang|gusting|con raffiche fino|
+lang|mostly|prevalentemente|
+lang|after|dopo|
+lang|midnight|la mezzanotte|
+lang|morning|mattino|
+lang|Mostly|Molto|
+lang|partly|poco|
+lang|Light|Lieve|
+lang|moderate|moderata|
+lang|evening|serata|
+lang|Dense|Molto|
+lang|overcast|cielo coperto|
+lang|Moderate|Moderata|
+lang|dense|molto|
+lang|sunny|soleggiato|
+lang|. Rain likely|. Probabili precipitazioni|
+lang|rain|precipitazioni|
+lang|A ||
+lang|chance of|possibilità di|
+lang|High|Temperatura massima:|
+lang|Low|Temperatura minima:|
+lang| but | ma |
+lang|temperatures falling|temperature in diminuzione|
+lang|temperatures rising|temperature in aumento|
+lang|noralast|nord-est|
+lang|nornelast|nord-est|
+lang|northeast|nord-est|
+lang|northwest|nord-ovest|
+lang|southeast|sud-est|
+lang|sounelast|sud-est|
+lang|southwest|sud-ovest|
+lang|north-|nord-|
+lang|east-|est-|
+lang|south-|sud-|
+lang|west-|ovest-|
+lang|north |nord |
+lang|east |est |
+lang|south |sud |
+lang|west |ovest |
+lang|down |in diminuzione |
+lang| or | o |
+lang|around|intorno a|
+lang|kph|km/h|
+lang| near | vicino |
+lang| percent|%|
+lang|less than|minore di|
+lang|Snow accumulation|Accumulo di neve|
+lang| snow | neve |
+lang| Snow | Nevicate |
+lang|Precipitation (liquid equivalent)|Precipitazioni (liquide)|
+lang| between | fra |
+lang| and | e |
+lang|Precipitation|Piogge|
+lang|accumulation expected|accumuli attesi|
+lang|Little|Poca|
+lang|snow |neve |
+lang|about|circa|
+lang| one | 1 |
+lang|Fair|Tempo discreto|
+lang|fair|discreto|
+lang|Cloudy|Nuvoloso|
+lang|calm|calma|
+lang|Clear|Sereno|
+lang|clear|sereno|
+lang|Sunny|Soleggiato|
+lang| ice | ghiaccio |
+lang|freezing|congelamento|
+lang|sleet|nevischio|
+lang|a mix of|un misto di|
+lang|if any|se c'è|
+lang|on ground|al suolo|
+lang|patchy|irregolare|
+lang|Thunderstorms likely, some possibly severe|Probabili temporali, localmente intensi|
+lang|Some thunder possible.|Non si esclude qualche isolato temporale.|
+lang|. Some thunderstorms likely|, con possibili fenomeni temporaleschi|
+lang|of an inch|di pollice|
+lang|half an inch|mezzo pollice|
+lang| inch| pollice|
+lang|UV index|Indice UV|
+lang|up a|fino a|
+lang|Rain very|piogge molto|
+lang|likely|probabili|
+lang|Wind chill|Temperatura effettivamente percepita|
+lang|Wind|Vento da|
+#
+# Translation of headings, periods and short conditions statements
+# headings
+#
+langlookup|WXSIM Forecast for:|Modello previsionale WX-SIM per:|
+langlookup|Issued by:|Pubblicato da:|
+langlookup|Updated:|Aggiornato il:|
+langlookup|High:|Max|
+langlookup|Low:|Min|
+#
+langlookup|Sunday|Domenica|
+langlookup|Monday|Lunedì|
+langlookup|Tuesday|Martedì|
+langlookup|Wednesday|Mercoledì|
+langlookup|Thursday|Giovedì|
+langlookup|Friday|Venerdì|
+langlookup|Saturday|Sabato|
+langlookup|Sunday night|Domenica sera|
+langlookup|Monday night|Lunedì sera|
+langlookup|Tuesday night|Martedì sera|
+langlookup|Wednesday night|Mercoledì sera|
+langlookup|Thursday night|Giovedì sera|
+langlookup|Friday night|Venerdì sera|
+langlookup|Saturday night|Sabato sera|
+langlookup|Today|Oggi|
+langlookup|Tonight|Stasera|
+langlookup|This afternoon|Oggi pomeriggio|
+langlookup|Rest of tonight|Stanotte|
+#
+# UV Index words
+langlookup|Low|Basso|
+langlookup|Medium|Medio|
+langlookup|High|Alto|
+langlookup|Very&nbsp;High|Molto&nbsp;Alto|
+langlookup|Extreme|Estremo|
+#
+# Summary conditions lookup
+langlookup|Severe storm|Forti temporali
+langlookup|Showers storms|Temporali sparsi
+langlookup|Thunder storm|Temporali
+langlookup|Rain Sleet|Nevischio
+langlookup|FrzgRn Snow|Ijzel/sneeuw
+langlookup|Rain and Snow|Pioggia e neve
+langlookup|Freezing Rain|Pioggia gelata
+langlookup|Rain likely|Probabili precipitazioni
+langlookup|Chance rain|Possibili precipitazioni
+langlookup|Mix|Mista
+langlookup|Sleet|Nevischio
+langlookup|Snow|Neve
+langlookup|Fog a.m.|Foschia mattutina
+langlookup|Fog late|Foschia serale
+langlookup|Fog|Nebbia
+langlookup|Very Cold|Molto freddo
+langlookup|Very Hot|Molto caldo
+langlookup|Partly Cloudy|Poco nuvoloso
+langlookup|Mostly Cloudy|Molto nuvoloso
+langlookup|Cloudy|Nuvoloso
+langlookup|Overcast|Coperto
+langlookup|Partly Sunny|Parzialmente soleggiato
+langlookup|Mostly Sunny|Prevalentemente soleggiato
+langlookup|Mostly Clear|Quasi sereno
+langlookup|Sunny|Soleggiato
+langlookup|Clear|Sereno
+langlookup|Fair|Discreto
+langlookup|Variable Clouds|Nuvolosità variabile
+langlookup|Clear|Sereno
+# translation for cardinal wind directions must be in North-East-South-West order
+langlookup|NESW|NESO|
+#
+# translation for Beaufort Wind Force
+langlookup|Calm|Calmo|
+langlookup|Light air|Bava di vento|
+langlookup|Light breeze|Brezza leggera|
+langlookup|Gentle breeze|Brezza tesa|
+langlookup|Moderate breeze|Vento moderato|
+langlookup|Fresh breeze|Vento teso|
+langlookup|Strong breeze|Vento fresco|
+langlookup|Near gale|Vento forte|
+langlookup|Gale|Burrasca|
+langlookup|Strong gale|Burrasca forte|
+langlookup|Storm|Tempesta|
+langlookup|Violent storm|Tempesta violenta|
+langlookup|Hurricane|Uragano|
+#
+# --- end of language file ------

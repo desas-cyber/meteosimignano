@@ -1,0 +1,52 @@
+estraiNumero('   12.8°C') → 12.8
+estraiNumero('    3.8°C 04:56') → 3.80456
+estraiNumero('   12.8°C') → 12.8
+estraiNumero('    3.8°C 04:56') → 3.80456
+estraiNumero('   12.8°C') → 12.8
+estraiNumero('     1018.9 hPa') → 1018.9
+estraiNumero('   12.7°C') → 12.7
+estraiNumero('     1018.9 hPa') → 1018.9
+estraiNumero('   12.7°C') → 12.7
+estraiNumero('     1018.8 hPa') → 1018.8
+estraiNumero('   12.7°C') → 12.7
+estraiNumero('     1019.0 hPa') → 1019
+estraiNumero('   12.7°C') → 12.7
+estraiNumero('     1019.0 hPa') → 1019
+estraiNumero('   11.7°C') → 11.7
+estraiNumero('     1019.2 hPa') → 1019.2
+estraiNumero('   11.5°C') → 11.5
+estraiNumero('     1019.2 hPa') → 1019.2
+estraiNumero('   11.5°C') → 11.5
+estraiNumero('     1019.2 hPa') → 1019.2
+estraiNumero('   11.4°C') → 11.4
+estraiNumero('     1019.3 hPa') → 1019.3
+estraiNumero('   11.4°C') → 11.4
+estraiNumero('     1019.2 hPa') → 1019.2
+estraiNumero('   11.3°C') → 11.3
+estraiNumero('     1019.3 hPa') → 1019.3
+estraiNumero('   11.3°C') → 11.3
+estraiNumero('     1019.3 hPa') → 1019.3
+estraiNumero('   11.2°C') → 11.2
+estraiNumero('     1019.2 hPa') → 1019.2
+estraiNumero('   11.2°C') → 11.2
+estraiNumero('     1019.3 hPa') → 1019.3
+estraiNumero('   11.2°C') → 11.2
+estraiNumero('     1019.3 hPa') → 1019.3
+estraiNumero('   11.1°C') → 11.1
+estraiNumero('     1019.4 hPa') → 1019.4
+estraiNumero('   11.1°C') → 11.1
+estraiNumero('     1019.5 hPa') → 1019.5
+estraiNumero('   10.9°C') → 10.9
+estraiNumero('     1019.3 hPa') → 1019.3
+estraiNumero('   10.9°C') → 10.9
+estraiNumero('     1019.3 hPa') → 1019.3
+estraiNumero('   10.9°C') → 10.9
+estraiNumero('     1019.3 hPa') → 1019.3
+estraiNumero('   10.9°C') → 10.9
+estraiNumero('     1019.2 hPa') → 1019.2
+estraiNumero('   10.9°C') → 10.9
+estraiNumero('     1019.2 hPa') → 1019.2
+estraiNumero('   10.8°C') → 10.8
+estraiNumero('     1019.2 hPa') → 1019.2
+estraiNumero('   10.8°C') → 10.8
+estraiNumero('     1019.3 hPa') → 1019.3

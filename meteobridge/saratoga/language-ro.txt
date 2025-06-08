@@ -1,0 +1,363 @@
+# Romanian language plugin for Carterlake/WD/AJAX/PHP template set
+# Ken True - http://saratoga-weather.org/template/
+# Translate Marian Peteanu
+# Version 1.00 - 24-Apr-2008 - initial release
+#
+# English and Western European use ISO-8859-1 character sets
+# 
+charset|ISO-8859-2|
+#
+# Greek should use ISO-8859-7 character set for compatibility with plaintext-parser-lang-el.txt
+#
+# Note:  the langlookup entries are for EXACT replacements including spaces and capitalization.
+#  
+# format is 'langlookup|<english-to-find>|<replacement-string>|
+#
+# Don't change the first field <english-to-find>  because it matches what is in the 
+# langtrans/langtransstr() calls embedded in various scripts in the template set.  
+# Only change the second field <replacement-string> for your language.
+#
+# You can add new langlookup entries to handle additions to your website.  Be sure to add the
+# same langlookup entry to the other language-LL.txt files for all the languages you support on your site.
+#
+# ajax-dashboard and ajax-gizmo language strings
+#
+langlookup|Enable JavaScript for live updates|Activati Javascript pentru actualizare in timp real|
+langlookup|Updated|Ultima actualizare|
+langlookup|updated| dela ultima actualizare au trecut |
+langlookup|sec ago|secunde|
+langlookup|next update at|urmãtoarea actualizare la|
+# thermometer language
+langlookup|Temperature|Temperatura|
+langlookup|Currently|Actualã|
+langlookup|Max|Max|
+langlookup|Min|Min|
+# rising/falling arrows text
+langlookup|Warmer|Cald|
+langlookup|Colder|Rece|
+langlookup|Rising|In creºtere|
+langlookup|Falling|In scãdere|
+langlookup|Increased|Creºte|
+langlookup|Decreased|Descreºte|
+langlookup|than last hour|în ultima orã|
+langlookup|since last hour|dela ultima orã
+langlookup|than yesterday at this time|ieri la aceastã orã|
+#
+langlookup|Feels like|Senzaþia|
+langlookup|24-hr difference|Diferenþa în 24-ore|
+langlookup|Today|Azi|
+langlookup|Yesterday|Ieri|
+langlookup|High:|Max:|
+langlookup|Low:|Min:|
+langlookup|Wind from|Vânt dela|
+langlookup|Gust|Vânt în rafale|
+langlookup|Gust Month|Vânt în rafale anual|
+langlookup|UV Index|Indice UV|
+langlookup|UV Index Forecast|Previziune indice UV|
+langlookup|Solar Radiation|Radiaþia solarã|
+langlookup|Summary|Sumar|
+langlookup|Humidity|Umiditate|
+langlookup|Dew Point|Punct de rouã|
+langlookup|Barometer|Barometru|
+langlookup|Baro Trend|Tendinþã barometru|
+langlookup|Wind|Vântul|
+langlookup|Rain|Precipitaþii|
+langlookup|Outlook|Perspectiva|
+langlookup|Rain Today|Precipitaþii azi|
+langlookup|Rain Rate|Rata precipitatii|
+langlookup|Rain Yesterday|Precipitaþii ieri|
+langlookup|Storm Rain|Furtunã de ploaie|
+langlookup|This Month|In luna aceastã|
+langlookup|Season Total|Total anual|
+langlookup|day since last rain|zi dela ultima ploaie|
+langlookup|days since last rain|zile dela ultima ploaie|
+langlookup|rain day in|ploaie în ziua|
+langlookup|rain days in|ploaie în zilele|
+langlookup|Snow|Zãpadã|
+langlookup|Snow Today|Zãpadã azi|
+langlookup|Snow Yesterday|Zãpadã ieri|
+langlookup|Snow Depth|Grosime zãpadã|
+langlookup|snow day in|ninsoare în ziua|
+langlookup|snow days in|ninsoare în zilele|
+langlookup|Almanac|Almanah|
+langlookup|Sun|Soare|
+langlookup|Moon|Luna|
+langlookup|Sunrise|Soarele rãsare|
+langlookup|Sunset|Soarele apune|
+langlookup|Moonrise|Luna rãsare|
+langlookup|Moonset|Luna apune|
+langlookup|Illuminated|Iluminatã|
+langlookup|Weather Forecast|Prognoza vremii|
+langlookup|forecast|Prognoza|
+langlookup|Cloudbase|Baza norilor|
+#
+# UV Index words - note: leave &nbsp; where shown for proper lookup
+langlookup|None|Zero|
+langlookup|Low|Scazut|
+langlookup|Medium|Mediu|
+langlookup|High|Ridicat|
+langlookup|Very&nbsp;High|Foarte&nbsp;Ridicat|
+langlookup|Extreme|Extrem|
+#
+# Moon words
+#
+langlookup|New Moon|Lunã nouã|
+langlookup|Waxing Crescent|In creºtere|
+langlookup|Waxing Crescent Moon|Lunã crescãtoare|
+langlookup|First Quarter|Prim pãtrar|
+langlookup|First Quarter Moon|Primul pãtrar al lunii|
+langlookup|Waxing Gibbous|Bombatã|
+langlookup|Waxing Gibbous Moon|Lunã bombatã|
+langlookup|Full Moon|Lunã plinã|
+langlookup|Waning Gibbous|Bombatã|
+langlookup|Waning Gibbous Moon|Lunã bombatã|
+langlookup|Last Quarter|Ultim pãtrar|
+langlookup|Last Quarter Moon|Ultim pãtrar al lunii|
+langlookup|Waning Crescent|Crestere palidã|
+langlookup|Waning Crescent Moon|Crestere palidã a lunii|
+#
+#
+# WU-Forecast.php replacement text
+#
+langlookup|Chance of precipitation|ªanse de precipitatii|
+#
+# footer.php
+#
+langlookup|Top|Sus|
+langlookup|Contact Us|Contact|
+langlookup|Bookmark Page|Marcheazã aceastã paginã|
+langlookup|Valid|Valabil|
+langlookup|Never base important decisions on this or any weather information obtained from the Internet|Niciodatã decizii importante în baza acestor prognoze sau orice informaþii obþinute de pe Internet|
+#
+# menubar.php and flyout-menu.xml entries
+#
+# Note: if using the flyout-menu, you can have individual language versions as
+# flyout-menu-LL.xml, flyout-menu-test-LL.xml using full native language which won't be translated.
+#
+# these settings below are for the English menubar.php $html section, and flyout-menu.xml/flyout-menu-test.xml
+#  which should be in English only.
+#
+langlookup|Navigation|Navigare|
+langlookup|External Links|Linkuri externe|
+langlookup|Home|Acasã|
+langlookup|Live Weather|Vremea în direct|
+langlookup|Full Screen|Pe tot ecranul|
+langlookup|Radar|Radar|
+langlookup|Forecast|Prognoza WU în detaliu|
+langlookup|WXSIM Forecast details|Prognoza WXSIM în detaliu|
+langlookup|Advisories|Avertizãri|
+langlookup|WU-History|Istoric-WU|
+langlookup|Maps|Hãrþi|
+langlookup|Animate maps|Hãrþi animate|
+langlookup|Four Day Map|Harta pe 4 zile|
+langlookup|Lightining Live|Fulgere în direct|
+langlookup|Lightning Summary|Statisticã Fulgere|
+langlookup|Live Mesomap|Mesomap în direct|
+langlookup|Daily Stats|Jurnal zilnic|
+langlookup|Station Data by Month|Datele dupa lunã|
+langlookup|Astronomy|Astronomie|
+langlookup|Links|Legãturi|
+langlookup|About|Prezentare|
+langlookup|About Us|Prezentarea mea|
+langlookup|Live|In direct|
+langlookup|Weather-Display Live|Weather-Display în direct|
+langlookup|Local Radar|Radar local|
+langlookup|Mesomap|Mesomap|
+langlookup|AIQ|Calitatea aerului|
+langlookup|MesoMap Live|MesoMap în direct|
+langlookup|Forecast &amp; Advisories|Prognoza &amp;Avertismente|
+langlookup|Weather Trends|Tendinþa vremii|
+langlookup|For Rapid Fire|Cele 4 staþii|
+langlookup|Station Graphs|Graficele staþiei|
+langlookup|Meteograms|Meteograme|
+langlookup|Station Monthly Reports|Raportul lunar al staþiei|
+langlookup|Sun/Moon Almanac|Date astronomice|
+langlookup|Earthquakes|Cutremure|
+langlookup|Website Map|Harta website|
+langlookup|New Radar|Radar extins|
+#
+# include-style-switcher.php items
+#
+langlookup|Style Options|Opþiuni de stil|
+langlookup|Style|Stilul|
+langlookup|Widescreen|Ecran lat|
+langlookup|On|Da|
+langlookup|Off|Nu|
+langlookup|Set|Validare|
+langlookup|Language|Limba|
+# Colors of templates for style-switcher
+langlookup|Black|Negru|
+langlookup|Blue|Albastru|
+langlookup|Dark|Intunecat|
+langlookup|Fall|De toamnã|
+langlookup|Green|Verde|
+langlookup|Ice Tea|De gheaþã|
+langlookup|Mocha|Mocca|
+langlookup|Orange|Portocaliu|
+langlookup|Pastel|Pastel|
+langlookup|Purple|Purpur|
+langlookup|Red|Roºu|
+langlookup|Salmon|Somon|
+langlookup|Silver|Argint|
+langlookup|Spring|Primãvara|
+langlookup|Taupe|Suav|
+langlookup|Teal|Vernil|
+#
+# wxastronomy.php items (solar/lunar words are specified above)
+#
+langlookup|Daylight|Zori|
+langlookup|Vernal Equinox|Equinoxul de primãvara|
+langlookup|Start of Spring|Inceput de primãvara|
+langlookup|Summer Solstice|Solstiþiu de varã|
+langlookup|Start of Summer|Inceputul verii|
+langlookup|Autumn Equinox|Equinoxul de toamnã|
+langlookup|Start of Fall|Inceputul toamnei|
+langlookup|Winter Solstice|Solstiþiu de iarnã|
+langlookup|Start of Winter|Inceputul iernii|
+#
+# wxgraphs.php items
+#
+langlookup|Weather Trend Graphs|Grafice de tendintã a vremii|
+langlookup|Last 24 Hours|Ultimele 24 ore|
+langlookup|Last 72 Hours|Ultimele 72 ore|
+langlookup|Month to Date|Date în lunã|
+#
+# V1.01 - trends-inc.php native PHP conversion translation items
+#
+langlookup|Trends as of|Tendinþa|
+langlookup|TIME|ORA|
+langlookup|TEMP|TEMP|
+langlookup|WIND SPEED|VITEZA VÂNTULUI|
+langlookup|WIND GUST|VÂNT IN RAFALE|
+langlookup|WIND DIR|DIRECÞIA|
+langlookup|HUMIDITY|UMIDITATEA|
+langlookup|PRESSURE|PRESIUNEA|
+langlookup|RAIN|PRECIPITAÞII|
+#
+langlookup|Current|Actualã|
+langlookup|CURRENT|ACTUALÃ|
+langlookup|Now|Acum|
+langlookup|Records and Stats|Recorduri ºi statisticã|
+langlookup|5 minutes ago|5 minute în urma|
+langlookup|10 minutes ago|10 minute în urma|
+langlookup|15 minutes ago|15 minute în urma|
+langlookup|20 minutes ago|20 minute în urma|
+langlookup|30 minutes ago|30 minute în urma|
+langlookup|45 minutes ago|45 minute în urma|
+langlookup|60 minutes ago|60 minute în urma|
+langlookup|75 minutes ago|75 minute în urma|
+langlookup|90 minutes ago|90 minute în urma|
+langlookup|105 minutes ago|105 minute în urma|
+langlookup|120 minutes ago|120 minute în urma|
+# following three entries are used for <condition> on <date> and <condition> at <time>
+langlookup|on|din|
+langlookup|at|la|
+langlookup|from|dela| unde '14 mph dela 315 °(NW)'
+#
+langlookup|last hour|Ultima orã|
+langlookup|over last 7 days|ultima sãptãmânã|
+langlookup|last month|Ultima lunã|
+#
+langlookup|Today|Azi|
+langlookup|Yest.|Ieri|
+langlookup|Week|Sãptãmâna|
+langlookup|Month|Luna|
+langlookup|Year|Anul|
+langlookup|Gust/hr|Rafale/orã|
+#
+langlookup|RAIN HISTORY|ISTORIC PRECIPITATII|
+langlookup|day since last rain on|zi trecutã dela ultima ploaie|
+langlookup|days since last rain on|zile trecute dela ultima ploaie|
+langlookup|rain day this month|zi cu ploaie în aceastã lunã|
+langlookup|rain days this month|zile cu ploaie în aceastã lunã|
+langlookup|rain day this year|zi cu ploaie în aceast an|
+langlookup|rain days this year|zile cu ploaie în aceast an|
+langlookup|total last year at this time|total anual|
+
+langlookup|TEMPERATURE HIGHS|TEMPERATURA MAXIMA|
+langlookup|HOT DAYS THIS MONTH|ZILE CALDE IN LUNA|
+langlookup|days|zile|
+langlookup|day|ziua|
+langlookup|Warmest day|ziua caldã|
+langlookup|Warmest night|noaptea caldã|
+
+langlookup|TEMPERATURE LOWS|TEMPERATURA MINIMÃ|
+langlookup|COLD DAYS THIS MONTH|ZILE RECI IN LUNÃ|
+langlookup|Coldest day|Ziua rece|
+langlookup|Coldest night|Noaptea rece|
+
+langlookup|BAROMETER HIGHS|PRESIUNEA MAXIMÃ|
+langlookup|WIND CHILL LOWS|WIND CHILL MINIM|
+langlookup|EVAPOTRANSPIRATION|EVAPOTRANSPIRAÞIA|
+langlookup|SOLAR HIGHS|RADIAÞIA SOLARÃ MAXIMÃ|
+langlookup|UV HIGHS|INDICELE UV MAXIM|
+langlookup|Wind Data|Date despre vânt|
+langlookup|WIND GUST HIGHS|VÂNT IN RAFALE MAXIM|
+langlookup|WIND GUST AVERAGE HIGHS|MEDIA VÂNT RAFALE|
+langlookup|WIND RUN|RECORD VÂNT|
+# --- end of new trends-inc.php translations
+#
+# include-wxhistory.php translations
+#
+langlookup|Daily / Monthly Weather History From This Station|Date meteo lunare istorice a acestei staþii|
+langlookup|Select a report and click submit|Selectaþi data pentru informare|
+langlookup|submit|Executã|
+langlookup|Daily Report for the month of|Raportul zilnic din aceastã lunã|
+langlookup|Average and Extremes|Medii ºi Extreme|
+langlookup|Average and Extremes for Month of|Medii ºi extreme pentru luna|
+langlookup|up to day|sus pe zi|
+langlookup|Click here to toggle the 24 Hour Graph of this day|Click aici pentru graficul pe 24 ore|
+langlookup|Day, Sunshine Hours, ET, Max Solar, UV|Ziua, Ore cu soare, ET, Radiaþia solarã maximã, UV|
+langlookup|Daily Rain Totals|Total precipitaþii pe zi|
+langlookup|Average temperature|Temperatura medie|
+langlookup|Average humidity|Umiditatea medie|
+langlookup|Average dewpoint|Punct de rouã medie|
+langlookup|Average barometer|Presiunea medie|
+langlookup|Average windspeed|Viteza vântului medie|
+langlookup|Average gustspeed|Vânt rafale medie|
+langlookup|Average direction|Direcþia medie|
+langlookup|Rainfall for month|Precipitaþii pe luni|
+langlookup|Rainfall for year|Precipitaþi pe ani|
+langlookup|Maximum rain per minute|Intensitatea maximã pe minut|
+langlookup|Maximum temperature|Temperatura maximã|
+langlookup|Minimum temperature|Temperatura minimã|
+langlookup|Maximum humidity|Umiditatea maximã|
+langlookup|Minimum humidity|Umiditatea minimã|
+langlookup|Maximum pressure|Presiunea maximã|
+langlookup|Minimum pressure|Presiunea minimã|
+langlookup|Maximum windspeed|Viteza vintului maxima|
+langlookup|Maximum gust speed|Vint în rafale maxim|
+langlookup|Maximum heat index|Indice de cãldurã maxim|
+langlookup|Sunshine hours month to date|Zile luminã lunare pe date|
+langlookup|Sunshine hours year to date|Zile luminã anuale pe date|
+langlookup|hrs|ora|
+#
+# --- end of include-wxhistory.php translations
+#
+#
+# Conditions (%Currentsolardescription% and clientraw[49])
+#
+conditions|begin|început|
+langlookup|Dry|Uscat|
+langlookup|Light rain|Ploaie uºoarã|
+langlookup|Moderate drizzle|Burniþã|
+langlookup|Moderate rain|Ploaie moderatã|
+langlookup|Heavy rain|Ploaie torenþialã|
+langlookup|Stopped raining|Ploaia s-a oprit|
+# conditions time
+langlookup|Dawn|Inceputul zilei|
+langlookup|Dusk|Amurg|
+langlookup|Night time|Noapte|
+# Clouds (sky)
+langlookup|Clear|Senin|
+langlookup|Sunny|Insorit|
+langlookup|Clear skies|Cer senin|
+langlookup|Mostly sunny|In mare parte însorit|
+langlookup|A few clouds|Puþin înorat|
+langlookup|Sc|Nebulos|
+langlookup|Partly cloudy|Parþial înorat|
+langlookup|Mostly cloudy|In mare parte înorat|
+langlookup|Cloudy with clear p|Nebulos cu senin|
+langlookup|Overcast|Acoperit cu nori|
+conditions|end|sfârºitul|
+#

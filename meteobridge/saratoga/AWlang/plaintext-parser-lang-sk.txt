@@ -1,0 +1,586 @@
+# Language file for plaintext-parser.php program
+# Version: 2.2-SK-only - 08-Jan-2014
+# translation - Slovak by EmsiWx   http://www.pocasie-bytca.sk
+#
+charset|windows-1250|
+#
+# Nové na allin1
+#
+langlookup|Feels|Na pocit|
+langlookup|Feels like|Pocitová teplota|
+langlookup|Temp./Prec.|Tepl./Zrá.|
+langlookup|Temp./Prec./Baro.|Tepl./Zrá./Tlak|
+langlookup|Thunder/Dewp.|Pravdpd.búrok/Ros.bod|
+langlookup|Solar/UV|Slneè.Rad./UV|
+langlookup|Max/min temp.|Max/min tepl.|
+langlookup|Compare|Porovnanie|
+langlookup|Snowdepth|Sneh.pokr.|
+langlookup|Move the mouse over the values for info.|Presunte kurzor myši na hodnoty pre viac informácií.|
+#
+lang|A mix of snow and sleet likely|Pravdepodobné sneenie alebo zmiešané zráky|
+lang|A slight chance of a mix of rain, sleet, freezing rain, and snow|Ojedinele mrznúce alebo zmiešané zráky|
+lang|A slight chance of a mix of sleet, snow, rain, and freezing rain|Ojedinele zmiešané alebo mrznúce zráky|
+lang|A slight chance of a mix of rain, freezing rain, sleet, and snow|Ojedinele dáï, mrznúci dáï, alebo zmiešané zráky|
+lang|A chance of a mix of rain, snow, sleet, and freezing rain|Monos daïa alebo mrznúcich zráok|
+lang|A chance of a mix of rain and snow in the evening, then a chance of a mix of snow and rain after midnight|Monos zmiešanıch zráok poèas veèera, neskôr monos zráok, prevane snehovıch po polnoci|
+lang|A chance of a mix of snow and rain in the morning, then a chance of a mix of rain and snow in the afternoon|Monos zráok, prevane snehovıch poèas rána, neskôr monos zmiešanıch zráok poèas popoludnia|
+lang|A slight chance of a mix of rain, sleet, and freezing rain|Ojedinele dáï alebo mrznúci dáï|
+lang|A slight chance of a mix of sleet, snow, and freezing rain|Ojedinele sneenie, dáï so snehom aleobo mrznúci dáï|
+lang|a slight chance of a mix of snow, rain, freezing rain, and sleet|ojedinele zmiešané zráky aleobo mrznúci dáï|
+lang|A mix of snow, sleet, freezing rain, and rain likely|Pravdepodobné zmiešané alebo mrznúce zráky|
+lang|a mix of sleet, rain, snow, and freezing rain likely|pravdepodobnı dáï alebo mrznúci dáï|
+lang|Above-ground freezing rain accumulation up to|Akumulácia mrznúcich zráok nad zemou do|
+lang|A mix of snow, sleet, and freezing rain likely|Pravdepodobné sneenie alebo mrznúce zráky|
+lang|Precipitation mostly less than|Predpokladanı úhrn zráok menej ako|
+lang|Precipitation mostly between|Predpokladanı úhrn zráok medzi|
+lang|Precipitation mostly around|Predpokladanı úhrn zráok okolo|
+lang|Scattered dense overcast|Ojedinele zamraèené nízkou oblaènosou|
+lang|Mostly cloudy to cloudy|Prevane oblaèno a zamraèené|
+lang|mostly cloudy to cloudy|prevane oblaèno a zamraèené|
+lang|Minimum snow level|Hranica sneenia poklesne na pribline|
+lang|Maximum snow level|Sneenie od nadmorskej vıšky pribline|
+lang|meters above sea level|metrov nad morom|
+lang|Except for higher amounts of precipitation within thunderstorms|Poèas búrok môe by lokálne úhrn zráok vyšší|
+lang|A chance of rain. Scattered thundershowers possible|Monos prehánok, ojedinele aj búrok|
+lang|A slight chance of rain. Scattered thundershowers possible|Ojedinele prehánky alebo búrky|
+lang|A chance of rain. Precipitation showery or intermittent|Monos prehánok alebo obèasného daïa|
+lang|A chance of rain in the morning, then a slight chance of rain in the afternoon. Scattered thundershowers possible|Ráno and predpoludním monos prehánok ojedinele aj búrok,neskôr zráky u len ojedinele|
+lang|A chance of rain in the evening, then rain likely after midnight. Scattered thundershowers possible|Monos prehánok alebo búrok poèas veèera, neskôr dáï ojedine aj búrky po polnoci|
+lang|A chance of rain in the evening, then rain likely after midnight. Scattered thundershowers possible|Monos prehánok alebo búrok poèas veèera, neskôr dáï ojedine aj búrky po polnoci|
+lang|A slight chance of rain in the morning, then a chance of rain in the afternoon. Precipitation showery or intermittent|Ráno and predpoludním zráky len ojedinele, neskôr monos prehánok alebo obèasného daïa|
+lang|A chance of rain in the afternoon. Scattered thunderstorms likely|Popoludní monos prehánok alebo búrok|
+lang|Rain likely in the morning, then a chance of rain in the afternoon. Scattered thunderstorms likely|Ráno and predpoludním dáï alebo búrky, neskôr ustávanie zráok|
+lang|Rain likely. Scattered thunderstorms likely|Dáï miestami aj búrky|
+lang|A slight chance of rain in the morning, then a chance of rain in the afternoon. Scattered thundershowers possible|Dopoludnia zráky len ojedinele, neskôr monos prehánok, ojedinele aj búrok|
+lang|A chance of rain in the afternoon. Precipitation showery or intermittent|Popoludní monos prehánok alebo obèasného daïa|
+lang|A chance of rain in the morning, then rain likely in the afternoon. Precipitation showery or intermittent|Ojedinele prehánky poèas dopoludnia, neskôr monos prehánok alebo obèasného daïa|
+lang|Rain likely. Thunderstorms very likely, some possibly severe|Pravdepodobnı dáï alebo búrky, ktoré môu by intenzívne|
+lang|A chance of rain in the evening, then a slight chance of rain after midnight. Scattered thunderstorms likely|Veèer monos daïa alebo búrok, neskôr zráky u len ojedinele|
+lang|A chance of rain after midnight. Scattered thundershowers possible|Po polnoci monos prehánok, ojedinele aj búrok|
+lang|Rain likely in the evening, then a slight chance of rain after midnight. Scattered thundershowers possible|Veèer dáï, ojedinele aj búrky,neskôr zráky u len ojedinele|
+lang|A chance of rain in the evening, then a slight chance of rain after midnight. Precipitation showery or intermittent|Monos prehánok alebo obèasného daïa poèas veèera, neskôr zráky u len ojedinele|
+lang|A chance of rain in the afternoon. Scattered thundershowers possible|Popoludní monos prehánok, ojedinele aj búrok|
+lang|A slight chance of rain in the afternoon. Scattered thundershowers possible|Popoludní, ojedinele prehánky, alebo aj búrky|
+lang|A slight chance of rain in the afternoon. Scattered thunderstorms likely|Popoludní, ojedinele prehánky alebo búrky|
+lang|A slight chance of rain after midnight. Scattered thundershowers possible|Cez noc ojedinele prehánky alebo búrky|
+lang|A slight chance of rain in the evening, then a chance of rain after midnight. Scattered thundershowers possible|Ojedinele prehánky alebo búrky poèas veèera, neskôr po polnoci monos prehánok ojedinele aj búrok|
+lang|A chance of rain in the evening, then a slight chance of rain after midnight. Scattered thundershowers possible|Monos prehánok alebo búrok poèas veèera, neskôr prehánky alebo búrky u len ojedinele|
+lang|A chance of rain. Scattered thunderstorms likely|Monos prehánok alebo búrok|
+lang|Scattered thundershowers possible, probability|Miestami monos búrkovıch prehánok, s pravdepodobnosou vıskytu|
+lang|Numerous thunderstorms, some heavy or severe, probability &ht;|Poèetné búrky, niektoré aj intenzívne a nièivé s pravdepodobnosou vıskytu >|
+lang|Numerous thunderstorms, some heavy or severe, probability|Poèetné búrky, niektoré aj intenzívne a nièivé s pravdepodobnosou vıskytu|
+lang|Thunderstorms very likely, some severe|Ve¾mi pravdepodobné búrky, niektoré aj intenzívne|
+lang|Numerous thunderstorms, some severe, probability|Poèetné búrky, niektoré aj intenzívne, s pravdepodobnosou vıskytu|
+lang|Numerous thunderstorms, some severe, probability &ht;|Poèetné búrky, sprevádzané intenzívnymi doprovodnımi javmi s pravdepodobnosou vıskytu >|
+lang|Numerous thunderstorms, some possible heavy, probability|Poèetné búrky, niektoré aj intenzívne s pravdepodobnosou vıskytu|
+lang|Scattered thunderstorms likely, probability|Miestami aj búrkové prehánky, s pravdepodobnosou vıskytu|
+lang|Scattered thundershowers possible|Miestami monos búrkovıch prehánok|
+lang|Scattered heavy or severe thunderstorms, probability|Miestami intenzívne a nièivé búrky, s pravdepodobnosou|
+lang|Scattered thunderstorms likely|Miestami aj búrky|
+lang|Thunderstorms very likely|Poèetné búrky|
+lang|Thunder possible, probability|Monos búrky, s pravdepodobnosou|
+lang|with areas of light frost likely|miestami slabı prízemnı mráz|
+lang|Light rain showers but thunder unlikely|Slabé daïové prehánky, ale búrky nepravdepodobné|
+lang|Moderate rain but thunder unlikely|Mierny dáï, ale búrky nepravdepodobné|
+lang|Heavy rain but thunder unlikely|Silnı dáï, ale búrky nepravdepodobné|
+lang|Moderate rain showers but thunder unlikely|Mierne daïové prehánky, ale búrky nepravdepodobné|
+lang|Light rain but thunder unlikely|Slabı dáï, ale búrky nepravdepodobné|
+lang|Move the mouse over the values for info|Presunte kurzor na jednotlivé hodnoty pre viac informácií|
+lang|Light rain showers|Slabé daïové prehánky|
+lang|Light snow shower|Slabá snehová prehánka|
+lang|Light rain shower|Slabá daïová prehánka|
+lang|Moderate rain showers|Mierne daïové prehánky|
+lang|Heavy rain showers|Silné daïové prehánky|
+lang|Freezing rain accumulation up to|Tvorba po¾adovice do|
+lang|Little or . no snow or ice (on ground) accumulation expected.|Oèakávaná malá prípadne iadna akumulácia snehu alebo ¾adu na povrchu.|
+lang|High risk of severe thunderstorms and possible tornados|Korkea riski voimakkaille ukkosille|
+lang|Risk of severe thunderstorms and possible tornados|Paikoin voimaksata ukkosta ukkosille|
+lang|Thunderstorms possible|Moné búrky|
+lang|Thunderstorms likely, some severe|Todennäköisesti paikoin voimakasta ukkosta|
+lang|Thunderstorms likely, some possibly severe|Todennäköisesti paikoin voimaksta ukkosta|
+lang|Thunderstorms likely, some severe|Todennäköisesti paikoin voimakkaita ukkoskuurjoa|
+lang|Thunderstorms likely|Pravdebodobné búrky|
+lang|Some thunder possible|Mahdollisesti ukkoskuuroja|
+lang|some possibly severe|ktoré môu by intenzívne|
+lang|Some thunderstorms likely|Todennäköisesti paikallisia ukkoskuuroja|
+lang|Scattered frost|Ojedinele prízemnı mráz|
+lang|Frost.|Yleisesti hallaa.|
+lang|Heat index up to|Teplotnı index a okolo|
+lang|probably|pravdepodobne|
+lang|Windchill|Pocitová teplota (vietor)|
+lang|kph|km/h|
+lang|Probably light fog|Pravdepodobná slabá hmla|
+lang|Probably moderate fog|Pravdepodobná mierna hmla|
+lang|Light rain|Slabı dáï|
+lang|Moderate rain shower|Mierna daïová prehánka|
+lang|Moderate rain|Mierny dáï|
+lang|Moderate snow|Mierne sneenie|
+lang|Heavy rain|Silnı dáï|
+lang|Overcast|Zamraèené|
+lang|Probably rain|Pravdepodobnı dáï|
+lang|Some thunder possible|Monos búrky|
+lang|Light sleet shower|Slabá prehánka daïa so snehom|
+lang|Moderate sleet|Mierny dáï so snehom|
+lang|Moderate to dense fog|Mierna a hustá hmla|
+#
+lang|Scattered light frost|Ojedine slabı prízemnı mráz|
+lang|Areas of light frost|Miestami slabı prízemnı mráz|
+lang|Light to moderate frost|Slabı a mierny prízemnı mráz|
+lang|Moderate to heavy frost|Mierny a silnı prízemnı mráz|
+lang|Moderate or heavy frost|Mierny alebo silnı prízemnı mráz|
+lang|with moderate to heavy frost|mierny a silnı prízemnı mráz|
+lang|with light to moderate frost|slabı a mierny prízemnı mráz|
+lang|Partly cloudy|Polooblaèno|
+lang|partly cloudy|polooblaèno|
+lang|Partly to mostly sunny|Jasno a polojasno|
+lang|partly to mostly sunny|jasno a polojasno|
+lang|Partly sunny|Polojasno|
+lang|partly sunny|polojasno|
+lang|Wind chill ranging from|Windchill (pocitová teplota vzh¾adom na rıchlos vetra) v rozmedzí|
+lang|Wind chill around|Windchill (pocitová teplota vzh¾adom na rıchlos vetra) okolo|
+lang|Wind chill as low as|Windchill (pocitová teplota vzh¾adom na rıchlos vetra) do|
+lang|Partly to mostly cloudy|Polooblaèno a oblaèno|
+lang|Snow very likely|Ve¾mi pravdepodobné sneenie|
+lang|with just a few wispy clouds|s vysokou tenkou oblaènosou|
+lang|with scattered light frost possible|miestami so slabou hmlou|
+lang|with just a few high thin clouds|s ojedinelou vysokou tenkou oblaènosou|
+lang|except for a few wispy clouds|s ojedinelou vysokou tenkou oblaènosou|
+lang|a slight chance of a mix of snow, sleet, and rain|lne dáï, dáï so snehom alebo sneenie|
+lang|A slight chance of a snow|Ojedinele sneenie|
+lang|a slight chance of a snow|ojedinele sneenie|
+lang|A slight chance of a mix of snow, sleet, freezing rain, and rain|Ojedinele sneenie, dáï so snehom, mrznúci dáï alebo dáï|
+lang|a slight chance of a mix of freezing rain and sleet|ojedinele mrznúci dáï alebo dáï so snehom|
+lang|a chance of a mix of rain, sleet, freezing rain, and snow|monos mixu daïa, daïa so snehom, mrznúceho daïa alebo sneenia|
+lang|A slight chance of a mix of sleet, freezing rain, rain, and snow|Ojedinele dáï so snehom, mrznúci dáï, dáï alebo sneenie|
+lang|A slight chance of a mix of rain, snow, sleet, and freezing rain|Ojedinele dáï, mrznúci dáï alebo dáï so snehom|
+lang|A chance of a mix of snow, sleet, freezing rain, and rain|Monos mixu sneenia, daïa so snehom, mrznúceho daïa alebo daïa|
+lang|A mix of snow, rain, and sleet likely|Pravdebodobnı mix sneenia, daïa alebo daïa so snehom|
+lang|A slight chance of a mix of sleet, freezing rain, and snow|Ojedinele dáï so snehom, mrznúci dáï alebo sneenie|
+lang|A chance of a mix of snow, sleet, and rain|Monos mixu sneenia, daïa so snehom alebo daïa|
+lang|a chance of a mix of snow, sleet, freezing rain, and rain|monos mixu sneenia, daïa so snehom, mrznúceho daïa alebo daïa|
+lang|A chance of a mix of snow, freezing rain, and sleet|Monos sneenia, mrznúceho daïa, daïa so snehom|
+lang|A chance of a mix of sleet, freezing rain, and rain|Monos daïa, mrznúceho daïa alebo daïa|
+lang|a chance of a mix of sleet, rain, and snow|monos daïa so snehom, daïa alebo sneenia|
+lang|A slight chance of a mix of snow, rain, and sleet|Ojedinele sneenie, dáï alebo dáï so snehom|
+lang|a mix of sleet and snow likely|pravdepodobnı dáï so snehom alebo sneenie|
+lang|A chance of a mix of snow, rain, and sleet|Monos sneenia, daïa alebo daïa so snehom|
+lang|A chance of a mix of snow and rain|Monos zmiešanıch zráok|
+lang|A slight chance of sleet|Ojedinele dáï so snehom|
+lang|A mix of sleet and freezing rain likely|Pravdepodobnı dáï so snehom alebo mrznúci dáï|
+lang|a chance of freezing rain|monos mrznúceho daïa|
+lang|a slight chance of a mix of rain and sleet|ojedinele dáï alebo dáï so snehom|
+lang|A mix of sleet and snow likely|Pravdebodobnı dáï so snehom alebo sneenie|
+lang|a mix of freezing rain and sleet likely|pravdepodobnı mrznúci dáï alebo dáï so snehom|
+lang|a chance of a mix of rain, sleet, and snow|monos daïa, daïa so snehom alebo sneenia|
+lang|A chance of freezing rain|Monos mrznúceho daïa|
+lang|sleet likely|pravdepodobnı dáï so snehom|
+lang|a chance of a mix of sleet and freezing rain|monos zmiešanıch zráok alebo mrznúceho daïa|
+lang|A chance of a mix of freezing rain, rain, and snow|Monos mixu mrznúceho daïa, daïa, alebo sneenia|
+lang|A slight chance of a mix of snow and rain|Ojedinele zmiešané zráky|
+lang|Snow likely|Pravdepodobné sneenie|
+lang|a chance of a mix of freezing rain, sleet, and snow|monos mrznúceho daïa, daïa so snehom alebo sneenia|
+lang|A slight chance of a mix of freezing rain and rain|Ojedinele mrznúci dáï alebo dáï|
+lang|A mix of freezing rain, snow, sleet, and rain|Mix mrznúceho daïa, sneenia, daïa so snehom ,daïa|
+lang|A mix of freezing rain, rain, sleet, and snow|Mix mrznúceho daïa, daïa, daïa so snehom ,sneenia|
+lang|a chance of a mix of rain and freezing rain|monos daïa alebo mrznúceho daïa|
+lang|a chance of a mix of freezing rain and rain|monos mrznúceho daïa alebo daïa|
+lang|A chance of a mix of rain and freezing rain|Monos daïa alebo mrznúceho dáïa|
+lang|No ice (on ground) accumulation expected|Tvorba po¾adovice sa neoèakáva|
+lang|a chance of a mix of rain, freezing rain, sleet, and snow|monos daïa, mrznúceho daïa, daïa so snehom alebo sneenia|
+lang|a chance of a mix of sleet, freezing rain, and snow|monos daïa so snehom, mrznúceho daïa alebo sneenia|
+lang|A slight chance of a mix of snow, rain, sleet, and freezing rain|Ojedinele sneenie, dáï so snehom, mrznúci dáï alebo dáï|
+lang|A mix of sleet, freezing rain, and snow likely|Pravdepodobnı dáï so snehom, mrznúci dáï alebo sneenie|
+lang|a chance of a mix of sleet, rain, snow, and freezing rain|monos daïa so snehom, daïa, mrznúceho daïa alebo sneenia|
+lang|A chance of a mix of sleet and freezing rain|Monos daïa alebo mrznúceho daïa|
+lang|a chance of a mix of sleet, freezing rain, rain, and snow|monos daïa so snehom, sneenia, daïa alebo mrznúceho daïa|
+lang|a chance of a mix of freezing rain, rain, sleet, and snow|monos mrznúceho daïa, daïa, daïa so snehom alebo sneenia|
+lang|A chance of a mix of freezing rain and sleet|Monos mrznúceho daïa alebo daïa so snehom|
+lang|a chance of a mix of freezing rain, sleet, rain, and snow|monı mrznúci dáï, dáï, dáï so snehom alebo sneenie|
+lang|a chance of a mix of sleet, freezing rain, and rain|monı dáï so snehom, mrznúci dáï alebo dáï|
+lang|A mix of snow and rain likely|Pravdepodobnı dáï so snehom|
+lang|a mix of snow, sleet, rain, and freezing rain likely|pravdepodobné sneenie, dáï so snehom alebo mrznúci dáï|
+lang|A chance of a mix of freezing rain, rain, and sleet|Monos mrznúceho daïa, daïa alebo zmiešanıch zráok|
+lang|a chance of a mix of sleet and snow|monos sneenia alebo daïa so snehom|
+lang|A chance of a mix of sleet, freezing rain, and snow|Monos sneenia, daïa so snehom alebo mrznúceho daïa|
+lang|a chance of a mix of freezing rain and sleet|monos daïa so snehom alebo mrznúceho daïa|
+lang|A mix of freezing rain and sleet likely|Pravdepodobnı dáï so snehom alebo mrznúci dáï|
+lang|a chance of a mix of snow, sleet, and freezing rain|monos sneenia, daïa so snehom alebo mrznúceho daïa|
+lang|Freezing rain accumulation up to|Akumulácia mrznúceho daïa do|
+lang|A chance of a mix of snow and sleet|Monos sneenia alebo daïa so snehom|
+lang|a chance of a mix of sleet, snow, and rain|monos daïa, daïa so snehom alebo sneenia|
+lang|A slight chance of a mix of rain, sleet, and snow|Ojedinele dáï, dáï so snehom alebo sneenie|
+lang|a chance of a mix of rain, snow, and sleet|monos daïa, daïa so snehom alebo sneenia|
+lang|A slight chance of a mix of sleet, rain, and snow|Ojedinele dáï, dáï so snehom, alebo sneenie|
+lang|Little or no snow or ice (on ground) accumulation expected|Na povrchu sa oèakáva malá alebo iadna akumulácia snehu alebo ¾adu|
+lang|Cloudy in the morning|Ráno ve¾ká oblaènos|
+lang|A chance of snow|Monos sneenia|
+lang|A slight chance of snow|Ojedinele sneenie|
+lang|A slight chance of rain|Ojedinele dáï|
+lang|A chance of a mix of rain and snow|Monos zmiešanıch zráok|
+lang|A mix of rain and snow likely|Pravdepodobné zmiešané zráky|A slight chance of a mix of rain, snow, and sleet
+lang|A slight chance of a mix of rain, snow, and sleet|Ojedinele dáï so snehom, alebo sneenie|
+lang|a slight chance of a mix of rain and snow|ojedinele zmiešané zráky|
+lang|a chance of a mix of rain and snow|moné zmiešané zráky|
+lang|No snow or ice (on ground) accumulation expected|Na povrchu sa neoèakáva akumulácia snehu alebo ¾adu|
+lang|A slight chance of a mix of snow and rain|Ojedinele zmiešané zráky|
+lang|a chance of a mix of snow and rain|moné zmiešané zráky|
+lang|a slight chance of a mix of snow and rain|ojedinele zmiešané zráky|
+lang|a chance of snow|monos sneenia|
+lang|A slight chance of a mix of snow, sleet, and rain|Ojedinele dáï so snehom alebo dáï|
+lang|a slight chance of a mix of rain, snow, and sleet|ojedinele dáï so snehom alebo sneenie|
+lang|a slight chance of snow|ojedinele sneenie|a chance of a mix of snow, sleet, and rain|
+lang|a chance of a mix of snow, sleet, and rain|monos daïa so snehom alebo daïa|
+lang|A chance of a mix of rain, snow, and sleet|Monos daïa so snehom alebo daïa|
+lang|a slight chance of a mix of snow and sleet|ojedinele dáï so snehom alebo mrznúci dáï|
+lang|A slight chance of a mix of snow and sleet|Ojedinele sneenie alebo mrznúci dáï|
+lang|a slight chance of a mix of rain, sleet, and snow|ojedinele zmiešané zráky alebo mrznúci dáï|
+lang|Snow or ice (on ground) accumulation|Akumulácia snehu alebo ¾adu na povrchu|
+lang|A chance of a mix of sleet, rain, freezing rain, and snow|Monos daïa so snehom alebo mrznúceho daïa|
+lang|a chance of a mix of snow, rain, and sleet|monos daïa, daïa so snehom alebo sneenia|
+lang|Little if any freezing rain accumulation|Ojedinele monos tvorby po¾adovice|
+lang|A chance of a mix of sleet, freezing rain, rain, and snow|Monos daïa so snehom, daïa alebo mrznúceho daïa|
+lang|a mix of snow, sleet, and rain likely|pravdepodobnı dáï so snehom alebo mrznúci dáï|
+lang|a mix of rain and snow likely|pravdepodobnı dáï so snehom|
+lang|a chance of a mix of snow and sleet|monos sneenia alebo zmiešanıch zráok|
+lang|A mix of snow and sleet likely|Pravdepodobné sneenie alebo dáï so snehom|
+lang|a slight chance of a mix of snow, freezing rain, sleet, and rain|ojedinele sneenie, dáï alebo mrznúci dáï|
+lang|A slight chance of a mix of rain and freezing rain|Ojedinele dáï alebo mrznúci dáï|
+lang|but some high cloudiness|s obèasnou vysokou oblaènosou|
+lang|High risk of severe thunderstorms and possible tornados|Ve¾ké riziko intenzívnych búrok s krúpobitím a silnım vetrom|
+lang|A slight chance of a mix of freezing rain, rain, sleet, and snow|Ojedeinele dáï so snehom alebo mrznúci dáï|
+lang|a chance of a mix of snow, freezing rain, sleet, and rain|monos daïa, daïa so snehom alebo mrznúcich zráok|
+lang|A chance of a mix of rain, freezing rain, and sleet|Monos daïa, daïa so snehom, alebo mrznúceho daïa|
+lang|a mix of snow and sleet likely|pravdepodobné sneenie, alebo dáï so snehom|
+lang|A chance of a mix of rain, sleet, snow, and freezing rain|Monos daïa, daïa so snehom, sneenia, alebo mrznúceho daïa|
+lang|A chance of a mix of rain, sleet, and snow|Monos daïa, daïa so snehom, alebo sneenia|
+lang|a mix of snow, rain, and sleet likely|pravdepodobné sneenie, dáï so snehom alebo dáï|
+lang|A mix of rain, snow, and sleet likely|Pravdepodobnı dáï, dáï so snehom alebo sneenie|
+lang|A chance of a mix of sleet and snow|Monos daïa so snehom alebo sneenia|
+lang|a slight chance of a mix of sleet, snow, and freezing rain|ojedinele dáï so snehom, sneenie alebo mrznúci dáï|
+lang|A slight chance of a mix of snow, sleet, rain, and freezing rain|Ojedinele sneenie, dáï so snehom alebo mrznúci dáï|
+lang|a mix of rain, snow, and sleet likely|dáï, dáï so snehom alebo sneenie|
+lang|A mix of sleet, rain, and snow likely|Pravdepodobnı dáï, dáï so snehom alebo sneenie|
+lang|A mix of snow, rain, and sleet likely|Pravdepodobné sneenie, dáï so snehom alebo dáï|
+lang|a slight chance of a mix of sleet, rain, and snow|ojedinele dáï, dáï so snehom alebo sneenie|
+lang|a mix of snow, freezing rain, sleet, and rain likely|pravdepodobné sneenie, dáï so snehom, alebo mrznúci dáï|
+lang|A mix of rain and snow|Dáï so snehom|
+lang|A chance of a mix of snow, sleet, and freezing rain|Monos sneenia, daïa so snehom alebo mrznúceho daïa|
+lang|A mix of rain, freezing rain, and sleet likely|Pravdepodobnı dáï, mrznúci dáï, alebo dáï so snehom|
+lang|A mix of rain, freezing rain, sleet, and snow likely|Pravdepodobnı dáï, mrznúci dáï, alebo dáï so snehom|
+lang|A chance of a mix of sleet, rain, snow, and freezing rain|Monos sneenia, mrznúcich zráok, daïa so snehom, alebo daïa|
+lang|A chance of a mix of sleet, snow, rain, and freezing rain|Monos sneenia, mrznúcich zráok, daïa so snehom, alebo daïa|
+lang|a mix of snow and rain likely|pravdepodobné zmiešané zráky|
+lang|A chance of a mix of snow, freezing rain, sleet, and rain|Monos mixu sneenia, mrznúceho daïa, daïa so snehom alebo daïa|
+lang|A slight chance of a mix of rain and snow|Ojedinele dáï so snehom|
+lang|partly to mostly cloudy|polooblaèno a oblaèno|
+lang|Flurry|Snehová prehánka|
+lang|Sleet|Dáï so snehom|
+lang|Freezing rain|Mrznúci dáï|
+lang|Heavy snow|Silné sneenie|
+lang|Light snow|Slabé sneenie|
+lang|Light sleet|Slabı dáï so snehom|
+lang|Snow accumulation|Akumulácia snehu|
+lang|Snow|Sneenie|
+lang|snow likely|pravdepodobné sneenie|
+lang|very likely|ve¾mi pravdepodobnı|
+lang| becoming | postupne |
+lang|A chance of a mix of snow and rain|Monos zmiešanıch zráok|
+lang|dense overcast|zamraèené nízkou oblaènosou|
+lang|Chance of precipitation|Pravdepodobnos zráok|
+lang|Thunderstorms likely, some possibly severe|Pravdepodobné búrky, niektoré intenzívne|
+lang| Thunderstorms likely, some severe.|Pravdepodobné búrky, niektoré intenzívne.|
+lang|Some thunder possible.|Monos búrok. |
+lang|Some thunderstorms likely|Pravdepodobné búrky|
+lang|some high cloudiness|niekiedy wysokie zachmurzenie|
+lang|some high thin clouds|niekiedy wysoka cienka warstwa chmur|
+lang|of an inch|25 mm|
+lang|half an inch|13 mm|
+lang|UV index up to|UV index do|
+lang|UV index more than|UV index vyšší ako|
+lang| mostly around | prevane okolo |
+lang| mostly less than | prevane menej ako |
+lang|then a slight chance of rain|neskôr ojedinele dáï|
+lang|then rain likely|neskôr pravdepodobnı dáï|
+lang|Rain very likely|Dáï ve¾mi pravdepodobnı|
+lang|Precipitation showery or intermittent|Obèasné zráky alebo prehánky| 
+lang|Precipitation (liquid equivalent)|Zráky (tekutı ekvivalent)|
+lang|showery or intermittent|intensywny lub przerywany|
+lang|Precipitation|Zráky|
+lang|Snow likely|Pravdepodobné sneenie|
+lang|Snow accumulation|Akumulácia snehu|
+lang|accumulation expected|oèakávaná akumulácia snehu|
+lang|Wind chill down to|Wind-chill (pocitová teplota vzh¾adom na rıchlos vetra) poklesne na|
+lang| chance | monos |
+lang| likely | pravdepodobnı |
+lang| accumulation | akumulácia |
+lang| cales | 25 mm |
+lang|less than a tenth of an inch|menej ako 2.5 mm|
+lang| a mix of | mix(-u) |
+lang| then | neskôr |
+lang| the | |
+lang| in | poèas |
+lang| of |  |
+lang|&ht;|>|
+lang|Fair|Malá oblaènos|
+lang|afternoon|popoludnia|
+lang|cloudy|ve¾ká oblaènos a zamraèené|
+lang|Patchy|Ojedinele|
+lang| slight | malá |
+lang| light | slabá |
+lang| fog| hmla|
+lang|Partly|Èiastoène|
+lang| to | a |
+lang|Wind |Vietor |
+lang|gusting|v nárazoch|
+lang|mostly|prevane|
+lang| after | po |
+lang|midnight|polnoci|
+lang|morning|rána|
+lang|Mostly|Prevane|
+lang|partly|èiastoène|
+lang|Light|Slabá|
+lang| moderate | mierna |
+lang|evening|veèera|
+lang|Dense|Nízka oblaènos, |
+lang|overcast|zamraèené|
+lang|Moderate|Mierna|
+lang|dense|hustı|
+lang|sunny|slneèno|
+lang|Rain likely|Pravdepodobnos daïa|
+lang| rain| daïa|
+lang|A | |
+lang| a |  |
+lang|chance of|monos|
+lang|High|Maximálna teplota:|
+lang|Low|Minimálna teplota:|
+lang| but | ale |
+lang|temperatures falling|teplota poklesne|
+lang|temperatures rising|teplota stúpne|
+lang|northeast|severovıchodnı|
+lang|northwest|severozápadnı|
+lang|southeast|juhovıchodnı|
+lang|southwest|juhozápadnı|
+lang|north-|severnı-|
+lang|east-|vıchodnı-|
+lang|west-|západnı-|
+lang|south-|junı-|
+lang| east | vıchodnı |
+lang| north | severnı |
+lang| south | junı |
+lang| west | západnı |
+lang|down |klesne |
+lang| or | alebo |
+lang|Rain|Dáï|
+lang|up to|do|
+lang|Freezing|Mrznúci|
+lang|No snow|iadna|
+lang|no snow|iadna|
+lang|accumulation about a quarter inch|akumulacja oko_o 0.25 cala|
+lang|likely|pravdepodobnı|
+lang|less than a tenth of an inch|mniej ni_ 0.1 cala|
+lang|around a tenth of an inch|oko_o 0.1 cala|
+lang|between a quarter and half an inch|pomi_dzy 0.25 a 0.5 cala|
+lang|around a quarter of an inch|oko_o 0.25 cala|
+lang|around|okolo|
+lang|kph|km/h|
+lang|mps|m/s|
+lang|near|takmer|
+lang|percent|%|
+lang|less than|menej ako|
+lang| between | medzi |
+lang| and | a |
+lang|Little|Malá|
+lang| no | nie |
+lang| snow| snehu|
+lang| Snow| Sneenie|
+lang|about|okolo|
+lang| one | 1 |
+lang|No |Nie |
+lang|fair|malá oblaènos|
+lang|Cloudy|Ve¾ká oblaènos|
+lang| calm| bezvetrie|
+lang|Clear|Jasno|
+lang|clear|jasno|
+lang|Sunny|Slneèno|
+lang| ice | ¾ad |
+lang|freezing|mrznúci|
+lang|sleet|_niegiem|
+lang|a mix of|mix|
+lang|if any|ewentualnie|
+lang|on ground|na zemi|
+lang|patchy|ojedinele|
+lang| half | pól |
+lang| an |  |
+lang| quarter | 6 mm |
+lang| tenth | 2.5 mm |
+lang| inch| 25 mm|
+lang|Breezy|Veterno|
+lang|Windy|Veterno|
+lang|Breezy a mild|Veterno a pomerne teplo|
+lang|Cool|Chladnejšie|
+lang|Cold|Chladno|
+lang|Very cold|Ve¾mi chladno|
+lang|Mild|Pomerne teplo|
+lang|Relatively mild|Relatívne teplo|
+lang|Unusually warm|Neobvykle teplo|
+lang|Unusually hot|Neobvykle ve¾mi teplo|
+lang|Exceptionally hot|Vınimoène ve¾mi teplo|
+lang|Unusually cold|Neobvykle chladno|
+lang|Breezy a unusually hot|Veterno a neobvykle ve¾mi teplo|
+lang|Breezy a warm|Veterno a teplo|
+lang|Warm|Teplo|
+lang|warm|teplo|
+lang|Very hot|Horúco|
+lang|Near record heat|Horúco|
+lang|Extremely hot|Extrémne horúco|
+lang|Hot|Ve¾mi teplo|
+#
+# Translation of headings, periods and short conditions statements
+# headings
+#
+langlookup|Aerisweather Forecast for:|Predpoveï programu Aerisweather pre:|
+langlookup|Meteogram and detailed Aerisweather Forecast for:|Meteogram a detailná predpoveï programu Aerisweather pre:|
+langlookup|Issued by:|Predpoveï vydal:|
+langlookup|Updated:|Predpoveï aktualizovaná:|
+langlookup|High:|Maximálna teplota:|
+langlookup|Low:|Minimálna teplota:|
+#
+langlookup|Sunday|Nede¾a|
+langlookup|Monday|Pondelok|
+langlookup|Tuesday|Utorok|
+langlookup|Wednesday|Streda|
+langlookup|Thursday|Štvrtok|
+langlookup|Friday|Piatok|
+langlookup|Saturday|Sobota|
+langlookup|Sunday night|Nede¾a v noci|
+langlookup|Monday night|Pondelok v noci|
+langlookup|Tuesday night|Utorok v noci|
+langlookup|Wednesday night|Streda v noci|
+langlookup|Thursday night|Štvrtok v noci|
+langlookup|Friday night|Piatok v noci|
+langlookup|Saturday night|Sobota v noci|
+langlookup|Today|Dnes|
+langlookup|Tonight|Dnes v noci|
+langlookup|Rest of tonight|Zvyšok noci|
+langlookup|This afternoon|Dnes popoludní|
+# UV Index words
+langlookup|Low|Nízky|
+langlookup|Medium|Strednı|
+langlookup|High|Vysokı|
+langlookup|Very&nbsp;High|Ve¾mi&nbsp;vysokı|
+langlookup|Extreme|Extrémny|
+# Summary conditions lookup
+langlookup|Severe storm|Búrka|
+langlookup|Showers storms|Búrkové prehánky|
+langlookup|Showers|Prehánky|
+langlookup|Thunder storm|Búrka|
+langlookup|Rain Sleet|Mrznúci dáï, alebo dáï|
+langlookup|FrzgRn Snow|Mrznúci dáï|
+langlookup|Rain and Snow|Dáï so snehom|
+langlookup|Freezing Rain|Mrznúci dáï|
+langlookup|Rain likely|Pravdepodobnı dáï|
+langlookup|Chance rain|Monos daïa|
+langlookup|Chance TStorms|Monos búrok|
+langlookup|Mix|Dáï so snehom|
+langlookup|Sleet|Mokrı sneh|
+langlookup|Snow|Sneenie|
+langlookup|Fog a.m.|Ranná hmla|
+langlookup|Fog late|Neskôr hmla|
+langlookup|Fog|Hmla|
+langlookup|Very Cold|Ve¾mi chladno|
+langlookup|Very Hot|Ve¾mi teplo|
+langlookup|Partly Cloudy|Polooblaèno|
+langlookup|Mostly Cloudy|Prevane oblaèno|
+langlookup|Cloudy|Oblaèno a zamraèené|
+langlookup|Overcast|Zamraèené|
+langlookup|Partly Sunny|Polojasno|
+langlookup|Mostly Sunny|Prevane slneèno|
+langlookup|Mostly Clear|Prevane jasno|
+langlookup|Sunny|Slneèno|
+langlookup|Clear|Jasno|
+langlookup|Fair|Malá oblaènos|
+langlookup|Variable Clouds|Premenlivá oblaènos|
+# translation for ordinal wind directions must be in North-East-South-West order
+# NOTE: comma format used here requires plaintext-parser.php V1.13 or above to process correctly
+langlookup|NESW|S,V,J,Z|
+# translation for Beaufort Wind Force
+langlookup|Calm|Bezvetrie|
+langlookup|Light air|Vánok|
+langlookup|Light breeze|Slabı vietor|
+langlookup|Gentle breeze|Mierny vietor|
+langlookup|Moderate breeze|Dos èerstvı vietor|
+langlookup|Fresh breeze|Èerstvı vietor|
+langlookup|Strong breeze|Silnı vietor|
+langlookup|Near gale|Prudkı vietor|
+langlookup|Gale|Búrlivı vietor|
+langlookup|Strong gale|Víchrica|
+langlookup|Storm|Silná víchrica|
+langlookup|Violent storm|Mohutná víchrica|
+langlookup|Hurricane|Orkán|
+langlookup|Cold!|Chladno!|
+#
+# Nové allin1
+#
+langlookup|Windchill|Pocitová teplota (vzh¾adom na rıchlos vetra)|
+langlookup|Overview|Preh¾ad|
+langlookup|Overview|Preh¾ad|
+langlookup|Bytca|Bytèa|
+langlookup|Detailed|Detailná|
+langlookup|hrs|hod|
+langlookup|No precip|Bez zráok|
+langlookup|Cloud cover|Pokrytie oblaènosou|
+langlookup|Visibility|Doh¾adnos|
+langlookup|Daylength|Dåka dòa|
+langlookup|Next update|Ïa¾šia aktualizácia|
+langlookup|Gusting to|V nárazoch|
+langlookup|Windch|Pocit|
+langlookup|possible|moné|
+langlookup|severe likely|pravdebodobné silné|
+langlookup|unlikely|nepravdepodobné|
+langlookup|likely|pravdepodobné|
+langlookup|Thunderstorm probability|Pravdepodobnos búrok|
+langlookup|within 80km from|v okruhu 80km od:|
+langlookup|Thunder|Búrkovı index|
+langlookup|Dewpoint|Rosnı bod|
+langlookup|Heat index|Heat index|
+langlookup|PoP|Pravdepodobnos zráok|
+langlookup|Temperature|Teplota|
+langlookup|Windgust|Nárazovı vietor|
+langlookup|Wind|Vietor|
+langlookup|Precipitation|Zráky|
+langlookup|Pressure|Tlak|
+langlookup|Show|Zobrazi|
+langlookup|Solar radiation|Slneèná radiácia|
+langlookup|Description and notes|Popis|
+langlookup|Conditions|Poèasie|
+langlookup|Detailed forecast|Detailná predpoveï|
+langlookup|Hour-by-hour|Kadé 3 hodiny|
+langlookup|Meteogram|Meteogram|
+langlookup|Graphs coming soon|U èoskoro...|
+langlookup|Snow depth|Vıška snehovej pokrıvky|
+langlookup|night|v noci|
+langlookup|Night|v noci|
+langlookup|WCh|Pocit|
+langlookup|Heat|TIdx|
+langlookup|Tomorrow|Zajtra|
+langlookup|Low temperature|Najnišia noèná teplota|
+langlookup|High temperature|Najvyššia denná teplota|
+#
+# Mierny UV Index
+#
+langlookup|Moderate|Mierny|
+#
+langlookup|Jan|Január|
+langlookup|Feb|Február|
+langlookup|Mar|Marec|
+langlookup|Apr|Apríl|
+langlookup|May|Máj|
+langlookup|Jun|Jún|
+langlookup|Jul|Júl|
+langlookup|Aug|August|
+langlookup|Sep|September|
+langlookup|Oct|Október|
+langlookup|Now|November|
+langlookup|Dec|December|
+langlookup|kph|km/h|
+# --- end of language file ------

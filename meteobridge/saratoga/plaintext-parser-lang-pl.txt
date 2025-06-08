@@ -1,0 +1,218 @@
+# Language file for plaintext-parser.php program
+# Version: 1.04 - 28-Aug-2008
+# translation - Polish by Andreti   http://www.andretti.neostrada.pl
+#
+charset|ISO-8859-2|
+#
+lang|Cloudy in the morning|Pochmurny poranek|
+lang|High risk of severe thunderstorms and possible tornados|Wysokie ryzyko wyst±pienia silnych burz z piorunami i tornad|
+lang| becoming | przechodzi w |
+lang|dense overcast|gêste zachmurzenie|
+lang|Chance of precipitation|Mo¿liwe opady|
+lang|Thunderstorms likely, some possibly severe|Prawdopodobne burze z piorunami, byæ mo¿e niektóre powa¿ne|
+lang|Some thunder possible.|Mo¿liwe burze. |
+lang|Some thunderstorms likely|Prawdopodobne burze|
+lang|some high cloudiness|niekiedy wysokie zachmurzenie|
+lang|some high thin clouds|niekiedy wysoka cienka warstwa chmur|
+lang|of an inch|z cala|
+lang|half an inch|0.5 cala|
+lang|UV index up to|UV index do|
+lang|UV index more than|UV index wiêkszy ni¿|
+lang| mostly around | g³ównie oko³o |
+lang| mostly less than | w wiêkszo¶ci mniej ni¿ |
+lang|then a slight chance of rain|nastêpnie niewielkie szanse na deszcz|
+lang|then rain likely|nastêpnie prawdopodobnie deszcz|
+lang|Rain very likely|Deszcz bardzo prawdopodobny|
+lang|Precipitation showery or intermittent|Opad intensywny lub przerywany| 
+lang|Precipitation (liquid equivalent)|Opad (równowa¿ny p³ynowi)|
+lang|showery or intermittent|intensywny lub przerywany|
+lang|Precipitation|Opady|
+lang|Snow likely|Prawdopodobny opad ¶niegu|
+lang|Snow accumulation|Akumulacja ¶niegu|
+lang|accumulation expected|oczekiwana akumulacja|
+lang|Wind chill down to|Czynnik ch³odz±cy wiatru (Wind chill) spadnie do|
+lang| chance | mo¿liwy |
+lang| likely | prawdopodobny |
+lang| accumulation | akumulacja |
+lang| cales | cali |
+lang|less than a tenth of an inch|mniej ni¿ 0.1 cala|
+lang| a mix of | mieszankê |
+lang| then | wtedy |
+lang| the | |
+lang| in | w |
+lang| of |  |
+lang|Fair|£adnie|
+lang|afternoon|popo³udnie|
+lang|cloudy|pochmurno|
+lang|Patchy|Niejednolita|
+lang| slight | nieznaczne |
+lang| light | lekka |
+lang| fog| mg³a|
+lang|Partly|Czê¶ciowo|
+lang| to | do |
+lang|Wind |wiatr |
+lang|gusting|w porywach|
+lang|mostly|g³ównie|
+lang| after | po |
+lang|midnight|pó³nocy|
+lang|morning|ranek|
+lang|Mostly|G³ównie|
+lang|partly|czê¶ciowo|
+lang|Light|Lekka|
+lang| moderate | umiarkowanej |
+lang|evening|wieczór|
+lang|Dense|Gêste|
+lang|overcast|zachmurzenie|
+lang|Moderate|Umiarkowany|
+lang|dense|gêste|
+lang|sunny|s³onecznie|
+lang|Rain likely|Mo¿liwy deszcz|
+lang| rain| deszcz|
+lang|A | |
+lang| a |  |
+lang|chance of|szansa na|
+lang|High|Maximum:|
+lang|Low|Minimum:|
+lang| but | ale |
+lang|temperatures falling|temperatura spadnie|
+lang|temperatures rising|temperatura wzro¶nie|
+lang|northeast|pó³nocno wschodni|
+lang|northwest|pó³nocno wschodni|
+lang|southeast|po³udniowo wschodni|
+lang|southwest|po³udniowo wschodni|
+lang|north-|pó³nocny-|
+lang|east-|wschodni-|
+lang|west-|zachodni-|
+lang|south-|po³udniowy-|
+lang| east | wschodni |
+lang| north | pó³nocny |
+lang| south | po³udniowy |
+lang| west | zachodni |
+lang|down |spadnie |
+lang| or | lub |
+lang|Rain|Dzeszcz|
+lang|up to|do|
+lang|Freezing|Marzn±cy|
+lang|No snow|Bez¶nie¿nie,|
+lang|no snow|bez¶nie¿nie,|
+lang|accumulation about a quarter inch|akumulacja oko³o 0.25 cala|
+lang|likely|prawdopodobny|
+lang|less than a tenth of an inch|mniej ni¿ 0.1 cala|
+lang|around a tenth of an inch|oko³o 0.1 cala|
+lang|between a quarter and half an inch|pomiêdzy 0.25 a 0.5 cala|
+lang|around a quarter of an inch|oko³o 0.25 cala|
+lang|around|oko³o|
+lang|kph|km/h|
+lang|mps|m/s|
+lang|near|prawie|
+lang|percent|%|
+lang|less than|mniej ni¿|
+lang| between | miêdzy |
+lang| and | i |
+lang|Little|Ma³o|
+lang| no | nie |
+lang| snow| ¶nieg|
+lang| Snow| ¦nieg|
+lang|about|oko³o|
+lang| one | 1 |
+lang|No |Nie |
+lang| fair | ³adnie |
+lang|Cloudy|Pochmurno|
+lang| calm| cisza|
+lang|Clear|Bezchmurnie|
+lang|clear|bezchmurnie|
+lang|Sunny|S³onecznie|
+lang| ice | lód |
+lang|freezing|marzn±cy|
+lang|sleet|¶niegiem|
+lang|a mix of|mieszanina|
+lang|if any|ewentualnie|
+lang|on ground|na gruncie|
+lang|patchy|niejednolity|
+lang| half | pó³ |
+lang| an |  |
+lang| quarter | 0.25 |
+lang| tenth | 0.1 |
+lang| inch| cala|
+#
+# Translation of headings, periods and short conditions statements
+# headings
+#
+langlookup|WXSIM Forecast for:|Prognoza WXSIM dla:|
+langlookup|Issued by:|Wydana przez:|
+langlookup|Updated:|Uaktualniona:|
+langlookup|High:|Max|
+langlookup|Low:|Min|
+#
+langlookup|Sunday|Niedziela|
+langlookup|Monday|Poniedzia³ek|
+langlookup|Tuesday|Wtorek|
+langlookup|Wednesday|¦roda|
+langlookup|Thursday|Czwartek|
+langlookup|Friday|Pi±tek|
+langlookup|Saturday|Sobota|
+langlookup|Sunday night|Niedziela noc|
+langlookup|Monday night|Poniedzia³ek noc|
+langlookup|Tuesday night|Wtorek noc|
+langlookup|Wednesday night|¦roda noc|
+langlookup|Thursday night|Czwartek noc|
+langlookup|Friday night|Pi±tek noc|
+langlookup|Saturday night|Sobota noc|
+langlookup|Today|Dzisiaj|
+langlookup|Tonight|Wieczorem|
+langlookup|Rest of tonight|Reszta nocy|
+langlookup|This afternoon|Tego popo³udnia|
+# UV Index words
+langlookup|Low|Niski|
+langlookup|Medium|¦redni|
+langlookup|High|Wysoki|
+langlookup|Very High|Bardzo  Wysoki|
+langlookup|Extreme|Ekstremalny|
+# Summary conditions lookup
+langlookup|Severe storm|¦lilna burza|
+langlookup|Showers storms|Przelotne burze
+langlookup|Thunder storm|Burza z piorunami
+langlookup|Rain Sleet|Deszcz ze ¶niegiem
+langlookup|FrzgRn Snow|Islag/sne
+langlookup|Rain and Snow|Opady ¶niegu i deszczu
+langlookup|Freezing Rain|Marzn±cy deszcz
+langlookup|Rain likely|Prawdopodobny deszcz
+langlookup|Chance rain|Mo¿liwy deszcz
+langlookup|Mix|Deszcz ze ¶niegiem
+langlookup|Sleet|¦niegiem
+langlookup|Snow|¦nieg
+langlookup|Fog a.m.|Poranna mg³a
+langlookup|Fog late|Tåge sent
+langlookup|Fog|Mg³a
+langlookup|Very Cold|Bardzo zimno
+langlookup|Very Hot|Bardzo gor±co
+langlookup|Partly Cloudy|Czê¶ciowe zachmurzenie
+langlookup|Mostly Cloudy|Przewa¿nie pochmurno
+langlookup|Cloudy|Pochmurno
+langlookup|Overcast|Pochmurno
+langlookup|Partly Sunny|Czê¶ciowo s³onecznie
+langlookup|Mostly Sunny|Przewa¿nie s³onecznie
+langlookup|Mostly Clear|W wiêkszo¶ci bezchmurnie
+langlookup|Sunny|S³onecznie
+langlookup|Clear|Bezchmurnie
+langlookup|Fair|£adnie
+langlookup|Variable Clouds|Forbigående skyer|
+# translation for ordinal wind directions must be in North-East-South-West order
+# NOTE: comma format used here requires plaintext-parser.php V1.13 or above to process correctly
+langlookup|NESW|Pn,Ws,Pd,Zs|
+# translation for Beaufort Wind Force
+langlookup|Calm|Cisza|
+langlookup|Light air|Powiew|
+langlookup|Light breeze|S³aby wiatr|
+langlookup|Gentle breeze|£agodny wiatr|
+langlookup|Moderate breeze|Umiarkowany wiatr|
+langlookup|Fresh breeze|Do¶æ silny wiatr|
+langlookup|Strong breeze|Silny wiatr|
+langlookup|Near gale|Bardzo silny wiatr|
+langlookup|Gale|Sztorm|
+langlookup|Strong gale|Silny sztorm|
+langlookup|Storm|Bardzo silny sztorm|
+langlookup|Violent storm|Gwa³towny sztorm|
+langlookup|Hurricane|Huragan|
+#
+# --- end of language file ------

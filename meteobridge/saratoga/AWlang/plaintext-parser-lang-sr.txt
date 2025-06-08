@@ -1,0 +1,186 @@
+# Language file for plaintext-parser.php program
+# Serbian text
+# Version 1.01 - 13-Oct-2008
+#
+charset|WINDOWS-1250|
+lang|Thunderstorms likely, some severe|Grmljavina, moguæa oluja|
+lang|High risk of severe thunderstorms and possible tornados|Visok rizik od oluje i moguænost tornada|
+lang|Thunderstorms likely, some possibly severe|Grmljavina, moguæa oluja|
+lang|Some thunderstorms likely.|Grmljavina.|
+lang|Some thunder possible.|Moguæa grmljavina. |
+lang|Some thunderstorms likely|Grmljavina|
+lang|Cloudy in the morning|Oblaèno ujutru|
+lang|becoming|kasnije|
+lang|dense overcast|oblaèno|
+lang|UV index up to|UV indeks do|
+lang|afternoon|popodne|
+lang|cloudy|oblaèno|
+lang|Patchy|Promenljivo|
+lang| light |slab |
+lang|fog|magla|
+lang|Partly|Delimièno|
+lang|gusting|gusting|
+lang|mostly|pretežno|
+lang|after|posle|
+lang|midnight|ponoæ|
+lang|morning|jutro|
+lang|Mostly|Pretežno|
+lang|partly|delimièno|
+lang|Light |Slab |
+lang|moderate|umeren|
+lang|evening|veèe|
+lang|Dense|Gusta|
+lang|overcast|oblaèno|
+lang|Moderate|Umereno|
+lang|dense|gusta|
+lang|sunny|sunèano|
+lang|Rain likely|Kiša|
+lang|rain likely|kiša|
+lang|a chance of rain|moguæa kiša|
+lang|rain|kiša|
+lang|chance of|moguæa|
+lang| slight | slight |
+lang|High|Maksimum:|
+lang|Low|Minimum:|
+lang|but|ali|
+lang|temperatures falling|pad temperature|
+lang|temperatures rising|rast temperature|
+lang|northeast|severoistok|
+lang|northwest|severozapad|
+lang|southeast|jugoistok|
+lang|southwest|jugozapad|
+lang|north-|sever-|
+lang|east-|istok-|
+lang|south-|jug-|
+lang|west-|zapad-|
+lang|north |sever |
+lang|east |istok |
+lang|south |jug |
+lang|west |zapad |
+lang|down |af |
+lang|around|oko|
+lang|kph|km/h|
+lang|Chance of precipitation|Šansa za padavine|
+lang|near|blizu|
+lang|percent|procenat|
+lang|less than|niže nego|
+lang|snow|sneg|
+lang|Precipitation (liquid equivalent)|Padavine (ukupno)|
+lang|between|izmeðu|
+lang|Precipitation|Padavine|
+lang|accumulation expected|ukupno oèekivano|
+lang|Little|Malo|
+lang|Snow accumulation|Visina snega |
+lang| snow | sneg |
+lang|about|o nama|
+lang|showery or intermittent|kišovito ili sa prekidima |
+lang|No |Nema |
+lang|Fair|Vedro|
+lang| fair | vedro |
+lang|Cloudy|Oblaèno|
+lang|calm|tišina|
+lang|Clear|Vedro|
+lang|clear|vedro|
+lang|Sunny|Sunèano|
+lang|sunny|sunèano|
+lang| ice | led |
+lang|freezing|smrzavanje|
+lang|sleet|susnežica|
+lang|a mix of|Pomešana|
+lang|if any|ako je bilo|
+lang|on ground|na površini|
+lang|patchy|promenljivo|
+lang|of an inch|inèa|
+lang|half an inch|polovina inèa|
+lang| then | tada |
+lang| the | |
+lang| to | do |
+lang| and | i |
+lang| no | ne |
+lang| one | 1 |
+lang| or | ili |
+lang|A | |
+lang| a | |
+lang| inch| inè|	
+#
+# Translation of headings, periods and short conditions statements
+# headings
+#
+langlookup|Aerisweather Forecast for:|Aerisweather prognoza za:|
+langlookup|Issued by:|Izdaje:|					
+langlookup|Updated:|Ažurirano:|					
+langlookup|High:|Maks:|
+langlookup|Low:|Min:|
+#
+langlookup|Sunday|Nedelja|
+langlookup|Monday|Ponedeljak|
+langlookup|Tuesday|Utorak|
+langlookup|Wednesday|Sreda|
+langlookup|Thursday|Èetvrtak|
+langlookup|Friday|Petak|
+langlookup|Saturday|Subota|
+langlookup|Sunday night|Nedelja veèe|
+langlookup|Monday night|Ponedeljak veèe|
+langlookup|Tuesday night|Utorak veèe|
+langlookup|Wednesday night|Sreda veèe|
+langlookup|Thursday night|Èetvrtak veèe|
+langlookup|Friday night|Petak veèe|
+langlookup|Saturday night|Subota veèe|
+langlookup|Today|Danas|
+langlookup|Tonight|Veèeras|
+langlookup|This afternoon|Danas popodne|
+langlookup|Rest of tonight|Ostatak noæi|
+# UV Index words
+langlookup|Low|Nizak|
+langlookup|Medium|Umeren|
+langlookup|High|Visok|
+langlookup|Very&nbsp;High|Veoma&nbsp;Visok|
+langlookup|Extreme|Ekstreman|
+# Summary conditions lookup
+langlookup|Severe storm|Jaka oluja
+langlookup|Showers storms|Jaka kiša
+langlookup|Thunder storm|Grmljavina
+langlookup|Rain Sleet|Kiša susnežica
+langlookup|FrzgRn Snow|Ledena kiša/sneg
+langlookup|Rain and Snow|Kiša i sneg
+langlookup|Freezing Rain|Ledena kiša
+langlookup|Rain likely|Kiša
+langlookup|Chance rain|Moguæa kiša
+langlookup|Mix|Mešano
+langlookup|Sleet|Susnežica
+langlookup|Snow|Sneg
+langlookup|Fog a.m.|Magla prepodne
+langlookup|Fog late|Magla kasnije
+langlookup|Fog|Magla
+langlookup|Very Cold|Veoma hladno
+langlookup|Very Hot|Veoma vruæe
+langlookup|Partly Cloudy|Delimièno oblaèno
+langlookup|Mostly Cloudy|Pretežno oblaèno
+langlookup|Cloudy|Oblaèno
+langlookup|Overcast|Oblaèno
+langlookup|Partly Sunny|Delimièno sunèano
+langlookup|Mostly Sunny|Pretežno sunèano
+langlookup|Mostly Clear|Pretežno vedro
+langlookup|Sunny|Sunèano
+langlookup|Clear|Vedro
+langlookup|Fair|Vedro
+langlookup|Variable Clouds|Promenljiva oblaènost
+# translation for cardinal wind directions must be in North-East-South-West order
+langlookup|NESW|S,I,J,Z|
+langlookup|Wind|Vetar|
+# translation for Beaufort Wind Force
+langlookup|Calm|tišina|
+langlookup|Light air|lahor|
+langlookup|Light breeze|povetarac|
+langlookup|Gentle breeze|slab vetar|
+langlookup|Moderate breeze|umeren vetar|
+langlookup|Fresh breeze|jak vetar|
+langlookup|Strong breeze|žestok vetar|
+langlookup|Near gale|olujni vetar|
+langlookup|Gale|oluja|
+langlookup|Strong gale|jaka oluja|
+langlookup|Storm|žestoka oluja|
+langlookup|Violent storm|vihor|
+langlookup|Hurricane|orkan|
+#
+# --- end of language file ------

@@ -1,0 +1,76 @@
+@charset "iso-8859-1";
+/* Overrides to set right-to-left order for languages requiring that display */
+/* Version 1.00 - 17-Nov-2011 - initial release */
+
+/* RTL overrides for menubar to right side */
+/* move menubar to right, with left-flyout, move main display to left side */
+
+.leftSideBar {
+ direction: rtl;
+ float: right;
+ clear: right;
+ text-align: right;
+ padding: 0.5ex 1ex;
+}
+
+.flyoutmenu li ul {
+  left:-110px;
+}
+.flyoutmenu li.sub {
+ background-position: left;
+ background-image: url(./ajax-images/flyout-sub-rtl.gif);
+}
+
+/* reposition main display to left for right-side menubar */
+#main-copy, #main-copy-dark {
+  margin: 0 10.5em 0 0 ;
+  direction: rtl;
+  border-right: 1px solid rgb(216,210,195);
+
+}
+/* main-copy area table formatting */
+.column-dark, .column-light, .table-top {
+  text-align: right;
+}
+
+/* reformatting for header area */
+
+#header {
+  direction: rtl;
+}
+.headerTemp {
+   direction: ltr;
+   float: left;
+}
+.subHeader {
+  float: right;
+  clear: right;
+}
+.subHeaderRight {
+  padding: 0.7ex 2ex;
+}
+
+
+/* ajax dashboard/gizmo fixup */
+td #ajaxsolar, td #ajaxsolarpct {
+ unicode-bidi: embed;
+}
+.ajaxDashboard .data1 {
+ text-align: right;
+}
+.ajaxDashboard .data2 {
+ text-align: right;
+}
+
+.WUforecast { /* WU-forecast.php already does correct formatting */
+  direction: ltr;
+}
+
+
+/* reformatting for footer area */
+#footer {
+   direction: ltr;
+   unicode-bidi: embed;
+}
+
+/* end of overrides for RTL formatting */

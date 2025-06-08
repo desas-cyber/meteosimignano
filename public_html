@@ -1,0 +1,189 @@
+let currentIndex = 0;
+        let rewindInterval = null;
+        let isRewinding = false;
+        
+        function dirTesto(gradi) {
+          if (gradi != null){
+          const directions = [
+            "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+            "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"
+          ];
+          let index = Math.round(gradi / 22.5) % 16;
+          return directions[index];}
+          else
+          {return "--";}
+        }
+
+
+
+        function aggiornaLightbox() {
+            const record = images[currentIndex]; // <--- questo è il tuo oggetto dati
+            if (!record) return;
+
+            const tempImg = new Image();
+            tempImg.src = record.src;
+
+            tempImg.onload = function () {
+                const canvas = document.createElement('canvas');
+                canvas.width = tempImg.width;
+                canvas.height = tempImg.height - 80;
+                const ctx = canvas.getContext('2d');
+
+                ctx.drawImage(
+                    tempImg,
+                    0, 0,
+                    tempImg.width, tempImg.height - 80,
+                    0, 0,
+                    tempImg.width, tempImg.height - 80
+                );
+
+                const croppedSrc = canvas.toDataURL();
+                document.getElementById('lightbox-img').src = croppedSrc;
+            };
+
+            document.getElementById('lightbox-info').textContent = `${record.data_ora ?? 'N/A'} | T ${record.temp ?? 'N/A'}°C | UR ${record.hr ?? 'N/A'}% |️ ${record.p_hpa ?? 'N/A'} hPa | Vento ${record.vento ?? 'N/A'} km/h, ${dirTesto(record.dir) ?? 'N/A'}`;
+        }
+
+        //gestione da tastiera *********************
+        document.addEventListener("keydown", function(event) {
+          if (document.getElementById("lightbox").classList.contains("hidden")) return;
+        
+          switch (event.key) {
+            case "Escape":
+              closeLightbox();
+              break;
+            case "ArrowLeft":
+              if (currentIndex < images.length - 1) {
+                currentIndex++;
+                aggiornaLightbox();
+                updateNavButtons();
+              }
+              break;
+            case "ArrowRight":
+              if (currentIndex > 0) {
+                currentIndex--;
+                aggiornaLightbox();
+                updateNavButtons();
+              }
+              break;
+          }
+        });
+        //gestione da tastiera *********************
+
+        function openLightbox(index) {
+            currentIndex = index;
+            aggiornaLightbox();
+            document.getElementById('lightbox').classList.add('active');
+            document.getElementById('close-btn').style.display = 'block'; // 👈 mostra
+            document.getElementById('rewind-btn').style.display = 'block'; // 👈 mostra rewind
+            updateNavButtons();
+        }
+        
+        document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("close-btn").addEventListener("click", closeLightbox);
+        document.getElementById("rewind-btn").addEventListener("click", rewindToCurrent);
+        
+        if (rewindInterval) {
+            clearInterval(rewindInterval);
+            rewindInterval = null;
+            isRewinding = false;
+            document.getElementById('rewind-btn').textContent = "⏪";
+          }
+        
+        });
+        
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.getElementById('close-btn').style.display = 'none'; // 👈 nascondi
+            document.getElementById('rewind-btn').style.display = 'none';
+        }
+        
+        function rewindToCurrent() {
+          const rewindBtn = document.getElementById("rewind-btn");
+          const rewindIcon = document.getElementById("rewind-icon");
+        
+          if (isRewinding) {
+            // 🔻 Pausa: interrompi
+            clearInterval(rewindInterval);
+            rewindInterval = null;
+            isRewinding = false;
+        
+            // 🔄 Torna al simbolo REWIND
+            rewindIcon.innerHTML = `
+             <path d="M13 12L4 6V18L13 12Z" />
+            <path d="M20 12L11 6V18L20 12Z" />
+            `;
+            return;
+          }
+        
+          // ▶️ Avvia REWIND
+          const targetIndex = currentIndex;
+          currentIndex = images.length - 1;
+          aggiornaLightbox();
+          updateNavButtons();
+          isRewinding = true;
+        
+          // 🔄 Cambia icona in PAUSA
+          rewindIcon.innerHTML = `
+            <rect x="6" y="4" width="5" height="16" />
+            <rect x="14" y="4" width="5" height="16" />
+          `;
+        
+          rewindInterval = setInterval(() => {
+            if (currentIndex <= targetIndex) {
+              clearInterval(rewindInterval);
+              rewindInterval = null;
+              isRewinding = false;
+        
+              // Torna a icona REWIND alla fine
+              rewindIcon.innerHTML = `
+                <path d="M11 12L20 18V6L11 12Z" />
+                <path d="M4 12L13 18V6L4 12Z" />
+              `;
+              return;
+            }
+            currentIndex--;
+            aggiornaLightbox();
+            updateNavButtons();
+          }, 300); // 3 immagini/sec
+        }
+
+        function prevImage(event) {
+            event.stopPropagation();
+            if (currentIndex > 0) currentIndex--;
+            aggiornaLightbox();
+            updateNavButtons();
+        }
+
+        function nextImage(event) {
+            event.stopPropagation();
+            if (currentIndex < images.length - 1) currentIndex++;
+            aggiornaLightbox();
+            updateNavButtons();
+        }
+            
+
+        function updateNavButtons() {
+            document.querySelector('.nav-btn.prev').disabled = currentIndex === 0;
+            document.querySelector('.nav-btn.next').disabled = currentIndex === images.length - 1;
+        }
+
+      
+        
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll('.gallery img').forEach((img, index) => {
+                img.addEventListener('click', () => openLightbox(index));
+            });
+            /* chiudi con click esterno immagine
+            document.getElementById('lightbox').addEventListener('click', (e) => {
+            console.log("Hai cliccato su:", e.target); // 👈 Così vedi cosa è stato cliccato
+        
+            if (e.target.id === 'lightbox') {
+                console.log("✅ Clic sullo sfondo: chiudo lightbox");
+                closeLightbox();
+            } else {
+                console.log("⛔ Clic su immagine o contenuto: non chiudo");
+            }
+        });
+        */
+        });

@@ -1,0 +1,295 @@
+# Language file for plaintext-parser.php program 
+# Version 1.0 | 2-MAR-2011
+# Translation - Slovenian by Marko of - http://www.okroglovreme.com
+#
+charset|ISO-8859-2||
+# new for v.1.14
+lang|Maximum snow level|Najveèja vi¹ina sne¾ne odeje:|
+lang|Minimum snow level|Najmanj¹a vi¹ina sne¾ne odeje:|
+lang|Maximum freezing level|Najvi¹ja toèka zmrzovanja:|
+lang|Minimum freezing level|Najni¾ja toèka zmrzovanja:|
+lang|above sea level|n.m.v.|
+lang|above ground|nad povr¹jem|
+lang|meters|metri|
+#
+lang|Rain likely in the evening, then a slight chance of rain after midnight. Some thunderstorms likely.|Mo¾en de¾ v popoldanskem èasu, ponoèi bo verjetnost padavin manj¹a. Mo¾ne so tudi posamezne nevihte.|
+lang|Rain likely in the evening, then a slight chance of rain after midnight.|Mo¾en de¾ v popoldanskem èasu, ponoèi bo verjetnost padavin manj¹a.|
+lang|Rain likely in the evening, then a chance of rain after midnight.|Mo¾en de¾ popoldan kakor tudi ponoèi.|
+lang|some high cloudiness|nekaj visoke oblaènosti|
+lang|A chance of rain. Thunderstorms likely|Mo¾en de¾, kakor tudi nevihte.|
+lang|A chance of rain. Some thunderstorms likely.|Mo¾en de¾ in lokalne nevihte.|
+lang|A slight chance of rain. Precipitation showery or intermittent.|De¾, lokalno tudi moènej¹i nalivi.|
+lang|A slight chance of rain in the evening, then a chance of rain after midnight.|Rahel de¾ dopoldan, ki se bo v popoldanskem èasu krepil.|
+lang|with just a few high thin clouds|z nekaj visoke oblaènosti|
+lang|but some high thin clouds|vendar nekaj visoke oblaènosti|
+lang|with just a few wispy clouds|nekaj rahle oblaènosti|
+lang|A slight chance of a mix of rain and snow.|Mo¾nost de¾ja s snegom.|
+lang|A slight chance of a mix of rain, snow, and sleet.|Mo¾nost de¾ja s snegom in tudi ¾leda.|
+lang|A chance of rain in the morning, then a slight chance of rain in the afternoon.|Mo¾nost de¾ja zjutraj, nato pa majhna mo¾nost de¾ja v popoldanskem èasu.|
+lang|A chance of rain. Precipitation showery or intermittent.|Mo¾nost obèasnega de¾ja, lokalno so mo¾ni tudi veèji nalivi.|
+lang|No snow or ice (on ground) accumulation expected.|Na povr¹ini ni prièakovati akumulacije snega, oz. leda.|
+lang|Clear in the evening, becoming mostly clear after midnight.|Jasno zveèer, prete¾no jasno ponoèi|
+lang|becoming mostly clear, with just a few high thin clouds after midnight.|nato prete¾no jasno, ponoèi lahko nekaj visoke oblaènosti.|
+lang|becoming partly to mostly sunny|nato delno do prete¾no jasno|
+lang|becoming partly to mostly sunny in the afternoon|nato delno do prete¾no jasno v popoldanskem èasu|
+lang|Partly to mostly sunny|Delno do prete¾no jasno|
+lang|Little if any freezing rain accumulation.|Mo¾nost de¾ja ki zmrzuje - poledica!|
+lang|Partly to mostly cloudy|Zmerno do prete¾no oblaèno|
+lang|Precipitation showery or intermittent|Plohe, posamezne nevihte|
+lang|Fair in the evening, becoming mostly clear after midnight.|Zveèer jasno, ponoèi prete¾no jasno.|
+lang|, becoming partly to mostly cloudy| , nato zmerno do prete¾no oblaèno|
+lang|High risk of severe thunderstorms and possible tornados.|Mo¾nost zelo moènih neviht.|
+lang|Cloudy in the morning|Dopoldan oblaèno|
+lang|Patchy light fog|Megla v pasovih|
+lang|patchy light fog| megla v pasovih|
+lang|Rain likely. Some thunderstorms likely.|Mo¾en de¾, kot tudi nevihte.|
+lang|Rain likely in the afternoon. Some thunderstorms likely.|Mo¾en de¾ v popoldanskem èasu. Mo¾ne tudi nevihte|
+lang|, some possibly severe.| , mo¾ni moènej¹i nalivi.|
+lang|Partly cloudy|Delno oblaèno|
+lang|Mostly cloudy to cloudy|Prete¾no oblaèno do oblaèno|
+lang|mostly cloudy to cloudy|prete¾no oblaèno do oblaèno|
+lang|Mostly cloudy|Prete¾no oblaèno|
+lang|mostly cloudy|prete¾no oblaèno|
+lang|Mostly sunny|Prete¾no jasno|
+lang|mostly sunny|prete¾no jasno|
+lang|Mostly clear|Prete¾no jasno|
+lang|becoming mostly clear|nato prete¾no jasno|
+lang|becoming fair to partly cloudy|nato prete¾no do delno jasno|
+lang|mostly clear|prete¾no jasno|
+lang|Fair to partly cloudy|prete¾no do delno jasno|
+lang|. Precipitation mostly less than|. De¾, manj kot|
+lang|. Precipitation mostly around|. De¾, okoli|
+lang|. Precipitation mostly between|. De¾, med|
+lang|then a chance of|nato mo¾en|
+lang|but temperatures falling|temperatura se ni¾a|
+lang|near calm|¹ibek|
+lang|in the evening|zveèer|
+lang|A mix of rain and snow|De¾ s snegom|
+lang|A mix of snow and rain|De¾ s snegom|
+lang|a mix of rain and snow|de¾ s snegom|
+lang|a mix of rain and sleet|de¾ ki zmrzuje|
+lang|a mix of snow and rain likely|mo¾nost de¾ja s snegom|
+lang|a mix of rain and snow likely|mo¾nost de¾ja s snegom|
+lang|a mix of sleet, freezing rain, and snow|¾led, zmrznjen de¾ in sneg|
+lang|a mix of sleet, rain, and snow| ¾led, de¾ in sneg|
+lang|a mix of snow, freezing rain, sleet, and rain likely|mo¾nost snega, zmrznjenega de¾ja, ¾leda in de¾ja| 
+lang|A mix of snow, rain, and sleet likely|Mo¾nost snega, de¾ja in ¾leda|
+lang|A mix of rain, snow, and sleet likely|Mo¾nost de¾ja, snega in ¾leda|
+lang|a mix of rain, snow, and sleet|de¾, sneg in ¾led|
+lang|a mix of snow, rain, and sleet|sneg, de¾ in ¾led|
+lang|A chance of snow|Mo¾nost sne¾enja|
+lang|A chance of rain|Mo¾nost de¾ja|
+lang|A chance of a mix of snow and rain|Mo¾nost de¾ja s snegom|
+lang|a mix of snow and rain|de¾ s snegom|
+lang|, snow,|, sneg,|
+lang|A slight chance of a mix of rain and snow|Manj¹a mo¾nost de¾ja s snegom|
+lang|a slight chance of a mix of rain and snow|manj¹a mo¾nost de¾ja s snegom|
+lang|A slight chance of a mix of snow and rain|Manj¹a mo¾nost de¾ja s snegom|
+lang|A slight chance of snow.|mo¾nost sne¾enja.|
+lang|A slight chance of rain|Mo¾nost de¾ja|
+lang|A slight chance of rain.|Mo¾nost de¾ja.|
+lang|freezing rain|pomrznjen de¾|
+lang|in the afternoon|popoldan|
+lang|less than|manj kot|
+lang|Light to moderate|Rahla do zmerna|
+lang|light to moderate| rahla do zmerna|
+lang|then moderate fog|nato zmerna|
+lang|then a slight chance of|nato manj¹a mo¾nost za|
+lang|then rain likely|nato mo¾en de¾|
+lang|Snow accumulation about a cm.|Zapadlo naj bi cca. en cm snega.|
+lang|Freezing rain accumulation up to 3 mm.|Zapadlo naj bi do 3 mm pomrznjenega de¾ja.|
+lang|Snow or ice (on ground) accumulation about a cm.|Zapadlo naj bi najveè en cm snega oz. ledu.|
+lang|Little or no snow accumulation expected|Prièakuje se zelo malo novozapadlega snega|
+lang|No ice (on ground) accumulation expected.|Ni mo¾nosti poledice.|
+lang|Little or no snow or ice (on ground) accumulation expected.|Prièakuje se zelo malo novozapadlega snega oz ledu.|
+lang|No snow accumulation expected.|Ne prièakuje se, da bi sneg obstal.|
+lang| in the | |
+lang|Chance of precipitation|Mo¾nost padavin|
+lang|dense overcast|oblaèno|
+lang|Dense overcast|Oblaèno|
+lang| then | nato|
+lang|the| |
+lang|afternoon|popoldan|
+lang|cloudy|oblaèno|
+lang|Patchy|mestoma|
+lang| slight | rahel |
+lang| light | rahel |
+lang|fog|megla|
+lang|, becoming |, nato |
+lang| of | |
+lang| to | |
+lang|gusting|sunki vetra|
+lang|mostly|prete¾no|
+lang|after|po|
+lang|midnight|polnoèi|
+lang|morning|zjutraj|
+lang|Mostly|Prete¾no|
+lang|partly|delno|
+lang|Light|Rahlo|
+lang|moderate|zmeren|
+lang|evening|zveèer|
+lang|Dense|Veliko|
+lang|overcast|oblaèno|
+lang|Moderate|Zmerno|
+lang|dense|veliko|
+lang|sunny|sonèno|
+lang|. Rain likely|. Mo¾en de¾|
+lang|rain|de¾|
+lang|A ||
+lang|chance of|mo¾en|
+lang|High|Najvi¹ja temperatura:|
+lang|Low|Najni¾ja temperatura:|
+lang| but | toda |
+lang|temperatures falling|temperatura se zni¾uje|
+lang|temperatures rising|temperatura se zvi¹uje|
+lang|northeast|severo-vzhod|
+lang|norast|severo-vzhod|
+lang|nornelast|severo-vzhod|
+lang|northeast|severo-vzhod|
+lang|northwest|severo-zahod|
+lang|southeast|jugo-vzhod|
+lang|sounelast|jugo-vzhod|
+lang|souast|jugo-vzhod|
+lang|southwest|jugo-zahod|
+lang|north-|sever-|
+lang|east-|vzhod-|
+lang|south-|jug-|
+lang|west-|zahod-|
+lang|north |sever |
+lang|east |vzhod |
+lang|south |jug |
+lang|west |zahod |
+lang|down |pada |
+lang| or | ali |
+lang|around|okoli|
+lang|kph|km/h|
+lang| near | v bli¾ini |
+lang| percent|%|
+lang|less than|manj kot|
+lang|Snow accumulation|Vi¹ina sne¾ne odeje|
+lang| snow | sneg |
+lang| Snow | Sneg |
+lang|Precipitation (liquid equivalent)|Padavine (de¾)|
+lang| between | med |
+lang| and | in |
+lang|Precipitation|Padavine|
+lang|accumulation expected|Predvidena kolièina|
+lang|Little|malo|
+lang|snow |sneg |
+lang|about|okoli|
+lang| one | 1 |
+lang|Fair|Lepo|
+lang|fair|lepo|
+lang|Cloudy|Oblaèno|
+lang|calm|mirno|
+lang|Clear|Jasno|
+lang|clear|jasno|
+lang|Sunny|Jasno|
+lang| ice | led |
+lang|freezing|zmrzovanje|
+lang|sleet|¾led|
+lang|a mix of| me¹anica |
+lang|if any|morda|
+lang|on ground|na povr¹ini|
+lang|patchy|neenotno|
+lang|Thunderstorms likely, some possibly severe|Mo¾ne nevihte, lokalno lahko tudi moènej¹e|
+lang|Some thunder possible.|Mo¾ne so posamezne nevihte.|
+lang|. Some thunderstorms likely|. Mo¾ne so posamezne nevihte|
+lang|of an inch|25 mm|
+lang| half an inch| 12 mm|
+lang| inch| 25 mm|
+lang| a tenth of an inch| 2 mm|
+lang|quarter and half an inch|5 in 10 mm|
+lang| a quarter of an inch| 5 mm|
+lang|UV index up to|UV index do|
+lang|UV index more than|UV index veè kot|
+lang|up a|do|
+lang|Rain very|Veliko de¾ja|
+lang|likely|mo¾nost|
+lang|Wind chill|Obèutek mraza|
+lang|Wind|Veter|
+#
+# Translation of headings, periods and short conditions statements
+# headings
+#
+langlookup|WXSIM Forecast for:|WXSIM napoved za:|
+langlookup|Issued by:|Ki jo je izdal:|
+langlookup|Updated:|Posodobitev:|
+langlookup|High:|Max|
+langlookup|Low:|Min|
+#
+langlookup|Sunday|Nedelja|
+langlookup|Monday|Ponedeljek|
+langlookup|Tuesday|Torek|
+langlookup|Wednesday|Sreda|
+langlookup|Thursday|Èetrtek|
+langlookup|Friday|Petek|
+langlookup|Saturday|Sobota|
+langlookup|Sunday night|Nedelja ponoèi|
+langlookup|Monday night|Ponedeljek ponoèi|
+langlookup|Tuesday night|Torek ponoèi|
+langlookup|Wednesday night|Sreda ponoèi|
+langlookup|Thursday night|Èetrtek ponoèi|
+langlookup|Friday night|Petek ponoèi|
+langlookup|Saturday night|Sobota ponoèi|
+langlookup|Today|Danes|
+langlookup|Tonight|Danes ponoèi|
+langlookup|This afternoon|Danes popoldan|
+langlookup|Rest of tonight|Preostanek noèi|
+#
+# UV Index words
+langlookup|Low|Nizek|
+langlookup|Medium|Srednji|
+langlookup|High|Visok|
+langlookup|Very&nbsp;High|Zelo&nbsp;visok|
+langlookup|Extreme|Ekstremen|
+#
+# Summary conditions lookup
+langlookup|Severe storm|Moène nevihte
+langlookup|Showers storms|Nevihte
+langlookup|Thunder storm|Nevihte
+langlookup|Rain Sleet|®led
+langlookup|FrzgRn Snow|Pomrznjen de¾/sneg
+langlookup|Rain and Snow|De¾ in sneg
+langlookup|Freezing Rain|Pomrznjen de¾
+langlookup|Rain likely|Verjetnost de¾ja
+langlookup|Chance rain|Mo¾nost de¾ja
+langlookup|Mix|Me¹anica
+langlookup|Sleet|®led
+langlookup|Snow|Sneg
+langlookup|Fog a.m.|Megla v jutranjem èasu
+langlookup|Fog late|Megla ponoèi
+langlookup|Fog|Megla
+langlookup|Very Cold|Zelo mrzlo
+langlookup|Very Hot|Zelo vroèe
+langlookup|Partly Cloudy|Delno oblaèno
+langlookup|Mostly Cloudy|Prete¾no oblaèno
+langlookup|Cloudy|Oblaèno
+langlookup|Overcast|Oblaèno
+langlookup|Partly Sunny|Delno Jasno
+langlookup|Mostly Sunny|Prete¾no jasno
+langlookup|Mostly Clear|Prete¾no jasno
+langlookup|Sunny|Jasno
+langlookup|Clear|Jasno
+langlookup|Fair|Lepo
+langlookup|Variable Clouds|Nestanovitno
+langlookup|Clear|Jasno
+# translation for cardinal wind directions must be in North-East-South-West order
+langlookup|NESW|SVJZ|
+#
+# translation for Beaufort Wind Force
+langlookup|Calm|Ti¹ina|
+langlookup|Light air|Lahek vetriè|
+langlookup|Light breeze|Vetriè|
+langlookup|Gentle breeze|Slab veter|
+langlookup|Moderate breeze|Zmeren veter|
+langlookup|Fresh breeze|Zmerno moèan veter|
+langlookup|Strong breeze|Moèan veter|
+langlookup|Near gale|Zelo moèan veter|
+langlookup|Gale|Viharni veter|
+langlookup|Strong gale|Vihar|
+langlookup|Storm|Moèan vihar|
+langlookup|Violent storm|Orkanski veter|
+langlookup|Hurricane|Orkan|
+#
+# --- end of language file ------

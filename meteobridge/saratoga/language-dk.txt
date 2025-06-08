@@ -1,0 +1,384 @@
+# Danish language plugin for Carterlake/WD/AJAX/PHP template set
+# Ken True - http://saratoga-weather.org/template/
+# Translation courtesy of Henrik at http://www.silkeborg-vejret.dk/
+#
+# Version 1.00 - 24-Apr-2008 - initial release
+# Version 1.01 - 12-Sep-2012 - added wxquake/quake-json.php translations
+#
+# English and Western European use ISO-8859-1 character sets
+#
+charset|ISO-8859-1|
+#
+# Greek should use ISO-8859-7 character set for compatibility with plaintext-parser-lang-el.txt
+#
+#charset|ISO-8859-7|
+#
+# Note:  the langlookup entries are for EXACT replacements including spaces and capitalization.
+#  
+# format is 'langlookup|<english-to-find>|<replacement-string>|
+#
+# Don't change the first field <english-to-find>  because it matches what is in the 
+# langtrans/langtransstr() calls embedded in various scripts in the template set.  
+# Only change the second field <replacement-string> for your language.
+#
+# You can add new langlookup entries to handle additions to your website.  Be sure to add the
+# same langlookup entry to the other language-LL.txt files for all the languages you support on your site.
+#
+# ajax-dashboard and ajax-gizmo language strings
+#
+langlookup|Enable JavaScript for live updates|Aktiver JavaScript for lever opdaterer|
+langlookup|Updated|Opdateret|
+langlookup|updated|opdateret|
+langlookup|sec ago|sek siden|
+langlookup|next update at|næste opdatering kl.|
+# thermometer language
+langlookup|Temperature|Temperatur|
+langlookup|Currently|Nu|
+langlookup|Max|Max|
+langlookup|Min|Min|
+# rising/falling arrows text
+langlookup|Warmer|Varmere|
+langlookup|Colder|Koldere|
+langlookup|Rising|Stigende|
+langlookup|Falling|Faldende|
+langlookup|Increased|Tiltaget med|
+langlookup|Decreased|Aftaget med|
+langlookup|than last hour|end sidste time|
+langlookup|since last hour|siden sidst time|
+langlookup|than yesterday at this time|end sidste 24 timer|
+#
+langlookup|Feels like|Føles som|
+langlookup|24-hr difference|24-timers forskel|
+langlookup|Today|I dag|
+langlookup|Yesterday|I går|
+langlookup|High:|Max:|
+langlookup|Low:|Min:|
+langlookup|Wind from|Vind retning|
+langlookup|Gust|Vindstød|
+langlookup|Gust Month|Denne måned|
+langlookup|UV Index|UV Index|
+langlookup|UV Index Forecast|UV-varsel|
+langlookup|Solar Radiation|Solenergi|
+langlookup|Summary|Oversigt|
+langlookup|Humidity|Fugtighed|
+langlookup|Dew Point|Dugpunkt|
+langlookup|Barometer|Barometer|
+langlookup|Baro Trend|Tryk tendens|
+langlookup|Wind|Vind|
+langlookup|Rain|Regn|
+langlookup|Outlook|Udsigt|
+langlookup|Rain Today|Regn i dag|
+langlookup|Rain Rate|Regn rate|
+langlookup|Rain Yesterday|Regn igår|
+langlookup|Storm Rain|Storm regn|
+langlookup|This Month|Denne måned|
+langlookup|Season Total|Denne sæson|
+langlookup|day since last rain|dage siden sidste regn|
+langlookup|days since last rain|dage siden sidste regn|
+langlookup|rain day in|regndage i|
+langlookup|rain days in|regndage i|langlookup|Almanac|Almanak|
+langlookup|Snow|Sne|
+langlookup|Snow Today|Sne idag|
+langlookup|Snow Yesterday|Sne igår|
+langlookup|Snow Depth|Snedybde|
+langlookup|Winter Total|Vinter i alt|
+langlookup|snow day in|sne dag i|
+langlookup|snow days in|sne dage i|
+langlookup|Almanac|Almanak|
+langlookup|Sun&nbsp;|Solen|
+langlookup|Moon|Månen|
+langlookup|Sunrise|Solopgang|
+langlookup|Sunset|Solnedgang|
+langlookup|Moonrise|Månen op|
+langlookup|Moonset|Månen ned|
+langlookup|Illuminated|oplyst|
+langlookup|Weather Forecast|Vejrudsigt|
+langlookup|forecast|vejrudsigt|
+#
+# UV Index words - note: leave &nbsp; where shown for proper lookup
+langlookup|None|Nul|
+langlookup|Low|Lav|
+langlookup|Medium|Moderat|
+langlookup|High|Høj|
+langlookup|Very&nbsp;High|Meget&nbsp;Højt|
+langlookup|Extreme|Ekstremt|
+#
+# Moon words
+#
+langlookup|New Moon|Nymåne|
+langlookup|Waxing Crescent|Tiltagende|
+langlookup|Waxing Crescent Moon|Tiltagende før første kvarter|
+langlookup|First Quarter|Første kvarter|
+langlookup|First Quarter Moon|Første kvarter måne|
+langlookup|Waxing Gibbous|Tiltagende før|
+langlookup|Waxing Gibbous Moon|Tiltagende før fuldmåne|
+langlookup|Full Moon|Fuldmåne|
+langlookup|Waning Gibbous|Aftagende|
+langlookup|Waning Gibbous Moon|Aftagende efter fuldmåne|
+langlookup|Last Quarter|Sidste kvarter|
+langlookup|Last Quarter Moon|Sidste kvarter måne|
+langlookup|Waning Crescent|Aftagende|
+langlookup|Waning Crescent Moon|Aftagende efter sidste kvarter|
+#
+#
+# WU-Forecast.php replacement text
+#
+langlookup|Chance of precipitation|Risiko for nedbør|
+#
+# footer.php
+#
+langlookup|Top|Top|
+langlookup|Contact Us|Kontakt Os|
+langlookup|Bookmark Page|Bogmærker|
+langlookup|Valid|Valider|
+langlookup|Never base important decisions on this or any weather information obtained from the Internet|Træf aldrig vigtige beslutninger på grundlag af denne vejrstation eller nogen som helst vejrinformationer fundet på Internettet|
+#
+# menubar.php and flyout-menu.xml entries
+#
+# Note: if using the flyout-menu, you can have individual language versions as
+# flyout-menu-LL.xml, flyout-menu-test-LL.xml using full native language which won't be translated.
+#
+# these settings below are for the English menubar.php $html section, and flyout-menu.xml/flyout-menu-test.xml
+#  which should be in English only.
+#
+langlookup|Navigation|Navigation|
+langlookup|External Links|Links|
+langlookup|Home|Forside|
+langlookup|Forecast|Vejrudsigt|
+langlookup|WXSIM Forecast|WXSIM vejrudsigt|
+langlookup|Radar|Radar|
+langlookup|Advisories|Varsler|
+langlookup|Live Weather|Live vejr|
+langlookup|Live Mesomap|Live MesoMap|
+langlookup|Daily Stats|Daglig statistik|
+langlookup|Graphs|Grafer|
+langlookup|Station Data by Month|Logfiler|
+langlookup|Astronomy|Astronomi|
+langlookup|Links|Links|
+langlookup|About|Om|
+langlookup|About Us|Om os|
+langlookup|Live|Live|
+langlookup|Weather-Display Live|Weather-Display Live|
+langlookup|Local Radar|Lokal radar|
+langlookup|Mesomap|MesoMap|
+langlookup|MesoMap Live|MesoMap Live|
+langlookup|Forecast &amp; Advisories|Vejrudsigt &amp; varsler|
+langlookup|Forecast details|Vejrudsigt i detaljer|
+langlookup|WXSIM Forecast details|WXSIM vejrudsigt i detaljer|
+langlookup|Weather Trends|Trends|
+langlookup|Station Graphs|Grafer|
+langlookup|Station Monthly Reports|Rapporter|
+langlookup|Sun/Moon Almanac|Sol &amp; Måne|
+langlookup|Earthquake activity|Jordskælv|
+langlookup|Website Map|Sitemap|
+#
+# include-style-switcher.php items
+#
+langlookup|Style Options|Design options|
+langlookup|Style|Farve|
+langlookup|Widescreen|Bredformat|
+langlookup|On|Til|
+langlookup|Off|Fra|
+langlookup|Set|OK|
+langlookup|Language|Sprog|
+# Colors of templates for style-switcher
+langlookup|Black|Sort|
+langlookup|Blue|Blå|
+langlookup|Dark|Mørke|
+langlookup|Fall|Efterår|
+langlookup|Green|Grøn|
+langlookup|Ice Tea|Iste|
+langlookup|Mocha|Mokka|
+langlookup|Orange|Orange|
+langlookup|Pastel|Pastel|
+langlookup|Purple|Lilla|
+langlookup|Red|Rød|
+langlookup|Salmon|Laks|
+langlookup|Silver|Sølv|
+langlookup|Spring|Forår|
+langlookup|Taupe|Beige|
+langlookup|Teal|Lyseblå|
+#
+# wxastronomy.php items (solar/lunar words are specified above)
+#
+langlookup|Daylight|Dagens længde|
+langlookup|Vernal Equinox|Forårsjævndøgn|
+langlookup|Start of Spring|Forår begynder|
+langlookup|Summer Solstice|Sommer solhverv|
+langlookup|Start of Summer|Sommer begynder|
+langlookup|Autumn Equinox|Efterårsjævndøgn|
+langlookup|Start of Fall|Efterår begynder|
+langlookup|Winter Solstice|Vintersolhverv|
+langlookup|Start of Winter|Vinter begynder|
+#
+# wxgraphs.php items
+#
+langlookup|Weather Trend Graphs|Grafer|
+langlookup|Last 24 Hours|Graf sidste 24 timer|
+langlookup|Last 72 Hours|Graf sidste 72 timer|
+langlookup|Month to Date|Graf sidste 30 dage|
+#
+# V1.01 - trends-inc.php native PHP conversion translation items
+#
+langlookup|Trends as of|Tendenser fra|
+langlookup|TIME|TID|
+langlookup|TEMP|TEMP|
+langlookup|WIND SPEED|VIND HAST|
+langlookup|WIND GUST|VINDSTØD|
+langlookup|WIND DIR|VIND RETN|
+langlookup|HUMIDITY|FUGTIGHED|
+langlookup|PRESSURE|BAROMETER|
+langlookup|RAIN|REGN|
+#
+langlookup|Current|Aktuelt|
+langlookup|CURRENT|AKTUELT|
+langlookup|Now|Nu|
+langlookup|Records and Stats|Rekorder og Statistik|
+langlookup|5 minutes ago|5 minutter siden|
+langlookup|10 minutes ago|10 minutter siden|
+langlookup|15 minutes ago|15 minutter siden|
+langlookup|20 minutes ago|20 minutter siden|
+langlookup|30 minutes ago|30 minutter siden|
+langlookup|45 minutes ago|45 minutter siden|
+langlookup|60 minutes ago|60 minutter siden|
+langlookup|75 minutes ago|75 minutter siden|
+langlookup|90 minutes ago|90 minutter siden|
+langlookup|105 minutes ago|105 minutter siden|
+langlookup|120 minutes ago|120 minutter siden|
+# following three entries are used for <condition> on <date> and <condition> at <time>
+langlookup|on|den|
+langlookup|at|kl.|
+langlookup|from|fra|  as in '14 mph from 315 °(NW)'
+#
+langlookup|last hour|sidste time|
+langlookup|over last 7 days|over de sidste 7 dage|
+langlookup|last month|sidste måned|
+#
+langlookup|Today|I dag|
+langlookup|Yest.|I går|
+langlookup|Week|Uge|
+langlookup|Month|Måned|
+langlookup|Year|År|
+langlookup|Gust/hr|Vindstød/timen|
+#
+langlookup|RAIN HISTORY|REGN HISTORIK|
+langlookup|day since last rain on|dage siden sidste regn den|
+langlookup|days since last rain on|dage siden sidste regn den|
+langlookup|rain day this month|regndag denne måned|
+langlookup|rain days this month|regndage denne måned|
+langlookup|rain day this year|regndag dette år|
+langlookup|rain days this year|regndage dette år|
+langlookup|total last year at this time|i alt sidste år på dette tidspunkt|
+
+langlookup|TEMPERATURE HIGHS|TEMPERATUR MAX.|
+langlookup|HOT DAYS THIS MONTH|VARME DAGE DENNE MÅNED|
+langlookup|days|dage|
+langlookup|day|dag|
+langlookup|Warmest day|Varmeste dag|
+langlookup|Warmest night|Varmetste nat|
+
+langlookup|TEMPERATURE LOWS|TEMPERATUR MIN.|
+langlookup|COLD DAYS THIS MONTH|KOLDE DAGE DENNE MÅNED|
+langlookup|Coldest day|Koldeste dag|
+langlookup|Coldest night|Koldeste nat|
+
+langlookup|BAROMETER HIGHS|BAROMETER MAX.|
+langlookup|WIND CHILL LOWS|VINDCHILL MIN.|
+langlookup|EVAPOTRANSPIRATION|EVAPOTRANSPIRATION|
+langlookup|SOLAR HIGHS|SOL MAX.|
+langlookup|UV HIGHS|UV MAX.|
+langlookup|Wind Data|Vind Data|
+langlookup|WIND GUST HIGHS|VINDSTØD MAX.|
+langlookup|WIND GUST AVERAGE HIGHS|VINDSTØD GNS. MAX.|
+langlookup|WIND RUN|VINDLØB|
+# --- end of new trends-inc.php translations
+#
+# include-wxhistory.php translations
+#
+langlookup|Daily / Monthly Weather History From This Station|Daily / Månedlig vejrhistorik fra denne station|
+langlookup|Select a report and click submit|Vælg rapport og tryk OK|
+langlookup|submit|OK|
+langlookup|Daily Report for the month of|Daglig rapport for måned|
+langlookup|Average and Extremes|Gennemsnit og ekstremer|
+langlookup|Average and Extremes for Month of|Gennemsnit og ekstremer for måned|
+langlookup|up to day|op til dag|
+langlookup|Click here to toggle the 24 Hour Graph of this day|Klik her for at åbne 24-timers graf for denne dag|
+langlookup|Day, Sunshine Hours, ET, Max Solar, UV|Dag, Solskinstimer, ET, Max Sol, UV|
+langlookup|Daily Rain Totals|Daglige regntotaler|
+langlookup|Average temperature|Gennemsnits temperatur|
+langlookup|Average humidity|Gennemsnits fugtighed|
+langlookup|Average dewpoint|Gennemsnits dugpunkt|
+langlookup|Average barometer|Gennemsnits barometer|
+langlookup|Average windspeed|Gennemsnits vindhastighed|
+langlookup|Average gustspeed|Gennemsnits vindstød|
+langlookup|Average direction|Gennemsnits vindretning|
+langlookup|Rainfall for month|Regn i denne måned|
+langlookup|Rainfall for year|Regn i år|
+langlookup|Maximum rain per minute|Maximum regn pr. minut|
+langlookup|Maximum temperature|Maximum temperatur|
+langlookup|Minimum temperature|Minimum temperatur|
+langlookup|Maximum humidity|Maximum fugtighed|
+langlookup|Minimum humidity|Minimum fugtighed|
+langlookup|Maximum pressure|Maximum barometer|
+langlookup|Minimum pressure|Minimum barometer|
+langlookup|Maximum windspeed|Maximum vindhastighed|
+langlookup|Maximum gust speed|Maximum vindstød|
+langlookup|Maximum heat index|Maximum hedeindex|
+langlookup|Sunshine hours month to date|Solskinstimer måned til dato|
+langlookup|Sunshine hours year to date|Solskinstimer år til dato|
+langlookup|hrs|timer|
+#
+# --- end of include-wxhistory.php translations
+#
+# Conditions (%Currentsolardescription% and clientraw[49])
+#
+conditions|begin||
+langlookup|Dry|Tørt|
+langlookup|Light rain|Let regn|
+langlookup|Moderate drizzle|Moderat nedbør|
+langlookup|Moderate rain|Moderat regn|
+langlookup|Heavy rain|Regn|
+langlookup|Stopped raining|Regn stoppet|
+# conditions time
+langlookup|Dawn|Solopgang|
+langlookup|Dusk|Solnedgang|
+langlookup|Night time|Nat|
+# Clouds (sky)
+langlookup|Clear|Klart|
+langlookup|Sunny|Sol|
+langlookup|Clear skies|Skyfrit|
+langlookup|Mostly sunny|Mest sol|
+langlookup|A few clouds|Få skyer|
+langlookup|Sc|Delvist skyet|
+langlookup|Scattered clouds|Delvist skyet|
+langlookup|Partly cloudy|Delvist skyet|
+langlookup|Mostly cloudy|Mest skyet|
+langlookup|Cloudy with clear p|Mest skyet|
+langlookup|Cloudy with clear patches|Mest skyet|
+langlookup|Overcast|Overskyet|
+conditions|end||
+#
+# wxquake (quake-json.php) 
+#
+langlookup|Update time|Opdateret|
+langlookup|of|af|
+langlookup|No earthquakes of magnitude|Ingen jordskælv på|
+langlookup|or greater within|eller større end|
+langlookup|reported in last 7 days|rapporteret de sidste 7 dage|
+langlookup|Cluster - click to expand details|Klynge - klik for at se detaljer|
+langlookup|Enable JavaScript to view the Google Map.|Tillad JavaScript for at se Google kort.|
+langlookup|Earthquakes in the past 7 days of magnitude|Jordskælv de sidste 7 dage på|
+langlookup|or greater within|eller større end|
+langlookup|Epicenter Near|Epicenter nær|
+langlookup|Magnitude|Størrelse|
+langlookup|Distance to Epicenter|Distance til Epicenter|
+langlookup|Local Time|Lokal tid|
+langlookup|Link|Link|
+langlookup|map|kort|
+langlookup|Note: Click on column heading marked with|OBS: Klik på kolonnen markeret med|
+langlookup|to sort column contents.|for at sortere.|
+langlookup|earthquakes found. Click on location or map links for more details from the <a href="http://earthquake.usgs.gov/earthquakes/map/">USGS</a>|jordskælv fundet. Klik på sted eller kortet links for at se flere detaljer fra <a href="http://earthquake.usgs.gov/earthquakes/map/">USGS</a>|
+langlookup|Depth|Dybde|
+langlookup|Distance to epicenter|Distance til epicenter|
+langlookup|Map and data courtesy of|Kort og data leveres af |
+langlookup|United States Geological Survey|United States Geological Survey|

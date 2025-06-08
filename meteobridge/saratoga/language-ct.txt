@@ -1,0 +1,510 @@
+# Catalan language plugin for Carterlake/WD/AJAX/PHP template set
+# Ken True - http://saratoga-weather.org/template/
+#
+# Version 1.00 - 24-Apr-2008 - initial release
+# Version 1.01 - 24-Jun-2008 - added support for trends-inc.php conversion
+#
+# English and Western European use ISO-8859-1 character sets
+#
+charset|ISO-8859-1|
+#
+# Greek should use ISO-8859-7 character set for compatibility with plaintext-parser-lang-el.txt
+#
+#charset|ISO-8859-7|
+#
+# Note:  the langlookup entries are for EXACT replacements including spaces and capitalization.
+#  
+# format is 'langlookup|<english-to-find>|<replacement-string>|
+#
+# Don't change the first field <english-to-find>  because it matches what is in the 
+# langtrans/langtransstr() calls embedded in various scripts in the template set.  
+# Only change the second field <replacement-string> for your language.
+#
+# You can add new langlookup entries to handle additions to your website.  Be sure to add the
+# same langlookup entry to the other language-LL.txt files for all the languages you support on your site.
+#
+# ajax-dashboard and ajax-gizmo language strings
+#
+langlookup|Enable JavaScript for live updates|Activa JavaScript per a actualitzar en temps real|
+langlookup|Updated|Actualització|
+langlookup|updated|actualitzat fa|
+langlookup|sec ago|segons|
+langlookup|next update at|pròpera actualització a les|
+# thermometer language
+langlookup|Temperature|Temperatura|
+langlookup|Currently|Actualment|
+langlookup|Max|Max|
+langlookup|Min|Min|
+langlookup|Temperature Range|Amplitut tèrmica|
+langlookup|Hours of sunshine|Hores de Sol|
+langlookup|Days Since Last Dry Day|Dies 
+langlookup|Days Since It Last Rained|Dies des de l'última precipitació|
+# rising/falling arrows text
+langlookup|Warmer|Més càlid|
+langlookup|Colder|Més fred|
+langlookup|Rising|Pujant|
+langlookup|Falling|Baixant|
+langlookup|Increased|Ha pujat|
+langlookup|Decreased|Ha baixat|
+langlookup|than last hour|què en l'última hora |
+langlookup|since last hour|des de l'última hora|
+langlookup|than yesterday at this time|que ahir a aquesta hora|
+#
+langlookup|Feels like|Sensació|
+langlookup|24-hr difference|Diferiència 24-hr|
+langlookup|Today|Avui|
+langlookup|Yesterday|Ahir|
+langlookup|High:|Màx:|
+langlookup|Low:|Mín:|
+langlookup|Wind from|Vent del|
+langlookup|Gust|Ràfega|
+langlookup|Gust Month|Ràfega mensual|
+langlookup|UV Index|Index UV|
+langlookup|UV Index Forecast|Previsió índex UV|
+langlookup|Solar Radiation|Radiació Solar|
+langlookup|Summary|Resum|
+langlookup|Humidity|Humitat|
+langlookup|Dew Point|Rosada|
+langlookup|Barometer|Baròmetre|
+langlookup|Baro Trend|Tendència|
+langlookup|Wind|Vent|
+langlookup|Rain|Pluja|
+langlookup|Outlook|Pronòstic|
+langlookup|Rain Today|Pluja avui|
+langlookup|Rain Rate|Int.|
+langlookup|RainRate|Intensitat de pluja|
+langlookup|Rain Yesterday|Pluja ahir|
+langlookup|Storm Rain|Tempesta|
+langlookup|This Month|Aquest mes|
+langlookup|This Year|Aquest any|
+langlookup|Season Total|Total anual|
+langlookup|day since last rain|dia des de l'ultima precipitació|
+langlookup|days since last rain|dies des de l'ultima precipitació|
+langlookup|rain day in|dia de pluja en|
+langlookup|rain days in|dies de pluja en|
+langlookup|Snow|Neu|
+langlookup|Snow Today|Neu Avui|
+langlookup|Snow Yesterday|Neu Ahir|
+langlookup|Snow Depth|gruix de la neu|
+langlookup|snow day in|dia a la neu|
+langlookup|snow days in|ara en dia|
+langlookup|Almanac|Almanac|
+langlookup|Sun&nbsp;|Sol|
+langlookup|Moon|Lluna|
+langlookup|Sunrise|Sol (sortida)|
+langlookup|Sunset|Sol (posta)|
+langlookup|Moonrise|Lluna (sortida)|
+langlookup|Moonset|Lluna (posta)|
+langlookup|Illuminated|Illuminada|
+langlookup|Weather Forecast|Pronòstic del temps|
+langlookup|forecast|Predicció|
+#
+# UV Index words - note: leave &nbsp; where shown for proper lookup
+langlookup|None|Nul|
+langlookup|Low|Baix|
+langlookup|Medium|Mig|
+langlookup|High|High|
+langlookup|Very&nbsp;High|Molt&nbsp;alt|
+langlookup|Extreme|Extrem|
+#
+# Moon words
+#
+langlookup|New Moon|Lluna nova|
+langlookup|Waxing Crescent|Creixent|
+langlookup|Waxing Crescent Moon|Creixent|
+langlookup|First Quarter|Quart creixent|
+langlookup|First Quarter Moon|Quart creixent|
+langlookup|Waxing Gibbous|Gibosa creixent|
+langlookup|Waxing Gibbous Moon|Gibosa creixent|
+langlookup|Full Moon|Lluna Vella|
+langlookup|Waning Gibbous|Lluna minvant|
+langlookup|Waning Gibbous Moon|Lluna minvant|
+langlookup|Last Quarter|Quart minvant|
+langlookup|Last Quarter Moon|Quart minvant|
+langlookup|Waning Crescent|Minvant|
+langlookup|Waning Crescent Moon|Minvant|
+#
+#
+# WU-Forecast.php replacement text
+#
+langlookup|Chance of precipitation|La probabilitat de precipitació|
+#
+# footer.php
+#
+langlookup|Top|Inici|
+langlookup|Contact Us|Contacte|
+langlookup|Bookmark Page|Marca aquesta pàgina|
+langlookup|Valid|Vàlid|
+langlookup|Never base important decisions on this or any weather information obtained from the Internet|Mai base decisions importants en aquestes dades o altres obtingudes d'Internet|
+langlookup|Hit CTRL-D to bookmark this page|Prem Ctrl+D per a guardar aquesta pàgina als marcadors|
+#
+# menubar.php and flyout-menu.xml entries
+#
+# Note: if using the flyout-menu, you can have individual language versions as
+# flyout-menu-LL.xml, flyout-menu-test-LL.xml using full native language which won't be translated.
+#
+# these settings below are for the English menubar.php $html section, and flyout-menu.xml/flyout-menu-test.xml
+#  which should be in English only.
+#
+langlookup|Navigation|Navegació|
+langlookup|External Links|Enllaços externs|
+langlookup|Home|Inici|
+langlookup|Forecast|Predicció|
+langlookup|WXSIM Forecast|Predicció WXSIM|
+langlookup|Radar|Radar|
+langlookup|NOAA reports|NOAA|
+langlookup|Nearby METAR Reports|Resums METAR propers|
+langlookup|Advisories|Avisos|
+langlookup|Live Weather|El temps ara|
+langlookup|Live Mesomap|Mapa en viu|
+langlookup|Daily Stats|Estadístiques diàries|
+langlookup|Graphs|Gràfics|
+langlookup|Station Data by Month|Dades mensuals|
+langlookup|Astronomy|Astronomia|
+langlookup|Links|Enllaços|
+langlookup|Status|Estat|
+langlookup|About|Sobre|
+langlookup|About Us|Nosaltres|
+langlookup|Live|En viu|
+langlookup|Weather-Display Live|Weather-Display Live|
+langlookup|Local Radar|Radar local|
+langlookup|Mesomap|Mesomap|
+langlookup|MesoMap Live|MesoMap Live|
+langlookup|Forecast &amp; Advisories|Predicció i avisos|
+langlookup|Forecast details|Predicció detallada|
+langlookup|WXSIM Forecast details|WXSIM Forecast details|
+langlookup|Weather Trends|Tendències|
+langlookup|Station Graphs|Gràfiques|
+langlookup|Station Monthly Reports|Dades mensuals|
+langlookup|Sun/Moon Almanac|Dades astronòmiques|
+langlookup|Earthquake activity|Activitat sísmica|
+langlookup|Website Map|Mapa web|
+#
+# include-style-switcher.php items
+#
+langlookup|Style Options|Opcions de disseny|
+langlookup|Style|Disseny|
+langlookup|Widescreen|Pantalla ampla|
+langlookup|On|Sí|
+langlookup|Off|No|
+langlookup|Set|Validar|
+langlookup|Language|Idioma|
+# Colors of templates for style-switcher
+langlookup|Black|Negre|
+langlookup|Blue|Blau|
+langlookup|Dark|Fosc|
+langlookup|Fall|Tardor|
+langlookup|Green|Verd|
+langlookup|Ice Tea|Te Gelat|
+langlookup|Mocha|Moka|
+langlookup|Orange|Taronja|
+langlookup|Pastel|Pastel|
+langlookup|Purple|Lila|
+langlookup|Red|Vermell|
+langlookup|Salmon|Salmon|
+langlookup|Silver|Plata|
+langlookup|Spring|Primavera|
+langlookup|Taupe|Suau|
+langlookup|Teal|Verdós|
+#
+# wxastronomy.php items (solar/lunar words are specified above)
+#
+langlookup|Daylight|Dia|
+langlookup|Vernal Equinox|Equinocci de primavera|
+langlookup|Start of Spring|Inici de la primavera|
+langlookup|Summer Solstice|Solstici d'estiu|
+langlookup|Start of Summer|Inici de l'estiu|
+langlookup|Autumn Equinox|Equinocci de tardor|
+langlookup|Start of Fall|Inici de la tardor|
+langlookup|Winter Solstice|Solstici d'hivern|
+langlookup|Start of Winter|Inici de l'hivern|
+#
+# wxgraphs.php items
+#
+langlookup|Weather Trend Graphs|Gràfiques de tendència|
+langlookup|Last 24 Hours|Últimes 24 hores|
+langlookup|Last 72 Hours|Últimes 72 hores|
+langlookup|Month to Date|Mes actual|
+#
+# V1.01 - trends-inc.php native PHP conversion translation items
+#
+langlookup|Trends as of|Tendencies el|
+langlookup|TIME|HORA|
+langlookup|TEMP|TEMPERATURA|
+langlookup|WIND SPEED|VENT|
+langlookup|WIND GUST|RÀFEGA|
+langlookup|WIND DIR|DIRECCIÓ|
+langlookup|HUMIDITY|HUMITAT|
+langlookup|PRESSURE|PRESSIÓ|
+langlookup|RAIN|PLUJA|
+#
+langlookup|Current|Actual|
+langlookup|CURRENT|ACTUAL|
+langlookup|Now|Ara|
+langlookup|Records and Stats|Efemèrides i estadístiques|
+langlookup|5 minutes ago|fa 5 minuts|
+langlookup|10 minutes ago|fa 10 minuts|
+langlookup|15 minutes ago|fa 15 minuts|
+langlookup|20 minutes ago|fa 20 minuts|
+langlookup|30 minutes ago|fa 30 minuts|
+langlookup|45 minutes ago|fa 45 minuts|
+langlookup|60 minutes ago|fa 60 minuts|
+langlookup|75 minutes ago|fa 75 minuts|
+langlookup|90 minutes ago|fa 90 minuts|
+langlookup|105 minutes ago|fa 105 minuts|
+langlookup|120 minutes ago|fa 120 minuts|
+# following three entries are used for <condition> on <date> and <condition> at <time>
+langlookup|on|el|
+langlookup|at|a les|
+langlookup|from|del| as in '14 mph from 315 °(NW)'
+#
+langlookup|last hour|última hora|
+langlookup|over last 7 days|en l'última setmana|
+langlookup|last month|últim mes|
+#
+langlookup|Today|Avui|
+langlookup|Yest.|Ahir|
+langlookup|Week|Setmana|
+langlookup|Month|Mes|
+langlookup|Year|Anys|
+langlookup|Gust/hr|Ràfega/hr|
+#
+langlookup|RAIN HISTORY|HISTORIA PLUJA|
+langlookup|day since last rain on| el dia des que va ploure,  |
+langlookup|days since last rain on|dies des que va ploure per última vegada
+langlookup|rain day this month|dia de pluja aquest mes |
+langlookup|rain days this month|dies de pluja aquest mes |
+langlookup|rain day this year|dia de pluja aquest any |
+langlookup|rain days this year|dies de pluja aquest any |
+langlookup|total last year at this time|total de l'any passat per aquestes dates|
+
+langlookup|TEMPERATURE HIGHS|MÀXIMES DE TEMPERATURA | 
+langlookup|HOT DAYS THIS MONTH|AQUEST MES |
+langlookup|days|dies|
+langlookup|day|die|
+langlookup|Warmest day|dia més càlid |
+langlookup|Warmest night|la nit més calenta |
+
+langlookup|TEMPERATURE LOWS|MÍNIMS DE TEMPERATURA |
+langlookup|COLD DAYS THIS MONTH|Els dies freds AQUEST MES |
+langlookup|Coldest day|Dia més fred |
+langlookup|Coldest night|Nit més freda |
+
+langlookup|BAROMETER HIGHS|BARÒMETRE MÀXIMES |
+langlookup|WIND CHILL LOWS|vent fred  |
+langlookup|EVAPOTRANSPIRATION|EVAPOTRANSPIRACIÓ |
+langlookup|SOLAR HIGHS|MÀXIMES SOLAR |
+langlookup|UV HIGHS|UV MÀXIMES |
+langlookup|Wind Data|Dades de vent |
+langlookup|WIND GUST HIGHS|RÀFEGA MÀXIMES |
+langlookup|WIND GUST AVERAGE HIGHS|MITJANA MÀXIMES DE VENT |
+langlookup|WIND RUN|recorregut del vent |
+# --- end of new trends-inc.php translations
+#
+# include-wxhistory.php translations
+#
+langlookup|Daily / Monthly Weather History From This Station|Diari / La història del temps mensual per aquesta estació|
+langlookup|Select a report and click submit|Seleccioneu un informe i feu clic a Enviar|
+langlookup|submit|Enviar|
+langlookup|Daily Report for the month of|Informe diari per al mes de|
+langlookup|Average and Extremes|Mitjanes i Extrems|
+langlookup|Average and Extremes for Month of|Mitjanes i Extrems per al mes de|
+langlookup|up to day|fins al dia|
+langlookup|Click here to toggle the 24 Hour Graph of this day|Feu clic aquí per veure el gràfic de 24 hores d'aquest dia|
+langlookup|Day, Sunshine Hours, ET, Max Solar, UV|Dia, Hores de sol, hora de l'est, màxim solar, els raigs UV|
+langlookup|Daily Rain Totals|Totals de pluja diaris|
+langlookup|Average temperature|la temperatura mitjana|
+langlookup|Average humidity|Average humidity|
+langlookup|Average dewpoint|La mitjana d'humitat|
+langlookup|Average barometer|Mitjana barometre|
+langlookup|Average windspeed|velocitat mitjana del vent|
+langlookup|Average gustspeed|Mitjana ràfegues|
+langlookup|Average direction|Mitjana Direcció |
+langlookup|Rainfall for month|Pluja mensual|
+langlookup|Rainfall for year|Les precipitacions per a l'any|
+langlookup|Maximum rain per minute|Intensitat pluja màxima per minut|
+langlookup|Maximum temperature|la temperatura màxima|
+langlookup|Minimum temperature|Minimum temperature|
+langlookup|Maximum humidity|la temperatura mínima|
+langlookup|Minimum humidity|humitat mínima|
+langlookup|Maximum pressure|Pressió màxima |
+langlookup|Minimum pressure|Pressió mínima |
+langlookup|Maximum windspeed|Màxima velocitat del vent |
+langlookup|Maximum gust speed|Velocitat màxima ratxa |
+langlookup|Maximum heat index|Màxim índex de calor |
+langlookup|Sunshine hours month to date|Hores de sol al mes fins avui |
+langlookup|Sunshine hours year to date|Hores de sol a l'any fins avui |
+langlookup|hrs|Horari |
+#
+# --- end of include-wxhistory.php translations
+#
+# Conditions (%Currentsolardescription% and clientraw[49])
+#
+conditions|begin||
+langlookup|Dry|Sec|
+langlookup|Light rain|Pluja dèbil|
+langlookup|Moderate drizzle|Plugim|
+langlookup|Moderate rain|Pluja|
+langlookup|Heavy rain|Pluja forta|
+langlookup|Stopped raining|Ha deixat de ploure|
+langlookup|Rain, partly cloudy|Plou, parcialment cobert|
+# conditions time
+langlookup|Dawn|Alba|
+langlookup|Dusk|Crepuscle|
+langlookup|Night time|Nit|
+# Clouds (sky)
+langlookup|Clear|Seré|
+langlookup|Sunny|Assolellat|
+langlookup|Clear skies|Despejat|
+langlookup|Mostly sunny|Practicament despejat|
+langlookup|A few clouds|Alguns núvols|
+langlookup|Few Clouds|Alguns núvols|
+langlookup|Sc|Parcialment cobert|
+langlookup|Partly cloudy|Bastant cobert|
+langlookup|Mostly cloudy|Núvols i clarianes|
+langlookup|Cloudy with clear p|Núvols i clarianes|
+langlookup|Overcast|Tapat|
+langlookup|Drizzle, mostly cloudy|Plugim, parcialment ennuvolat|
+langlookup|Drizzle|Plugim|
+#
+# WU-forecast.php Icon forecast terms
+#
+langlookup|Chance flurries|Posibilitat de flocs de neu|
+langlookup|Chance rain|Posibilitat de pluja|
+langlookup|Chance sleet|Posibilitat d'aiguaneu|
+langlookup|Chance snow|Posibilitat de neu|
+langlookup|Chance thunderstorms|Posibilitat de tempestes|
+langlookup|Clear|Seré|
+langlookup|Cloudy|Cobert|
+langlookup|Flurries|Flocs de neu|
+langlookup|Light snow grains, partly cloudy|Flocs de neu, parcialment ennuvolat|
+langlookup|Fog|Boira|
+langlookup|Hazy|Boirós|
+langlookup|Mostly cloudy|Molt cobert|
+langlookup|Partly cloudy|Parcialment cobert|
+langlookup|Mostly sunny|Molt poc cobert|
+langlookup|Rain|Pluja|
+langlookup|Sleet|Aguaneu|
+langlookup|Snow|Neu|
+langlookup|Sunny|Assolejat|
+langlookup|Thunderstorms|Tempesta elèctrica|
+langlookup|Patches of Fog|Bancs de boira|
+langlookup|Patches of fog|Bancs de boira|
+conditions|end||
+#
+#wxstatus.php
+#
+langlookup|Weather Station Status|Estat de l'estació meteorològica|
+langlookup|Station system up for|Sistema en marxa desde fa|
+langlookup|day|dia|
+langlookup|days|dies|
+langlookup|hour|hora|
+langlookup|hours|hores|
+langlookup|Station system free memory|Memòria lliure del sistema|
+langlookup|This website uses|Aquesta web fa servir|
+langlookup|for weather conditions reporting|per a informar de les condicions meteorològiques|
+langlookup|It was last started|Es va ficar en marxa per últim cop fa|
+langlookup|Age|Antiguitat|
+langlookup|NOT Current|NO actualitzat|
+langlookup|Actual|Actual
+langlookup|Latest update time as of|Hora actualització|
+#
+#NOAA-reports
+#
+langlookup|NOAA-Style Climate Reports|Resums Climàtics NOAA|
+langlookup|NOAA reports not available as weather software is not yet specified.|Resums NOAA no disponibles ja que no hi ha especificat cap programa de recollida de dades|
+langlookup|Select a Year or Month report|Selecciona un any o mes per veure el resum|
+langlookup|Report for|Resum
+#
+#wxdatasummary.php
+#
+langlookup|Annual Weather Data Summary|Resum anual de dades meteorològiques|
+langlookup|Date|Data|
+langlookup|Wind Gust|Ràfega|
+langlookup|Highest wind gust|Ràfega màxima|
+langlookup|Min Temp|Temp. mín|
+langlookup|Minimum temperature|Temperatura mínima|
+langlookup|Max Temp|Temp. màx|
+langlookup|Maximum temperature|Temperatura màxima|
+langlookup|Min Pres|Pres. mín|
+langlookup|Minimum sea level barometric pressure|Pressió mínima a nivell del mar|
+langlookup|Max Pres|Pres. màx|
+langlookup|Maximum sea level barometric pressure|Pressió màxima a nivell del mar|
+langlookup|Max Rain Rate|Int. precipitació|
+langlookup|Maximum rainfall rate|Precipitació màxima|
+langlookup|Day Rain|Pluja diaria|
+langlookup|Total rainfall for the day|Pluja total del dia|
+langlookup|Avg Temp|Temp. mitja|
+langlookup|Average temperature for the day|Temperatura mitja del dia|
+langlookup|Wind Run|Recorregut total del vent|
+langlookup|Total daily wind run|Recorregut total del vent diari|
+langlookup|Hi Avg Wind Speed|Vel. vent més alta|
+langlookup|Highest average wind speed|Velocitat del vent mitjana més alta|
+langlookup|Low Hum|Hum. mín|
+langlookup|Lowest humidity|Humitat mínima|
+langlookup|Hi Hum|Hum. màx|
+langlookup|Highest humidity|Humitat màxima|
+langlookup|Sunshine|Hores de Sol|
+langlookup|Total hours of sunshine|Hores de Sol|
+langlookup|hours|hores|
+langlookup|High Heat|Xafogor (est.)|
+langlookup|High heat index|Xafogor màxima|
+langlookup|Lo Chill|ºT sensació (hiv.)|
+langlookup|Low wind chill|ºT sensació mínima|
+langlookup|Hi Dew|Rosada màx|
+langlookup|High dew point|Punt de rosada màxim|
+langlookup|Lo Dew|Rosada mín|
+langlookup|Dry Period|Període sec|
+langlookup|Wet Period|Període humit|
+langlookup|Longest|més llarg|
+langlookup|Low dew point|Punt de rosada mínim|
+langlookup|Note: All month columns are sortable - move your mouse cursor on top of the month's name and click.|Totes les columnes dels mesos es poden ordenar. Mou el ratolí per sobre del nom del mes i clica a sobre.
+langlookup|Script for the Annual Weather Data Summary by David Jamieson of|Secuència de comandaments per al Resum Anual de dades meteorològiques per David Jamieson de|
+#
+#wvcurecords.php
+#
+langlookup|Records|Registres|
+langlookup|Records began on|Es va iniciar el registre el|
+langlookup|Here are the extremes recorded since then|Aquests són els extrems registrats des de llavors|
+langlookup|Records Since|Registres des de|
+langlookup|Highest|més alta|
+langlookup|Highestm|més alt|
+langlookup|Lowest|més baixa|
+langlookup|Heat Index|Temp. xafogor|
+langlookup|Windchill|Temp. sensació|
+langlookup|Minimum|Mínima|
+langlookup|Maximum|Màxima|
+langlookup|Rainfall|Pluja|
+langlookup|Hourly Rainfall|Pluja horaria|
+langlookup|Daily Rainfall|Pluja diària|
+langlookup|Monthly Rainfall|Pluja mensual|
+langlookup|Wind Gust|Ràfega|
+langlookup|Wind Speed Average|Vel. vent promig|
+langlookup|Dominant Direction|Direcció predominant|
+#
+#wxmetar.php
+#
+langlookup|Spain|Espanya
+langlookup|France|França
+langlookup|Distance from station|Distància des de l'estació|
+langlookup|Wind Chill|Sensació|
+langlookup|Visibility|Visibilitat|
+langlookup|greater than|major de|
+langlookup|Clouds|Nuvolositat|
+langlookup|Cloud details|Detalls nuvolositat|
+#
+#mesos de l'any
+#
+langlookup|enero|Gener|
+langlookup|febrero|Febrer|
+langlookup|marzo|Març|
+langlookup|abril|Abril|
+langlookup|mayo|Maig|
+langlookup|junio|Juny|
+langlookup|julio|Juliol|
+langlookup|agosto|Agost|
+langlookup|septiembre|Setembre|
+langlookup|octubre|Octubre|
+langlookup|noviembre|Novembre|
+langlookup|diciembre|Desembre|
+#

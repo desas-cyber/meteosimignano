@@ -1,0 +1,358 @@
+# Finnish language plugin for Carterlake/WD/AJAX/PHP template set
+# Ken True - http://saratoga-weather.org/template/
+#
+# Version 1.00 - 24-Apr-2008 - initial release
+#
+# English and Western European use ISO-8859-1 character sets
+#
+charset|ISO-8859-1|
+#
+# Greek should use ISO-8859-7 character set for compatibility with plaintext-parser-lang-el.txt
+#
+#charset|ISO-8859-7|
+#
+# Note:  the langlookup entries are for EXACT replacements including spaces and capitalization.
+#  
+# format is 'langlookup|<english-to-find>|<replacement-string>|
+#
+# Don't change the first field <english-to-find>  because it matches what is in the 
+# langtrans/langtransstr() calls embedded in various scripts in the template set.  
+# Only change the second field <replacement-string> for your language.
+#
+# You can add new langlookup entries to handle additions to your website.  Be sure to add the
+# same langlookup entry to the other language-LL.txt files for all the languages you support on your site.
+#
+# ajax-dashboard and ajax-gizmo language strings
+#
+langlookup|Enable JavaScript for live updates|Aktivoi Javascript live-päivityksiä varten|
+langlookup|Updated|Päivitetty|
+langlookup|updated|päivitetty|
+langlookup|sec ago|sekuntia sitten|
+langlookup|next update at|seuraava päivitys|
+# thermometer language
+langlookup|Temperature|Lämpötila|
+langlookup|Currently|Nyt|
+langlookup|Max|Maksimi|
+langlookup|Min|Minimi|
+# rising/falling arrows text
+langlookup|Warmer|Lämpimämpää|
+langlookup|Colder|Kylmempää|
+langlookup|Rising|Nouseva|
+langlookup|Falling|Laskeva|
+langlookup|Increased|Nousua|
+langlookup|Decreased|Laskua|
+langlookup|than last hour|kuin tunti sitten|
+langlookup|since last hour|viime tunnista|
+langlookup|than yesterday at this time|kuin vuorokausi sitten|
+#
+langlookup|Feels like|Tuntuu kuin|
+langlookup|24-hr difference|24 tunnin erotus|
+langlookup|Today|Tänään|
+langlookup|Yesterday|Eilen|
+langlookup|High:|Maksimi:|
+langlookup|Low:|Minimi:|
+langlookup|Wind from|Tuulen suunta|
+langlookup|Gust|Puuskatuuli|
+langlookup|Gust Month|Tässä kuussa|
+langlookup|UV Index|UV Index|
+langlookup|UV Index Forecast|UV Index ennuste|
+langlookup|Solar Radiation|Aurinkoenergia|
+langlookup|Summary|Yhteenveto|
+langlookup|Humidity|Kosteus|
+langlookup|Dew Point|Kastepiste|
+langlookup|Barometer|Ilmanpaine|
+langlookup|Baro Trend|Trendi|
+langlookup|Wind|Tuuli|
+langlookup|Rain|Sade|
+langlookup|Outlook|Ennuste|
+langlookup|Rain Today|Tänään|
+langlookup|Rain Rate|Voimakkuus|
+langlookup|Rain Yesterday|Eilen|
+langlookup|Storm Rain|Rintama|
+langlookup|This Month|Tässä kuussa|
+langlookup|Season Total|Tänä vuonna|
+langlookup|day since last rain|päivä viime sateesta|
+langlookup|days since last rain|päivää viime sateesta|
+langlookup|rain day in|sadepäivä|
+langlookup|rain days in|sadepäivää|
+langlookup|Snow|Lumi|
+langlookup|Snow Today|Lumisade tänään|
+langlookup|Snow Yesterday|Lumisade eilen|
+langlookup|Snow Depth|Lumen syvyys|
+langlookup|Winter Total|Talvi yhteensä|
+langlookup|snow day in|lumipäiviä|
+langlookup|snow days in|lumipäiviä|
+langlookup|Almanac|Almanakka|
+langlookup|Sun&nbsp;|Aurinko|
+langlookup|Moon|Kuu|
+langlookup|Sunrise|Auringonnousu|
+langlookup|Sunset|Auringonlasku|
+langlookup|Moonrise|Kuu nousee|
+langlookup|Moonset|Kuu laskee|
+langlookup|Illuminated|Näkyvää|
+langlookup|Weather Forecast|Sääennuste|
+langlookup|forecast|sääennuste|
+#
+# UV Index words - note: leave &nbsp; where shown for proper lookup
+langlookup|None|n/a|
+langlookup|Low|Matala|
+langlookup|Medium|Kohtalainen|
+langlookup|High|Korkea|
+langlookup|Very&nbsp;High|Erittäin&nbsp;Korkea|
+langlookup|Extreme|Vaarallisen&nbsp;Korkea|
+#
+# Moon words
+#
+langlookup|New Moon|Uusikuu|
+langlookup|Waxing Crescent|Kasvava puoli|
+langlookup|Waxing Crescent Moon|Kasvava puolikuu|
+langlookup|First Quarter|I Neljännes|
+langlookup|First Quarter Moon|I Neljänneskuu|
+langlookup|Waxing Gibbous|Kasvava II neljännes|
+langlookup|Waxing Gibbous Moon|Kasvava II neljänneskuu|
+langlookup|Full Moon|Täysikuu|
+langlookup|Waning Gibbous|Vähenevä II neljännes|
+langlookup|Waning Gibbous Moon|Vähenevä II neljänneskuu|
+langlookup|Last Quarter|II neljännes|
+langlookup|Last Quarter Moon|II neljänneskuu|
+langlookup|Waning Crescent|Vähenevä puoli|
+langlookup|Waning Crescent Moon|Vähenevä puolikuu| 
+#
+#
+# WU-Forecast.php replacement text
+#
+langlookup|Chance of precipitation|Mahdollisesti sadetta|
+#
+# footer.php
+#
+langlookup|Top|Ylös|
+langlookup|Contact Us|Ota yhteyttä|
+langlookup|Bookmark Page|Lisää kirjanmerkkeihin|
+langlookup|Valid|Oikeaa|
+langlookup|Never base important decisions on this or any weather information obtained from the Internet|Sivun tietoja ei saa käyttää ihmisen tai omaisuuden suojeluun|
+#
+# menubar.php and flyout-menu.xml entries
+#
+# Note: if using the flyout-menu, you can have individual language versions as
+# flyout-menu-LL.xml, flyout-menu-test-LL.xml using full native language which won't be translated.
+#
+# these settings below are for the English menubar.php $html section, and flyout-menu.xml/flyout-menu-test.xml
+#  which should be in English only.
+#
+langlookup|Navigation|Valikko|
+langlookup|External Links|Ulkoiset linkit|
+langlookup|Home|Etusivu|
+langlookup|Forecast|Sääennuste|
+langlookup|WXSIM Forecast|WXSIM sääennuste|
+langlookup|Radar|Tutka|
+langlookup|Advisories|Varoitukset|
+langlookup|Live Weather|Sää Live|
+langlookup|Live Mesomap|MesoMap Live|
+langlookup|Daily Stats|Päivittäiset tilastot|
+langlookup|Graphs|Käyrät|
+langlookup|Station Data by Month|Lokitiedot|
+langlookup|Astronomy|Astronomia|
+langlookup|Links|Linkit|
+langlookup|About|Tietoa meistä|
+langlookup|About Us|Tietota meistä|
+langlookup|Live|Live|
+langlookup|Weather-Display Live|Weather-Display Live|
+langlookup|Local Radar|Paikallinen tutka|
+langlookup|Mesomap|MesoMap|
+langlookup|MesoMap Live|MesoMap Live|
+langlookup|Forecast &amp; Advisories|Sääennuste &amp; varoitukset|
+langlookup|Forecast details|Sääennuste|
+langlookup|WXSIM Forecast details|WXSIM sääennuste|
+langlookup|Weather Trends|Sään muutos|
+langlookup|Station Graphs|Käyrät|
+langlookup|Station Monthly Reports|Kuukausitilastot|
+langlookup|Sun/Moon Almanac|Aurinko/Kuu|
+langlookup|Earthquake activity|Maajäristystiedot|
+langlookup|Website Map|Sivukartta|
+#
+# include-style-switcher.php items
+#
+langlookup|Style Options|Tyylivalinnat|
+langlookup|Style|Tyyli|
+langlookup|Widescreen|Sivu kokonäytölle|
+langlookup|On|Päällä|
+langlookup|Off|Pois|
+langlookup|Set|Muuta|
+langlookup|Language|Kieli|
+# Colors of templates for style-switcher
+langlookup|Black|Musta|
+langlookup|Blue|Sininen|
+langlookup|Dark|Tumma|
+langlookup|Fall|Syksy|
+langlookup|Green|Vihreä|
+langlookup|Ice Tea|Jäätee|
+langlookup|Mocha|Mokka|
+langlookup|Orange|Oranssi|
+langlookup|Pastel|Pastelli|
+langlookup|Purple|Liila|
+langlookup|Red|Punainen|
+langlookup|Salmon|Lohen pun.|
+langlookup|Silver|Hopea|
+langlookup|Spring|Kevät|
+langlookup|Taupe|Beige|
+langlookup|Teal|Sinivihr.|
+#
+# wxastronomy.php items (solar/lunar words are specified above)
+#
+langlookup|Daylight|Päivän pituus|
+langlookup|Vernal Equinox|Kevätpäiväntasaus|
+langlookup|Start of Spring|Kevät alkaa|
+langlookup|Summer Solstice|Kesäpäivän seisaus|
+langlookup|Start of Summer|Kesä alkaa|
+langlookup|Autumn Equinox|Syyspäiväntasaus|
+langlookup|Start of Fall|Syksy alkaa|
+langlookup|Winter Solstice|Talvipäivänseisaus|
+langlookup|Start of Winter|Talvi alkaa|
+#
+# wxgraphs.php items
+#
+langlookup|Weather Trend Graphs|Käyrät|
+langlookup|Last 24 Hours|24 tunnin käyrät|
+langlookup|Last 72 Hours|72 tunnin käyrät|
+langlookup|Month to Date|30 päivän käyrät|
+#
+# V1.01 - trends-inc.php native PHP conversion translation items
+#
+langlookup|Trends as of|Trendit alkaen|
+langlookup|TIME|AIKA|
+langlookup|TEMP|LÄMPÖTILA|
+langlookup|WIND SPEED|TUULEN-<br/>NOPEUS|
+langlookup|WIND GUST|TUULEN<br/>PUUSKA|
+langlookup|WIND DIR|TUULEN<br/>SUUNTA|
+langlookup|HUMIDITY|ILMAN-<br/>KOSTEUS|
+langlookup|PRESSURE|ILMAN-<br/>PAINE|
+langlookup|RAIN|SADE|
+#
+langlookup|Current|Juuri nyt|
+langlookup|CURRENT|JUURI NYT|
+langlookup|Now|Juuri nyt|
+langlookup|Records and Stats|Ennätykset ja tilastot|
+langlookup|5 minutes ago|5 min. sitten|
+langlookup|10 minutes ago|10 min. sitten|
+langlookup|15 minutes ago|15 min. sitten|
+langlookup|20 minutes ago|20 min. sitten|
+langlookup|30 minutes ago|30 min. sitten|
+langlookup|45 minutes ago|45 min. sitten|
+langlookup|60 minutes ago|60 min. sitten|
+langlookup|75 minutes ago|75 min. sitten|
+langlookup|90 minutes ago|90 min. sitten|
+langlookup|105 minutes ago|105 min. sitten|
+langlookup|120 minutes ago|120 min. sitten|
+# following three entries are used for <condition> on <date> and <condition> at <time>
+langlookup|on|mitattu|
+langlookup|at|klo.|
+langlookup|from|suunta| as in '14 mph from 315 °(NW)'
+#
+langlookup|last hour|edell. tunti|
+langlookup|over last 7 days|viimeisen 7 päivän ajalta|
+langlookup|last month|viime kuussa|
+#
+langlookup|Today|Tänään|
+langlookup|Yest.|Eilen|
+langlookup|Week|Viikko|
+langlookup|Month|Kuukausi|
+langlookup|Year|Vuosi|
+langlookup|Gust/hr|Puuska/h|
+#
+langlookup|RAIN HISTORY|SADEHISTORIA|
+langlookup|day since last rain on|päivä viime sateesta|
+langlookup|days since last rain on|päivää viime sateesta|
+langlookup|rain day this month|sadepäivä|
+langlookup|rain days this month|sadepäivää|
+langlookup|rain day this year|sadepäivä|
+langlookup|rain days this year|sadepäivää|
+langlookup|total last year at this time|viime vuonna tähän aikaan|
+
+langlookup|TEMPERATURE HIGHS|KORKEIMMAT LÄMPÖTILAT|
+langlookup|HOT DAYS THIS MONTH|KUUKAUDEN LÄMPIMÄT PÄIVÄT|
+langlookup|days|päivää|
+langlookup|day|päivä|
+langlookup|Warmest day|Lämpimin päivä|
+langlookup|Warmest night|Lämpimin yö|
+
+langlookup|TEMPERATURE LOWS|ALIMMAT LÄMPÖTILAT|
+langlookup|COLD DAYS THIS MONTH|KUUKAUDEN KYLMÄT PÄIVÄT|
+langlookup|Coldest day|Kylmin päivä|
+langlookup|Coldest night|Kylmin yö|
+
+langlookup|BAROMETER HIGHS|KORKEIN ILMANPAINE|
+langlookup|WIND CHILL LOWS|ALIN HYYTÄVYYS|
+langlookup|EVAPOTRANSPIRATION|HAIHDUNTA|
+langlookup|SOLAR HIGHS|KORKEIN AURINGON TEHO|
+langlookup|UV HIGHS|KORKEIN UV|
+langlookup|Wind Data|Tuuli tiedot|
+langlookup|WIND GUST HIGHS|KOVIMMAT PUUSKAT|
+langlookup|WIND GUST AVERAGE HIGHS|KOVIMMAT KESKITUULET|
+langlookup|WIND RUN|TUULEN MATKA|
+# --- end of new trends-inc.php translations
+#
+# include-wxhistory.php translations
+#
+langlookup|Daily / Monthly Weather History From This Station|Päivittäinen/Kuukautinen säähistoria tältä asemalta|
+langlookup|Select a report and click submit|Valitse raportti ja paina ok|
+langlookup|submit|ok|
+langlookup|Daily Report for the month of|Päivittäinen raportti kuukaudelle|
+langlookup|Average and Extremes|Keskiarvot sekä ennätykset|
+langlookup|Average and Extremes for Month of|Keskiarvot ja ennätykset kuukadelle|
+langlookup|up to day|tähän päivään asti|
+langlookup|Click here to toggle the 24 Hour Graph of this day|Klikkaa tästä nähdääksesi 24 tunnin käyrän tältä päivältä|
+langlookup|Day, Sunshine Hours, ET, Max Solar, UV|Päivä, Aurinkotunnit, ET, Max Aurinko, UV|
+langlookup|Daily Rain Totals|Päivittäiset sateet|
+langlookup|Average temperature|Keskilämpötila|
+langlookup|Average humidity|Keskimääräinen kosteus|
+langlookup|Average dewpoint|Keskimääräinen kastepiste|
+langlookup|Average barometer|Keskimääräinen ilmanpaine|
+langlookup|Average windspeed|Keskimääräinen tuulennopues|
+langlookup|Average gustspeed|Keskimääräinen puuskatuuli|
+langlookup|Average direction|Keskimääräinen tuulen suunta|
+langlookup|Rainfall for month|Sade tässä kuussa|
+langlookup|Rainfall for year|Sade vuosi|
+langlookup|Maximum rain per minute|Korkein sateen rankkuus|
+langlookup|Maximum temperature|Korkein lämpötila|
+langlookup|Minimum temperature|Alin lämpötila|
+langlookup|Maximum humidity|Korkein ilmankosteus|
+langlookup|Minimum humidity|Alin ilmankosteus|
+langlookup|Maximum pressure|Korkein ilmanpaine|
+langlookup|Minimum pressure|Alin ilmanpaine|
+langlookup|Maximum windspeed|Kovin tuulen nopeus|
+langlookup|Maximum gust speed|Kovin tuulen puuska|
+langlookup|Maximum heat index|Korkein tukaluus|
+langlookup|Sunshine hours month to date|Aurinkotunnit tässä kuussa|
+langlookup|Sunshine hours year to date|Aurinkotunnit tänä vuonna|
+langlookup|hrs|tuntia|
+#
+# --- end of include-wxhistory.php translations
+#
+# Conditions (%Currentsolardescription% and clientraw[49])
+#
+conditions|begin||
+langlookup|Dry|Hienoa säätä|
+langlookup|Light rain|Heikkoa sadetta|
+langlookup|Moderate drizzle|Kohtalaista tihkusadetta|
+langlookup|Moderate rain|Kohtalaista sadetta|
+langlookup|Heavy rain|Voimasta sadetta|
+langlookup|Stopped raining|Sade loppunut|
+# conditions time
+langlookup|Dawn|Sarastus|
+langlookup|Dusk|Hämärä|
+langlookup|Night time|Yö aika|
+# Clouds (sky)
+langlookup|Clear|Selkeätä|
+langlookup|Sunny|Aurinkoista|
+langlookup|Clear skies|Selkeä taivas|
+langlookup|Mostly sunny|Enimmäkseen aurinkoista|
+langlookup|A few clouds|Muutama pilvi|
+langlookup|Sc|Puolipivistä|
+langlookup|Scattered clouds|Puolipivistä|
+langlookup|Partly cloudy|Puolipilvistä|
+langlookup|Mostly cloudy|Enimmäkseen pilvistä|
+langlookup|Cloudy with clear p|Enimmäkseen pilvistä|
+langlookup|Cloudy with clear patches|Enimmäkseen pilvistä|
+langlookup|Overcast|Vaihetelvaa|
+conditions|end||
+#

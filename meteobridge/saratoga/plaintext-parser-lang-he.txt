@@ -1,0 +1,328 @@
+﻿# Language file for plaintext-parser.php program 
+#
+# Version 1.00 - 27-Dec-2011 - initial release
+# This translation, has been extensively tested under all the available weather forecasts produced by  WXsim.
+# translation - Hebrew by Eli at http://www.evweather.info/ (do not remove or modify this info!)
+#
+# note: file is encoded in UTF-8 (non BOM) character set
+charset|UTF-8|
+#
+#lang|Mostly cloudy to cloudy in the evening|מעונן ברובו במשך היום ואז מעונן בערב| **Temp disabled**
+#lang|cloudy in|מעונן ב| (the 'in' depends on context) **Temp disabled**
+#
+#THIS SECTION WILL TRANSLATE SENTENCES TO A MORE NATURAL (LESS SYNTHETIC) LANGUAGE
+#
+# new for v.1.14
+lang|Maximum snow level|מקסימום גובה השלג|
+lang|Minimum snow level|מינימום גובה השלג|
+lang|Maximum freezing level|גובה מקס' של נקודת הקיפאון|
+lang|Minimum freezing level|גובה מינ' של נקודת הקפאון|
+lang|above sea level|מעל גובה פני הים
+lang|above ground|מעל הקרקע|
+lang|meters|מטרים|
+#
+lang|Cloudy in the morning|מעונן בבוקר|
+lang|Patchy light fog|ערפל קל לסירוגין|
+lang|Patchy light fog after midnight|ערפל מקומי קל לאחר חצות|
+lang|Mostly cloudy to cloudy|מעונן ברובו עד מעונן|
+lang|mostly cloudy to cloudy|מעונן ברובו עד מעונן|
+lang|Mostly cloudy|בעיקר מעונן|
+#lang|mostly cloudy|בעיקר מעונן| **Temp disabled**
+lang|Mostly sunny|בעיקר בהיר|
+lang|mostly sunny|בעיקר בהיר|
+lang|becoming mostly cloudy|נעשה בעיקר מעונן|
+lang|becoming mostly clear|נעשה בעיקר בהיר|
+lang|becoming fair to partly cloudy|נעשה נאה עד מעונן חלקית|
+lang|becoming partly cloudy|נעשה מעונן חלקית|
+lang|becoming cloudy|נעשה מעונן|
+lang|becoming mostly cloudy to cloudy|נעשה בעיקר מעונן עד מעונן|
+lang|partly to mostly cloudy|מעונן חלקית עד בעיקר מעונן|
+lang|becoming clear|נעשה בהיר|
+lang|becoming dense overcast|עננות כבדה|
+lang|partly to mostly sunny|בהיר חלקית עד בעיקר בהיר|
+lang|mostly clear|בעיקר בהיר|
+lang|then light to moderate fog in the afternoon|ואז ערפל קל אחר הצהרים|
+lang|then light to moderate fog after midnight|ואז ערפל קל עד בינוני לאחר חצות|
+lang|Fair to partly cloudy|נאה עד מעונן חלקית|
+lang|Partly to mostly cloudy|מעונן חלקית עד בעיקר מעונן|
+lang|Partly to mostly sunny|בהיר חלקית עד בעיקר בהיר|
+lang|. Precipitation mostly less than|. גשום בעיקר פחות מ|
+lang|. Precipitation mostly around|. גשום בעיקר בסביבות|
+lang|. Precipitation mostly between|. גשום בעיקר בין|
+lang|then a chance of|ואז סיכוי ל|
+lang|near calm|כמעט שקט|
+lang|in the evening|בערב|
+lang|in the afternoon|אחר הצהרים|
+lang|Precipitation showery or intermittent.|ממטרים לסרוגין.|
+lang|Thunderstorms likely, some possibly severe.|יתכנו סופות רעמים.|
+lang|less than|פחות מ|
+lang|Light to moderate|קל עד בינוני|
+lang|then moderate fog|ואז ערפל בינוני|
+lang|then a slight chance of|ואז סיכוי קל ל|
+lang|then rain likely|ואז יתכן גשם|
+lang|very likely.|בסבירות גבוהה.|
+lang|Little or no snow accumulation expected|צפוי שלג קל או הצטברות קלה של שלג|
+lang|Snow accumulation|הצטברות שלג|
+lang|No snow accumulation expected|שלג לא צפוי להערם|
+lang|A chance of a mix of rain and snow|סיכוי לגשם מעורב בשלג|
+lang|chance of a mix of rain and snow|סיכוי לגשם מעורב בשלג|
+lang|A slight chance of a mix of snow and rain|סיכוי קל לשלג מעורב בגשם|
+lang|a mix of rain and snow|גשם מעורב בשלג|
+lang|A chance of snow|סיכוי לשלג|
+lang|a mix of snow and rain|שלג מעורב בגשם|
+lang|down to|ירידה עד ל|
+lang|A slight|קלוש|
+lang|Some thunderstorms likely.|צפויות סופות רעמים|
+lang|Heat index up to|עומס חום עד ל|
+#
+lang|but some high cloudiness|אבל מעט עננות גבוהה|
+lang|but some high thin clouds|אבל מעט עננות |
+lang|UV index up to|עד UV מדד|
+lang|with just a few high thin clouds|עם מעט עננות גבוהה|
+lang|Partly to mostly cloudy in the evening,|,מעונן חלקית עד מעונן בעיקר בערב|
+lang|except for a few wispy clouds|צפי למעט עננים דקים|
+lang|with just a few wispy clouds|עם מעט עננים דקים|
+lang|becoming south-southwest|משתנה לדר-דר-מע|
+lang|becoming east-southeast|משתנה למז-דר-מז|
+lang|becoming east-northeast|משתנה למז-צפ-מז|
+lang|becoming southwest|משתנה לדר-מע|
+lang|becoming southeast|משתנה לדר-מז|
+lang|becoming northwest|משתנה לצפ-מע|
+lang|becoming northeast|משתנה לצפ-מז|
+lang|becoming north-northeast|משתנה לצפ-צפ-מז|
+lang|becoming north-northwest|משתנה לצפ-צפ-מע|
+lang|becoming south-southeast|משתנה לדר-דר-מז|
+lang|becoming south-southwest|משתנה לדר-דר-מע|
+lang|becoming west-southwest|משתנה למע-דר-מע|
+lang|becoming west-northwest|משתנה למע-צפ-מע|
+lang|becoming east|משתנה למזרח|
+lang|becoming west|משתנה למערב|
+lang|becoming north|משתנה לצפון|
+lang|becoming south|משתנה לדרום|
+#
+#TEMP FIX (MORE TESTING NEEDED)
+lang|in the|ב|
+lang|wind chill|אפקט הרוח|
+lang|Wind chill|אפקט הרוח|
+#
+lang|Chance of precipitation|סיכוי לגשם|
+lang|becoming|נעשה |
+lang|dense overcast|עננות כבדה|
+#lang|Dense overcast|עננות כבדה| **Temp disabled**
+lang| then | מ |
+lang|afternoon|אחר הצהרים|
+lang|cloudy|מעונן|
+lang|Patchy|פזורים|
+#lang|to cloudy|עד מעונן| **Temp disabled**
+#lang| slight | מעט | **Temp disabled**
+lang| light | קל |
+lang| fog | ערפל |
+lang| fog.| .ערפל|
+lang|Partly|חלקית|
+lang| to | עד |
+lang| up | עד |
+lang|gusting|משבים|
+lang| mostly| בעיקר|
+lang|after|אחרי|
+lang|likely|סביר|
+lang|midnight|חצות|
+lang|morning|בוקר|
+lang|Mostly|בעיקר|
+lang|mostly| בעיקר|
+lang|partly|חלקית|
+lang|Light|קל|
+lang|moderate|בינוני|
+lang|evening|ערב|
+lang|Dense|כבד|
+lang|overcast|כבדה|
+lang|Moderate|בינונית|
+lang|dense|כבד|
+lang|sunny|שמש|
+lang|Rain likely|סבירות לגשם|
+lang|rain|גשם|
+#
+#lang|A |ה | **Temp disabled**
+lang| a | ה |
+lang|A chance of|סיכוי ל|
+lang|chance of|סיכוי ל|
+lang|High|מקסימום|
+lang|Low|מינימום|
+lang| but | אבל |
+lang|temperatures falling|טמפרטורה יורדת|
+lang|temperatures rising|טמפרטורה עולה|
+#
+lang|Wind east-|-רוח מזרחית|
+lang|Wind west-|-רוח מערבית|
+lang|Wind east |רוח מזרחית |
+lang|Wind west |רוח מערבית |
+lang|Wind north-|-רוח צפונית|
+lang|Wind north |רוח צפונית |
+lang|Wind south-|-רוח דרומית|
+lang|Wind south |רוח דרומית |
+lang|northeast|צפון מזרח|
+lang|northwest|צפון מערב|
+lang|southeast|דרום מזרח|
+lang|southwest|דרום מערב|
+lang|north-|-צפון|
+lang|east-|-מזרח|
+lang|south-|-דרום|
+lang|west-|-מערב|
+lang|north |צפון |
+lang|east |דרום |
+lang|south |מזרח |
+lang|west |מערב |
+lang|the|ה|
+lang|down |למטה |
+lang| or | או |
+lang|around|בסביבות|
+lang|kph|קמ"ש|
+lang|mps|מ/ש|
+lang| near | בסביבות |
+lang| percent|%|
+lang|less than|פחות מ|
+lang| snow| שלג|
+lang|Precipitation (liquid equivalent)|משקעים|
+lang| between | בין |
+lang| and | ו |
+#lang|Precipitation|משקעים| **Temp disabled**
+#
+lang|accumulation expected|צפויה הצטברות|
+lang|Little|מעט|
+lang|snow |שלג |
+lang|Snow |שלג |
+lang|about|בערך|
+lang| no | לא |
+lang| one | 1 |
+lang|showery or intermittent|גשום לפרקים|
+lang|Rain|גשם|
+lang|Fair|נאה|
+lang|fair|נאה|
+lang|Cloudy|מעונן|
+lang|calm|שקט|
+lang|Clear|בהיר|
+lang|clear|בהיר|
+lang|Sunny|שמש|
+lang| ice | קרח |
+lang|freezing|קפוא|
+lang|sleet|גשם מעורב בשלב|
+lang|mix of|שילוב של|
+lang|if any|אם בכלל|
+lang|on ground|על הקרקע|
+lang|patchy|חלקית|
+lang|Thunderstorms likely, some possibly severe|צפויות סופות רעמים חלקם חמורות|
+lang|Some thunder possible.|.מספר רעמים צפויים|
+lang|Some thunderstorms likely|סיכוי לסופות רעמים|
+lang|quarter |רבע |
+lang|tenth |עשירית |
+lang|of an inch|'של אינצ|
+lang|half an inch|'חצי אינצ|
+lang| inch| 'אינצ|
+lang|UV index|UV תחזית|
+#
+# ---=== Mario's added translation ===---
+lang|Wind|רוח|
+#
+# Translation of headings, periods and short conditions statements
+# headings
+#
+langlookup|WXSIM Forecast for:|:ל WXSIM תחזית|
+langlookup|Issued by:|:בוצע על ידי|
+langlookup|Updated:|:עודכן|
+langlookup|High:|:גבוה|
+langlookup|Low:|:נמוך|
+#
+# I presume following at beginning of sentence, otherwise initial letter lower case)
+langlookup|Sunday|ראשון|
+langlookup|Monday|שני|
+langlookup|Tuesday|שלישי|
+langlookup|Wednesday|רביעי|
+langlookup|Thursday|חמישי|
+langlookup|Friday|שישי|
+langlookup|Saturday|שבת|
+langlookup|Sunday night|ראשון בלילה|
+langlookup|Monday night|שני בלילה|
+langlookup|Tuesday night|שלישי בלילה|
+langlookup|Wednesday night|רביעי בלילה|
+langlookup|Thursday night|חמישי בלילה|
+langlookup|Friday night|שישי בלילה|
+langlookup|Saturday night|שבת בלילה|
+langlookup|Today|היום|
+langlookup|Tonight|הלילה|
+langlookup|Rest of tonight|שאר הלילה|
+langlookup|This afternoon|אחה"צ|
+#
+# UV Index words
+langlookup|Low|נמוך|
+langlookup|Medium|בינוני|
+langlookup|High|גבוה|
+langlookup|very|מאוד|
+langlookup|Very&nbsp;High|מאוד גבוה|
+langlookup|Extreme|קיצוני|
+#
+# Summary conditions lookup
+langlookup|Severe storm|סופות חמורות|
+langlookup|Showers storms|ממטרים כבדים|
+langlookup|Thunder storm|סופות רעמים|
+langlookup|Rain Sleet|גשם מעורב בשלג|
+langlookup|FrzgRn Snow|שלג|
+langlookup|Rain and Snow|גשם ושלג|
+langlookup|Freezing Rain|גשם קפוא|
+langlookup|Rain likely|סבירות לגשם|
+langlookup|Chance rain|סיכוי לגשם|
+langlookup|Mix|שילוב|
+langlookup|of rain and snow|גשם ושלג|
+langlookup|Thessaloniki|סלוניקי| **This is my hometown :) Replace it with your location!**
+#
+langlookup|Sleet|שלג מעורב בשלג|
+langlookup|Snow|שלג|
+langlookup|Fog a.m.|ערפל בבוקר|
+langlookup|Fog late|ערפל מאוחר|
+langlookup|Fog|ערפל|
+langlookup|Very Cold|קר מאוד|
+langlookup|Very Hot|חם מאוד|
+langlookup|Partly Cloudy|מעונן חלקית|
+langlookup|Mostly Cloudy|בעיקר מעונן|
+langlookup|Cloudy|מעונן|
+langlookup|Overcast|עננות כבדה|
+langlookup|Partly Sunny|בהיר חלקית|
+langlookup|Mostly Sunny|בעיקר שמש|
+langlookup|Mostly Clear|בעיקר בהיר|
+langlookup|Sunny|שמש|
+langlookup|Clear|בהיר|
+langlookup|Fair|נאה|
+langlookup|Variable Clouds|עננות משתנה|
+langlookup|Clear|בהיר|
+#
+# translation for cardinal wind directions
+langlookup|NESW-N|צפ|
+langlookup|NESW-NNE|צפ-צפ-מז|
+langlookup|NESW-NE|צפ-מז|
+langlookup|NESW-ENE|מז-צפ-מז| 
+langlookup|NESW-E|מז|
+langlookup|NESW-ESE|מז-דר-מז|
+langlookup|NESW-SE|דר-מז|
+langlookup|NESW-SSE|דר-דר-מז| 
+langlookup|NESW-S|דר|
+langlookup|NESW-SSW|דר-דר-מע|
+langlookup|NESW-SW|דר-מע|
+langlookup|NESW-WSW|מע-דר-מע| 
+langlookup|NESW-W|מע|
+langlookup|NESW-WNW|מע-צפ-מע|
+langlookup|NESW-NW|צפ-מע|
+langlookup|NESW-NNW|צפ-צפ-מע|
+# translation for Beaufort Wind Force
+langlookup|Calm|שקט|
+langlookup|Light air|אויר קל|
+langlookup|Light breeze|בריזה קלה|
+langlookup|Gentle breeze|בריזה נעימה|
+langlookup|Moderate breeze|בריזה בינונית|
+langlookup|Fresh breeze|בריזה מתחזקת|
+langlookup|Strong breeze|בריזה חזקה|
+langlookup|Near gale|רוח סוערת|
+langlookup|Gale|סערה|
+langlookup|Strong gale|סערה חזקה|
+langlookup|Storm|סופה|
+langlookup|Violent storm|סופה חזקה|
+langlookup|Hurricane|הוריקן|
+
+# --- end of language file ------

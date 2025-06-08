@@ -1,0 +1,2 @@
+2025-05-30 22:28:56 - ERRORE: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'DAYS
+        AND radianza_int_whm2 IS NULL' at line 4

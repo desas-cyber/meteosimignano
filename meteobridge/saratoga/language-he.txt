@@ -1,0 +1,450 @@
+# Hebrew language plugin for AJAX/PHP template set
+# Ken True - http://saratoga-weather.org/wxtemplates/
+#
+# Hebrew translation provided by Eli http://www.evweather.info/
+#
+# Version 1.00 - 17-Nov-2011 - initial release
+# Version 1.01 - 27-Dec-2011 - additional translation entries by Eli (wxmetar.php, etc.)
+#
+# English and Western European use ISO-8859-1 character sets
+# Hebrew uses UTF-8 (non BOM) character set
+#
+charset|UTF-8|
+#
+# Greek should use ISO-8859-7 character set for compatibility with plaintext-parser-lang-el.txt
+#
+# Note:  the langlookup entries are for EXACT replacements including spaces and capitalization.
+#  
+# format is 'langlookup|<english-to-find>|<replacement-string>|
+#
+# Don't change the first field <english-to-find>  because it matches what is in the 
+# langtrans/langtransstr() calls embedded in various scripts in the template set.  
+# Only change the second field <replacement-string> for your language.
+#
+# You can add new langlookup entries to handle additions to your website.  Be sure to add the
+# same langlookup entry to the other language-LL.txt files for all the languages you support on your site.
+#
+# ajax-dashboard and ajax-gizmo language strings
+#
+langlookup|Enable JavaScript for live updates|Enable JavaScript for live updates|
+langlookup|Updated|עודכן|
+langlookup|updated|מעודכן|
+langlookup|sec ago|שניות לפני|
+langlookup|next update at|עדכון הבא ב|
+# thermometer language
+langlookup|Temperature|טמפרטורה|
+langlookup|Currently|נוכחי|
+langlookup|Max|'מקס|
+langlookup|Min|'מינ|
+# rising/falling arrows text
+langlookup|Warmer|מתחמם|
+langlookup|Colder|מתקרר|
+langlookup|Rising|עולה|
+langlookup|Falling|יורד|
+langlookup|Increased|מתגבר|
+langlookup|Decreased|מתחלש|
+langlookup|than last hour|משעה אחרונה|
+langlookup|since last hour|מאז השעה האחרונה|
+langlookup|than yesterday at this time|than yesterday at this time|
+#
+langlookup|Feels like|מרגיש כמו|
+langlookup|24-hr difference|שינוי ב-24 שעות|
+langlookup|Today|היום|
+langlookup|Yesterday|אתמול|
+langlookup|High:|:גבוה|
+langlookup|Low:|:נמוך|
+langlookup|Wind from|רוח מ|
+langlookup|Gust|משב|
+langlookup|Gust Month|משב החודש|
+langlookup|UV Index|UV מדד|
+langlookup|UV Index Forecast|UV תחזית מדד|
+langlookup|Solar Radiation|קרינה סולארית|
+langlookup|Summary|סיכום|
+langlookup|Humidity|לחות|
+langlookup|Dew Point|נקודת הטל|
+langlookup|Barometer|ברומטר|
+langlookup|Baro Trend|מגמת לחץ|
+langlookup|Wind|רוח|
+langlookup|Rain|גשם|
+langlookup|Outlook|תחזית|
+langlookup|Rain Today|גשם היום|
+langlookup|Rain Rate|עוצמת הגשם|
+langlookup|/hr|/שעה|
+langlookup|Rain Yesterday|גשם אתמול|
+langlookup|Storm Rain|גשם סערה|
+langlookup|This Month|החודש הזה|
+langlookup|Season Total|סה"כ לעונה|
+langlookup|day since last rain|יום מאז הגשם האחרון|
+langlookup|days since last rain|ימים מאז הגשם האחרון|
+langlookup|rain day in|יום גשם ב|
+langlookup|rain days in|ימי גשם ב|
+langlookup|Snow|שלג|
+langlookup|Snow Today|שלג היום|
+langlookup|Snow Yesterday|שלג אתמול|
+langlookup|Snow Depth|גובה השלג|
+langlookup|Winter Total|סה"כ החורף|
+langlookup|snow day in|יום שלג ב|
+langlookup|snow days in|ימי שלג ב|
+langlookup|Almanac|דוחות ונתונים|
+langlookup|Sun&nbsp;|שמש|
+langlookup|Moon|ירח|
+langlookup|Sunrise|זריחת השמש|
+langlookup|Sunset|שקיעת השמש|
+langlookup|Moonrise|זריחת הירח|
+langlookup|Moonset|שקיעת הירח|
+langlookup|Illuminated|מואר|
+langlookup|Weather Forecast|תחזית מזג אויר|
+langlookup|forecast|תחזית|
+#
+# UV Index words - note: leave &nbsp; where shown for proper lookup
+langlookup|None|אין|
+langlookup|Low|נמוך|
+langlookup|Medium|בינוני|
+langlookup|High|גבוה|
+langlookup|Very&nbsp;High|גבוה&nbsp;מאוד|
+langlookup|Extreme|קיצוני|
+#
+# Moon words
+#
+langlookup|New Moon|מולד|
+langlookup|Waxing Crescent|חרמש מתמלא|
+langlookup|Waxing Crescent Moon|חרמש מתמלא ירח|
+langlookup|First Quarter|רבע ראשון|
+langlookup|First Quarter Moon|רבע ראשון ירח|
+langlookup|Waxing Gibbous|חרמש מתמלא|
+langlookup|Waxing Gibbous Moon|חרמש מתמלא ירח|
+langlookup|Full Moon|ירח מלא|
+langlookup|Waning Gibbous|חרמש נחסר|
+langlookup|Waning Gibbous Moon|חרמש נחסר ירח|
+langlookup|Last Quarter|רבע אחרון|
+langlookup|Last Quarter Moon|רבע ירחי אחרון|
+langlookup|Waning Crescent|חרמש נחסר|
+langlookup|Waning Crescent Moon|חרמש ירח נחסר|
+#
+# index.php
+langlookup|Animated icons courtesy of|אייקונים מונפשים באדיבות|
+#
+#
+# WU-Forecast.php replacement text
+#
+langlookup|Chance of precipitation|סיכוי לגשם|
+#
+# footer.php
+#
+langlookup|Top|למעלה|
+langlookup|Contact Us|צור קשר|
+langlookup|Bookmark Page|הוסף למועדפים|
+langlookup|Valid|Valid|
+langlookup|Never base important decisions on this or any weather information obtained from the Internet|השימוש באתר הוא על אחריות המשתמש בלבד|
+#
+# menubar.php and flyout-menu.xml entries
+#
+# Note: if using the flyout-menu, you can have individual language versions as
+# flyout-menu-LL.xml, flyout-menu-test-LL.xml using full native language which won't be translated.
+#
+# these settings below are for the English menubar.php $html section, and flyout-menu.xml/flyout-menu-test.xml
+#  which should be in English only.
+#
+langlookup|Navigation|תפריט|
+langlookup|External Links|קישורים חיצוניים|
+langlookup|Home|בית|
+langlookup|Local Weather Exchange Stations|תחנות מזג אויר מקומיות|
+langlookup|Mesonet|Mesonet|
+langlookup|Forecast|תחזית|
+langlookup|WXSIM Forecast|WXSIM תחזית|
+langlookup|Radar|מכ"מ|
+langlookup|Advisories|אזהרות|
+langlookup|Live Weather|מזג אויר עכשוי|
+langlookup|Live Mesomap|עכשוי Mesomap|
+langlookup|Daily Stats|סטטיסטיקות יומיות|
+langlookup|Graphs|גרפים|
+langlookup|Station Data by Month|נתוני התחנה לפי חודש|
+langlookup|Astronomy|אסטרונומיה|
+langlookup|Links|קישורים|
+langlookup|About|אודות|
+langlookup|About Us|עלינו  |
+langlookup|Status of weather software|סטטוס תוכנת מזג האויר|
+langlookup|Status|סטטוס|
+langlookup|Live|כעת|
+langlookup|Weather-Display Live|תצוגת-מזג אויר עכשוי|
+langlookup|Local Radar|מכ"מ מקומי|
+langlookup|Mesomap|Mesomap|
+langlookup|MesoMap Live|MesoMap עכשיו|
+langlookup|Forecast &amp; Advisories|תחזיות|
+langlookup|Forecast details|פרטי התחזית|
+langlookup|WXSIM Forecast details|WXSIM פרטי תחזית|
+langlookup|Weather Trends|מגמת מזג אויר|
+langlookup|Station Graphs|גרפים של התחנה|
+langlookup|Station Monthly Reports|דוחות חודשיים של התחנה|
+langlookup|NOAA reports|NOAA דוחות|
+langlookup|Sun/Moon Almanac|אלמנך שמש/ירח|
+langlookup|Earthquake activity|פעילות רעידות אדמה|
+langlookup|Website Map|מפת האתר|
+langlookup|Home Page|דף הבית|
+langlookup|Realtime display of weather conditions|תצוגה עכשוית של תנאי מזג האויר|
+langlookup|Realtime display of conditions using WDL|תצוגה עכשיות של תנאי מזג אויר לפי  WDL|
+langlookup|Mesomaps, Marine Buoys|Mesomaps, מצופים ימיים|
+langlookup|Realtime display of nearby conditions using MML|Realtime display of nearby conditions using MML|
+langlookup|Weather outlook|תחזית מזג אויר|
+langlookup|Trends, Sun/Moon, Earthquakes|מגמות, ירח/שמש, רעידות אדמה|
+langlookup|Daily condition reports by Month|דיווחים יומיים לפי חודש|
+#
+# include-style-switcher.php items
+#
+langlookup|Style Options|אפשרויות סגנון|
+langlookup|Style|סגנון|
+langlookup|Widescreen|מסך רחב|
+langlookup|On|הפעל|
+langlookup|Off|כבה|
+langlookup|Set|קבע|
+langlookup|Language|שפה|
+# Colors of templates for style-switcher
+langlookup|Black|שחור|
+langlookup|Blue|כחול|
+langlookup|Dark|כהה|
+langlookup|Fall|סתיו|
+langlookup|Green|ירוק|
+langlookup|Ice Tea|אייס תה|
+langlookup|Mocha|מוקה|
+langlookup|Orange|תפוז|
+langlookup|Pastel|פסטל|
+langlookup|Purple|סגול|
+langlookup|Red|אדום|
+langlookup|Salmon|סלמון|
+langlookup|Silver|כסף|
+langlookup|Spring|אביב|
+langlookup|Taupe|אפור-חום|
+langlookup|Teal|ירוק-כחול|
+#
+# wxastronomy.php items (solar/lunar words are specified above)
+#
+langlookup|Daylight|אור יום|
+langlookup|Vernal Equinox|נקודת שווי אביב|
+langlookup|Start of Spring|תחילת האביב|
+langlookup|Summer Solstice|היפוך קיץ|
+langlookup|Start of Summer|תחילת  הקיץ|
+langlookup|Autumn Equinox|נקודת שווי סתיו|
+langlookup|Start of Fall|תחילת  הסתיו|
+langlookup|Winter Solstice|היפוך חורף|
+langlookup|Start of Winter|תחילת  החורף|
+#
+# wxgraphs.php items
+#
+langlookup|Weather Trend Graphs|גרפים של מגמות מזג האויר|
+langlookup|Last 24 Hours|עשרים וארבע שעות אחרונות|
+langlookup|Last 72 Hours|שבעים ושתים שעות אחרונות|
+langlookup|Month to Date|החודש|
+langlookup|Graphs generated by|גרפים שנוצרו על ידי|
+langlookup|Trend Graphs|גרפי מגמות|
+#
+# wxnoaaclimatereports.php
+langlookup|NOAA-Style Climate Reports|NOAA-דיווחי אקלים בסגנון|
+langlookup|Select a Year or Month report|בחר שנה או חודש לדיווח|
+langlookup|Report for|דיווח ל|
+#--- end of wxnoaaclimatereports.php
+#
+# V1.01 - trends-inc.php native PHP conversion translation items
+#
+langlookup|Trends as of|:מגמות ל  |
+langlookup|TIME|זמן|
+langlookup|TEMP|'טמפ|
+langlookup|WIND SPEED|עוצמת הרוח|
+langlookup|WIND GUST|עוצמת משב הרוח|
+langlookup|WIND DIR|כיוון הרוח|
+langlookup|HUMIDITY|לחות|
+langlookup|PRESSURE|לחץ|
+langlookup|RAIN|גשם|
+#
+langlookup|Current|נוכחי|
+langlookup|CURRENT|נוכחי|
+langlookup|Now|עכשיו|
+langlookup|Records and Stats|נתונים וסטטיסטיקות|
+langlookup|5 minutes ago|לפני 5 דקות| 
+langlookup|10 minutes ago|לפני 10 דקות|
+langlookup|15 minutes ago|לפני 15 דקות|
+langlookup|20 minutes ago|לפני 20 דקות|
+langlookup|30 minutes ago|לפני 30 דקות|
+langlookup|45 minutes ago|לפני 45 דקות|
+langlookup|60 minutes ago|לפני 60 דקות|
+langlookup|75 minutes ago|לפני 75 דקות|
+langlookup|90 minutes ago|לפני 90 דקות|
+langlookup|105 minutes ago|לפני 105 דקות|
+langlookup|120 minutes ago|לפני 120 דקות|
+# following three entries are used for <condition> on <date> and <condition> at <time>
+langlookup|on|ב|
+langlookup|at|ב|
+langlookup|from|מ| as in '14 mph from 315 °(NW)'
+#
+langlookup|last hour|שעה אחרונה|
+langlookup|over last 7 days|שבעה ימים אחרונים|
+langlookup|last month|חודש שעבר|
+#
+langlookup|Today|היום|
+langlookup|Yest.|אתמול|
+langlookup|Week|שבוע|
+langlookup|Month|חודש|
+langlookup|Year|שנה|
+langlookup|Gust/hr|שעה/משב|
+#
+langlookup|RAIN HISTORY|היסטוריית גשם|
+langlookup|day since last rain on|יום מאז גשם אחרון ב|
+langlookup|days since last rain on|ימים מאז גשם אחרון ב|
+langlookup|rain day this month|יום גשם החודש|
+langlookup|rain days this month|ימי גשם החודש|
+langlookup|rain day this year|יום גשם השנה|
+langlookup|rain days this year|ימי גשם השנה|
+langlookup|total last year at this time|סה"כ שנה שעברה באותו זמן|
+
+langlookup|TEMPERATURE HIGHS|מקסימום טמפרטורה|
+langlookup|HOT DAYS THIS MONTH|ימים חמים החודש  |
+langlookup|days|ימים|
+langlookup|day|יום|
+langlookup|Warmest day|היום החם ביותר|
+langlookup|Warmest night|הלילה החם ביותר|
+
+langlookup|TEMPERATURE LOWS|מינימום טמפרטורה|
+langlookup|COLD DAYS THIS MONTH|ימים קרים החודש|
+langlookup|Coldest day|היום הקר ביותר|
+langlookup|Coldest night|הלילה הקר ביותר|
+
+langlookup|BAROMETER HIGHS|מקסימום לחץ ברומטרי|
+langlookup|WIND CHILL LOWS|מינימום טמפרטורת אפקט הרוח|
+langlookup|EVAPOTRANSPIRATION|התאיידות|
+langlookup|SOLAR HIGHS|ערכי קרינה סולארית|
+langlookup|UV HIGHS|UV ערכי קרינת|
+langlookup|Wind Data|נתוני רוח|
+langlookup|WIND GUST HIGHS|מקסימום עוצמת הרוח|
+langlookup|WIND GUST AVERAGE HIGHS|ממוצע מקסימום עוצמת הרוח|
+langlookup|WIND RUN|WIND RUN|
+# --- end of new trends-inc.php translations
+#
+# include-wxhistory.php translations
+#
+langlookup|Daily / Monthly Weather History From This Station|היסטוריית נתונים יומית/חודשית מתחנה זו|
+langlookup|Select a report and click submit|בחר דו"ח ולחץ על שלח|
+langlookup|submit|שלח|
+langlookup|Daily Report for the month of|דיווח יומי לחודש|
+langlookup|Average and Extremes|ממוצעים וערכי מקסימום/מינימום|
+langlookup|Average and Extremes for Month of|ממוצעים וערכי מקס/מינ לחודש|
+langlookup|up to day|נכון לעכשיו|
+langlookup|Click here to toggle the 24 Hour Graph of this day|לחץ כאן על מנת להחליף גרף 24 שעות של היום|
+langlookup|Day, Sunshine Hours, ET, Max Solar, UV|UV יום, שעות שמש, מקס' סולארי|
+langlookup|Daily Rain Totals|סה"כ גשם יומי|
+langlookup|Average temperature|טמפרטורה ממוצעת|
+langlookup|Average humidity|לחות ממוצעת|
+langlookup|Average dewpoint|ממוצע נקודת הטל|
+langlookup|Average barometer|לחץ ברומטרי ממוצע|
+langlookup|Average windspeed|מהירות רוח ממוצעת|
+langlookup|Average gustspeed|ממוצע עוצמת הרוח|
+langlookup|Average direction|כיוון ממוצע|
+langlookup|Rainfall for month|גשם לחודש|
+langlookup|Rainfall for year|גשם לשנה|
+langlookup|Maximum rain per minute|מקסימום גשם לדקה|
+langlookup|Maximum temperature|טמפרטורת מקסימום|
+langlookup|Minimum temperature|טמפרטורת מינימום|
+langlookup|Maximum humidity|לחות מקסימאלית|
+langlookup|Minimum humidity|לחות מינימאלית|
+langlookup|Maximum pressure|לחץ מקסימאלי|
+langlookup|Minimum pressure|לחץ מינימאלי|
+langlookup|Maximum windspeed|מהירות רוח מקסימאלית|
+langlookup|Maximum gust speed|משב רוח מקסימלי|
+langlookup|Maximum heat index|עומס חום מקסימלי|
+langlookup|Sunshine hours month to date|שעות שמש לחודש|
+langlookup|Sunshine hours year to date|שעות שמש לשנה|
+langlookup|hrs|שעות|
+#
+# --- end of include-wxhistory.php translations
+#
+# wxuvforecast.php
+#
+langlookup|UV forecast courtesy of and Copyright &copy; KNMI/ESA (http://www.temis.nl/). Used with permission.|UV forecast courtesy of and Copyright &copy; KNMI/ESA (http://www.temis.nl/). Used with permission.|
+#
+# Conditions (%Currentsolardescription% and clientraw[49])
+#
+conditions|begin||
+langlookup|Dry|יבש|
+langlookup|Rain|גשם|
+langlookup|Light rain|גשם קל|
+langlookup|Moderate drizzle|טפטוף בינוני|
+langlookup|Moderate rain|גשם בינוני|
+langlookup|Heavy rain|גשם כבד|
+langlookup|Stopped raining|הגשם פסק|
+# conditions time
+langlookup|Dawn|שחר|
+langlookup|Dusk|בין הערביים|
+langlookup|Night time|לילה  |
+# Clouds (sky)
+langlookup|Clear|בהיר|
+langlookup|Sunny|שמש|
+langlookup|Clear skies|שמים נקיים|
+langlookup|Mostly sunny|בעיקר שמש|
+langlookup|A few clouds|עננים בודדים|
+langlookup|Sc|מעונן חלקית|
+langlookup|Scattered clouds|מעונן חלקית|
+langlookup|Partly cloudy|מעונן חלקית|
+langlookup|Mostly cloudy|בעיקר מעונן|
+langlookup|Cloudy with clear p|בעיקר מעונן|
+langlookup|Cloudy with clear patches|בעיקר מעונן|
+langlookup|Overcast|עננות כבדה|
+conditions|end||
+#
+# wxstatus
+langlookup|Station Status|מצב התחנה|
+langlookup|Station system up for|התחנה פועלת במשך|
+langlookup|Station system free memory|זכרון חופשי של התחנה|
+langlookup|This website uses|תחנה זו משתמשת|
+langlookup|for weather conditions reporting|לצורכי דיווח מזג אויר|
+langlookup|It was last started|הותחל לאחרונה|
+langlookup|realtime|זמן אמת|
+langlookup|FTP|FTP|
+langlookup|weather data|נתוני מזג אויר|
+langlookup|NOAA report|NOAA דו"ח|
+#
+#wxlinks
+#
+langlookup|Useful Links|קישורים שימושיים|
+langlookup|Weather Education|למד על מזג אויר|
+langlookup|Weather Station Info|נתוני תחנת מזג האויר|
+langlookup|Weather Website PHP Scripts|Weather Website PHP Scripts|
+#
+# wxforecast (WU-forecast ML)
+#
+langlookup|Chance flurries|סיכוי לסופות|
+langlookup|Chance rain|סיכוי לגשם|
+langlookup|Chance sleet|סיכוי לגשם מעורב בשלג|
+langlookup|Chance snow|סיכוי לשלג|
+langlookup|Chance thunderstorms|סיכוי לסופות רעמים|
+langlookup|Clear|בהיר|
+langlookup|Cloudy|מעונן|
+langlookup|Flurries|סופות|
+langlookup|Fog|ערפל|
+langlookup|Hazy|מעורפל|
+langlookup|Mostly cloudy|בעיקר מעונן|
+langlookup|Partly cloudy|מעונן חלקית|
+langlookup|Mostly sunny|בעיקר בהיר|
+langlookup|Rain|גשם|
+langlookup|Sleet|גשם מעורב בשלג|
+langlookup|Snow|שלג|
+langlookup|Sunny|שמש|
+langlookup|Thunderstorms|סופות רעמים|
+#
+langlookup|/hr|/שעה|
+langlookup|Local Weather Exchange Stations|תחנות מזג אויר מקומיות|
+langlookup|Mesonet|Mesonet|
+langlookup|NOAA reports|NOAA דוחות|
+# wxstatus.php
+langlookup|Status of weather software|סטטוס תוכנת מזג האויר|
+langlookup|Status|סטטוס|
+langlookup|NOT Current|לא מעודכן|
+langlookup|Current|עכשיו|
+# wxmetar.php
+langlookup|METAR|METAR|
+langlookup|Nearby METAR Reports|תחנות METAR סמוכות|
+langlookup|Wind Chill|אפקט הרוח|
+langlookup|Heat Index|עומס חום|
+langlookup|Clouds|עננים|
+langlookup|Visibility|ראות|
+langlookup|Wind from|רוח מ
+langlookup|varies|משתנה|
+langlookup|Few clouds|מעט עננים|
+#

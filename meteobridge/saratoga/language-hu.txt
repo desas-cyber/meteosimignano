@@ -1,0 +1,657 @@
+# English language plugin for Carterlake/WD/AJAX/PHP template set
+# Ken True - http://saratoga-weather.org/template/
+#
+# Version 1.00 - 24-Apr-2008 - initial release
+# Version 1.01 - 24-Jun-2008 - added support for trends-inc.php conversion
+#
+# English and Western European use ISO-8859-1 character sets
+#
+charset|ISO-8859-2|
+#
+# Greek should use ISO-8859-7 character set for compatibility with plaintext-parser-lang-el.txt
+#
+#charset|ISO-8859-7|
+#
+# Note:  the langlookup entries are for EXACT replacements including spaces and capitalization.
+#  
+# format is 'langlookup|<english-to-find>|<replacement-string>|
+#
+# Don't change the first field <english-to-find>  because it matches what is in the 
+# langtrans/langtransstr() calls embedded in various scripts in the template set.  
+# Only change the second field <replacement-string> for your language.
+#
+# You can add new langlookup entries to handle additions to your website.  Be sure to add the
+# same langlookup entry to the other language-LL.txt files for all the languages you support on your site.
+#
+# ajax-dashboard and ajax-gizmo language strings
+#
+langlookup|Trends as of|Az útolsó óra óta|
+
+langlookup|TIME|Idõ|
+
+langlookup|TEMP|Hõmérséklet|
+langlookup|TEMP2|Hõfok|
+
+langlookup|WIND SPEED|Szélerõ|
+
+langlookup|WIND GUST|Széllökés|
+langlookup|WIND DIR|Szélirány|
+langlookup|WIND|Szél|
+langlookup|DIR2|irány|
+langlookup|HUMIDITY|Páratartalom|
+langlookup|HUMIDITY2|Páratart.|
+
+langlookup|PRESSURE|Légnyomás|
+
+langlookup|RAIN|Esõ|
+
+
+
+langlookup|Enable JavaScript for live updates|Enable JavaScript for live updates|
+langlookup|Updated|Frissítve|
+langlookup|updated|frissítve|
+langlookup|sec ago|sec |
+langlookup|next update at|Következo frissítés|
+# thermometer language
+langlookup|Temperature|Hõmérséklet|
+langlookup|Currently|Jelenleg|
+langlookup|Current|Jelenleg|
+langlookup|Max|Max|
+langlookup|Min|Min|
+# rising/falling arrows text
+langlookup|Warmer|Melegebb|
+langlookup|Colder|Hidegebb|
+langlookup|Rising|Emelkedik|
+langlookup|Falling|Csökken|
+langlookup|Increased|Növekedett|
+langlookup|Decreased|Csökkent|
+langlookup|than last hour|mint az elmúlt órában |
+langlookup|since last hour|mivel az elmúlt órában|
+langlookup|than yesterday at this time|mint tegnap ilyenkor|
+langlookup|Steady|Állandó|
+langlookup|Falling|Csökken|
+langlookup|High Today|Napi Max|
+langlookup|Solar Summary|Solar Összefoglaló|
+langlookup|UV Summary/Forecast|UV Index/Elõrejelzés|
+
+
+
+
+#
+langlookup|Feels like|Hõérzet|
+langlookup|24-hr|24-órás|
+langlookup|difference|eltérés|
+langlookup|Today:|Ma|
+langlookup|Yesterday|Tegnap|
+langlookup|Yesterday:|Tegnap:|
+langlookup|HIGH|Magas|
+langlookup|High:|Magas|
+langlookup|Low:|Alacsony|
+langlookup|LOW|Alacsony|
+langlookup|Wind from|Szél|
+langlookup|Gust:|Lökés|
+langlookup|Gust Month|Lökés hónap|
+langlookup|UV Index|UV Index|
+langlookup|UV Index Forecast|Elorejelzés|
+langlookup|Solar Radiation|Szolár Radiáció|
+langlookup|Summary| Összegzés|
+langlookup|Humidity|Páratartalom|
+langlookup|Dew Point|Harmatpont|
+langlookup|Barometer|Barométer|
+langlookup|Baro Trend|Barométer trend|
+langlookup|Wind|Szél|
+langlookup|Rain|Esõ|
+langlookup|Outlook|Évkönyv|
+langlookup|Rain Today|Esõ ma|
+langlookup|Rain Rate|Esõ Arány (/hr)|
+langlookup|Rain Yesterday|Esõ Tegnap|
+langlookup|Storm Rain|Zivatar|
+langlookup|This Month|Ebben a hónapban|
+langlookup|Season Total|Hó az idényden|
+langlookup|day since last rain|az utolsó esõ|
+langlookup|days since last rain|napja az utolsó esõ|
+langlookup|rain day in|Esõs napok|
+langlookup|rain days in|Esõs napok|
+langlookup|Snow|Hó|
+langlookup|Snow Today|Hó ma|
+langlookup|Snow Yesterday|Tegnap|
+langlookup|Snow Depth| Hóvastagság|
+langlookup|Winter Total|Téli Összesen|
+langlookup|snow day in| Havas napok|
+langlookup|snow days in| Havas napok|
+langlookup|Almanac|Kalendárium|
+langlookup|Sun&nbsp;|Nap|
+langlookup|Moon| Hold|
+langlookup|Sunrise|Napkelte|
+langlookup|Sunset|Napnyugta|
+langlookup|Moonrise|Holdkelte|
+langlookup|Moonset|Holdnyugta|
+langlookup|Illuminated| Holdfázis|
+langlookup|Weather Forecast|Részletes elõrejelzés|
+langlookup|forecast|Elorejelzés|
+langlookup|Summary / Temperature|Hõmérséklet összefoglaló|
+langlookup|Rain / Melted Snow|Esõ és olvadt hó|
+langlookup|Cloud Level|Felhõ szint|
+langlookup|Warmer|Melegebb|
+langlookup|Colder|Hüvösebb|
+langlookup|than last hour|mint az elmúlt órában|
+langlookup|LOCALLY:|Helyszin|
+langlookup|Wind|Szél|
+langlookup|Wind from|Szél|
+langlookup|60-min Avg|60-perc átlag|
+langlookup|120-min Avg|120-perc átlag|
+langlookup|Rate|Ráta|
+langlookup|Storm Rain|Zivatar|
+langlookup|Max gust|Max lökés|
+langlookup|Rain:|Esõ|
+langlookup|Last|Utoljára|
+langlookup|Rain:|Esõ|
+langlookup|Last 7 Days|Utolsó 7 Nap:|
+langlookup|Rain Season|Évben:|
+langlookup|Rain Days|Esõs napok|
+langlookup||Current:|Jelenleg|
+langlookup|Humidity/Dew Point|Pára/Harmatpont|
+langlookup|1-Hr Trend:|1-órás Trend:|
+langlookup|3-Hr Trend:|3-órás Trend:|
+langlookup|Humidity:|Páratartalom|
+langlookup|Wetbulb:|Párahõfok|
+langlookup|to Date:|Dátum:|
+langlookup|Hó<sup>3</sup>|Hó<sup>3</sup>|
+langlookup|Lightning Strikes|Villám adat|
+langlookup|Fire Risk|Tûzveszély|
+langlookup|Station All Time Records|Állomás rekordjai|
+langlookup|Season Total:<sup>2</sup>|Szezonban összesen|
+langlookup|Havas nap|Havas nap|
+langlookup|Snow3|Hó|
+langlookup|Last Min:|Az elmúlt percben:|
+langlookup|Last 5 mins:|Az elmúlt 5 percben:|
+langlookup|Last 30 mins:|Az elmúlt 30 percben:|
+langlookup|Last 60 mins:|Az elmúlt 60 percben:|
+langlookup|Last 12 hrs:|Az elmúlt 12 órában:|
+langlookup|Last|Utolsó|
+langlookup|Updated at Midnight|Újraszámolva éjfélkor|
+langlookup|7-Days Rain|7-napi esõ|
+langlookup|7-Days ET|7-napi ET|7-Day:
+langlookup|7-Day:|7-Nap:|
+langlookup|Air Density|Levegõ sûrûség|
+langlookup|Outside Now|Levegõ tulajdonságok|
+langlookup|<sup>1</sup> Rain season: Jan 1st to Dec 31st.|<sup>1</sup> Esõ szezon: Jan 1-tõl to Dec 31-ig.|
+langlookup|<sup>2</sup> Snow season: July 1st to June 30th.|<sup>2</sup> Hó szezon: November 1-tõl Március 31-ig.|
+langlookup|<sup>3</sup> Snow manually measured|<sup>3</sup> A hóadatok manuálisan vannak megjelenítve|
+langlookup|<sup>5</sup> Estimated amount of water needed to replace the water used by plants and evaporation from the past week.|<sup>5</sup>5A becsült összeg a növények víz szükségletének. (Negatív számok azt jelentik mennyi víz szükséges, a pozitív számok azt jelentik, többlet víz van jelen.|
+langlookup|Dew Point:|Harmat pont|
+langlookup|Daytime Records|Napi rekord|
+
+#
+# UV Index words - note: leave &nbsp; where shown for proper lookup
+langlookup|None|Nulla|
+langlookup|Low|Alacsony|
+langlookup|Medium|Normál|
+langlookup|High|Magas|
+langlookup|Very&nbsp;High|Nagyon&nbsp;magas|      
+langlookup|Extreme|Extrém|
+#
+# Moon words
+#
+langlookup|New Moon|Újhold|
+langlookup|moonphase|Növekvõ|
+langlookup|Waxing Crescent Moon|Növekvõ hold|
+langlookup|First Quarter|Elso negyed|
+langlookup|First Quarter Moon|Elsõ negyed hold|
+langlookup|Waxing Gibbous|Fél|
+langlookup|Waxing Gibbous Moon|Félhold|
+langlookup|Full Moon|Telihold|
+langlookup|Waning Gibbous|Fogyatkozó|
+langlookup|Waning Gibbous Moon|Félhold|
+langlookup|Last Quarter| Utolsó negyed|
+langlookup|Last Quarter Moon|Utolsó negyed hold|
+langlookup|Waning Crescent|Növekvo|
+langlookup|Waning Crescent Moon|Növekvõ hold|
+langlookup|Rises|Kelés|
+langlookup|Sets|Nyugvás|
+langlookup|Illuminated|Holdvilág|
+langlookup|UV Forecast|UV elõrejelzés|
+langlookup|Current Solar Energy|Szolár energia|
+langlookup|Solar Information|Nap Infó|
+langlookup|Sunrise is at:|Mai napkelte:|
+langlookup|Sunlight 24-Hr:|Napfény 24-óra|
+langlookup|Sunlight Month:|Napos órák a hónapban:|
+langlookup|Feels like:|Hõérzet|
+langlookup|Solar Noon:||
+langlookup|Wind Chill|Szélhütés|
+langlookup|Cooling Degree Days|Hûtésigény|
+langlookup|Heating Degree Days|Fûtésigény|
+langlookup|Daylight:|Nap|
+langlookup|Sun&nbsp;|Nap|
+langlookup|Chandler Burning Index|Gyulladási index:|
+langlookup|Sunrise:|Napkelte:|
+langlookup|Sunset:|Napnyugta:|
+langlookup|Moonrise:|Holdkelte:|
+langlookup|Moonset:|Holdnyugta:|
+langlookup|Full Moon:|Telehold:|
+langlookup|New Moon:|Újhold:|
+langlookup|Moonset:|Holdnyugta:| Hrs of sunlight
+langlookup|Last Week|Mult héten|
+langlookup|than yesterday at this time.|mint tegnap ebben az idõben.|
+langlookup|Warmer %s|Magasabb|
+langlookup|Colder %s|Alacsonyabb|
+langlookup|Hrs of light|Fény idõ:|
+
+
+#
+# -------------cloud-base.php----------
+langlookup|Dry|Száraz|
+langlookup|Drizzle|Szitálás|
+langlookup|Light rain|gyenge esõ|
+langlookup|Moderate drizzle|Gyenge szitálás|
+langlookup|Moderate rain|Gyenge esõ|
+langlookup|Heavy rain|Záporesõ|
+langlookup|Stopped raining|Elállt az esõ|
+langlookup|Recent rain|Recent rain|
+langlookup|Snowing|Havazás|
+langlookup|Raining|Esõ|
+langlookup|Thundershower|Viharos|
+langlookup|Thunderstorm|Felhõszakadás|
+langlookup|Heavy thunderstorm|Felhõszakadás|
+
+# conditions time
+langlookup|Dawn|Hajnal|
+langlookup|Dusk|Alkonyat|
+langlookup|Night time|Éjszaka|
+langlookup|Night|Éjszaka|
+
+# Clouds (sky)
+langlookup|Fine weather|Fine weather|
+langlookup|Clear|Clear|
+langlookup|Sunny|Sunny|
+langlookup|Clear skies|Clear skies|
+langlookup|Mostly sunny|Többnyire napos|
+langlookup|A few clouds|Záporesõ|
+langlookup|Sc|Partly cloudy|
+langlookup|Scattered clouds|Elszórtan felhõs|
+langlookup|Scattered|Gyengén felhõs|
+langlookup|Partly cloudy|Partly cloudy|
+langlookup|Mostly cloudy|Közepesen felhõs|
+langlookup|Cloudy with clear patches|Felhõs tisztul|
+langlookup|Overcast|Párás|
+langlookup|Misty|Párás|
+langlookup|Fog|Köd|
+langlookup|Cloudbase|Felhõs|
+conditions|end||
+# WU-Forecast.php replacement text
+#
+langlookup|Chance of precipitation| |
+#
+# footer.php
+#
+langlookup|Top|Top|
+langlookup|Contact Us|Javitások|
+langlookup|Bookmark Page|Könyvjelzõ|
+langlookup|Valid|Érvényes|
+langlookup|Never base important decisions on this or any weather information obtained from the Internet|             |
+#
+# menubar.php and flyout-menu.xml entries
+#
+# Note: if using the flyout-menu, you can have individual language versions as
+# flyout-menu-LL.xml, flyout-menu-test-LL.xml using full native language which won't be translated.
+#
+# these settings below are for the English menubar.php $html section, and flyout-menu.xml/flyout-menu-test.xml
+#  which should be in English only.
+#
+langlookup|Navigation|Navigáció|
+langlookup|External Links|Külsõ linkek|
+langlookup|Home|Fõoldal|
+langlookup|Forecast|Részletes elõrejelzés|
+langlookup|WXSIM Forecast|WXSIM Forecast| Lighting radar
+langlookup|Radar|Térképek|
+langlookup|Lighting radar|Villámtérkép|
+langlookup|Advisories|Vészjelzõ|
+langlookup|Live Weather|Live Weather|
+langlookup|Live Mesomap|Live Mesomap|
+langlookup|Daily Stats|Napi statisztika|
+langlookup|Graphs|Grafikon|
+langlookup|Station Data by Month|Havi adatok|
+langlookup|Astronomy|Csillagászat|
+langlookup|Links|Linkek|
+langlookup|About|About|
+langlookup|About Us|About Us|
+langlookup|Live|Élö|
+langlookup|Weather-Display Live|Élõ idõjárás|
+langlookup|Local Radar|Locális Radar|
+langlookup|Mesomap|Mesomap|
+langlookup|MesoMap Live|MesoMap Live|
+langlookup|Forecast &amp; Advisories|Elorejelzés&Naptár|
+langlookup|Forecast details|Részletes elõrejelzés|
+langlookup|WXSIM Forecast details|WXSIM elorejelzés|
+langlookup|Weather Trends|Idõjárási trend|
+langlookup|Station Graphs|Station Grafikon|
+langlookup|Station Monthly Reports|Havi jelentés|
+langlookup|Sun/Moon Almanac|Nap/Hold Kalendárium|
+langlookup|Earthquake activity|Földrengés tevékenység|
+langlookup|Muhold kovetes|Mûhold követés|
+langlookup|Javitasok|Javítások|
+langlookup|Climatologia|Klimatológia|
+langlookup|Website Map|Weboldal térkép|
+langlookup|Oldal nyomtatas|Oldal nyomtatás|
+langlookup|Website Map|Weboldal térkép|
+langlookup|Homerseklet riport|Hõmérsékleti riport|
+langlookup|Szeladatbazis|Széladatbázis|
+langlookup|Csapadek homerseklet|Csapadék Hõmérséklet|
+langlookup|Homereseklet osszefoglalo|Hõmérséklet összefoglaló|
+langlookup|Szel osszefoglalo|Szél összefoglaló|
+langlookup|Csapadek osszefoglalo|Csapadék összefoglaló| eves osszefoglalo
+langlookup|Clima osszefoglalo|Clíma összefoglaló|
+langlookup|eves osszefoglalo|Éves összefoglaló|
+langlookup|Homerseklet eso rekord|Hõmerseklet esõ rekord|
+
+
+#
+# include-style-switcher.php items
+#
+langlookup|Style Options|Stilus beállítás |
+langlookup|Style|Stílus|
+langlookup|Widescreen|Széles oldal|
+langlookup|On|Be|
+langlookup|Off|Ki|
+langlookup|Set|Set|
+langlookup|Language|Nyelv|
+# Colors of templates for style-switcher
+langlookup|Black|Black|
+langlookup|Blue|Blue|
+langlookup|Dark|Dark|
+langlookup|Fall|Fall|
+langlookup|Green|Green|
+langlookup|Ice Tea|Ice Tea|
+langlookup|Mocha|Mocha|
+langlookup|Orange|Orange|
+langlookup|Pastel|Pastel|
+langlookup|Purple|Purple|
+langlookup|Red|Red|
+langlookup|Salmon|Salmon|
+langlookup|Silver|Silver|
+langlookup|Spring|Spring|
+langlookup|Taupe|Taupe|
+langlookup|Teal|Teal|
+#
+# hilowavg2.php items (solar/lunar words are specified above)
+#
+langlookup|Daylight|Napfény|
+langlookup|Vernal Equinox|Tavaszi napéjegyenloség|
+langlookup|Start of Spring|Tavasz kezdete|
+langlookup|Summer Solstice|Nyári napforduló|
+langlookup|Start of Summer|Nyár kezdete|
+langlookup|Autumn Equinox|Õszi napéjegyenlõség|
+langlookup|Start of Fall|Õsz kezdete|
+langlookup|Winter Solstice|Téli napforduló|
+langlookup|Start of Winter|Tél kezdete|
+#Monthly hiloavg words
+#
+langlookup|Feb|Feb|
+langlookup|Apr|Ápr|
+langlookup|May|Máj|
+langlookup|Jun|Jún|
+langlookup|Jul|Júl|
+langlookup|Aug|Aug|
+langlookup|Dec|Dec|
+langlookup|High Temp |Max hõfok|
+langlookup|Low Temp |Min hõfok|
+langlookup|Avg Temp |Átlag hõfok|
+langlookup|Avg Rain |Átlag esõ|
+langlookup|Updated:|Frissítve:|
+langlookup|Measurement:|Mérték:|
+langlookup|Current:|Jelenleg:|
+langlookup|Temperature:|Hõmérséklet:|
+langlookup|Maximum|Maximum|
+langlookup|Minimum|Minimum|
+langlookup|Station Record|Állomás rekord|
+langlookup|This Year|Ez év|
+langlookup|Average:|Átlag:|
+langlookup|Wind Chill:|Szélhûtés:|
+langlookup|Minimum<br/>Wind Chill:|Minimum<br/>Szélhûtés:|
+langlookup|Heat Index:|Hõindex:|
+langlookup|Maximum<br/>Heat Index:|Maximum<br/>Hõindex:|
+langlookup|Solar Radiation:|Szolár adat:|
+langlookup|Maximum<br/> Solar:|Maximum<br/>Szolár:|
+langlookup|Sunshine Hrs:|Napos órák száma:|
+langlookup|Maximum<br/>UV:|UV<br/>maximum:|
+langlookup|Evapotranspiration:|Párolgás:|
+langlookup|Irrigation Index:<sup>4</sup>|Locsolási index:<sup>4</sup>|
+langlookup|7-Days Index:|7-napi index:|
+langlookup|Rain/Melted Snow|Esõ / Olvadt hó|
+langlookup|Rainfall:|Esõ:|
+langlookup|Days with Rain:|Napi esõ:|
+langlookup|Most 24hr Rain:|24 órás esõ:|
+langlookup|Snow:|Hó:|
+langlookup|Days with Snow:|Napi havazás:|
+langlookup|Snow Totals:|Hó totál:|
+langlookup|Humidity:|Páratartalom:|
+langlookup|Maximum<br/>Humidity:|Páratartalom<br/>maximum:|
+langlookup|Minimum<br/>Humidity:|Páratartalom<br/>minimum:|
+langlookup|Wind:|Szél:|
+langlookup|Average Gust:|Átlag<br/>Széllökés:|
+langlookup|Average<br/>Wind Speed:|Átlag<br/>Szélsebesség:|
+langlookup|Maximum<br/>Wind Gust:|Maximum<br/>Széllökés:|
+langlookup|Wind<br/>Run:|Szél<br/>Erõ:|
+langlookup|Barometer:|Légnyomás:|
+langlookup|Maximum<br/>Barometer:|Légnyomás<br/>maximum:|
+langlookup|Minimum<br/>Barometer:|Légnyomás<br/>minimum:|
+langlookup|<sup>1</sup> Rain season: Jan 1st to Dec 31st.|<sup>1</sup> Esõ szezon: Jan 1-tõl to Dec 31-ig.|
+langlookup|<sup>2</sup> Snow season: July 1st to June 30th.|<sup>2</sup> Hó szezon: November 1-tõl Március 31-ig.|
+langlookup|<sup>3</sup> Snow manually measured|<sup>3</sup>  A hóadatok manuálisan vannak megjelenítve|
+langlookup|<sup>4</sup> Estimated amount of water needed to replace the water used by plants and evaporation from the past week.|<sup>4</sup>A becsült összeg a növények víz szükségletének. (Negatív számok azt jelentik mennyi víz szükséges, a pozitív számok azt jelentik, többlet víz van jelen |
+langlookup||  |
+langlookup|Monthly Station Records|Havi idõállomás rekord.|
+langlookup|Average Reading|Átlag|
+langlookup|Météo Lanaudière History|Mért meteorológiai min. max. adatok
+|
+langlookup|Since: December 1 2008|2008 05 01-tõl|
+# wxgraphs.php items
+#
+langlookup|Weather Trend Graphs|Idojárás trend grafikon|
+langlookup|Last 24 Hours|Az elmúlt 24 óra|
+langlookup|Last 72 Hours|Az elmúlt 72 óra|
+langlookup|Month to Date|Havi dátum|
+#
+# V1.01 - trends-inc.php native PHP conversion translation items
+#
+langlookup|Trends as of|Az utolsó óra óta|
+langlookup|TIME|Idõ|
+langlookup|TEMP|Hõmérséklet|
+langlookup|WIND SPEED|Szélerõ|
+langlookup|WIND GUST|Széllökés|
+langlookup|WIND DIR|Szélirány|
+langlookup|HUMIDITY|Páratartalom|
+langlookup|PRESSURE|Légnyomás|
+langlookup|RAIN|Esõ|
+#
+langlookup|Current|Aktuális|
+langlookup|CURRENT|AKTUÁLIS|
+langlookup|Now|Most|
+langlookup|Records and Stats|Rekord és statisztika|
+langlookup|5 minutes ago|5 perce|
+langlookup|10 minutes ago|10 perce|
+langlookup|15 minutes ago|15 perce|
+langlookup|20 minutes ago|20 perce|
+langlookup|30 minutes ago|30 perce|
+langlookup|45 minutes ago|45 perce|
+langlookup|60 minutes ago|60 perce|
+langlookup|75 minutes ago|75 perce|
+langlookup|90 minutes ago|90 perce|
+langlookup|105 minutes ago|105 perce|
+langlookup|120 minutes ago|120 perce|
+# following three entries are used for <condition> on <date> and <condition> at <time>
+langlookup|on|on|
+langlookup|at|at|
+langlookup|from|from| as in '14 mph from 315 °(NW)'
+#
+langlookup|last hour|az elmult óra|
+langlookup|over last 7 days|multhéten|
+langlookup|last month|mult hónapban|
+#
+langlookup|Today|Ma|
+langlookup|Yest.|Tegnap|
+langlookup|Week|Héten|
+langlookup|Month|Hónap|
+langlookup|Year|Év|
+langlookup|Gust/hr|Lökés/hr|
+#
+langlookup|RAIN HISTORY|ESõ ADATOK|
+langlookup|day since last rain on|Napok esõ óta|
+langlookup|days since last rain on|az utolsó esõ|
+langlookup|rain day this month|Esõs nap|
+langlookup|rain days this month|Esõs nap|
+langlookup|rain day this year|Esõs nap idén|
+langlookup|rain days this year|Esõs napok idén|
+langlookup|total last year at this time|Az elmúlt évi csapadék|
+
+langlookup|TEMPERATURE HIGHS|HÕMÉRSÉKLET MAX|
+langlookup|HOT DAYS THIS MONTH|FORRÓ NAPOK SZÁMA|
+langlookup|days|napok|
+langlookup|day|nap|
+langlookup|Warmest day|Legmelegebb nap|
+langlookup|Warmest night|Leghûvösebb éjszaka|
+
+langlookup|TEMPERATURE LOWS|HÕMÉRSÉKLET MIN|
+langlookup|COLD DAYS THIS MONTH|Hüvös napok száma hónapban|
+langlookup|Coldest day|Hüvös nap|
+langlookup|Coldest night|Hüvös éjszaka|
+
+langlookup|BAROMETER HIGHS|LÉGNYOMÁS MAX|
+langlookup|WIND CHILL LOWS|SZÉLHÜTÉS MIN|
+langlookup|EVAPOTRANSPIRATION|EVAPOTRANSPIRATION|
+langlookup|SOLAR HIGHS|SZOLÁR MAX|
+langlookup|UV HIGHS|UV MAX|
+langlookup|Wind Data|Széladat|
+langlookup|WIND GUST HIGHS|SZÉLLÖKÉS MAX|
+langlookup|WIND GUST AVERAGE HIGHS|SZÉLLÖKÉS ÁTLAG MAX|
+langlookup|WIND RUN|SZÉL|
+# --- end of new trends-inc.php translations
+#
+# include-wxhistory.php translations
+#
+langlookup|Daily / Monthly Weather History From This Station|Daily / Havi idojárás adatok|
+langlookup|Select a report and click submit|Válasszon ki egy jelentést és kattintson|
+langlookup|submit|Elküld|
+langlookup|Daily Report for the month of|Napi jelentés a hónapban|
+langlookup|Average and Extremes|Átlag és extrém|
+langlookup|Average and Extremes for Month of|Átlag és extrém a hónapban|
+langlookup|up to day|Napi|
+langlookup|Click here to toggle the 24 Hour Graph of this day|Kattintson ide és láthatja a 24 órás grafikont|
+langlookup|Day, Sunshine Hours, ET, Max Solar, UV|Nap,Napos órák száma, ET, Max Szolar, UV|
+langlookup|Daily Rain Totals|Napi csapadék|
+langlookup|Average temperature|Átlag hõmérséklet|
+langlookup|Average humidity|Átlag páratartalom|
+langlookup|Average dewpoint|Átlag harmatpont|
+langlookup|Average barometer|Átlag légnyomás|
+langlookup|Average windspeed|Átlag szélsebesség|
+langlookup|Average gustspeed|Átlag széllökés|
+langlookup|Average direction|Átlag irány|
+langlookup|Rainfall for month|csapadék a hónapban|
+langlookup|Rainfall for year|Csapadék az évben|
+langlookup|Maximum rain per minute|maximum csapadék percben|
+langlookup|Maximum temperature|Maximum hõfok|
+langlookup|Minimum temperature|Minimum hõfok|
+langlookup|Maximum humidity|Maximum páratartalom|
+langlookup|Minimum humidity|Minimum páratartalom|
+langlookup|Maximum pressure|Maximum légnyomás|
+langlookup|Minimum pressure|Minimum légnyomás|
+langlookup|Maximum windspeed|Maximum szélsebesség|
+langlookup|Maximum gust speed|Maximum széllökés|
+langlookup|Maximum heat index|Maximum hõindex|
+langlookup|Sunshine hours month to date|Napsütéses órák száma a hónapban|
+langlookup|Sunshine hours year to date|Napsütéses órák száma az évben|
+langlookup|hrs|Óra|
+#
+# --- end of include-wxhistory.php translations
+#
+# Conditions (%Currentsolardescription% and clientraw[49])
+#
+conditions|begin||
+langlookup|Dry|Száraz|
+langlookup|Light rain|Gyenge esõ|
+langlookup|Moderate drizzle|Gyenge szitálás|
+langlookup|Moderate rain|Gyenge esõ|
+langlookup|Heavy rain|Zápor esõ|
+langlookup|Stopped raining|Elállt az esõ|
+# conditions time
+langlookup|Dawn|Hajnal|
+langlookup|Dusk|Alkonyat|
+langlookup|Night time|Éjszaka|
+# Clouds (sky)
+langlookup|Clear|Derült|
+langlookup|Sunny|Borult|
+langlookup|Clear skies|Tiszta égbolt|
+langlookup|Mostly sunny|Többnyire napos|
+langlookup|A few clouds|Felhõs|
+langlookup|Sc|Részben felhõs|
+langlookup|Scattered clouds|Erõsen felhõs|
+langlookup|Partly cloudy|Partly cloudy|
+langlookup|Mostly cloudy|Mostly cloudy|
+langlookup|Cloudy with clear p|Mostly cloudy|
+langlookup|Cloudy with clear patches|Mostly cloudy|
+langlookup|Overcast|Párás|
+conditions|end||
+#
+# hilowavg2.php items (solar/lunar words are specified above)
+#
+langlookup|Yesterday|Tegnap|
+langlookup|  |
+langlookup|   |
+langlookup|    |
+#
+# wxrecordsalltime.php
+langlookup|All-Time Records|Minden Idõ Rekord|
+langlookup|Data collected since|Rekord gyüjtés kezdete|
+langlookup|Highest Temperature|Legmagasabb hõmérséklet|
+langlookup|Lowest Temperature|Legalacsonyabb hõmérséklet|
+langlookup|Temperature Records|Hõmérsékleti rekord|
+langlookup|Highest Heat Index|Legmagasabb hõindex|
+langlookup|Lowest Wind Chill|Legalacsonyabb szélhûtés|
+langlookup|Warmest Day|Legmelegebb nap|
+langlookup|Warmest Night|Legmelegebb éjszaka|
+langlookup|Coldest Day|Leghidegebb nap|
+langlookup|Coldest Night|Leghidegebb éjszaka|
+langlookup|Wind Records|Szél rekord|
+langlookup|Maximum Wind Gust|Maximum széllökés|
+langlookup|Highest Average Speed|Legnagyobb átlagsebesség|
+langlookup|Highest Daily Wind Run|Legnagyobb napi szélsebesség|
+langlookup|Precipitation Records|Csapadék rekord|
+langlookup|Highest Daily Precipitation|Legnagyobb napi csapadék|
+langlookup|Highest Monthly Precipitation|Legnagyobb havi csapadék|
+langlookup|Highest Precipitation Rate|Legnagyobb csapadék ráta|
+langlookup|Consecutive Days With Precipitation|Egymást követõ csapadékos napok|
+langlookup|Consecutive Days Without Precipitation|Egymást követõ napok csapadék nélkül|
+langlookup|Days|nap|
+langlookup|Ending|Idõpont|
+langlookup|Humidity Records|Páratartalom rekord|
+langlookup|Highest Humidity|Legnagyobb páratartalom|
+langlookup|Lowest Humidity|Legalacsonyabb páratartalom|
+langlookup|Highest Dew Point|Legnagyobb harmatpont|
+langlookup|Lowest Dew Point|Legalacsonyabb harmatpont|
+langlookup|Barometer Records|Légnyomás rekord|
+langlookup|Highest Barometer|Legnagyobb barométer|
+langlookup|Lowest Barometer|Legalacsonyabb barométer|
+langlookup|Sun Records|Nap rekord|
+langlookup|Highest Solar Radiation|Legnagyobb napsugárzás|
+langlookup|Highest UV|Ultraibolya legmagasabb|
+langlookup|Current Month Records|Aktuális havi rekord|
+langlookup|Current Year Records|Aktuális éves rekord|
+langlookup||Borult|
+langlookup|24-hr difference|24 órás eltérés|
+langlookup|Overcast|Borult|
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

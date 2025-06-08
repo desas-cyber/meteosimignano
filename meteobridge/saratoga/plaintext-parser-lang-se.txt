@@ -1,0 +1,320 @@
+# Language file for plaintext-parser.php program
+# Version: 2.00 28-Jan-2008
+# Swedish by Bo  http://www.sm6kiw.se
+# Swedish by Labbs http://www.lokaltvader.se
+#
+#charset|iso-8859-1|
+
+dateformat|d M, Y - H:i|		
+
+# Natural language translations of sentences
+lang|Little if any freezing rain accumulation.|Varning för halka om det fryser på (underkylt regn)!|
+lang|A slight chance of a mix of freezing rain and sleet|En liten risk för underkylt och snöblandat regn|
+lang|then a mix of rain and snow likely after midnight|senare efter midnatt troligtvis snöblandat regn|
+lang|, becoming dense overcast in the afternoon| som senare under eftermiddagen mulnar på|
+lang|, becoming dense overcast after midnight| som efter midnatt mulnar på ytterligare|
+lang|Cloudy in the morning, becoming mostly cloudy to cloudy in the afternoon|Molnigt på morgonen som på eftermiddagen lättar något|
+lang|Cloudy in the evening, becoming mostly cloudy to cloudy after midnight|Molnigt på kvällen som efter midnatt lättar något|
+lang|Mostly cloudy to cloudy in the morning, becoming cloudy in the afternoon|Ganska molnligt under förmiddagen följt av ökad molnighet på eftermiddagen|
+lang|Mostly cloudy to cloudy in the evening, becoming cloudy after midnight|Ganska molnligt under kvällen följt av ökad molnighet efter midnatt|
+lang|Mostly cloudy to cloudy in the morning, becoming mostly cloudy in the afternoon|Relativt molnligt under förmiddagen som under eftermiddagen lättar något|
+lang|Mostly cloudy to cloudy in the evening, becoming mostly cloudy after midnight|Relativt molnligt under kvällen som efter midnatt lättar något|
+lang|Dense overcast in the morning, becoming cloudy in the afternoon|Ordentligt mulet under morgonen som senare under eftermiddagen övergår i molnigt|
+lang|Dense overcast in the evening, becoming cloudy after midnight|Ordentligt mulet under kvällen som under natten övergår i molnigt|
+lang|Dense overcast in the morning, becoming mostly cloudy to cloudy in the afternoon|Riktigt mulet under morgonen som spricker upp något under eftermiddagen|
+lang|Dense overcast in the evening, becoming mostly cloudy to cloudy after midnight|Riktigt mulet under kvällen som under natten spricker upp något|
+
+lang|Precipitation showery or intermittent|Tidvist eller ihållande regn|
+lang|Showery or intermittent|Förbigående byar av regn|
+lang|showery or intermittent|förbigående byar av regn|
+#lang|Thunderstotrms likely, some possibly severe|Åskbyar möjligt, vissa eventuellt kraftiga|
+lang|Thunderstotrms likely, some possibly severe|Förmodligen åskbyar, varav vissa eventuellt kraftiga|
+
+# new for v.1.14
+lang|Maximum snow level|Högsta höjdnivå för snö:|
+lang|Minimum snow level|Lägsta höjdnivå för snö:|
+lang|Maximum freezing level|Högsta höjdnivå för isbildning:|
+lang|Minimum freezing level|Lägsta höjdnivå för isbildning:|
+lang|above sea level|över havsytan|
+lang|above ground|ovan mark|
+# --- end ---
+
+lang|but temperatures falling|temperaturen faller dock|
+lang|but temperatures rising|temperaturen stiger dock|
+lang|temperatures falling|fallande temperatur|
+lang|temperatures rising|stigande temperatur|
+
+lang|UV index up to|UV index upp till|
+lang|UV index more than|UV index mer än|
+
+# Long weatherconditions
+lang|Fair to partly cloudy|Klart till halvklart|
+lang|fair to partly cloudy|klart till halvklart|
+lang|Partly to mostly cloudy|Växlande molnlighet|
+lang|partly to mostly cloudy|växlande molnlighet|
+lang|Mostly cloudy to cloudy|Dominerande molnighet|
+lang|mostly cloudy to cloudy|dominerande molnighet|
+lang| except for a few wispy clouds|, förutom några få fjädermoln|
+lang|but some high thin clouds|så när som på några höga tunna moln|
+
+#A slight chance of a mix of sleet, rain, and snow in the evening, then a slight chance of a mix of sleet, snow, and rain after midnight
+lang|A mix of rain and snow likely|Troligtvis snöblandat regn|
+lang|a mix of rain and snow|snöblandat regn|
+lang|A mix of snow and rain likely|Troligtvis regnblandad snö|
+lang|a mix of snow and rain|regnblandad snö|
+lang|Rain likely|Troligtvis regn|		// tidvis?
+lang|rain likely|troligen regn|			// tidvis?
+lang|Snow likely|Troligtvis snö|
+lang|snow likely|troligen snö|
+lang|Some thunder possible.|Möjligtvis någon åska. |
+lang|Some thunderstorms likely|Troligen kan några åskbyar förekomma|
+lang|Mostly clear|Nästan klart|
+lang|mostly clear|nästan klart|
+lang|Mostly cloudy|Övervägande molnigt|
+lang|mostly cloudy|övervägande molnighet|
+lang|Chance of precipitation|Sannolikhet för nederbörd är|
+lang|Precipitation (liquid equivalent)|Nederbörd (vatten)|
+lang|Precipitation|Nederbörden|
+lang|Patchy light fog|Disigt på sina ställen|
+lang|then patchy light fog|följt av bitvis disigt|
+
+lang|accumulation expected|förväntas ligga kvar|
+lang|(on ground) accumulation|(ack.) på marken|
+lang|Snow accumulation|Kvarvarande snö |
+lang|accumulation up to|uppgår till (ack.)|
+lang|A slight chance of|Liten chans för|
+lang|a slight chance of|ringa chans för|
+lang|A chance of|Risk för|
+lang|a chance of|möjligtvis|
+lang|Little or no|Ingen, eller endast lite,|
+lang|more than|mer än|
+lang|less than|mindre än|
+lang|mix of|blandning av|
+lang|if any|om någon|
+lang|on ground|på marken|
+
+# Short weatherconditions
+lang|Clear|Klart|
+lang|clear|klart|
+lang| clear | klart |
+lang|Fair|Fint|			// uppehållsväder ?
+lang|fair|fint|
+lang|Cloudy|Molnigt|
+lang|cloudy|molnigt|
+lang|cloudiness|moln|
+lang|wispy clouds|fjädermoln|
+lang|clouds|moln|
+lang|Light fog|Disigt|
+lang|light fog|disigt|
+lang|Fog|Dimma|
+lang|fog|dimma|
+lang|Dense overcast|Grått och mulet|
+lang|dense overcast|tät molnighet|
+lang|overcast|genommulet|
+lang|sleet|slask|
+lang|Snow |Snö |
+lang|snow|snö|
+lang|Sunny|Soligt|
+lang|sunny|sol|
+lang| ice | is |
+lang|Freezing rain|Underkylt/frysande regn|
+lang|freezing rain|underkylt regn|
+lang|Rain|Regn|
+lang|rain|regn|
+lang|Thunderstorms|Åskbyar|
+lang|thunderstorms|åskbyar|
+
+# Wind
+#lang|. Wind chill| med vindavkylning på|
+lang|, gusting to| med vindbyar på|
+lang|Wind chill|Vindavkylning|
+lang|Wind |Vind |
+lang|chill|avkylning|
+lang|Heat index|Värme index|
+lang|gusting|vindbyar|
+lang|near calm|nästan vindstilla|
+lang|calm|vindstilla|
+
+# Wind directions
+lang|northeast|nordost|
+lang|northwest|nordväst|
+lang|southeast|sydost|
+lang|southwest|sydväst|
+lang|north-|nord-|
+lang|east-|ost-|
+lang|west-|väst-|
+lang|south-|syd-|
+lang| east | ost |
+lang| north | nord |
+lang| south | syd |
+lang| west | väst |
+
+# Units
+lang|half an|en halv|
+lang|quarter of an|fjärdedels|
+lang|tenth of an|tiondels|
+lang|quarter|fjärdedel|
+lang|tenth|tiondel|
+lang|inches|tum|
+lang|inch|tum|
+lang|meters|meter|
+lang|feet|ft|
+lang|kph|km/h|
+lang|mps|m/s|
+lang| percent|%|
+
+# Single words
+lang|midnight|midnatt|
+lang|morning|morgonen|
+lang|evening|kvällen|
+lang|afternoon|eftermiddagen|
+
+lang|High|Maximum:|
+lang|Low|Minimum:|
+lang|high|höga|
+lang|down to|ner till|
+lang|down |fallande |
+
+lang|Likely|Troligen|
+lang|likely|troligt|
+lang|Moderate|Måttlig|
+lang| moderate | måttlig |
+lang|Dense|Kraftig|
+lang|dense|kraftig|
+lang|thin|tunna|
+lang|Freezing|Frysande|
+lang|freezing|frysande|
+lang|Mostly|Mestadels|
+lang|mostly|mestadels|
+lang|Partly|Delvis|
+lang|partly|delvis|
+lang|Patchy|På sina ställen|
+lang|patchy|bitvis|
+lang|Very|Mycket|
+lang|very|mycket|
+lang|Little|Lite|
+lang|little|lite|
+lang|Some|Vissa|
+lang|some|vissa|
+lang|showery|förbigående|
+
+lang|, with just| med endast|
+lang|with just|med endast|
+lang|a few|några få|
+lang|about|omkring|
+lang|around|omkring|
+lang|except|förutom|
+lang|near|nära|
+lang|Light|Lätt|
+lang| light | lätt |
+lang|, becoming | som övergår till |
+lang| becoming | övergår till |
+lang| chance | chans |
+lang| one | 1 |
+lang| slight | liten |
+lang| after | efter |
+lang| then | därefter |
+lang| with | med |
+lang| the | |
+lang| few | få |
+lang| for | för |
+lang| to | till |
+lang| in | under |
+lang| of | för |
+lang| but | men |
+lang| or | eller |
+lang| and | och |
+lang| between | mellan |
+lang|No |Ingen |
+lang| no | ingen |
+lang|A |En |
+lang| a | en |
+lang|An |En |
+lang| an | en |
+
+#
+# Translation of headings, periods and short conditions statements headings
+#
+langlookup|WXSIM Forecast for:|WXSIM prognos för:|
+langlookup|Issued by:|Utfärdad av:|
+langlookup|Updated:|Uppdaterad:|
+langlookup|High:|Max|
+langlookup|Low:|Min|
+
+# Days etc
+langlookup|Sunday|Söndag|
+langlookup|Monday|Måndag|
+langlookup|Tuesday|Tisdag|
+langlookup|Wednesday|Onsdag|
+langlookup|Thursday|Torsdag|
+langlookup|Friday|Fredag|
+langlookup|Saturday|Lördag|
+langlookup|Sunday night|Söndag natt|
+langlookup|Monday night|Måndag natt|
+langlookup|Tuesday night|Tisdag natt|
+langlookup|Wednesday night|Onsdag natt|
+langlookup|Thursday night|Torsdag natt|
+langlookup|Friday night|Fredag natt|
+langlookup|Saturday night|Lördag natt|
+langlookup|Today|I&nbsp;dag|
+langlookup|Tonight|I&nbsp;natt|
+langlookup|This afternoon|I&nbsp;eftermiddag|
+langlookup|Rest of tonight|Resterande del&nbsp;av&nbsp;natten|
+
+# UV Index words
+langlookup|Low|Låg|
+langlookup|Medium|Medel|
+langlookup|High|Hög|
+langlookup|Very&nbsp;High|Mycket&nbsp;Högt|
+langlookup|Extreme|Extremt|
+
+# Summary conditions lookup
+langlookup|Severe storm|Svår storm
+langlookup|Showers storms|Regnstormar
+langlookup|Thunder storm|Åskbyar
+langlookup|Rain Sleet|Snöblandat regn
+langlookup|FrzgRn Snow|Frusen snö
+langlookup|Rain and Snow|Regn och Snö
+langlookup|Freezing Rain|Underkylt regn
+langlookup|Rain likely|Regn sannolikt
+langlookup|Chance rain|Risk för regn
+langlookup|Mix|Blandat
+langlookup|Sleet|Slask/Blötsnö
+langlookup|Snow|Snö
+langlookup|Fog a.m.|Dimma under morgontimmarna
+langlookup|Fog late|Dimma sent
+langlookup|Fog|Dimma
+langlookup|Very Cold|Väldigt kallt
+langlookup|Very Hot|Mycket kallt
+langlookup|Partly Cloudy|Delvis molnigt
+langlookup|Mostly Cloudy|Övervägande molnigt
+langlookup|Cloudy|Molnigt
+langlookup|Overcast|Genommulet
+langlookup|Partly Sunny|Delvis sol
+langlookup|Mostly Sunny|Mest sol
+langlookup|Mostly clear|Mest klart
+langlookup|Mostly Clear|Mest klart
+langlookup|Sunny|Sol
+langlookup|Clear|Klart
+langlookup|Clear.|Klart.
+langlookup|Fair|Fint
+langlookup|Variable Clouds|Blandade moln
+langlookup|NESW|NOSV|
+
+# translation for Beaufort Wind Force - Sea(Land)
+langlookup|Calm|Stiltje<br />(Lugnt)|						// 0
+langlookup|Light air|Nästan stiltje<br />(Svag vind)|		// 1
+langlookup|Light breeze|Lätt bris<br />(Svag vind)|			// 2
+langlookup|Gentle breeze|God bris<br />(Måttlig vind)|		// 3
+langlookup|Moderate breeze|Frisk bris<br />(Måttlig vind)|	// 4
+langlookup|Fresh breeze|Styv bris<br />(Frisk vind)|		// 5
+langlookup|Strong breeze|Hård bris<br />(Frisk vind)|		// 6
+langlookup|Near gale|Kuling<br />(Hård vind)|				// 7
+langlookup|Gale|Hård kuling<br />(Hård vind)|				// 8
+langlookup|Strong gale|Halv storm<br />(Mycket hård vind)|	// 9
+langlookup|Storm|Storm|										// 10
+langlookup|Violent storm|Svår storm|						// 11
+langlookup|Hurricane|Orkan|									// 12
+
+
+# --- end of language file ------

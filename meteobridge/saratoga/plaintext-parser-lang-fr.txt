@@ -1,0 +1,235 @@
+# Language file for plaintext-parser.php program 
+# Version 0.16
+# translation - French by Brian Ellis  http://www.cypenv.org/weather
+#
+lang|Mostly cloudy to cloudy in the evening|Principalement nuageux ou très nuageux le soir|
+#lang|cloudy in|nuageux| (the 'in' depends on context)
+#
+#THIS SECTION WILL TRANSLATE SENTENCES TO A MORE NATURAL (LESS SYNTHETIC) LANGUAGE
+#
+lang|Cloudy in the morning|Nuageux le matin|
+lang|Patchy light fog after midnight|Brumeux par endroit après minuit|
+lang|Mostly cloudy to cloudy|Principalement nuageux ou très nuageux|
+lang| mostly cloudy to cloudy| principalement, nuageux ou très nuageux|
+lang|Mostly cloudy|Principalement nuageux|
+lang|Dense overcast|Très couvert|
+lang|Partly to mostly cloudy|Partiellement nuageux|
+lang|Fair to partly cloudy|Un peu ou partiellement nuageux|
+lang|becoming partly to mostly|avec une tendance d'un peu ou partiellement|
+lang|Precipitation mostly less than|Précipitation probablement moins de|
+lang|in the evening|le soir|
+lang|less than|moins de|
+lang|mostly around|aux alentours de|
+lang|No snow accumulation expected|Pas d'accumulation de neige attendue|
+lang|Snow accumulation |Accumulation de neige |
+#
+#TEMP FIX (MORE TESTING NEEDED)
+lang|in the||
+lang|wind chill|abaissement de température dû au vent|
+lang|Wind chill|Abaissement de température dû au vent|
+#
+lang|Chance of precipitation|Possibilité de précipitation|
+lang|becoming|tendance à|
+lang|dense overcast|très couvert|
+lang| then | puis |
+lang|A slight chance of|Une légère possibilité de|
+
+lang|afternoon|l'après-midi|
+lang|cloudy|nuageux|
+lang|Patchy|Par endroit|
+lang| slight | un peu de |
+lang| light | léger |
+lang| fog | brouillard |
+lang| fog.| brouillard.|
+lang|Partly|Partiellement|
+lang| up to| jusqu'à|
+lang| to | à |
+#lang| up | plus haut, jusque, jusqu'à, jusqu'au, etc. |
+lang|gusting|en rafale|
+lang| mostly| principalement|
+lang|after|après|
+lang|likely|probable|
+lang|midnight|minuit|
+lang|morning|le matin|
+lang|Mostly|Principalement|
+lang| mostly| principalement|
+lang|partly|partiellement|
+lang|Light|Léger|
+lang|moderate|moderé|
+lang|evening|le soir|
+lang|Dense|Très|
+lang|overcast|couvert|
+lang|Moderate|Modéré|
+lang|dense|très|
+lang|sunny|ensoleillé|
+lang|Rain likely|Probabilité de pluie|
+lang|rain|pluie|
+#lang|A |Qualche | ********* temp removed *********
+lang|A ||
+lang| a | |
+lang|chance of|possibilité de|
+lang|High|Maximum|
+lang|Low|Minimum|
+lang| but | mais |
+lang|temperatures falling|baisse de température|
+lang|temperatures rising|augmentation de température|
+#lang|noralast|NordEst|  ?????
+lang|Wind east-|Vent de l'est au |
+lang|Wind west-|Vent de l'ouest au |
+lang|Wind east |Vent de l'est |
+lang|Wind west |Vent de l'ouest |
+lang|Wind north-|Vent du nord au |
+lang|Wind north |Vent du nord |
+lang|Wind south-|Vent du sud au |
+lang|Wind south |Vent du sud |
+ 
+lang|northeast|nord-est|
+lang|northwest|nord-ouest|
+lang|southeast|sud-est|
+lang|southwest|sud-ouest|
+lang|north-|nord à |
+lang|east-|est à |
+lang|south-|sud à |
+lang|west-|ouest à |
+lang|north |nord |
+lang|east |est |
+lang|south |sud |
+lang|west |ouest |
+lang|the||
+
+lang|down | |
+lang| or | ou |
+lang|around|environ|
+lang|kph|km/h|
+lang|mps|m/s|
+lang| near | environ |
+lang| percent| pour cent|
+lang|less than|moins de|
+lang| snow| neige|
+lang|Precipitation (liquid equivalent)|Précipitation (équivalent de liquide)|
+lang| between | entre |
+lang| and | et |
+lang|Precipitation|Précipitation|
+
+lang|accumulation expected|accumulation attendue|
+lang|Little|Un peu de|
+lang|snow |neige |
+lang|Snow |Neige |
+lang|Snow accumulation|Accumulation de neige |
+lang|about|environ|
+lang| no | pas de |
+lang| one | 1 |
+lang|showery or intermittent|pluie intermittente|
+lang|Rain|Pluie|
+lang|Fair|Beau|
+lang|fair|beau|
+lang|Cloudy|Nuageux|
+lang|calm|calme|
+lang|Clear|Ciel dégagé|
+lang|clear|ciel dégagé|
+lang|Sunny|Ensoleillé|
+lang| ice | glace |
+lang|freezing|gélant|
+lang|sleet|neige fondue|
+lang|a mix of|un mélange de|
+lang|mix of|mélange de|
+lang|if any|si jamais|
+lang|on ground|au sol|
+lang|patchy|par endroit|
+lang|Thunderstorms likely, some possibly severe|Probabilité d'orages, parfois violents|
+lang|Some thunder possible.|Possibilité d'orages.|
+lang|Some thunderstorms likely|Probabilité d'orages|
+lang|quarter |un quart |
+lang|tenth |dixième |
+lang|of an inch|d'un pouce|
+lang|half an inch|demi-pouce|
+lang| inch| pouce|
+lang|UV index|indice UV|
+#lang| a a ||
+# ---=== Mario's added translation ===---
+lang|Wind|Vent du|
+#
+# Translation of headings, periods and short conditions statements
+# headings
+#
+langlookup|WXSIM Forecast for:|Prévisions WX-SIM pour:|
+langlookup|Issued by:|Publiées par:|
+langlookup|Updated:|Mise à jour:|
+langlookup|High:|Max|
+langlookup|Low:|Min|
+#
+# I presume following at beginning of sentence, otherwise initial letter lower case)
+langlookup|Sunday|Dimanche|
+langlookup|Monday|Lundi|
+langlookup|Tuesday|Mardi|
+langlookup|Wednesday|Mercredi|
+langlookup|Thursday|Jeudi|
+langlookup|Friday|Vendredi|
+langlookup|Saturday|Samedi|
+langlookup|Sunday night|Nuit de dimanche|
+langlookup|Monday night|Nuit de lundi|
+langlookup|Tuesday night|Nuit de mardi|
+langlookup|Wednesday night|Nuit de mercredi|
+langlookup|Thursday night|Nuit de jeudi|
+langlookup|Friday night|Nuit de vendredi|
+langlookup|Saturday night|Nuit de samedi|
+langlookup|Today|Aujourd'hui|
+langlookup|Tonight|Cette nuit|
+langlookup|Rest of tonight|Fin de cette nuit|
+langlookup|This afternoon|Cet après-midi|
+# UV Index words
+langlookup|Low|Bas|
+langlookup|Medium|Moyen|
+langlookup|High|Elevé|
+langlookup|Very&nbsp;High|Très&nbsp;élevé|
+langlookup|Extreme|Extrème|
+# Summary conditions lookup
+langlookup|Severe storm|Tempête violente|
+langlookup|Showers storms|Tempêtes locales|
+langlookup|Thunder storm|Orage|
+langlookup|Rain Sleet|Neige fondue|
+langlookup|FrzgRn Snow|Neige gélée|
+langlookup|Rain and Snow|Pluie et neige|
+langlookup|Freezing Rain|Pluie gélante|
+langlookup|Rain likely|Pluie probable|
+langlookup|Chance rain|Pluie possible|
+langlookup|Mix|Mélange|
+
+langlookup|Sleet|Neige fondue|
+langlookup|Snow|Neige|
+langlookup|Fog a.m.|Brouillard matinal|
+langlookup|Fog late|Brouillard plus tard|
+langlookup|Fog|Brouillard|
+langlookup|Very Cold|Très froid|
+langlookup|Very Hot|Très chaud|
+langlookup|Partly Cloudy|Partiellement nuageux|
+langlookup|Mostly Cloudy|Principalement nuageux|
+langlookup| mostly cloudy| principalement nuageux|
+langlookup|Cloudy|Nuageux|
+langlookup|Overcast|Couvert|
+langlookup|Partly Sunny|Partiellement ensoleillé|
+langlookup|Mostly Sunny|Principalement ensoleillé|
+langlookup|Mostly Clear|Principalement ciel dégagé|
+langlookup|Sunny|Ensoleillé|
+langlookup|Clear|Ciel dégagé|
+langlookup|Fair|Beau|
+langlookup|Variable Clouds|Nebulosité variable|
+langlookup|Clear|Ciel dégagé|
+# translation for cardinal wind directions must be in North-East-South-West order
+langlookup|NESW|NESO|
+# translation for Beaufort Wind Force
+langlookup|Calm|Calme|
+langlookup|Light air|Très légère brise|
+langlookup|Light breeze|Légère brise|
+langlookup|Gentle breeze|Petite brise|
+langlookup|Moderate breeze|Jolie brise|
+langlookup|Fresh breeze|Bonne brise|
+langlookup|Strong breeze|Vent frais|
+langlookup|Near gale|Grand frais|
+langlookup|Gale|Coup de vent|
+langlookup|Strong gale|Fort coup de vent|
+langlookup|Storm|Tempête|
+langlookup|Violent storm|Violente tempête|
+langlookup|Hurricane|Ouragan|
+#
+# --- end of language file ------

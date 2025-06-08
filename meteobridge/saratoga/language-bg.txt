@@ -1,0 +1,364 @@
+# Bulgarian language plugin for Carterlake/WD/AJAX/PHP template set
+# Ken True - http://saratoga-weather.org/template/
+# Bulgarian translation by Radmil http://www.vremeto.org/
+#
+# Version 1.00 - 24-Apr-2008 - initial release
+# Version 1.01 - 24-Jun-2008 - added support for trends-inc.php conversion
+#
+# English and Western European use ISO-8859-1 character sets
+#
+#charset|ISO-8859-1|
+#
+# Eastern European use ISO-8859-2
+#
+charset|ISO-8859-5|
+#
+# Greek should use ISO-8859-7 character set for compatibility with plaintext-parser-lang-el.txt
+#
+#charset|ISO-8859-7|
+#
+# Note:  the langlookup entries are for EXACT replacements including spaces and capitalization.
+#  
+# format is 'langlookup|<english-to-find>|<replacement-string>|
+#
+# Don't change the first field <english-to-find>  because it matches what is in the 
+# langtrans/langtransstr() calls embedded in various scripts in the template set.  
+# Only change the second field <replacement-string> for your language.
+#
+# You can add new langlookup entries to handle additions to your website.  Be sure to add the
+# same langlookup entry to the other language-LL.txt files for all the languages you support on your site.
+#
+# ajax-dashboard and ajax-gizmo language strings
+#
+langlookup|Enable JavaScript for live updates|Активирайте JavaScript за актуализации|
+langlookup|Updated|Актуализирано|
+langlookup|updated|актуализирано преди|
+langlookup|sec ago|сек.|
+langlookup|next update at|следващата актуализация след|
+# thermometer language
+langlookup|Temperature|Температура|
+langlookup|Currently|В момента|
+langlookup|Max|Max|
+langlookup|Min|Min|
+# rising/falling arrows text
+langlookup|Warmer|По-топло|
+langlookup|Colder|По-студено|
+langlookup|Rising|Покачващо се|
+langlookup|Falling|Спадащо|
+langlookup|Increased|Повишено|
+langlookup|Decreased|Намалено|
+langlookup|than last hour|в сравнение с последния час|
+langlookup|since last hour|от последния час|
+langlookup|than yesterday at this time|в сравнение вчера по същото време|
+#
+langlookup|Feels like|Усеща се като|
+langlookup|24-hr difference|24 час. разлика|
+langlookup|Today|Днес|
+langlookup|Yesterday|Вчера|
+langlookup|High:|Висока:|
+langlookup|Low:|Ниска:|
+langlookup|Wind from|Вятър от|
+langlookup|Gust|Порив|
+langlookup|Gust Month|Пориви през месеца|
+langlookup|UV Index|UV Индекс|
+langlookup|UV Index Forecast|UV Индекс Прогноза|
+langlookup|Solar Radiation|Слънчева радиация|
+langlookup|Summary|Метео сводка|
+langlookup|Humidity|Влажност|
+langlookup|Dew Point|Точка на оросяване|
+langlookup|Barometer|Барометър|
+langlookup|Baro Trend|Тенденция на атм. нал.|
+langlookup|Wind|Вятър|
+langlookup|Rain|Валежи|
+langlookup|Outlook|Прогноза|
+langlookup|Rain Today|Валежи днес|
+langlookup|Rain Rate|К-во валежи|
+langlookup|Rain Yesterday|Валежи вчера|
+langlookup|Storm Rain|Порои|
+langlookup|This Month|Този месец|
+langlookup|Season Total|Общо за сезона|
+langlookup|day since last rain|ден без дъжд|
+langlookup|days since last rain|дни без дъжд|
+langlookup|rain day in|ден с валежи през|
+langlookup|rain days in|дни с валежи през|
+langlookup|Snow|Сняг|
+langlookup|Snow Today|Снеговалеж днес|
+langlookup|Snow Yesterday|Снеговалеж вчера|
+langlookup|Snow Depth|Снежна покривка|
+langlookup|Winter Total|Общо за зимата|
+langlookup|snow day in|ден със сняг през|
+langlookup|snow days in|дни със сняг през|
+langlookup|Almanac|Годишник|
+langlookup|Sun&nbsp;|Слънце|
+langlookup|Moon|Луна|
+langlookup|Sunrise|Изгрев|
+langlookup|Sunset|Залез|
+langlookup|Moonrise|Луна изгрев|
+langlookup|Moonset|Луна залез|
+langlookup|Illuminated|Осветеност|
+langlookup|Weather Forecast|Прогноза за времето|
+langlookup|forecast|прогноза|
+#
+# UV Index words - note: leave &nbsp; where shown for proper lookup
+langlookup|None|Без промяна|
+langlookup|Low|Нисък|
+langlookup|Medium|Среден|
+langlookup|High|Висок|
+langlookup|Very&nbsp;High|Много&nbsp;Висок|
+langlookup|Extreme|Екстремна|
+#
+# Moon words
+#
+langlookup|New Moon|Новолуние|
+langlookup|Waxing Crescent|Waxing Crescent|
+langlookup|Waxing Crescent Moon|Waxing Crescent Moon|
+langlookup|First Quarter|Първа четвъртина|
+langlookup|First Quarter Moon|Луна в Първа четвърт|
+langlookup|Waxing Gibbous|Waxing Gibbous|
+langlookup|Waxing Gibbous Moon|Waxing Gibbous Moon|
+langlookup|Full Moon|Пълнолуние|
+langlookup|Waning Gibbous|Waning Gibbous|
+langlookup|Waning Gibbous Moon|Waning Gibbous Moon|
+langlookup|Last Quarter|Последна четвърт|
+langlookup|Last Quarter Moon|Луна в Последна четвърт|
+langlookup|Waning Crescent|Waning Crescent|
+langlookup|Waning Crescent Moon|Waning Crescent Moon|
+#
+#
+# WU-Forecast.php replacement text
+#
+langlookup|Chance of precipitation|Възможни превалявания|
+#
+# footer.php
+#
+langlookup|Top|Горе|
+langlookup|Contact Us|Свържете се с нас|
+langlookup|Bookmark Page|Добавете ни в своите предпочитани страници|
+langlookup|Valid|Валиден|
+langlookup|Never base important decisions on this or any weather information obtained from the Internet|Никога не се базирайте решенията си единствено на информация от този сайт|
+#
+# menubar.php and flyout-menu.xml entries
+#
+# Note: if using the flyout-menu, you can have individual language versions as
+# flyout-menu-LL.xml, flyout-menu-test-LL.xml using full native language which won't be translated.
+#
+# these settings below are for the English menubar.php $html section, and flyout-menu.xml/flyout-menu-test.xml
+#  which should be in English only.
+#
+langlookup|Navigation|Навигация|
+langlookup|External Links|Връзки|
+langlookup|Home|Начало|
+langlookup|Forecast|Прогноза|
+langlookup|WXSIM Forecast|WXSIM Прогноза|
+langlookup|Radar|Радар|
+langlookup|Advisories|Съвети|
+langlookup|Live Weather|Времето на живо|
+langlookup|Live Mesomap|Mesomap на живо|
+langlookup|Daily Stats|Дневна статистика|
+langlookup|Graphs|Графики|
+langlookup|Station Data by Month|Месечни данни|
+langlookup|Astronomy|Астрономия|
+langlookup|Links|Връзки|
+langlookup|About|Относно|
+langlookup|About Us|За нас|
+langlookup|Live|На живо|
+langlookup|Weather-Display Live|Weather-Display Live|
+langlookup|Local Radar|Локален радар|
+langlookup|Mesomap|Mesomap|
+langlookup|MesoMap Live|MesoMap на живо|
+langlookup|Forecast &amp; Advisories|Прогноза &amp; Съвети|
+langlookup|Forecast details|Детайлна прогноза|
+langlookup|WXSIM Forecast details|WXSIM Детайлна прогноза|
+langlookup|Weather Trends|Трендове|
+langlookup|Station Graphs|Графики на станцията|
+langlookup|Station Monthly Reports|Месечни справки|
+langlookup|Sun/Moon Almanac|Слънчево-лунен алманах|
+langlookup|Earthquake activity|Сеизмична дейност|
+langlookup|Website Map|Карта на сайта|
+#
+# include-style-switcher.php items
+#
+langlookup|Style Options|Теми-опции|
+langlookup|Style|Теми|
+langlookup|Widescreen|Широк екран|
+langlookup|On|Вкл.|
+langlookup|Off|Изкл.|
+langlookup|Set|Установи|
+langlookup|Language|Език|
+# Colors of templates for style-switcher
+langlookup|Black|Черна|
+langlookup|Blue|Синя|
+langlookup|Dark|Тъмна|
+langlookup|Fall|Есен|
+langlookup|Green|Зелена|
+langlookup|Ice Tea|Леден чай|
+langlookup|Mocha|Мока|
+langlookup|Orange|Оранж|
+langlookup|Pastel|Пастел|
+langlookup|Purple|Виолетова|
+langlookup|Red|Червена|
+langlookup|Salmon|Салмон|
+langlookup|Silver|Сребърна|
+langlookup|Spring|Пролет|
+langlookup|Taupe|Топ|
+langlookup|Teal|Тийл|
+#
+# wxastronomy.php items (solar/lunar words are specified above)
+#
+langlookup|Daylight|Дневна|
+langlookup|Vernal Equinox|Пролетно равноденствие|
+langlookup|Start of Spring|Начало на пролетта|
+langlookup|Summer Solstice|Лятно слънцестоене|
+langlookup|Start of Summer|Начало на лятото|
+langlookup|Autumn Equinox|Есенно равноденствие|
+langlookup|Start of Fall|Начало на есента|
+langlookup|Winter Solstice|Зимно слънцестоене|
+langlookup|Start of Winter|Начало на зимата|
+#
+# wxgraphs.php items
+#
+langlookup|Weather Trend Graphs|Графики на Тенденциите|
+langlookup|Last 24 Hours|Последните 24 Часа|
+langlookup|Last 72 Hours|Последните 72 Часа|
+langlookup|Month to Date|Последния месец|
+#
+# V1.01 - trends-inc.php native PHP conversion translation items
+#
+langlookup|Trends as of|Тенденции|
+langlookup|TIME|ЧАС|
+langlookup|TEMP|ТЕМП|
+langlookup|WIND SPEED|ВЯТЪР СКОРОСТ|
+langlookup|WIND GUST|ПОРИВИ|
+langlookup|WIND DIR|ПОСОКА|
+langlookup|HUMIDITY|ВЛАЖНОСТ|
+langlookup|PRESSURE|НАЛЯГАНЕ|
+langlookup|RAIN|ВАЛЕЖИ|
+#
+langlookup|Current|Текущо|
+langlookup|CURRENT|ТЕКУЩО|
+langlookup|Now|Now|
+langlookup|Records and Stats|Данни и статистика|
+langlookup|5 minutes ago|5 мин. назад|
+langlookup|10 minutes ago|10 мин. назад|
+langlookup|15 minutes ago|15 мин. назад|
+langlookup|20 minutes ago|20 мин. назад|
+langlookup|30 minutes ago|30 мин. назад|
+langlookup|45 minutes ago|45 мин. назад|
+langlookup|60 minutes ago|60 мин. назад|
+langlookup|75 minutes ago|75 мин. назад|
+langlookup|90 minutes ago|90 мин. назад|
+langlookup|105 minutes ago|105 мин. назад|
+langlookup|120 minutes ago|120 мин. назад|
+# following three entries are used for <condition> on <date> and <condition> at <time>
+langlookup|on|на|
+langlookup|at|в|
+langlookup|from|от| as in '14 mph from 315 (NW)'
+#
+langlookup|last hour|последния час|
+langlookup|over last 7 days|през последните 7 дни|
+langlookup|last month|през последния месец|
+#
+langlookup|Today|Днес|
+langlookup|Yest.|Вчера|
+langlookup|Week|Седмица|
+langlookup|Month|Месец|
+langlookup|Year|Година|
+langlookup|Gust/hr|Порив/в час|
+#
+langlookup|RAIN HISTORY|RAIN HISTORY|
+langlookup|day since last rain on|ден от последното преваляване|
+langlookup|days since last rain on|дни от последното преваляване|
+langlookup|rain day this month|дъждовен ден този месец|
+langlookup|rain days this month|дъждовни дни този месец|
+langlookup|rain day this year|дъждовен ден тази година|
+langlookup|rain days this year|дъждовни дни тази година|
+langlookup|total last year at this time|общо превалявания миналата година по това време|
+
+langlookup|TEMPERATURE HIGHS|Най-високи темпреатури|
+langlookup|HOT DAYS THIS MONTH|Горещи дни през този месец|
+langlookup|days|дни|
+langlookup|day|ден|
+langlookup|Warmest day|Най-топлия ден|
+langlookup|Warmest night|Най-топлата нощ|
+
+langlookup|TEMPERATURE LOWS|Най-ниски температури|
+langlookup|COLD DAYS THIS MONTH|Студени дни през месеца|
+langlookup|Coldest day|Най-студения ден|
+langlookup|Coldest night|Най-студената нощ|
+
+langlookup|BAROMETER HIGHS|МАКС. ст-ти на атм. налягане|
+langlookup|WIND CHILL LOWS|Усеща се като - най-ниски ст-ти|
+langlookup|EVAPOTRANSPIRATION|EVAPOTRANSPIRATION|
+langlookup|SOLAR HIGHS|SOLAR HIGHS|
+langlookup|UV HIGHS|UV HIGHS|
+langlookup|Wind Data|Данни за вятъра|
+langlookup|WIND GUST HIGHS|Най-силни пориви|
+langlookup|WIND GUST AVERAGE HIGHS|Най-силни усреднени пориви|
+langlookup|WIND RUN|Сила на вятъра|
+# --- end of new trends-inc.php translations
+#
+# include-wxhistory.php translations
+#
+langlookup|Daily / Monthly Weather History From This Station|Daily / Monthly Weather History From This Station|
+langlookup|Select a report and click submit|Изберете справка и потвърдете|
+langlookup|submit|потвърди|
+langlookup|Daily Report for the month of|Дневни справки за месеца|
+langlookup|Average and Extremes|Усреднени и крайни стойности|
+langlookup|Average and Extremes for Month of|Усреднени и крайни стойности за месеца|
+langlookup|up to day|до днес|
+langlookup|Click here to toggle the 24 Hour Graph of this day|Натиснете тук за 24 часова графика за деня|
+langlookup|Day, Sunshine Hours, ET, Max Solar, UV|Ден, Слънч. часове, ET, Max Solar, UV|
+langlookup|Daily Rain Totals|Превалявания Общо|
+langlookup|Average temperature|Усреднена температура|
+langlookup|Average humidity|Усреднена влажност|
+langlookup|Average dewpoint|Усреднена точка на оросяване|
+langlookup|Average barometer|Усреднена атм. налягане|
+langlookup|Average windspeed|Усреднена скорост на вятъра|
+langlookup|Average gustspeed|Усреднена скорост на поривите|
+langlookup|Average direction|Усреднена посока навятъра|
+langlookup|Rainfall for month|Месечни валежи|
+langlookup|Rainfall for year|Годишни Валежи|
+langlookup|Maximum rain per minute|Max. к-во дъжд за мин.|
+langlookup|Maximum temperature|Max. температура|
+langlookup|Minimum temperature|Min. температура|
+langlookup|Maximum humidity|Max. влажност|
+langlookup|Minimum humidity|Min. влажност|
+langlookup|Maximum pressure|Max. атм. налягане|
+langlookup|Minimum pressure|Min. атм. налягане|
+langlookup|Maximum windspeed|Max скорост на вятъра|
+langlookup|Maximum gust speed|Maxскорост на поривите|
+langlookup|Maximum heat index|Max индекс на топлината|
+langlookup|Sunshine hours month to date|Слънчеви часове през месеца|
+langlookup|Sunshine hours year to date|Слънчеви часове през годината|
+langlookup|hrs|часове|
+#
+# --- end of include-wxhistory.php translations
+#
+# Conditions (%Currentsolardescription% and clientraw[49])
+#
+conditions|begin||
+langlookup|Dry|Сухо|
+langlookup|Light rain|Слаби превалявания|
+langlookup|Moderate drizzle|Ръмеж|
+langlookup|Moderate rain|Умерени превалявания|
+langlookup|Heavy rain|Силни превалявания|
+langlookup|Stopped raining|Преустановен валеж|
+# conditions time
+langlookup|Dawn|Изгрев|
+langlookup|Dusk|Залез|
+langlookup|Night time|Нощ|
+# Clouds (sky)
+langlookup|Clear|Тихо и ясно|
+langlookup|Sunny|Слънчево|
+langlookup|Clear skies|Ясно време|
+langlookup|Mostly sunny|Предимно слънчево|
+langlookup|A few clouds|Незначителна облачност|
+langlookup|Sc|Разпокъсана облачност|
+langlookup|Scattered clouds|Разпокъсана облачност|
+langlookup|Partly cloudy|Частична облачност|
+langlookup|Mostly cloudy|Преобладаваща облачност|
+langlookup|Cloudy with clear p|Преобладаващо облачно с разкъсвания|
+langlookup|Cloudy with clear patches|Преобладаващо облачно с разкъсвания|
+langlookup|Overcast|Облачно|
+conditions|end||
+#

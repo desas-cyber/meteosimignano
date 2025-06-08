@@ -1,0 +1,197 @@
+# Language file for plaintext-parser.php program
+# Version 1.11 - 26-Sep-2007
+# translation - Spanish by Aerolugo, Luis Gil  http://meteo.aerolugo.com/
+#
+lang|Cloudy in the morning|Nuboso por la mañana|
+lang| becoming | cambiando a |
+lang|Dense overcast|Cubierto|
+lang|dense overcast|cubierto|
+lang| then | después |
+lang| the | la |
+lang|afternoon|tarde|
+lang|Mostly cloudy|Muy nuboso|
+lang|mostly cloudy|muy nuboso|
+lang|cloudy|nuboso|
+lang|Patchy|Nubes y claros, |
+lang|slight|suave|
+lang|light|ligera|
+lang|fog|niebla|
+lang|Partly|Parcialmente|
+lang|UV index up to|Indice ultravioleta:|
+lang|UV index more than|Indice ultravioleta mayor de|
+lang|down to|hasta|
+lang| to | o |
+lang|gusting|racheado|
+lang|Precipitation mostly|Precipitación|
+lang|mostly|bastante|
+lang|after|después de|
+lang|midnight|medianoche|
+lang|morning|mañana|
+lang|Mostly|Bastante|
+lang|partly|parcialmente|
+lang|Light|Ligera|
+lang|moderate|moderada|
+lang|evening|tarde|
+lang|Dense|Denso|
+lang|overcast|cubierto|
+lang|Moderate|Moderada|
+lang|dense|denso|
+lang|sunny|soleado|
+lang|Rain likely|Probabilidad de lluvia|
+lang|rain likely|probabilidad de lluvia|
+lang|Snow likely|Probabilidad de nieve|
+lang|rain|lluvia|
+lang|around|alrededor de|
+lang|slight|ligera|
+lang|A | |
+lang|chance of|Posibilidad de|
+lang|High|Máxima:|
+lang|Low|Mínima:|
+lang|but|pero|
+lang|temperatures falling|temperaturas en descenso|
+lang|temperatures rising|temperaturas en ascenso|
+lang| light | ligera |
+lang| in | por |
+lang|Wind chill|Sensación de frío por viento|
+lang|Wind|Viento del|
+lang|northeast|noreste|
+lang|northwest|noroeste|
+lang|southeast|sureste|
+lang|southwest|suroeste|
+lang|north-|norte-|
+lang|east-|este-|
+lang|south-|sur-|
+lang|west-|oeste-|
+lang| north | norte |
+lang| east | este |
+lang| south | sur |
+lang| west | oeste |
+lang|down |por debajo |
+lang| or | o |
+lang|around|alrededor de|
+lang|kph|km/h|
+lang|Chance of precipitation|Posibilidad de precipitación|
+lang|percent|%|
+lang| evening | tarde |
+lang|near|cerca|
+lang|less than|menos de|
+lang|snow|nieve|
+lang|Precipitation (liquid equivalent)|Precipitación (equivalente líquido)|
+lang|between|entre|
+lang| and | y |
+lang|Precipitation|Precipitación|
+lang|No snow accumulation expected|No se espera acumulación de nieve|
+lang|accumulation expected|espesor previsible|
+lang|Little|Poco|
+lang| no | no |
+lang|snow |nieve |
+lang|Snow accumulation|Acumulación de nieve |
+lang|about|sobre|
+lang| one | un |
+lang|showery of intermittent|chubascos intermitentes|
+lang|No |No |
+lang|Fair |Poco nuboso |
+lang|fair |poco nuboso |
+lang|Cloudy|Nuboso|
+lang|calm|calma|
+lang|Clear|Despejado|
+lang|clear|despejado|
+lang|Sunny|Soleado|
+lang| ice | hielo |
+lang|freezing|helada|
+lang|sleet|aguanieve|
+lang|a mix of|mezcla de|
+lang|if any|si hay|
+lang|on ground|en el terreno|
+lang|patchy|nubes y claros, |
+lang|Thunderstorms likely, some possibly severe|Posiblemente tormentas, alguna puede ser intensa|
+lang|Some thunder possible.|Posible aparato eléctrico.|
+lang|Some thunderstorms likely|Probabilidad de tormentas|
+lang|of an inch|de pulgada|
+lang|half an inch|media pulgada|
+lang|a quarter|un cuarto|
+lang|a tenth|un décimo|
+lang| inch| pulgada|
+#
+# Translation of headings, periods and short conditions statements
+# headings
+#
+langlookup|Aerisweather Forecast for:|Pronóstico Aerisweather para:|
+langlookup|Issued by:|Generado por:|					
+langlookup|Updated:|Actualizado:|					
+langlookup|High:|Máx:|
+langlookup|Low:|Mín:|
+#
+langlookup|Sunday|Domingo|
+langlookup|Monday|Lunes|
+langlookup|Tuesday|Martes|
+langlookup|Wednesday|Miércoles|
+langlookup|Thursday|Jueves|
+langlookup|Friday|Viernes|
+langlookup|Saturday|Sábado|
+langlookup|Sunday night|Domingo noche|
+langlookup|Monday night|Lunes noche|
+langlookup|Tuesday night|Martes noche|
+langlookup|Wednesday night|Miércoles noche|
+langlookup|Thursday night|Jueves noche|
+langlookup|Friday night|Viernes noche|
+langlookup|Saturday night|Sábado noche|
+langlookup|Today|Hoy|
+langlookup|Tonight|Esta noche|
+langlookup|This afternoon|Esta tarde|
+langlookup|Rest of tonight|Resto de&nbsp;la&nbsp;noche|
+# UV Index words
+langlookup|Low|Bajo|
+langlookup|Medium|Medio|
+langlookup|High|Alto|
+langlookup|Very&nbsp;High|Muy&nbsp;alto|
+langlookup|Extreme|Extremo|
+# Summary conditions lookup
+langlookup|Severe storm|Tormenta severa
+langlookup|Showers storms|Chubascos
+langlookup|Thunder storm|Tormenta eléctrica
+langlookup|Rain Sleet|Aguanieve
+langlookup|FrzgRn Snow|Lluvia helada/nieve
+langlookup|Rain and Snow|Lluvia y Nieve
+langlookup|Freezing Rain|Lluvia helada
+langlookup|Rain likely|Probáblemente lluvioso
+langlookup|Chance rain|Posibilidad de lluvia
+langlookup|Mix|Mezcla
+langlookup|Sleet|Aguanieve
+langlookup|Snow|Nieve
+langlookup|Fog a.m.|Nieblas matinales
+langlookup|Fog late|Nieblas nocturnas
+langlookup|Fog|Niebla
+langlookup|Very Cold|Mucho frío
+langlookup|Very Hot|Mucho calor
+langlookup|Partly Cloudy|Parcialmente nuboso
+langlookup|Mostly Cloudy|Muy nuboso
+langlookup|Cloudy|Nuboso
+langlookup|Overcast|Cubierto
+langlookup|Partly Sunny|Poco nuboso
+langlookup|Mostly Sunny|Muy poco nuboso
+langlookup|Mostly Clear|Prácticamente despejado
+langlookup|Sunny|Soleado
+langlookup|Clear|Despejado
+langlookup|Fair|Poco nuboso
+langlookup|Variable Clouds|Nubosidad variable
+# translation for cardinal wind directions must be in North-East-South-West order
+langlookup|NESW|NESO|
+# translation for Beaufort Wind Force
+langlookup|Calm|Calma|
+langlookup|Light air|Ventolina|
+langlookup|Light breeze|Flojito|
+langlookup|Gentle breeze|Flojo|
+langlookup|Moderate breeze|Bonancible|
+langlookup|Fresh breeze|Fresquito|
+langlookup|Strong breeze|Fresco|
+langlookup|Near gale|Frescachón|
+langlookup|Gale|Temporal|
+langlookup|Strong gale|Temporal fuerte|
+langlookup|Storm|Temporal duro|
+langlookup|Violent storm|Temporal muy duro|
+langlookup|Hurricane|Temporal huracanado|
+#
+# --- end of language file ------
+
+

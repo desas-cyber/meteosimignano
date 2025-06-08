@@ -1,0 +1,726 @@
+# Italian language plugin for Carterlake/WD/AJAX/PHP template set
+# Ken True - http://saratoga-weather.org/template/
+# Italian translation by Alessandro (Meteocarmignano.it) at http://www.meteocarmignano.it/
+#
+# Version 1.00 - 24-Apr-2008 - initial release
+# Version 1.10 - 02-May-2009 - Support Cloudbase 2.xx Script translation
+# Version 1.20 - 20-Jul-2009 - Support Wxglobal Script translation
+# Version 1.30 - 10-Nov-2010 - Support Ajax Dashboard ver. 6.xx Script translation
+# Version 1.40 - 20-Mar-2011 - Support Hilowavg 3.x Script translation
+# Version 1.50 - 14-Sep-2011 - Support WU-forecast.php translations
+# Version 1.60 - 12-Sep-2012 - Support wxquake/quake-json.php translations
+#
+# English and Western European use ISO-8859-1 character sets
+#
+charset|ISO-8859-1|
+#
+# Greek should use ISO-8859-7 character set for compatibility with plaintext-parser-lang-el.txt
+#
+#charset|ISO-8859-7|
+#
+# Note:  the langlookup entries are for EXACT replacements including spaces and capitalization.
+#  
+# format is 'langlookup|<english-to-find>|<replacement-string>|
+#
+# Don't change the first field <english-to-find>  because it matches what is in the 
+# langtrans/langtransstr() calls embedded in various scripts in the template set.  
+# Only change the second field <replacement-string> for your language.
+#
+# You can add new langlookup entries to handle additions to your website.  Be sure to add the
+# same langlookup entry to the other language-LL.txt files for all the languages you support on your site.
+#
+# ajax-dashboard and ajax-gizmo language strings
+#
+langlookup|Enable JavaScript for live updates|Abilitate JavaScript per gli aggiornamenti Live|
+langlookup|Updated|Dati ricevuti|
+langlookup|updated|aggiornato|
+langlookup|Updates paused|Aggiornamenti in Pausa|
+langlookup|sec ago|sec fa|
+langlookup|next update at|prossimo aggiornamento alle|
+# thermometer language
+langlookup|Temperature|Temperatura|
+langlookup|Currently|Attualmente|
+langlookup|LOCALLY|LOCALMENTE|
+langlookup|Max|Max|
+langlookup|Min|Min|
+# rising/falling arrows text
+langlookup|Warmer|Più caldo|
+langlookup|Colder|Più fresco|
+langlookup|Rising|Aumento|
+langlookup|Rising rapidly|Rapido aumento|
+langlookup|Steady|Stabile|
+langlookup|Falling|Diminuzione|
+langlookup|Falling rapidly|Rapida diminuzione|
+langlookup|Increased|Aumento|
+langlookup|Decreased|Diminuzione|
+langlookup|than last hour|rispetto ad un ora fa|
+langlookup|since last hour|rispetto ad un ora fa|
+langlookup|than yesterday at this time|rispetto a ieri a quest'ora|
+#
+# New Ajax-dashboard ver. 4.xx or higher
+#
+langlookup|METRIC|METRICO|
+langlookup|IMPERIAL|INGLESE|
+langlookup|Currently Outside|Adesso Fuori|
+langlookup|Current Conditions|Condizioni Attuali|
+langlookup|Feels like|Percepita|
+langlookup|24-hr difference|Differenza 24h|
+langlookup|Outside Now|Adesso fuori|
+langlookup|Rec* High|Sta* Max|
+langlookup|Rec* Low|Sta* Min|
+langlookup|Today|Oggi|
+langlookup|Yesterday|Ieri|
+langlookup|High:|Max:|
+langlookup|Low:|Min:|
+langlookup|Wind from|Vento da|
+langlookup|Gust|Raffica|
+langlookup|60-Min Avg|Media 60-Min|
+langlookup|120-Min Avg|Media 120-Min|
+langlookup|Max Gust|Raffica Max|
+langlookup|This Month|questo mese|
+langlookup|Liquid Precipitation|Precipitazioni|
+langlookup|Solar Radiation|Radiazione Solare|
+langlookup|Humidity|Umidit&agrave;|
+langlookup|Dew Point|P.to Rugiada|
+langlookup|Humidity/Dew Point|Umidit&agrave;/P.to Rugiada|
+langlookup|Support this Site!|Supporta questo Sito!|
+langlookup|Barometer|Barometro|
+langlookup|Baro Trend|Tendenza|
+langlookup|Wind|Vento|
+langlookup|Gusting to|Raffiche a|
+langlookup|Gusting To|Raffiche a|
+langlookup|YTD Avg Temp|Media Temp anno|
+langlookup|In Last Hour|Ult. Ora|
+langlookup|High Dew|Max P.to|
+langlookup|Low Dew|Min P.to|
+langlookup|Point|Rugiada|
+langlookup|Diff from Avg|Diff. dalla Media|
+langlookup|Last YTD Rain|Pioggia Anno Prec.|
+langlookup|Last Rain|Ult. Pioggia|
+langlookup|Time/Date|Ora/Data|
+langlookup|days in|giorni in|
+langlookup|Rain|Pioggia|
+langlookup|Forecast|Previsioni|
+langlookup|Outlook|Previsioni|
+langlookup|Rain Today|Pioggia odierna|
+langlookup|Rain Rate|Accumulo|
+langlookup|Rain Season|Stagionale|
+langlookup|Last<br/>Rain|Ultima<br/>Pioggia|
+langlookup|Last 7 Days|Ult. 7 Giorni|
+langlookup|Rain Days|GG. Pioggia|
+langlookup|Rain Yesterday|Pioggia ieri|
+langlookup|Storm Rain|Storm rain|
+langlookup|Season Total|Stagionale|
+langlookup|day since last rain|giorno dall'ultima pioggia|
+langlookup|days since last rain|giorni dall'ultima pioggia|
+langlookup|rain day in|giorno piovoso in|
+langlookup|rain days in|giorni piovosi in|
+langlookup|Snow|Snow|
+langlookup|Snow Today|Snow Today|
+langlookup|Snow Yesterday|Snow Yesterday|
+langlookup|Snow Depth|Snow Depth|
+langlookup|snow day in|snow day in|
+langlookup|snow days in|snow days in|
+langlookup|1-Hr Trend|Trend 1 ora|
+langlookup|3-Hr Trend|Trend 3 ore|
+langlookup|Almanac|Almanacco|
+langlookup|Lightning Strikes|Fulminazioni|
+langlookup|Last|Ultimo|
+langlookup|Strike|Fulmine|
+langlookup|Last Bearing|Ult. Posizione|
+langlookup|Last Distance|Ult. Distanza|
+langlookup|Last Min|Ult. Min.|
+langlookup|Last 5 Mins|Ult. 5 Min.|
+langlookup|Last 30 Mins|Ult. 30 Min.|
+langlookup|Last 60 Mins|Ult. 60 Min.|
+langlookup|Last 12 Hrs|Ult. 12 Ore|
+langlookup|to Date|fino oggi|
+langlookup|Snow|Neve|
+langlookup|Snow Depth|Prof.t&agrave; Neve|
+langlookup|Sunrise is at|Alba alle|
+langlookup|Solar Noon|Massimo alle|
+langlookup|Sunset is at|Tramonto alle|
+langlookup|Daytime Records|Record Giorno (06/18)|
+langlookup|Nitetime Records|Record Notte (18/06)|
+langlookup|Station All Time Records|Record Stazione|
+langlookup|Fire Risk|Rischio Incendio|
+langlookup|Wind Chill|Temperatura Vento|
+langlookup|Sun&nbsp;|Sole|
+langlookup|Click here for full Forecast|Clicca qui per maggiori dettagli previsionali|
+langlookup|* Records from this Station Since&nbsp;|* Record di questa stazione dal&nbsp;|
+langlookup|Your donation helps support<br />this site|La tua donazione<br />sosterr&agrave; i costi del portale|
+langlookup|Minutes|Minuti|
+langlookup|High Today|Max Oggi|
+langlookup|Low Today|Min Oggi|
+langlookup|HIGHS|MAX|
+langlookup|LOWS|MIN|
+langlookup|High|Max|
+langlookup|Low|Min|
+langlookup|1Hr Average|Media Oraria|
+langlookup|Wind Run|Percorso Vento|
+langlookup|Rec* High|Rec* Max|
+langlookup|Rec* Low|Rec* Min|
+langlookup|Sun/Moon|Sole/Luna|
+langlookup|Sunrise|Alba|
+langlookup|Sunset|Tramonto|
+langlookup|Rises|Levata|
+langlookup|Sets|Tramonto|
+langlookup|Moonrise|Levata Luna|
+langlookup|Moonset|Tramonto Luna|
+langlookup|Illuminated|Illuminazione|
+langlookup|Air Density|Densit&agrave; Aria|
+langlookup|Cloud Level|Alt. Nuvole|
+langlookup|Solar Noon|Zenith Solare|
+langlookup|Current Fire Weather Index|Indice Probabilit&agrave; Incendio|
+langlookup|Cooling Degree Days|Raffredd.to Gradi/gg|
+langlookup|Heating Degree Days|Riscald.to Gradi/gg|
+langlookup|Weather Forecast|Previsioni Meteo|
+langlookup|WXSIM Short Term Weather Forecast|Tendenza Meteo Prossimi Giorni|
+langlookup|WXSIM forecast:|Previsioni WXSIM:|
+langlookup|Last Week|Settimana|
+langlookup|forecast|previsione|
+#
+# UV Index words - note: leave &nbsp; where shown for proper lookup
+langlookup|None|- - -|
+langlookup|Low|Min|
+langlookup|Medium|Medio|
+langlookup|High|Max|
+langlookup|Very&nbsp;High|Molto&nbsp;Alto|
+langlookup|Extreme|Estremo|
+#
+# Moon words
+#
+langlookup|New Moon|Luna Nuova|
+langlookup|Waxing Crescent|Crescente|
+langlookup|Waxing Crescent Moon|Luna Crescente|
+langlookup|First Quarter|Primo Quarto|
+langlookup|First Quarter Moon|Luna al Primo Quarto|
+langlookup|Waxing Gibbous|Gobba a Ponente|
+langlookup|Waxing Gibbous Moon|Luna Gobba a Ponente|
+langlookup|Full Moon|Luna Piena|
+langlookup|Waning Gibbous|Calante|
+langlookup|Waning Gibbous Moon|Luna Calante|
+langlookup|Last Quarter|Ultimo Quarto|
+langlookup|Last Quarter Moon|Luna all'ultimo quarto|
+langlookup|Waning Crescent|Gobba a Levante|
+langlookup|Waning Crescent Moon|Luna Gobba a Levante|
+#
+#
+# WU-Forecast.php replacement text
+#
+langlookup|Chance of precipitation|Possibilità di precipitazioni|
+#
+# Wxhilowavg3 Ver. 3.0
+#
+langlookup|Local Station History|Record Storici Stazione|
+langlookup|Monthly Station Records|Record Mensili Stazione|
+langlookup|Measurement|Misurazioni|
+langlookup|Month / MTD|Questo mese|
+langlookup|Year / YTD|Questo anno|
+langlookup|Station Record|Record Stazione|
+langlookup|Maximum|Max|
+langlookup|Minimum|Min|
+langlookup|Days|Giorni|
+langlookup|Average|Media|
+langlookup|Run|Percorso|
+langlookup|Avg Wind Speed|Media Vel. Vento|
+langlookup|Since|Dal|
+langlookup|Heat Index|Indice di Calore|
+langlookup|Rain|Pioggia|
+langlookup|High Temp|Max Temp|
+langlookup|Low Temp|Min Temp|
+langlookup|Avg Temp|Media Temp|
+langlookup|Avg Rain|Media Pioggia|
+langlookup|&nbsp;/&nbsp;Snow Melt| / Neve Fusa|
+langlookup|Rainfall|Pioggia|
+langlookup|or Melt|/Neve Fusa|
+langlookup|Days with Rain|Giorni con Pioggia|
+langlookup|Most 24hr Rain|Pioggia in 24h|
+langlookup|Snowfall|Neve|
+langlookup|Snow Totals|Neve Totale|
+langlookup|Days with Snow|Giorni con Neve|
+langlookup|Wind Speed|Vel. Vento|
+langlookup|Wind Gust|Raffiche|
+langlookup|Avg Wind Gust|Media Raffiche|
+langlookup|Average Gust|Media Raffiche|
+langlookup|Percent of Average|Media Percentuale|
+langlookup|&nbsp;Rain season: Jan 1st to Dec 31st| Stagione Piogge: 1&deg; Gen - 31 Dic|
+langlookup|&nbsp;Snow manually measured| Neve misurata manualmente|
+langlookup|&nbsp;Snow season July 1st to June 30th| Stagione neve: 1&deg; Novembre - 30 Aprile|
+langlookup|Average Reading|Media aritmetica|
+langlookup|Rec Year|Rec Anno|
+langlookup|Rec Season|Rec Stagione|
+langlookup|Season|Stagione|
+langlookup|Jan|Gen|
+langlookup|May&amp;|Mag|
+langlookup|Jun|Giu|
+langlookup|Jul|Lug|
+langlookup|Aug|Ago|
+langlookup|Sep|Set|
+langlookup|Oct|Ott|
+langlookup|Dec|Dic|
+#
+# footer.php
+#
+langlookup|Top|Inizio|
+langlookup|Contact Us|Contatti|
+langlookup|Bookmark Page|Aggiungi ai Preferiti|
+langlookup|Valid|Verifica|
+langlookup|Never base important decisions on this or any weather information obtained from the Internet|Non prendere mai decisioni importanti sulla base di questo o altri servizi meteo da internet|
+#
+# cloudbase.php
+#
+conditions|begin||
+# precipitation
+langlookup|Dry|Secco|
+langlookup|Drizzle|Pioviggine|
+langlookup|Light rain|Leggera pioviggine|
+langlookup|Moderate drizzle|Moderata pioviggine|
+langlookup|Moderate rain|Pioggia moderata|
+langlookup|Heavy rain|Pioggia forte|
+langlookup|Stopped raining|Pioggia terminata|
+langlookup|Recent rain|Pioggia recente|
+langlookup|Snowing|Neve|
+langlookup|Raining|Pioggia|
+langlookup|Thundershower|Rovescio temporalesco|
+langlookup|Thunderstorm|Temporale|
+langlookup|Heavy thunderstorm|Forte temporale|
+
+# conditions time
+langlookup|Dawn|Alba|
+langlookup|Dusk|Tramonto|
+langlookup|Night time|Notte|
+langlookup|Night|Notte|
+
+# Clouds (sky)
+langlookup|Fine weather|Fine weather|
+langlookup|Clear|Sereno|
+langlookup|Sunny|Soleggiato|
+langlookup|Clear skies|Cielo terso|
+langlookup|Mostly sunny|Prev. soleggiato|
+langlookup|A few clouds|Poche nubi|
+langlookup|Sc|Parz. nuvoloso|
+langlookup|Scattered clouds|Nubi sparse|
+langlookup|Scattered|Nubi sparse|
+langlookup|Partly cloudy|Parz. nuvoloso|
+langlookup|Mostly cloudy|Nuvoloso|
+langlookup|Cloudy with clear patches|Variabile|
+langlookup|Overcast|Coperto|
+langlookup|Misty|Foschia|
+langlookup|Fog|Nebbia|
+langlookup|Cloudbase|Altezza Nuvole|
+conditions|end||
+#
+# Metar condictions items
+#
+langlookup|Nearby METAR Reports|Report METAR|
+langlookup|NOT Current|DATI Obsoleti|
+langlookup|Clouds|Nuvole|
+langlookup|Mist, partly cloudy|Foschia, Parz. nuvoloso|
+langlookup|Patches of fog, partly cloudy|Banchi di nebbia, Parz. Nuvoloso|
+langlookup|Few clouds|Nubi sparse|
+langlookup|Mist, few clouds|Foschia, Nubi sparse|
+langlookup|Fog, partly cloudy|Nebbia, Parz. nuvoloso|
+langlookup|Fog, overcast|Nebbia, Coperto|
+langlookup|Mist, mostly cloudy|Foschia, Molto nuvoloso|
+langlookup|Rain, mostly cloudy|Pioggia, Molto nuvoloso|
+langlookup|Mist, overcast|Foschia, Coperto|
+langlookup|Light rain, mist, mostly cloudy|Pioggia debole, foschia, Molto nuvoloso|
+langlookup|Thunderstorm rain, few clouds|Temporale, Poche nubi|
+langlookup|Freezing fog, overcast|Nebbia congelantesi, Coperto|
+langlookup|calm|calmo|
+langlookup|varies|Variabile|
+langlookup|greater than|superiore a|
+#
+# menubar.php and flyout-menu.xml entries
+#
+# Note: if using the flyout-menu, you can have individual language versions as
+# flyout-menu-LL.xml, flyout-menu-test-LL.xml using full native language which won't be translated.
+#
+# these settings below are for the English menubar.php $html section, and flyout-menu.xml/flyout-menu-test.xml
+#  which should be in English only.
+#
+langlookup|Navigation|Nav Menu|
+langlookup|External Links|Links Esterni|
+langlookup|Home|Home|
+langlookup|Forecast|Previsione|
+langlookup|WXSIM Forecast|Previsioni WXSIM|
+langlookup|Radar|Radar|
+langlookup|Advisories|Avvisi|
+langlookup|Live Weather|Live Weather|
+langlookup|Live Mesomap|Live MesoMap|
+langlookup|Daily Stats|Statistiche giornaliere|
+langlookup|Graphs|Grafici|
+langlookup|Station Data by Month|Report mensili|
+langlookup|Astronomy|Effemeridi|
+langlookup|Links|Links|
+langlookup|About|Informazioni|
+langlookup|About Us|Informazioni|
+langlookup|Live|Live|
+langlookup|Weather-Display Live|Weather-Display Live|
+langlookup|Local Radar|Radar locali|
+langlookup|Mesomap|MesoMap|
+langlookup|MesoMap Live|MesoMap Live|
+langlookup|Forecast &amp; Advisories|Previsioni &amp; Avvisi|
+langlookup|Forecast details|Dettagli previsionali|
+langlookup|WXSIM Forecast details|Dettagli previsionali WXSIM|
+langlookup|Weather Trends|Statistiche|
+langlookup|Station Graphs|Grafici|
+langlookup|Station Monthly Reports|Report mensili|
+langlookup|Sun/Moon Almanac|Almanacco Sole/Luna|
+langlookup|Earthquake activity|Attività sismica|
+langlookup|Website Map|Mappa del Sito|
+#
+# include-style-switcher.php items
+#
+langlookup|Style Options|Layout|
+langlookup|Style|Schema Colori|
+langlookup|Widescreen|Widescreen|
+langlookup|On|On|
+langlookup|Off|Off|
+langlookup|Set|Set|
+langlookup|Language|Lingua|
+# Colors of templates for style-switcher
+langlookup|Black|Nero|
+langlookup|Blue|Blu|
+langlookup|Dark|Scuro|
+langlookup|Fall|Autunno|
+langlookup|Green|Verde|
+langlookup|Ice Tea|Ice Tea|
+langlookup|Mocha|Mokka|
+langlookup|Orange|Arancio|
+langlookup|Pastel|Pastello|
+langlookup|Purple|Lilla|
+langlookup|Red|Rosso|
+langlookup|Salmon|Salmone|
+langlookup|Silver|Argento|
+langlookup|Spring|Primavera|
+langlookup|Taupe|Beige|
+langlookup|Teal|Teal|
+#
+# wxastronomy.php items (solar/lunar words are specified above)
+#
+langlookup|Daylight|Ore di Luce|
+langlookup|Vernal Equinox|Equinozio di Primavera|
+langlookup|Start of Spring|Inizio della primavera|
+langlookup|Summer Solstice|Solstizio d'estate|
+langlookup|Start of Summer|Inizio dell' estate|
+langlookup|Autumn Equinox|Equinozio d'autunno|
+langlookup|Start of Fall|Inizio dell'autunno|
+langlookup|Winter Solstice|Solstizio d'inverno|
+langlookup|Start of Winter|Inizio dell'inverno|
+#
+# wxgraphs.php items
+#
+langlookup|Weather Statistics Graph|Statistiche Meteo Grafiche|
+langlookup|Updated Every Day At Midnight|Aggiornamento ogni giorno a Mezzanotte|
+langlookup|Statistics For The Last 7 Days|Statistiche Ultimi 7 Giorni|
+langlookup|Statistics For The Last 31 Days|Statistiche Ultimi 31 Giorni|
+langlookup|Statistics For The Last 12 Months|Statistiche Ultimi 12 Mesi|
+#
+# V1.01 - trends-inc.php native PHP conversion translation items
+#
+langlookup|Trends as of|Trends dal|
+langlookup|TIME|ORA|
+langlookup|TEMP|TEMP|
+langlookup|WIND SPEED|VENTO VEL.|
+langlookup|WIND GUST|VENTO RAFFICA|
+langlookup|WIND DIR|VENTO DIR.|
+langlookup|HUMIDITY|UMIDITA'|
+langlookup|PRESSURE|PRESSIONE|
+langlookup|RAIN|PIOGGIA|
+#
+langlookup|Current|Attuale|
+langlookup|CURRENT|ATTUALE|
+langlookup|Now|Attualmente|
+langlookup|Records and Stats|Statistiche e record|
+langlookup|5 minutes ago|5 minuti fa|
+langlookup|10 minutes ago|10 minuti fa|
+langlookup|15 minutes ago|15 minuti fa|
+langlookup|20 minutes ago|20 minuti fa|
+langlookup|30 minutes ago|30 minuti fa|
+langlookup|45 minutes ago|45 minuti fa|
+langlookup|60 minutes ago|60 minuti fa|
+langlookup|75 minutes ago|75 minuti fa|
+langlookup|90 minutes ago|90 minuti fa|
+langlookup|105 minutes ago|105 minuti fa|
+langlookup|120 minutes ago|120 minuti fa|
+# following three entries are used for <condition> on <date> and <condition> at <time>
+langlookup|on|il|
+langlookup|at|alle|
+langlookup|from|da| as in '14 mph from 315 °(NW)'
+#
+langlookup|last hour|ultima ora|
+langlookup|over last 7 days|durante gli ultimi 7gg.|
+langlookup|last month|mese scorso|
+#
+langlookup|Today|Oggi|
+langlookup|Yest.|Ieri|
+langlookup|Week|Settimana|
+langlookup|Month|Mese|
+langlookup|Year|Anno|
+langlookup|Gust/hr|Raffica/hr|
+#
+langlookup|RAIN HISTORY|RIEPILOGO PIOGGIA|
+langlookup|day since last rain on|giorno senza pioggia|
+langlookup|days since last rain on|giorni senza pioggia|
+langlookup|rain day this month|giorno piovoso questo mese|
+langlookup|rain days this month|giorni piovosi questo mese|
+langlookup|rain day this year|giorno piovoso quest'anno|
+langlookup|rain days this year|giorni piovosi quest'anno|
+langlookup|total last year at this time|totale un anno fa a quest'ora|
+
+langlookup|TEMPERATURE HIGHS|TEMPERATURE MAX|
+langlookup|HOT DAYS THIS MONTH|GIORNO PIU' CALDO DEL MESE|
+langlookup|days|giorni|
+langlookup|day|giorno|
+langlookup|Warmest day|Giorno più caldo|
+langlookup|Warmest night|Notte più calda|
+
+langlookup|TEMPERATURE LOWS|TEMPERATURE MIN|
+langlookup|COLD DAYS THIS MONTH|GIORNO PIU' FRESCO DEL MESE|
+langlookup|Coldest day|Giorno più fresco|
+langlookup|Coldest night|Notte più fresca|
+
+langlookup|BAROMETER HIGHS|ESTREMI BAROMETRICI|
+langlookup|WIND CHILL LOWS|WIND CHILL MIN|
+langlookup|EVAPOTRANSPIRATION|EVAPOTRSPIRAZIONE|
+langlookup|SOLAR HIGHS|RAD. SOLARE MAX|
+langlookup|UV HIGHS|INDICE UV MAX|
+langlookup|Wind Data|Dati Vento|
+langlookup|WIND GUST HIGHS|RAFFICA VENTO MAX|
+langlookup|WIND GUST AVERAGE HIGHS|RAFFICA VENTO MAX (MEDIA)|
+langlookup|WIND RUN|WIND RUN|
+# --- end of new trends-inc.php translations
+#
+# include-wxhistory.php translations
+#
+langlookup|Daily / Monthly Weather History From This Station|Report Giornaliero / Mensile della Stazione|
+langlookup|Select a report and click submit|Selezionare un report e fare clic su conferma|
+langlookup|submit|conferma|
+langlookup|Daily Report for the month of|Report giornaliero del mese di|
+langlookup|Average and Extremes|Medie ed Estremi|
+langlookup|Average and Extremes for Month of|Medie ed Estremi del mese di|
+langlookup|up to day|ad oggi|
+langlookup|Click here to toggle the 24 Hour Graph of this day|Cliccare quì per commutare il grafico giornaliero 24 ore|
+langlookup|Day, Sunshine Hours, ET, Max Solar, UV|Giorno, Ore di Luce, ET, Rad. Solare, Indice UV|
+langlookup|Daily Rain Totals|Giorni totali di Pioggia|
+langlookup|Average temperature|Temperatura media|
+langlookup|Average humidity|Umidita' media|
+langlookup|Average dewpoint|P.to Rugiata medio|
+langlookup|Average barometer|Pressione media|
+langlookup|Average Wind|Vento|
+langlookup|Average windspeed|Vel. Vento media|
+langlookup|Average gustspeed|Vel. Raffica media|
+langlookup|Average direction|Direz. Vento media|
+langlookup|Rainfall for month|Precipitazioni mensili|
+langlookup|Rainfall for year|Precipitazioniannuali|
+langlookup|Maximum rain per minute|Pioggia max. / minuto|
+langlookup|Maximum temperature|Temperatura massima|
+langlookup|Minimum temperature|Temperatura minima|
+langlookup|Maximum humidity|Umidita' massima|
+langlookup|Minimum humidity|Umidita' minima|
+langlookup|Maximum pressure|Pressione massima|
+langlookup|Minimum pressure|Pressione minima|
+langlookup|Maximum windspeed|Vel. vento massima|
+langlookup|Maximum gust speed|Raffica vento max|
+langlookup|Maximum heat index|Indice di calore max|
+langlookup|Sunshine hours month to date|Ore di sole mensili|
+langlookup|Sunshine hours year to date|Ore di sole annuali|
+langlookup|hrs|ore|
+#
+# --- end of include-wxhistory.php translations
+#
+# Conditions (%Currentsolardescription% and clientraw[49])
+#
+conditions|begin|inizio|
+langlookup|Dry|Secco|
+langlookup|Light rain|Pioviggine|
+langlookup|Moderate drizzle|Pioggia|
+langlookup|Moderate rain|Pioggia moderata|
+langlookup|Heavy rain|Pioggia intensa|
+langlookup|Recent rain|Pioggia recente|
+langlookup|Recente showers|Rovescio recente|
+langlookup|Partly cloudy  -  fog|Molto nuvoloso - Nebbia|
+langlookup|fog|Nebbia|
+langlookup|Stopped raining|Pioggia terminata|
+# conditions time
+langlookup|Dawn|Alba|
+langlookup|Dusk|Tramonto|
+langlookup|Day time|Giorno|
+langlookup|Night time|Notte|
+# Clouds (sky)
+langlookup|Clear|Sereno|
+langlookup|Sunny|Soleggiato|
+langlookup|Clear skies|Cielo sereno|
+langlookup|Mostly clear|Prev. sereno|
+langlookup|Mostly clear -  mist|Prevalentemente sereno - Foschia|
+langlookup|Mostly clear -  fog in the vicinity|Prevalentemente sereno - Nebbia nelle vicinanze|
+langlookup|Mostly clear -  freezing fog|Prevalentemente sereno - Nebbia congelantesi|
+langlookup|Mostly clear -  shallow fog|Prevalentemente sereno - Nebbia bassa|
+langlookup|Mostly clear -  partial fog|Prevalentemente sereno - Parz. nebbioso|
+langlookup|Mostly clear -  towering cumulus clouds observed|Prevalentemente sereno - Avvistate nubi temporalesche|
+langlookup|Mostly clear -  light with thunder in the vicinity|Prevalentemente sereno - Tuoni e Fulmini nelle vicinanze|
+langlookup|Mostly clear -  cumulonimbus clouds observed|Prevalentemente sereno - Avvistati cumulonembi|
+langlookup|Mostly clear -  towering cumulus clouds observed|Prevalentemente sereno - Avvistate nubi temporalesche accastellate|
+langlookup|A few clouds|Poco nuvoloso|
+langlookup|Sc|Nubi sparse|
+langlookup|Scattered clouds|Nubi sparse|
+langlookup|Windy|Ventoso|
+langlookup|Partly cloudy|Parz. nuvoloso|
+langlookup|Partly cloudy -  mist|Parzialmente nuvoloso - Foschia|
+langlookup|Partly cloudy -  light drizzle|Parzialmente nuvoloso - Leggera Pioviggine|
+langlookup|Partly cloudy -  drizzle|Parzialmente nuvoloso - Pioviggine|
+langlookup|Partly cloudy -  patches of fog|Parzialmente nuvoloso - Banchi di Nebbia|
+langlookup|Partly cloudy -  shallow fog|Parzialmente nuvoloso - Nebbia bassa|
+langlookup|Partly cloudy -  cumulonimbus clouds observed|Parzialmente nuvoloso - Avvistati cumulonembi|
+langlookup|Partly cloudy -  towering cumulus clouds observed|Parzialmente nuvoloso - Avvistate nubi temporalesche accastellate|
+langlookup|Partly cloudy -  thunder in the vicinity; cumulonimbus clouds observed|Parzialmente nuvoloso - Tuoni nelle vicinanze; Avvistati cumulonenbi|
+langlookup|Partly cloudy -  light rain with thunder; cumulonimbus clouds observed|Parzialmente nuvoloso - Pioggia leggera con tuoni; Avvistati cumulonembi|
+langlookup|Partly cloudy -  light rain|Parzialmente nuvoloso - Pioggia leggera|
+langlookup|Partly cloudy -  cumulonimbus clouds, towering cumulus clouds observed|Parzialmente nuvoloso - Avvistati cumulonembi e nubi temporalesche|
+langlookup|Partly cloudy -  light with thunder; cumulonimbus clouds observed|Parzialmente nuvoloso - Tuoni e fulmini; Avvistati cumulonembi|
+langlookup|Partly cloudy -  rain|Parzialmente nuvoloso - Pioggia|
+langlookup|Mostly cloudy -  snow|Molto nuvoloso - NEVE|
+langlookup|Mostly cloudy -  mist|Molto nuvoloso - Foschia|
+langlookup|Mostly cloudy -  drizzle|Molto nuvoloso - Pioviggine|
+langlookup|Mostly cloudy -  light drizzle|Molto nuvoloso - Leggera Pioviggine|
+langlookup|Mostly cloudy -  light drizzle, mist|Molto nuvoloso - Leggera Pioviggine, Foschia|
+langlookup|Mostly cloudy -  patches of fog|Molto nuvoloso - Banchi di nebbia|
+langlookup|Mostly cloudy -  fog|Molto nuvoloso - Nebbia|
+langlookup|Mostly cloudy -  freezing fog|Parzialmente nuvoloso - Nebbia congelantesi|
+langlookup|Mostly cloudy -  shallow fog|Molto nuvoloso - Nebbia bassa|
+langlookup|Mostly cloudy|Molto nuvoloso|
+langlookup|Mostly cloudy -  light rain; mist|Molto nuvoloso - Pioggia leggera; Foschia|
+langlookup|Mostly cloudy -  light rain|Molto nuvoloso - Pioggia leggera|
+langlookup|Mostly cloudy -  rain|Molto nuvoloso - Pioggia|
+langlookup|Mostly cloudy -  mist, drizzle|Molto nuvoloso - Foschia, Pioviggine|
+langlookup|Mostly cloudy -  rain; towering cumulus clouds observed|Molto nuvoloso - Pioggia; Avvistate nubi temporalesche|
+langlookup|Mostly cloudy -  rain; cumulonimbus clouds observed|Molto nuvoloso, - Pioggia; Avvistati cumulonembi|
+langlookup|Mostly cloudy -  rain; thunder in the vicinity; cumulonimbus clouds observed|Molto nuvoloso - Pioggia; Tuoni nelle vicinanze; Avvistati cumulonembi|
+langlookup|Mostly cloudy -  rain, mist|Molto nuvoloso - Pioggia, Foschia|
+langlookup|Mostly cloudy -  rain; mist|Molto nuvoloso - Pioggia; Foschia| 
+langlookup|Mostly cloudy -  cumulonimbus clouds observed|Molto nuvoloso - Avvistati cumulonembi|
+langlookup|Mostly cloudy -  towering cumulus clouds observed|Molto nuvoloso - Avvistate nubi temporalesche|
+langlookup|Mostly cloudy -  light rain; cumulonimbus clouds observed|Molto nuvoloso - Pioviggine; Avvistati cumulonembi|
+langlookup|Mostly cloudy -  light rain;towering cumulus clouds observed|Molto nuvoloso - Pioviggine; Avvistate nubi temporalesche|
+langlookup|Mostly cloudy -  light rain; towering cumulus clouds observed|Molto nuvoloso - Pioviggine; Avvistate nubi temporalesche|
+langlookup|Mostly cloudy -  cumulonimbus clouds, towering cumulus clouds observed|Molto nuvoloso - Avvistati cumulonembi e nubi temporalesche accastellate|
+langlookup|Mostly cloudy -  rain with thunder; cumulonimbus clouds observed|Molto nuvoloso - Temporale; Avvistati cumulonembi|
+langlookup|Mostly cloudy -  thunder; cumulonimbus clouds observed|Molto nuvoloso - Tuoni; Avvistati cumulonembi|
+langlookup|Mostly cloudy -  towering cumulus clouds observed|Molto nuvoloso - Avvistate nubi temporalesche accastellate|
+langlookup|Mostly cloudy -  squalls; towering cumulus clouds observed|Molto nuvoloso - Burrascoso; Avvistate nubi temporalesche accastellate|
+langlookup|Mostly cloudy -  thunder in the vicinity; cumulonimbus clouds, towering cumulus clouds observed|Molto nuovoloso  - Tuoni nelle vicinanze; Avvistati cumulonembi e nubi temporalesche|
+langlookup|Mostly cloudy -  light with thunder; cumulonimbus clouds observed|Molto nuvoloso - Tuoni e fulmini; Avvistati cumulonembi|
+langlookup|Mostly cloudy -  light with thunder; rain; cumulonimbus clouds observed|Molto nuvoloso - Tuoni e fulmini; Pioggia; Avvistati cumulonembi|
+langlookup|Mostly cloudy -  thunder in the vicinity; cumulonimbus clouds observed|Molto nuvoloso - Tuoni nelle vicinanze; Avvistati cumulonembi|
+langlookup|Mostly cloudy -  thunder in the vicinity; rain; cumulonimbus clouds observed|Molto nuvoloso - Tuoni nelle vicinanze; Pioggia; Avvistati cumulonembi|
+langlookup|Mostly cloudy -  thunder; rain; cumulonimbus clouds observed|Molto nuvoloso - Tuoni; Pioggia; Avvistati cumulonembi|
+langlookup|Cloudy with clear patches|Nuvoloso con schiarite|
+langlookup|--- freezing patches of fog|Nebbia a banchi congelantesi|
+langlookup|--- patches of fog|Banchi di nebbia|
+langlookup|--- mist|Foschia|
+langlookup|--- fog|Nebbia|
+langlookup|--- shallow fog|Nebbia bassa|
+langlookup|Overcast|Coperto|
+langlookup|Obscured -  fog|Oscuro - Nebbia|
+langlookup|Obscured -  freezing fog|Oscuro - Nebbia congelantesi|
+langlookup|Overcast -  snow|Coperto - NEVE|
+langlookup|Overcast -  fog|Coperto - Nebbia|
+langlookup|Overcast -  rain; mist|Coperto - Pioggia; Foschia|
+langlookup|Overcast -  mist|Coperto - Foschia|
+langlookup|Overcast -  light rain|Coperto - Pioggia leggera|
+langlookup|Overcast -  drizzle|Coperto - Pioviggine|
+langlookup|Overcast -  light drizzle|Coperto - Leggera Pioviggine|
+langlookup|Overcast -  light rain; mist|Coperto - Pioggia leggera; Foschia|
+langlookup|Overcast -  heavy rain; mist|Coperto - Pioggia forte; Foschia|
+langlookup|Overcast -  light rain; fog|Coperto - Pioggia leggera; Nebbia|
+langlookup|Overcast -  rain|Coperto - Pioggia|
+langlookup|Overcast -  mist; drizzle|Coperto - Foschia; Pioviggine|
+langlookup|Overcast -  drizzle; mist|Coperto - Pioviggine; Foschia|
+langlookup|Overcast -  drizzle, rain|Coperto - Pioviggine|
+langlookup|Overcast -  light drizzle; mist|Coperto - Leggera pioviggine; Foschia|
+langlookup|Overcast -  heavy drizzle; mist|Coperto - Intensa pioviggine; Foschia|
+langlookup|Overcast -  rain; cumulonimbus clouds observed|Coperto - Pioggia; Avvistati cumulonembi|
+langlookup|Overcast -  thunder; rain showers; cumulonimbus clouds observed|Coperto  - Tuoni; Rovesci di pioggia; Avvistati cumulonembi|
+langlookup|Overcast -  rain with thunder; mist; cumulonimbus clouds observed|Coperto  - Tuoni con pioggia; Foschia; Avvistati cumulonembi|
+langlookup|Overcast -  rain, drizzle; mist|Coperto - Pioggia / Pioviggine; Foschia|
+langlookup|Overcast -  rain; towering cumulus clouds observed|Coperto - Pioggia; Avvistate nubi temporalesche accastellate|
+langlookup|Sleet fall|Nevischio|
+langlookup|Overcast -  snow; mist|Coperto - Neve; Foschia|
+conditions|end||
+#
+# Donazioni
+#
+langlookup|If you find this site useful to you, please consider making a small donation to help offset my time and the routine expenses of operation of this website. Thanks for your kind support!|Se trovi questo sito utile, considera una piccola donazione. In questo modo non solo compenserai il tempo speso per la manutenzione ordinaria del portale ma darai anche un piccolo contributo per ammortizzare i costi del dominio ed i consumi elettrici della stazione. Grazie per il tuo gentile supporto!|
+#
+# Wxglobal
+#
+langlookup|Global Station Map|Mappa Globale Stazioni|
+langlookup|Home Page|Home Page|
+langlookup|Realtime display of weather conditions|Mostra condizioni meteo tempo reale|
+langlookup|Realtime display of conditions using WDL|Realtime display of conditions using WDL|
+langlookup|Mesomaps, Marine Buoys|Mesomaps, Marine Buoys|
+langlookup|Global Station Map of Affiliated Weather Networks|Global Station Map of Affiliated Weather Networks|
+langlookup|Nets|Reti|
+langlookup|Weather, Lightning, WebCam|Meteo, Fulminazioni, WebCam|
+langlookup|Weather, WebCam, Lightning|Meteo, WebCam, Fulminazioni|
+langlookup|Weather, Lightning|Meteo, Fulminazioni|
+langlookup|Weather, WebCam|Meteo, WebCam|
+langlookup|Weather|Meteo|
+langlookup|Enable clustering|Abilita Raggruppamenti|
+langlookup|Conditions not available|Condizioni non disponibili|
+langlookup|Temp|Temp|
+langlookup|Hum|Umid.|
+langlookup|DewPT|P.di Rugiada|
+langlookup|Baro|Baro|
+langlookup|About the Global Map|Informazioni Mappa Globale Stazioni|
+langlookup|Affiliated Regional Weather Networks|Affiliati Reti Meteo Regionali|
+langlookup|Global Station Map of Affiliated Weather Networks|Mappa Globale Stazioni Affiliate Reti Meteo Continentali|
+#
+# WU-forecast.php Icon forecast terms
+#
+langlookup|Chance flurries|Possibili rovesci di neve|
+langlookup|Chance rain|Possibilit&agrave; di pioggia|
+langlookup|Chance sleet|Possibile acquaneve|
+langlookup|Chance snow|Possibile neve|
+langlookup|Chance thunderstorms|Possibili temporali|
+langlookup|Clear|Sereno|
+langlookup|Cloudy|Molto nuvoloso|
+langlookup|Flurries|Rovesci di neve|
+langlookup|Fog|Nebbia|
+langlookup|Hazy|Hazy|
+langlookup|Mostly cloudy|Nuvoloso|
+langlookup|Partly cloudy|Parz. nuvoloso|
+langlookup|Mostly sunny|Prev. soleggiato|
+langlookup|Rain|Pioggia|
+langlookup|Sleet|Acquaneve|
+langlookup|Snow|Neve|
+langlookup|Sunny|Soleggiato|
+langlookup|Thunderstorms|Temporali|
+#
+# wxquake.php (quake-json.php) terms
+#
+langlookup|Update time|Aggiornato il|
+langlookup|of|di|
+langlookup|No earthquakes of magnitude|Nessun terremoto di magnitudine|
+langlookup|or greater within|o superiore entro|
+langlookup|reported in last 7 days|registrato negli ultimi 7 giorni|
+langlookup|Cluster - click to expand details|Cluster - clicca per maggiori dettagli|
+langlookup|Enable JavaScript to view the Google Map.|Abilita JavaScript per vedere la Google Map.|
+langlookup|Earthquakes in the past 7 days of magnitude|Terremoti negli ultimi 7 giorni di magnitudine|
+langlookup|Epicenter Near|Epicentro a|
+langlookup|Magnitude|Magnitudine|
+langlookup|Distance to Epicenter|Distanza da epicentro|
+langlookup|Distance to epicenter|Distanza da epicentro|
+langlookup|Local Time|Ora Locale|
+langlookup|Link|Link|
+langlookup|map|mappa|
+langlookup|Note: Click on column heading marked with|Nota: Clicca sul titolo della colonna contrassegnato da|
+langlookup|to sort column contents.|per ordinare i contenuti nella colonna.|
+langlookup|earthquakes found. Click on location or map links for more details from the <a href="http://earthquake.usgs.gov/earthquakes/map/">USGS</a>|terremoti trovati. Clicca sulla localit&agrave; nella mappa per maggiori dettagli da <a href="http://earthquake.usgs.gov/earthquakes/map/">USGS</a>|
+langlookup|Depth|Profondit&agrave;|
+langlookup|Map and data courtesy of|Dati e Mappa a cura di|
+langlookup|United States Geological Survey|Osservatorio Geologico degli Stati Uniti|
+langlookup|Earthquakes|Terremoti|
+#

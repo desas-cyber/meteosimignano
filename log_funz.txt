@@ -1,0 +1,4 @@
+[DEBUG] ❌ Errore getSolareMassimoGiornaliero: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'giorno_anno' in 'SELECT' (2025-06-07 21:33:51)
+[DEBUG] ❌ Errore getSolaregiornaliero: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'energia_totale_wh_m2' in 'SELECT' (2025-06-07 21:33:51)
+[DEBUG] ❌ Errore getSolareMassimoGiornaliero: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'giorno_anno' in 'SELECT' (2025-06-07 21:38:51)
+[DEBUG] ❌ Errore getSolaregiornaliero: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'giorno_anno' in 'WHERE' (2025-06-07 21:38:51)

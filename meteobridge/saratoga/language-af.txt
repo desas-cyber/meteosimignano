@@ -1,0 +1,364 @@
+# AFRIKAANS language plugin for Carterlake/WD/AJAX/PHP template set
+# Ken True - http://saratoga-weather.org/template/
+# Afrikaans text courtesy of http://www.namibiaweather.info/
+# Version 1.01 - 13-Oct-2008 - initial release
+# 
+# English and Western European use ISO-8859-1 character sets
+#
+charset|ISO-8859-1|
+#
+# Greek should use ISO-8859-7 character set for compatibility with plaintext-parser-lang-el.txt
+#
+#charset|ISO-8859-7|
+#
+# Note:  the langlookup entries are for EXACT replacements including spaces and capitalization.
+#  
+# format is 'langlookup|<english-to-find>|<replacement-string>|
+#
+# Don't change the first field <english-to-find>  because it matches what is in the 
+# langtrans/langtransstr() calls embedded in various scripts in the template set.  
+# Only change the second field <replacement-string> for your language.
+#
+# You can add new langlookup entries to handle additions to your website.  Be sure to add the
+# same langlookup entry to the other language-LL.txt files for all the languages you support on your site.
+#
+# ajax-dashboard and ajax-gizmo language strings
+#
+langlookup|Enable JavaScript for live updates|Aktiveer JavaScript vir live updates|
+langlookup|Updated|Opdateer|
+langlookup|updated|opdateer|
+langlookup|sec ago|sec. gelede|
+langlookup|next update at|volgende update|
+# thermometer language
+langlookup|Temperature|Temperatuur|
+langlookup|Currently|Huidige|
+langlookup|Max|Max|
+langlookup|Min|Min|
+# rising/falling arrows text
+langlookup|Warmer|Warmer|
+langlookup|Colder|Kouer|
+langlookup|Rising|Steigend|
+langlookup|Falling|Dalend|
+langlookup|Increased|Toenemend|
+langlookup|Decreased|Afnemend|
+langlookup|than last hour|afgelope uur|
+langlookup|since last hour|1 uur gelede|
+langlookup|than yesterday at this time|as gister op hierdie tyd|
+#
+langlookup|Feels like|Aanvoelbare-<br />temperatuur|
+langlookup|24-hr difference|24-uur verskil|
+langlookup|Today|Vandag|
+langlookup|Yesterday|Gister|
+langlookup|High:|Max:|
+langlookup|Low:|Min:|
+langlookup|Wind from|Wind van|
+langlookup|Gust|Windvlaag|
+langlookup|Gust Month|Windvlaag hierdie maand|
+langlookup|UV Index|UV Index|
+langlookup|UV Index Forecast|UV Index voorspelling|
+langlookup|Solar Radiation|Sonbestraaling|
+langlookup|Summary|Obsomming|
+langlookup|Humidity|Humiditeit|
+langlookup|Dew Point|Doupunt|
+langlookup|Barometer|Druk|
+langlookup|Baro Trend|Druk tendens|
+langlookup|Wind|Wind|
+langlookup|Rain|Reën|
+langlookup|Outlook|Voorspelling|
+langlookup|Rain Today|Reën Vandag|
+langlookup|Rain Rate|Reën Intensiteit|
+langlookup|Rain Yesterday|Reën Gister|
+langlookup|Storm Rain|Storm Reën|
+langlookup|This Month|Hierdie maand|
+langlookup|Season Total|Jaar totaal|
+langlookup|day since last rain|dag van laaste Reën|
+langlookup|days since last rain|dae vanaf laaste Reën|
+langlookup|rain day in|reën dag in|
+langlookup|rain days in|reën dae in|
+langlookup|Snow|Sneeu|
+langlookup|Snow Today|Sneeu Vandag|
+langlookup|Snow Yesterday|Sneeu Gister|
+langlookup|Snow Depth|Sneeudiepte|
+langlookup|Winter Total|Winter totaal|
+langlookup|snow day in|Sneeudag in|
+langlookup|snow days in|Sneeudagen in|
+langlookup|Almanac|Almanak|
+langlookup|Sun&nbsp;|Son|
+langlookup|Moon|Maan|
+langlookup|Sunrise|Sons-opkoms|
+langlookup|Sunset|Sons-ondergang|
+langlookup|Moonrise|Maansopkoms|
+langlookup|Moonset|Maansondergang|
+langlookup|Illuminated|Verlig|
+langlookup|Weather Forecast|Weers voorspelling|
+langlookup|forecast|vooruitsig|
+#
+# UV Index words - note: leave &nbsp; where shown for proper lookup
+langlookup|None|Geen|
+langlookup|Low|Laag|
+langlookup|Medium|Gemiddeld|
+langlookup|High|Hoog|
+langlookup|Very&nbsp;High|Baie&nbsp;Hoog|
+langlookup|Extreme|Ekstreem|
+#
+# Moon words
+#
+langlookup|New Moon|Donker maan|
+langlookup|Waxing Crescent|Groieende maan|
+langlookup|Waxing Crescent Moon|Groieende maan|
+langlookup|First Quarter|Eerste kwartier|
+langlookup|First Quarter Moon|Eerste kwartier|
+langlookup|Waxing Gibbous|Groieende maan|
+langlookup|Waxing Gibbous Moon|Groieende maan|
+langlookup|Full Moon|Volle maan|
+langlookup|Waning Gibbous|Afnemende maan|
+langlookup|Waning Gibbous Moon|Afnemende maan|
+langlookup|Last Quarter|Laatste kwartier|
+langlookup|Last Quarter Moon|Laatste kwartier|
+langlookup|Waning Crescent|Afnemende maan|
+langlookup|Waning Crescent Moon|Afnemende maan|
+#
+#
+# WU-Forecast.php replacement text
+#
+langlookup|Chance of precipitation|Kans op neerslag|
+#
+# footer.php
+#
+langlookup|Top|Top|
+langlookup|Contact Us|Kontak Ons|
+langlookup|Bookmark Page|Boekmerk bladsy|
+langlookup|Valid|Valid|
+langlookup|Never base important decisions on this or any weather information obtained from the Internet|Baseer nooit belangrike beslissinge op hierdie of enige ander weergegewens verkry via Internet.|
+#
+# menubar.php and flyout-menu.xml entries
+#
+# Note: if using the flyout-menu, you can have individual language versions as
+# flyout-menu-LL.xml, flyout-menu-test-LL.xml using full native language which won't be translated.
+#
+# these settings below are for the English menubar.php $html section, and flyout-menu.xml/flyout-menu-test.xml
+#  which should be in English only.
+#
+langlookup|Navigation|Navigeer|
+langlookup|External Links|Eksterne skakel|
+langlookup|Home|Tuiste|
+langlookup|Forecast|Voorspelling|
+langlookup|WXSIM Forecast|WXSIM Voorspelling|
+langlookup|Radar|Radaar|
+langlookup|Windhoek Home|Windhoek Tuiste|
+langlookup|Oranjemund Home|Oranjemund Tuiste|
+langlookup|Auas Mountains Home|Auas Berge Tuiste|
+langlookup|Other Stations|Ander stasies|
+langlookup|Advisories|Waarskuuwings|
+langlookup|Live Weather|Live Weer|
+langlookup|Live Mesomap|Live MesoMap|
+langlookup|Daily Stats|Daglikse statistieke|
+langlookup|Graphs|Grafieke|
+langlookup|Station Data by Month|Stasie data per maand|
+langlookup|Astronomy|Astronomie|
+langlookup|Links|Skakel|
+langlookup|About|Profiel|
+langlookup|About Us|Profiel|
+langlookup|Live|Live|
+langlookup|Weather-Display Live|Weather-Display Live|
+langlookup|Local Radar|Lokale Radaar|
+langlookup|Mesomap|MesoMap|
+langlookup|MesoMap Live|MesoMap Live|
+langlookup|Forecast &amp; Advisories|Voorspelling &amp; waarskuwings|
+langlookup|Forecast details|Voorspelling besonderhede|
+langlookup|WXSIM Forecast details|WXSIM Voorspelling besonderhede|
+langlookup|Weather Trends|Weer tendensie|
+langlookup|Station Graphs|Grafieke|
+langlookup|Station Monthly Reports|Stasie data per maand|
+langlookup|Sun/Moon Almanac|Son/maan almanak|
+langlookup|Earthquake activity|Aardbewinge|
+langlookup|Website Map|Webtuiste map|
+#
+# include-style-switcher.php items
+#
+langlookup|Style Options|Styl opsies|
+langlookup|Style|Styl|
+langlookup|Widescreen|Wye bladsy|
+langlookup|On|Aan|
+langlookup|Off|Af|
+langlookup|Set|Selekteer|
+langlookup|Language|Taal|
+# Colors of templates for style-switcher
+langlookup|Black|Swart|
+langlookup|Blue|Blou|
+langlookup|Dark|Donker|
+langlookup|Fall|Herfs|
+langlookup|Green|Groen|
+langlookup|Ice Tea|Ice tea|
+langlookup|Mocha|Mokka|
+langlookup|Orange|Oranje|
+langlookup|Pastel|Pastel|
+langlookup|Purple|Pers|
+langlookup|Red|Rooi|
+langlookup|Salmon|Salm|
+langlookup|Silver|silver|
+langlookup|Spring|Lente|
+langlookup|Taupe|Taupe|
+langlookup|Teal|Teal|
+#
+# wxastronomy.php items (solar/lunar words are specified above)
+#
+langlookup|Daylight|Daglig|
+langlookup|Vernal Equinox|Lentenagewening|
+langlookup|Start of Spring|Begin van lente|
+langlookup|Summer Solstice|Somer-sonstilstand |
+langlookup|Start of Summer|Begin van somer|
+langlookup|Autumn Equinox|Herfsnagewening |
+langlookup|Start of Fall|Begin van herfs|
+langlookup|Winter Solstice|Winter-sonstilstand |
+langlookup|Start of Winter|Begin van winter|
+#
+# wxgraphs.php items
+#
+langlookup|Weather Trend Graphs|Trend grafieke|
+langlookup|Last 24 Hours|Laatste 24 uur|
+langlookup|Last 72 Hours|Laatste 72 uur|
+langlookup|Month to Date|Afgelope 30 dae|
+langlookup|Alltime Records|Rekords van alle tye|
+langlookup|Records this year|Rekords hierdie jaar|
+#
+# V1.01 - trends-inc.php native PHP conversion translation items
+#
+langlookup|Trends as of|Tendensie|
+langlookup|TIME|TYD|
+langlookup|TEMP|TEMPER-<br/>ATUUR|
+langlookup|WIND SPEED|WIND-<br/>SPOED|
+langlookup|WIND GUST|VLAAG|
+langlookup|WIND DIR|WIND-<br/>RIGTING|
+langlookup|HUMIDITY|VOGTIG-<br/>HEID|
+langlookup|PRESSURE|LUG-<br/>DRUK|
+langlookup|RAIN|REËN|
+#
+langlookup|Current|Aktueel|
+langlookup|CURRENT|AKTUEEL|
+langlookup|Records and Stats|Rekords en Statistieke|
+langlookup|Now|Nu|
+langlookup|5 minutes ago|5 minute gelede|
+langlookup|10 minutes ago|10 minute gelede|
+langlookup|15 minutes ago|15 minute gelede|
+langlookup|20 minutes ago|20 minute gelede|
+langlookup|30 minutes ago|30 minute gelede|
+langlookup|45 minutes ago|45 minute gelede|
+langlookup|60 minutes ago|60 minute gelede|
+langlookup|75 minutes ago|75 minute gelede|
+langlookup|90 minutes ago|90 minute gelede|
+langlookup|105 minutes ago|105 minute gelede|
+langlookup|120 minutes ago|120 minute gelede|
+# following three entries are used for <condition> on <date> and <condition> at <time>
+langlookup|on|op|
+langlookup|at|om|
+langlookup|from|van| as in '14 mph from 315 °(NW)'
+#
+langlookup|last hour|laatste uur|
+langlookup|over last 7 days|oor laatste 7 dae|
+langlookup|last month|laatste maand|
+#
+langlookup|Today|Vandag|
+langlookup|Yest.|Gistere|
+langlookup|Week|Week|
+langlookup|Month|Maand|
+langlookup|Year|Jaar|
+langlookup|Gust/hr|Vlaag/uur|
+#
+langlookup|RAIN HISTORY|REËN GESKIEDENIS|
+langlookup|day since last rain on|dag vanaf laaste reën op|
+langlookup|days since last rain on|dage vanaf laaste reën op|
+langlookup|rain day this month|reën dag hierdie maand|
+langlookup|rain days this month|reëndae hierdie maand|
+langlookup|rain day this year|reëndag hierdie jaar|
+langlookup|rain days this year|reëndae hierdie jaar|
+langlookup|total last year at this time|totaal verlede jaar op huidige datum|
+
+langlookup|TEMPERATURE HIGHS|TEMPERATUUR MAKS.|
+langlookup|HOT DAYS THIS MONTH|WARM DAE HIERDIE JAAR|
+langlookup|days|dae|
+langlookup|day|dag|
+langlookup|Warmest day|Warmste dag|
+langlookup|Warmest night|Warmste nag|
+
+langlookup|TEMPERATURE LOWS|TEMPERATUR MIN.|
+langlookup|COLD DAYS THIS MONTH|KOUE DAE|
+langlookup|Coldest day|Koudste dag|
+langlookup|Coldest night|Koudste nag|
+
+langlookup|BAROMETER HIGHS|LUGDRUK MAKS.|
+langlookup|WIND CHILL LOWS|AANVOELBARETEMPERATUUR MIN.|
+langlookup|EVAPOTRANSPIRATION|EVAPOTRANSPIRASIE|
+langlookup|SOLAR HIGHS|MAKSIMUM SONENERGIE|
+langlookup|UV HIGHS|UV MAKSIMUM.|
+langlookup|Wind Data|Wind Data|
+langlookup|WIND GUST HIGHS|STERKSTE WINDVLAAG.|
+langlookup|WIND GUST AVERAGE HIGHS|STERKSTE GEMIDDELDE WINDVLAAG.|
+langlookup|WIND RUN|WINDAFSTAND|
+# --- end of new trends-inc.php translations
+#
+# include-wxhistory.php translations
+#
+langlookup|Daily / Monthly Weather History From This Station|Daglikse / Maandelikse Geskiedenis Van die Stasie|
+langlookup|Select a report and click submit|Selekteer een rapport en klik op stuur|
+langlookup|submit|stuur|
+langlookup|Daily Report for the month of|Daglikse Rapport vir die Maand van|
+langlookup|Average and Extremes|Gemiddelde en Ekstreme|
+langlookup|Average and Extremes for Month of|Gemiddelde en Ekstreme vir die Maand van|
+langlookup|up to day|tot vandag|
+langlookup|Click here to toggle the 24 Hour Graph of this day|Klik hier om te wissel na die 24-uur grafiek van hierdie dag|
+langlookup|Day, Sunshine Hours, ET, Max Solar, UV|Dag, Sonskyn uur, ET, Maks Sonenergie, UV|
+langlookup|Daily Rain Totals|Daglikse reën totale|
+langlookup|Average temperature|Gemiddelde temperatuur|
+langlookup|Average humidity|Gemiddelde vogtigheid|
+langlookup|Average dewpoint|Gemiddeld doupunt|
+langlookup|Average barometer|Gemiddelde lugdruk|
+langlookup|Average windspeed|Gemiddelde windspoed|
+langlookup|Average gustspeed|Gemiddelde windvlaag|
+langlookup|Average direction|Gemiddelde windrigting|
+langlookup|Rainfall for month|Reën hierdie maand|
+langlookup|Rainfall for year|Reën hierdie jaar|
+langlookup|Maximum rain per minute|Maksimum reën per minuut|
+langlookup|Maximum temperature|Maksimum temperatuur|
+langlookup|Minimum temperature|Minimum temperatuur|
+langlookup|Maximum humidity|Maksimum vogtigheid|
+langlookup|Minimum humidity|Minimum vogtigheid
+langlookup|Maximum pressure|Maksimum lugdruk|
+langlookup|Minimum pressure|Minimum lugdruk|
+langlookup|Maximum windspeed|Maksimum windspoed|
+langlookup|Maximum gust speed|Maksimum windvlaag|
+langlookup|Maximum heat index|Maksimum hitte-index|
+langlookup|Sunshine hours month to date|Aantal ure sonneskyn hierdie maand|
+langlookup|Sunshine hours year to date|Aantal ure sonneskyn hierdie jaar|
+langlookup|hrs|ure|
+#
+# --- end of include-wxhistory.php translations
+#
+# Conditions (%Currentsolardescription% and clientraw[49])
+#
+conditions|begin||
+langlookup|Dry|Droog|
+langlookup|Light rain|Ligte reën|
+langlookup|Moderate drizzle|Motregen|
+langlookup|Moderate rain|Reën|
+langlookup|Heavy rain|Sterk regen|
+langlookup|Stopped raining|Reën gestop|
+# conditions time
+langlookup|Dawn|Oggend|
+langlookup|Dusk|Aand|
+langlookup|Night time|Nag|
+# Clouds (sky)
+langlookup|Clear|Helder|
+langlookup|Sunny|Sonnig|
+langlookup|Clear skies|Helder|
+langlookup|Mostly sunny|Meestal sonnig|
+langlookup|A few clouds|Enkele wolke|
+langlookup|Sc|Enkele wolke|
+langlookup|Scattered clouds|Enkele wolke|
+langlookup|Partly cloudy|Gedeeltelik bewolk|
+langlookup|Mostly cloudy|Meestal bewolk|
+langlookup|Cloudy with clear p|Meestal bewolk|
+langlookup|Cloudy with clear patches|Meestal bewolk|
+langlookup|Overcast|Toegetrek|
+conditions|begin||
+#

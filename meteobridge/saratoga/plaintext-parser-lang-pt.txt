@@ -1,0 +1,203 @@
+# Language file for plaintext-parser.php program
+# Version 1.04 - 18Nov-2007
+# translation - Portuguese by Meteoabrantes, Hélder Silvano  http://meteoabrantes.no-ip.info/
+#
+lang|Cloudy in the morning|Nublado pela manhã|
+lang|showery or intermittent|de aguaceiros ou intermitente|
+lang|with just a few high thin clouds|com algumas nuvens altas|
+lang|Thunderstorms likely, some severe|Possibilidade de trovoadas, eventualmente severas|
+lang|risk of severe thunderstorms|risco de trovoadas severas|
+lang|possible tornados|eventualmente tornados|
+lang| becoming | mudando para |
+lang|Dense overcast|Encoberto|
+lang|dense overcast|encoberto|
+lang| then | havendo |
+lang| the | a |
+lang|afternoon|tarde|
+lang|Mostly cloudy|Muito nublado|
+lang|mostly cloudy|muito nublado|
+lang|cloudy|nublado|
+lang|Patchy|Nublado com abertas,|
+lang|slight|leve|
+lang|light|ligeiro|
+lang|fog|nevoeiro|
+lang|Partly|Parcialmente|
+lang|UV index up to|Índice UV Máximo:|
+lang|UV index more than|Índice UV maior de que|
+lang|down to|a baixar até|
+lang| to | a |
+lang|gusting|com rajadas|
+lang|Precipitation mostly|Precipitação: |
+lang|mostly||
+lang|after|depois da|
+lang|midnight|meia-noite|
+lang|morning|manhã|
+lang|Mostly|Sobretudo|
+lang|partly|parcialmente|
+lang|Light|Ligeiro|
+lang|moderate|moderado|
+lang|evening|tarde|
+lang|Dense|Denso|
+lang|overcast|encoberto|
+lang|Moderate|Moderado|
+lang|dense|denso|
+lang|sunny|praticamente limpo|
+lang|Rain likely|Possibilidade de chuva|
+lang|rain likely|possibilidade de chuva|
+lang|Rain very likely|Chuva muito provável|
+lang|rain very likely|chuva muito provável|
+lang|Snow likely|Possibilidade de neve|
+lang|snow likely|possibilidade de neve|
+lang|rain|chuva|
+lang|around|cerca de|
+lang|slight|leve|
+lang|A | |
+lang|chance of|Possibilidade de|
+lang|High|Temperatura Máxima:|
+lang|Low|Temperatura Mínima:|
+lang|but|mas|
+lang|temperatures falling|temperaturas a descer|
+lang|temperatures rising|temperaturas a subir|
+lang| light | ligeiro |
+lang| in | durante |
+lang|Wind chill|Índice de frio|
+lang|Wind|Vento de|
+lang|northeast|nordeste|
+lang|northwest|noroeste|
+lang|southeast|sudeste|
+lang|southwest|sudoeste|
+lang|north-|norte-|
+lang|east-|este-|
+lang|south-|sul-|
+lang|west-|oeste-|
+lang| north | norte |
+lang| east | este |
+lang| south | sul |
+lang| west | oeste |
+lang|down |abaixo de |
+lang| or | ou |
+lang|around|à volta de|
+lang|kph|km/h|
+lang|Chance of precipitation|Possibilidade de precipitação:|
+lang|percent|%|
+lang| evening | tarde |
+lang|near|com cerca de|
+lang|less than|menos de|
+lang|snow|neve|
+lang|Precipitation (liquid equivalent)|Precipitação (equivalência em líquido)|
+lang|between|entre|
+lang| and | e |
+lang|Precipitation|Precipitação|
+lang|No snow accumulation expected|Nenhuma acumulação de neve prevista|
+lang|accumulation expected|acumulação esperada|
+lang|Little|Pouca|
+lang| no | nenhuma |
+lang|snow |neve |
+lang|Snow accumulation|Acumulação de neve |
+lang|about|sobre|
+lang| one | um |
+lang|No |Nenhuma |
+lang|Fair |Pouco nublado |
+lang|fair |pouco nublado |
+lang|Cloudy|Nublado|
+lang|calm|0 km/h|
+lang|Clear|Limpo|
+lang|clear|limpo|
+lang|Sunny|Praticamente limpo|
+lang| ice | gelo |
+lang|freezing|gelada|
+lang|sleet|aguanieve|
+lang|a mix of|uma mistura de|
+lang|if any|se houver alguma|
+lang|on ground|no chão|
+lang|patchy|nuvens com abertas|
+lang|Thunderstorms likely, some possibly severe|Trovoadas prováveis, eventualmente intensas|
+lang|Some thunder possible.|Possibilidade de trovoadas.|
+lang|Some thunderstorms likely|Ocorrência provável de trovoadas|
+lang|of an inch|de uma polegada|
+lang|half an inch|meia polegada|
+lang|a quarter|um quarto|
+lang|a tenth|um décimo|
+lang| inch| polegada|
+#
+# Translation of headings, periods and short conditions statements
+# headings
+#
+langlookup|WXSIM Forecast for:|Prognóstico WXSIM para:|
+langlookup|Issued by:|Gerado por:|					
+langlookup|Updated:|Última Actualização:|					
+langlookup|High:|Máx:|
+langlookup|Low:|Mín:|
+#
+langlookup|Sunday|Domingo|
+langlookup|Monday|2ª Feira|
+langlookup|Tuesday|3ª Feira|
+langlookup|Wednesday|4ª Feira|
+langlookup|Thursday|5ª Feira|
+langlookup|Friday|6ª Feira|
+langlookup|Saturday|Sábado|
+langlookup|Sunday night|Domingo à noite|
+langlookup|Monday night|2ª Feira à noite|
+langlookup|Tuesday night|3ª Feira à noite|
+langlookup|Wednesday night|4ª Feira à noite|
+langlookup|Thursday night|5ª Feira à noite|
+langlookup|Friday night|6ª Feira à noite|
+langlookup|Saturday night|Sábado à noite|
+langlookup|Today|Hoje|
+langlookup|Tonight|Esta noite|
+langlookup|This afternoon|Esta tarde|
+langlookup|Rest of tonight|Ainda esta noite|
+# UV Index words
+langlookup|Low|Baixo|
+langlookup|Medium|Médio|
+langlookup|High|Alto|
+langlookup|Very&nbsp;High|Muito&nbsp;alto|
+langlookup|Extreme|Extremo|
+# Summary conditions lookup
+langlookup|Severe storm|Tempestade severa
+langlookup|Showers storms|Aguaceiros
+langlookup|Thunder storm|Trovoada
+langlookup|Rain Sleet|Chuva e neve
+langlookup|FrzgRn Snow|Chuva gelada/nieve
+langlookup|Rain and Snow|Chuva e neve
+langlookup|Freezing Rain|Chuva gelada
+langlookup|Rain likely|Chuva provável
+langlookup|Chance rain|Possibilidade de chuva
+langlookup|Mix|Mistura
+langlookup|Sleet|Chuva e neve
+langlookup|Snow|Neve
+langlookup|Fog a.m.|Nevoeiro matinal
+langlookup|Fog late|Nevoeiro nocturno
+langlookup|Fog|Nevoeiro
+langlookup|Very Cold|Muito frío
+langlookup|Very Hot|Muito calor
+langlookup|Partly Cloudy|Parcialmente nublado
+langlookup|Mostly Cloudy|Muito nublado
+langlookup|Cloudy|Nublado
+langlookup|Overcast|Encoberto
+langlookup|Partly Sunny|Pouco nublado
+langlookup|Mostly Sunny|Maioritariamente limpo
+langlookup|Mostly Clear|Pouco nublado
+langlookup|Sunny|Praticamente limpo
+langlookup|Clear|Limpo
+langlookup|Fair|Pouco nublado
+langlookup|Variable Clouds|Nebulosidade variável
+# translation for cardinal wind directions must be in North-East-South-West order
+langlookup|NESW|NESO|
+# translation for Beaufort Wind Force
+langlookup|Calm|Calmo|
+langlookup|Light air|Vento Fraco|
+langlookup|Light breeze|Vento Moderado|
+langlookup|Gentle breeze|Brisa Ligeira|
+langlookup|Moderate breeze|Brisa Moderada|
+langlookup|Fresh breeze|Brisa Acentuada|
+langlookup|Strong breeze|Vento Forte|
+langlookup|Near gale|Vento Muito Forte|
+langlookup|Gale|Temporal|
+langlookup|Strong gale|Forte Temporal|
+langlookup|Storm|Tempestade|
+langlookup|Violent storm|Forte Tempestade|
+langlookup|Hurricane|Furacão|
+#
+#
+# --- end of language file ------

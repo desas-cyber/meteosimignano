@@ -1,0 +1,184 @@
+# Language file for plaintext-parser.php program
+# Afrikaans text courtesy of http://www.namibiaweather.info/
+# Version 1.01 - 13-Oct-2008
+#
+lang|Thunderstorms likely, some severe|Kans op donderstorms, sommige sterk buie kan moontlik wees|
+lang|High risk of severe thunderstorms and possible tornados|Groot kans op donderstorms en moontlike tornados|
+lang|Thunderstorms likely, some possibly severe|Donderstorms moontlik, sommiges sterk|
+lang|Some thunderstorms likely.|Donderstorms moontlik.|
+lang|Some thunder possible.|Kans op onweer. |
+lang|Some thunderstorms likely|Kans op donderstorms|
+lang|Cloudy in the morning|Bewolk in die oggend|
+lang|becoming|wat oorslaan na|
+lang|dense overcast|digte bewolking|
+lang|UV index up to|UV index tot aan|
+lang|afternoon|namiddag|
+lang|cloudy|bewolk|
+lang|Patchy|Gedeeltelik|
+lang| light |ligte |
+lang|fog|mis|
+lang|Partly|Gedeeltelik|
+lang|gusting|windvlagen|
+lang|mostly|oorwegend|
+lang|after|na|
+lang|midnight|middernag|
+lang|morning|oggend|
+lang|Mostly|Oorwegend|
+lang|partly|gedeeltelik|
+lang|Light |Lig |
+lang|moderate|matige|
+lang|evening|aand|
+lang|Dense|Dig|
+lang|overcast|bewolk|
+lang|Moderate|Matige|
+lang|dense|digte|
+lang|sunny|sonnig|
+lang|Rain likely|Moontlike reën|
+lang|rain likely|moontlike reën|
+lang|a chance of rain|'n kans op reën|
+lang|rain|reën|
+lang|chance of|kans op|
+lang| slight | ligte |
+lang|High|Maksimum:|
+lang|Low|Minimum:|
+lang|but|maar|
+lang|temperatures falling|temperature daal|
+lang|temperatures rising|temperature styg|
+lang|northeast|noordoos|
+lang|northwest|noordwes|
+lang|southeast|suidoos|
+lang|southwest|suidwes|
+lang|north-|noord-|
+lang|east-|oos-|
+lang|south-|suid-|
+#lang|west-|wes-|
+lang|north |noord |
+lang|east |oos |
+lang|south |suid |
+#lang|west |wes |
+lang|down |af |
+lang|around|omtrent|
+lang|kph|km/uur|
+lang|Chance of precipitation|Kans op neerslag|
+lang|near|naby|
+lang|percent|persent|
+lang|less than|minder as|
+lang|snow|sneeu|
+lang|Precipitation (liquid equivalent)|Neerslag (gesmelt)|
+lang|between|tussen|
+lang|Precipitation|Neerslag|
+lang|accumulation expected|ophoping verwag|
+lang|Little|Weinig|
+lang|Snow accumulation|Sneeu ophoping |
+lang| snow | sneeu |
+lang|about|ongeveer|
+lang|showery or intermittent|afwisselend droog met buie|
+lang|No |Geen |
+lang|Fair|Byna geen bewolking|
+lang| fair | byna geen bewolking |
+lang|Cloudy|Bewolk|
+lang|calm|kalm|
+lang|Clear|Wolkloos|
+lang|clear|wolkloos|
+lang|Sunny|Sonnig|
+lang|sunny|sonnig|
+lang| ice | ys |
+lang|freezing|vriesende|
+lang|sleet|nat sneeu|
+lang|a mix of|'n mengsel van|
+lang|if any|as enige|
+lang|on ground|op grond|
+lang|patchy|gedeeltelik|
+lang|of an inch|van 'n inch|
+lang|half an inch|halwe inch|
+lang| then | as |
+lang| the | die |
+lang| to | tot |
+lang| and | en |
+lang| no | geen |
+lang| one | 1 |
+lang| or | of |
+lang|A |'n |
+lang| a | 'n |
+lang| inch| inch|	
+#
+# Translation of headings, periods and short conditions statements
+# headings
+#
+langlookup|WXSIM Forecast for:|WXSIM Voorspelling vir:|
+langlookup|Issued by:|Uitgeryk deur:|					
+langlookup|Updated:|opdateer:|					
+langlookup|High:|Maks|
+langlookup|Low:|Min|
+#
+langlookup|Sunday|Sondag|
+langlookup|Monday|Maandag|
+langlookup|Tuesday|Dinsdag|
+langlookup|Wednesday|Woensdag|
+langlookup|Thursday|Donderdag|
+langlookup|Friday|Vrydag|
+langlookup|Saturday|Saterdag|
+langlookup|Sunday night|Sondag nag|
+langlookup|Monday night|Maandag nag|
+langlookup|Tuesday night|Dinsdag nag|
+langlookup|Wednesday night|Woensdag nag|
+langlookup|Thursday night|Donderdag nag|
+langlookup|Friday night|Vrydag nag|
+langlookup|Saturday night|Saterdag nag|
+langlookup|Today|Vandag|
+langlookup|Tonight|Vannag|
+langlookup|This afternoon|Vanmiddag|
+langlookup|Rest of tonight|Middernag|
+# UV Index words
+langlookup|Low|Laag|
+langlookup|Medium|Gematigde|
+langlookup|High|Hoog|
+langlookup|Very&nbsp;High|Baie&nbsp;Hoog|
+langlookup|Extreme|Ekstreem|
+# Summary conditions lookup
+langlookup|Severe storm|Swaar storm
+langlookup|Showers storms|Reën storm
+langlookup|Thunder storm|Donderstorm
+langlookup|Rain Sleet|Nat sneeu
+langlookup|FrzgRn Snow|Ryp/sneeu
+langlookup|Rain and Snow|Reën en Sneeu
+langlookup|Freezing Rain|Ys Reën
+langlookup|Rain likely|Moontlike reën
+langlookup|Chance rain|Kans op regen
+langlookup|Mix|Ys/sneeu
+langlookup|Sleet|Nat sneeu
+langlookup|Snow|Sneeu
+langlookup|Fog a.m.|Oggend mis
+langlookup|Fog late|Laat mis
+langlookup|Fog|Mis
+langlookup|Very Cold|Erg koud
+langlookup|Very Hot|Bloedig warm
+langlookup|Partly Cloudy|Gedeeltelik bewolk
+langlookup|Mostly Cloudy|Overwegend bewolk
+langlookup|Cloudy|Bewolk
+langlookup|Overcast|Bewolk
+langlookup|Partly Sunny|Gedeeltelik sonnig
+langlookup|Mostly Sunny|Overwegend sonnig
+langlookup|Mostly Clear|Overwegend wolkloos
+langlookup|Sunny|Sonnig
+langlookup|Clear|Wolkloos
+langlookup|Fair|Stapelwolke
+langlookup|Variable Clouds|Wisselende wolke
+# translation for cardinal wind directions must be in North-East-South-West order
+langlookup|NESW|NOSW|
+# translation for Beaufort Wind Force
+langlookup|Calm|Windstil|
+langlookup|Light air|Swak wind|
+langlookup|Light breeze|Ligte bries|
+langlookup|Gentle breeze|Matige wind|
+langlookup|Moderate breeze|Matige wind|
+langlookup|Fresh breeze|kragtige wind|
+langlookup|Strong breeze|Sterk wind|
+langlookup|Near gale|Harde wind|
+langlookup|Gale|Stormagtige wind|
+langlookup|Strong gale|Storm|
+langlookup|Storm|Sterk storm|
+langlookup|Violent storm|Baie sterk storm|
+langlookup|Hurricane|Orkaan|
+#
+# --- end of language file ------

@@ -1,0 +1,39 @@
+<?php
+ # The $firstPart is what gets printed when the page is first presented.
+ $firstPart = <<<EOT
+
+    <noscript><p><b>JavaScript must be enabled in order for you to use Google Maps.</b> 
+      However, it seems JavaScript is either disabled or not supported by your browser. 
+      To view Google Maps, enable JavaScript by changing your browser options, and then 
+      try again.</p>
+    </noscript>
+
+EOT;
+// do not remove the above EOT line
+
+ # The $secondPart is what gets printed under the legend on the map.
+ 
+ $secondPart = <<<EOT
+<p>This <a href="http://maps.google.com/">Google Map</a> shows the locations of current affiliated regional weather network member stations.</p>
+<p>Green markers with numbers indicate clusters of stations - click to zoom the map to show station markers.
+If you click on a marker for a station, a descriptive window will open and show the station features,
+a link to the station's homepage, the regional network affiliations for the station, 
+and current conditions at the station (where available).</p>
+<p>Click on the home button in the map navigation controls to restore the map to the initial zoom level.<br/>
+Click on the "Enable clustering" check box to toggle the clustering of stations display.</p>
+
+EOT;
+// do not remove the above EOT line
+
+ # The $thirdPart is what gets printed at the bottom of the page.
+ 
+ $thirdPart = <<<EOT
+
+<p><small>Map data from <a href="http://www.northamericanweather.net/">Affiliated Regional Networks</a> and scripts from
+<a href="http://saratoga-weather.org/">Saratoga-Weather.org</a>.<br/>
+If you have a personal weather station publishing to a personal weather website, you can submit a request to have your
+data included in this display by visiting the network for your geography from the list above.</small></p>
+
+EOT;
+// do not remove the above EOT line
+?>

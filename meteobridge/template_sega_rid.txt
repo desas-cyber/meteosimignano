@@ -1,0 +1,32 @@
+https://www.meteosimignano.it/meteobridge/tabella_home.php?temp=[DD]/[MM]/[YYYY],[hh]:[mm], [mbsystem-sunrise],  [mbsystem-sunset], [mbsystem-lunarsegment]/7-[mbsystem-lunarpercent]%, {*[th0temp-act:--]-[th0temp-val60]*1} °C, {*[thb0press-act:--]-[thb0press-val60]*1} hPa, [th0temp-act:--]°C, [th0temp-dmax]°C [th0temp-dmaxtime.ij:--]:[th0temp-dmaxtime.kl:--], [th0temp-dmin]°C [th0temp-dmintime.ij:--]:[th0temp-dmintime.kl:--], [th0hum-act:--]%, [th0hum-dmax]% [th0hum-dmaxtime.ij:--]:[th0hum-dmaxtime.kl:--], [th0hum-dmin]% [th0hum-dmintime.ij:--]:[th0hum-dmintime.kl:--], [th0dew-act:--]°C, [th0dew-dmax]°C [th0dew-dmaxtime.ij:--]:[th0dew-dmaxtime.kl:--], [th0dew-dmin]°C [th0dew-dmintime.ij:--]:[th0dew-dmintime.kl:--], {*[thb0press-act:--]+ 50*1} hPa, {*[thb0seapress-dmax] + 50*1} hPa [thb0seapress-dmaxtime.ij:--]:[thb0seapress-dmaxtime.kl:--], {*[thb0seapress-dmin] + 50*1} hPa [thb0seapress-dmintime.ij:--]:[thb0seapress-dmintime.kl:--], {*[wind0avgwind-act:--] * 3.6 *1} km/h, {*[wind0avgwind-dmax] * 3.6 *1} km/h [wind0avgwind-dmaxtime.ij:--]:[wind0avgwind-dmaxtime.kl:--], {*[wind0wind-act:--] * 3.6 *1} km/h, {*[wind0wind-dmax] * 3.6 *1} km/h [wind0wind-dmaxtime.ij:--]:[wind0wind-dmaxtime.kl:--], [wind0dir-lastval=endir], {*[wind0chill-lastval]-[th0temp-lastval]*0}°C, {*[th0heatindex-lastval]-[th0temp-lastval]*0}°C, [sol0rad-act] W/m², [sol0rad-sum24h:--] W/m², {*[th0temp-age]/60*0}min,{*[thb0press-age]/60*0}min,{*[wind0wind-age] /60*0}min
+
+
+
+
+
+
+
+https://www.meteosimignano.it/meteobridge/tabella_home_test.php?temp=[DD]/[MM]/[YYYY],[hh]:[mm], 
+ [mbsystem-sunrise] - [mbsystem-sunset], 
+ [mbsystem-lunarsegment] - [mbsystem-lunarpercent]%, 
+ {*[th0temp-act:--]-[th0temp-val60]*1} °C | {*[thb0press-act:--]-[thb0press-val60]*1} hPa,
+ [th0temp-delta4h]°C, 
+ [th0temp-act:--]°C, 
+ [th0temp-ydmax:--]°C, 
+ [th0temp-dmax]°C [th0temp-dmaxtime.ij:--]:[th0temp-dmaxtime.kl:--], 
+ [th0temp-ydmin:--]°C,
+ [th0temp-dmin]°C [th0temp-dmintime.ij:--]:[th0temp-dmintime.kl:--], 
+ [th0hum-act:--]%, 
+ [th0hum-dmax]% [th0hum-dmaxtime.ij:--]:[th0hum-dmaxtime.kl:--], 
+ [th0hum-dmin]% [th0hum-dmintime.ij:--]:[th0hum-dmintime.kl:--],
+[th0dew-act:--]°C, 
+  [th0dew-dmax]°C [th0dew-dmaxtime.ij:--]:[th0dew-dmaxtime.kl:--], 
+  [th0dew-dmin]°C [th0dew-dmintime.ij:--]:[th0dew-dmintime.kl:--],
+  [thb0press-delta24h:--]hPa,  
+  {*[thb0press-act:--]+ 50*1} hPa, 
+  {*[thb0seapress-dmax] + 50*1} hPa [thb0seapress-dmaxtime.ij:--]:[thb0seapress-dmaxtime.kl:--], {*[thb0seapress-dmin] + 50*1} hPa [thb0seapress-dmintime.ij:--]:[thb0seapress-dmintime.kl:--], {*[wind0avgwind-act:--] * 3.6 *1} km/h, 
+  {*[wind0avgwind-dmax] * 3.6 *1} km/h [wind0avgwind-dmaxtime.ij:--]:[wind0avgwind-dmaxtime.kl:--], {*[wind0wind-act:--] * 3.6 *1} km/h, 
+  {*[wind0wind-dmax] * 3.6 *1} km/h [wind0wind-dmaxtime.ij:--]:[wind0wind-dmaxtime.kl:--], 
+  [wind0dir-lastval=endir], 
+  {*[wind0chill-lastval]-[th0temp-lastval]*0}°C, {*[th0heatindex-lastval]-[th0temp-lastval]*0}°C, 
+  [sol0rad-act] W/m², [sol0rad-sum24h:--] W/m², {*[th0temp-age]/60*0}min,{*[thb0press-age]/60*0}min,{*[wind0wind-age] /60*0}min
