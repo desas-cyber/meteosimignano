@@ -1,0 +1,8 @@
+# 🗃️ Backup DB e temporanei
+*.sql
+*.bak
+
+# ✍️ File locali o temporanei dell’editor
+*~
+*.swp
+ *  History restored 
