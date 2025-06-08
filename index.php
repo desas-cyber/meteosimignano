@@ -50,7 +50,7 @@ if (isset($data['error'])) {
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <title>Simmignano_meteo_galleria</title>
     <link rel="stylesheet" href="galleria-lightbox.css">
-    <style>
+    <style>/*PROVA VS CODE*/
         body {
             font-family: Arial, sans-serif;
             display: flex;
