@@ -468,7 +468,7 @@ $noteCentrali = [
     // Temperatura max → calcola differenza con ieri e mostra pallino + valore di ieri
     "th0temp-dmax" => (function() use ($valoriParametri) {
         $oggi = extractTemperatureValue($valoriParametri["th0temp-dmax"] ?? '');
-        $ieri = floatval($valoriParametri["th0temp-ydmax"] ?? 0);
+        $ieri = floatval($valoriParametri["th0temp-ydmax"] ?? 'N/A');
         $delta = ($oggi !== null && $ieri !== null) ? ($ieri-$oggi) : 0;
         
         /* Stampa la differenza e il risultato
@@ -484,7 +484,7 @@ $noteCentrali = [
     // Temperatura min → calcola differenza con ieri e mostra pallino + valore di ieri
     "th0temp-dmin" => (function() use ($valoriParametri) {
         $oggi = extractTemperatureValue($valoriParametri["th0temp-dmin"] ?? '');
-        $ieri = floatval($valoriParametri["th0temp-ydmin"] ?? 0);
+        $ieri = floatval($valoriParametri["th0temp-ydmin"] ?? 'N/A');
         $delta = ($oggi !== null && $ieri !== null) ? ($ieri-$oggi) : 0;
         /* Stampa la differenza e il risultato
     echo "<p>Delta temperatura minima (oggi vs ieri): <strong>" 
@@ -678,7 +678,7 @@ foreach ($datiFinali as $dato) {
         echo "<td>" . htmlspecialchars($valore_string) . "</td>";
     } else {
         echo "<td>" . $dato['nota'] . "</td>";
-        echo "<td>" . htmlspecialchars($dato['valore']) . "</td>";
+        echo "<td>" . htmlspecialchars($dato['valore'] ?? 'N/A') . "</td>";
     }
     
     echo "</tr>";

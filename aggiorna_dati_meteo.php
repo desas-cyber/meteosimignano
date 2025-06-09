@@ -1,6 +1,6 @@
 
 <?php
-$directory = '/home/erbielqv/public_html/tabella_home_display.php';
+$directory = __DIR__ . '/tabella_home_display.php';
 
 // Controlla se il file esiste
 if (!file_exists($directory)) {
