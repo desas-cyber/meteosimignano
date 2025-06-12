@@ -639,7 +639,9 @@ echo "<style>
   }
 </style>";
 echo "<table border='1' cellpadding='10' cellspacing='0'>";
-echo "<tr><th style='vertical-align: bottom; background-color: rgba(173, 173, 173, 0.8); position: relative;'>TABELLA METEO:<br>Parametro</th><th style='vertical-align: bottom; background-color: rgba(173, 173, 173, 0.8);'>Note</th><th style='vertical-align: bottom; background-color: rgba(173, 173, 173, 0.8);'>Dati</th></tr>";
+echo "<tr><th style='vertical-align: top; background-color: rgba(173, 173, 173, 0.8); position: relative;'>TABELLA METEO:<br>Parametro</th>
+<th style='vertical-align: top; background-color: rgba(173, 173, 173, 0.8);'>Note<br><span style='font-style: italic; font-weight: normal; font-size: 0.8em;'>&Delta;24h = attuale - 24h</span></th>
+<th style='vertical-align: top; background-color: rgba(173, 173, 173, 0.8);'>Dati</th></tr>";
 
 $risultati_solari = getSolareteoricoMezzaGiornata($pdo_lettura);
 $cumulato_percent_12h = $risultati_solari['cumulato_percent_12h'];
