@@ -62,7 +62,6 @@ if (isset($data['error'])) {
 
         .sub-title {
             font-size: 3vw;
-            max-font-size: 25px; /* Questa proprietà non è standard */
             font-weight: normal;
             white-space: nowrap;
             margin: 30;
@@ -71,7 +70,7 @@ if (isset($data['error'])) {
         /* Media query per limitare la dimensione massima del font */
         @media (min-width: 600px) {
             .sub-title {
-                font-size: 30px; /* Imposta una dimensione fissa per schermi più grandi */
+                font-size: 25px; /* Imposta una dimensione fissa per schermi più grandi */
             }
         }
     
