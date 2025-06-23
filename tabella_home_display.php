@@ -24,6 +24,21 @@ if (!isset($pdo_lettura)) {
     file_put_contents('log_delta.txt', "[DEBUG] ❌ Errore: \$pdo _lettura non definito\n", FILE_APPEND);
     return ['Err', 'Err'];
 }
+//funzione che return null se il valore non è numerico; serve per gestire i valori possono essere vuoti o non numerici
+//in php il valore non numerico è convertito fa float($val) come zero e quindi è ambiguo
+function pulisciValoreNumerico($valore) {
+    // Prende solo i primi 3 caratteri da sinistra
+    $val = ltrim($valore); // rimuove solo spazi a sinistra
+    $val = substr($val, 0, 6); // prendiamo fino a 6 caratteri utili (es. ' 27.1°C')
+
+    // Elimina tutto tranne cifre, punto e meno
+    $val = preg_replace('/[^0-9\.\-]/', '', $val);
+
+    // Se non è numerico dopo la pulizia, ritorna 'NA'
+    return is_numeric($val) ? $valore : 'NA';
+}
+
+
 
 //restituisce massimo solare e ora
 function getSolareMassimoGiornaliero(?PDO $pdo_lettura): string
@@ -232,7 +247,7 @@ echo '💡 teorico_12h: ' . var_export(round($teorico_12h), true)
      . '  cumulato%_24h: ' . var_export(round($cumulato_percent_24h), true);
 echo "</pre>";    
 */        
-        $output = "12h: " . ($cumulato_percent_12h !== null ? $cumulato_percent_12h : "N/A") . "\n24h: " . ($cumulato_percent_12h !== null ? $cumulato_percent_24h : "N/A") . "\n";
+        $output = "12h: " . ($cumulato_percent_12h !== null ? $cumulato_percent_12h : "N/A") . "\n24h: " . ($cumulato_percent_24h !== null ? $cumulato_percent_24h : "N/A") . "\n";
     
         file_put_contents('cumulato_radianza.txt', $output);
         file_put_contents('debug.txt', "12h = " . var_export($cumulato_percent_12h, true) . "\n24h = " . var_export($cumulato_percent_24h, true) . "\n", FILE_APPEND);
@@ -344,17 +359,19 @@ function createComfortIndicator($dewpointValue) {
 
 function createWindchillHeatIndicator($differenza) {
     // Forza la conversione sicura
-    if (!is_numeric($differenza)) {
-        $differenza = 0;
-    } else {
-        $differenza = floatval($differenza);
+   
+
+   $valore = pulisciValoreNumerico($differenza);
+    if ($valore === null) {
+    return 'N/A';
     }
+    $differenza = floatval($differenza);
 
     if ($differenza < -2) {
         $color = '#0088ff';
         $title = 'Sensazione di freddo significativa';
-    } elseif ($differenza > 3) {
-        $color = '#ff4444';
+    } elseif ($differenza > 2) {
+        $color = '#FFA500';
         $title = 'Sensazione di caldo significativa';
     } else {
         $color = '#ffffff';
@@ -558,6 +575,11 @@ $valore = $valoriParametri[$key];
 // Gestione speciale per il valore della luna
 if ($key === 'mbsystem-lunarpercent') {
     $valore = processLunarValue($valore);
+} elseif ($key === 'wind0dir-act') {
+    // Non fare nulla, lascia invariato
+    $valore = $valore;
+} else {
+    $valore = pulisciValoreNumerico($valore);
 }
 
 $datiFinali[] = [
@@ -710,8 +732,8 @@ echo "</div>";
 echo "<h4>Windchill / Heat Index:</h4>";
 echo "<div style='display: flex; flex-wrap: wrap; gap: 5px;'>";
 echo "<div>" . createWindchillHeatIndicator(-3) . " Sensazione di freddo (<-2°C)</div>";
-echo "<div>" . createWindchillHeatIndicator(0) . " Sensazione neutra (-2°C / +3°C)</div>";
-echo "<div>" . createWindchillHeatIndicator(3.2) . " Sensazione di caldo (>+3°C)</div>";
+echo "<div>" . createWindchillHeatIndicator(0) . " Sensazione neutra (-2°C / +2°C)</div>";
+echo "<div>" . createWindchillHeatIndicator(3.2) . " Sensazione di caldo (>+2°C)</div>";
 echo "</div>";
 echo "</div>";
 ?>
