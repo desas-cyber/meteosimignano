@@ -5,6 +5,7 @@ error_reporting(E_ALL);
 
 // $parametri arriva da questo file
 require_once __DIR__ . '/meteobridge/tabella_home.php';
+require_once __DIR__ . '/datetime_helper.php';
 
 // Funzione per leggere i dati dal file
 function readDataFromFile() {
@@ -50,7 +51,8 @@ function getSolareMassimoGiornaliero(?PDO $pdo_lettura): string
 
     try {
         // 2) Calcolo oggi come giorno dell'anno (1-based)
-        $oggi = intval(date('z')) + 1;  // es. 152 per il 31 maggio 2025
+        //$oggi = intval(date('z')) + 1;  // es. 152 per il 31 maggio 2025
+        $oggi = get_day_of_year();
 
         // 3) Eseguo la query per irradianza e ora UTC
         $sql = "
@@ -134,7 +136,8 @@ function getSolareteoricoMezzaGiornata(?PDO $pdo_lettura)
         $cumulato_percent_24h = "N/A";
         $oggi = (int)date('z') + 1;  // 'z' = zero-based day of year
         //echo "📅 Oggi: $oggi";
-        $ora_attuale = (new DateTime('now', new DateTimeZone('Europe/Rome')))->format('H:i:s');
+        //$ora_attuale = (new DateTime('now', new DateTimeZone('Europe/Rome')))->format('H:i:s');
+        $ora_attuale = (new DateTime(get_now(), new DateTimeZone('Europe/Rome')))->format('H:i:s');
         $pdo_lettura->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         //CHIAMATA PARAMETRI RADIANZA TEORICA 
         $sql = "
@@ -157,14 +160,18 @@ function getSolareteoricoMezzaGiornata(?PDO $pdo_lettura)
         $sql = "
             SELECT data_ora, radianza_int_whm2
             FROM dati_meteo_simignano
-            WHERE data_ora BETWEEN NOW() - INTERVAL 15 MINUTE AND NOW()
-            AND DATE(data_ora) = CURDATE()
+            WHERE data_ora BETWEEN :start_time AND :end_time
+            AND DATE(data_ora) = :oggi 
             AND radianza_int_whm2 IS NOT NULL
             ORDER BY data_ora DESC
             LIMIT 1
             ";
             $stmt = $pdo_lettura->prepare($sql);
-            $stmt->execute();
+            $stmt->execute([
+                ':start_time' => date("Y-m-d H:i:s", strtotime(get_now() . " -15 minutes")),
+                ':end_time' => get_now(),
+                ':oggi' => date("Y-m-d", strtotime(get_now()))
+            ]);
             $row2 = $stmt->fetch(PDO::FETCH_ASSOC);
 /*        
 echo "<pre>";
@@ -175,13 +182,21 @@ echo "</pre>";
             //CHIAMATA PARAMETRI RADIANZA CUMULATA ALLE 12 H
 
             $radianza_max_cumulo_12h = "N/A";
-            $oggi = date("Y-m-d");  // ad esempio: "2025-06-01"
-            
-            $ora_massima_utc_obj = new DateTime($ora_massima_utc, new DateTimeZone('UTC'));
-            $ora_massima_loc = $ora_massima_utc_obj->setTimezone(new DateTimeZone('Europe/Rome'))->format('H:i:s');
-            
-            $ora_massima_loc_start = date("Y-m-d H:i:s", strtotime("$ora_massima_loc -5 minutes"));
-            $ora_massima_loc_end = date("Y-m-d H:i:s", strtotime("$ora_massima_loc +5 minutes"));
+            // Usa TEST_DATETIME o data reale
+$testDatetime = USE_TEST_MODE ? TEST_DATETIME : date("Y-m-d H:i:s");
+$oggi = date("Y-m-d", strtotime($testDatetime));
+
+$ora_massima_utc_obj = new DateTime($ora_massima_utc, new DateTimeZone('UTC'));
+$ora_massima_loc = $ora_massima_utc_obj->setTimezone(new DateTimeZone('Europe/Rome'));
+
+// Clona e modifica per start e end ±5 minuti
+$start_dt = clone $ora_massima_loc;
+$start_dt->modify('-5 minutes');
+$ora_massima_loc_start = $start_dt->format('Y-m-d H:i:s');
+
+$end_dt = clone $ora_massima_loc;
+$end_dt->modify('+5 minutes');
+$ora_massima_loc_end = $end_dt->format('Y-m-d H:i:s');
                 
             $sql = "
                 SELECT radianza_int_whm2 AS radianza_max_cumulo_12h
