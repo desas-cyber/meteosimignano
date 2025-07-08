@@ -1,19 +1,19 @@
 
 <?php
-if (php_sapi_name() !== "cli") {
+/*if (php_sapi_name() !== "cli") {
     http_response_code(403);
     exit("Accesso negato.");
-    }
+    }*/
     ini_set('display_errors', 1);
     error_reporting(E_ALL);
     date_default_timezone_set("Europe/Rome");
     
     // === INCLUDI CONNESSIONE PDO ===
-    require_once '/home/erbielqv/envelop.php'; // Connessione via $pdo - scrittura, lettura
-    require_once '/home/erbielqv/envelop_lettura.php'; // Connessione via $pdo - lettura
+    require_once __DIR__ . '/../../envelop.php';// Connessione via $pdo - scrittura, lettura
+    require_once __DIR__ . '/../../envelop_lettura.php'; // Connessione via $pdo - lettura
     
     // === CONFIGURAZIONE ===
-    $directory = "/home/erbielqv/public_html/FoscamCamera_E8ABFAA799FE/snap";
+    $directory = __DIR__ . "/../FoscamCamera_E8ABFAA799FE/snap";
     $debug = true; // 👉 Mostra output a schermo
     $now = time();
     $threshold_sec = 128400;

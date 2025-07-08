@@ -7,5 +7,6 @@
 *.swp
 *.log
 debug.txt
-cumulato_radianza.txt
- *  History restored 
+cumulato_radianza.txt,
+aggiorna_log.txt
+ *  History restored l.
