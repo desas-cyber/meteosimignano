@@ -15,7 +15,7 @@ if ($handle === false) {
     die("Impossibile aprire il file CSV");
 }
 
-fgetcsv($handle); // Salta intestazione
+fgetcsv($handle); // è un puntatore, quindi salta la prima riga (intestazioni) e ha memoria della posizione corrente
 
 $contatore = 0;
 
