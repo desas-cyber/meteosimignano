@@ -1,13 +1,13 @@
 <?php
 // Connessione al database (assicurati che il file envelop.php esista e configuri $pdo correttamente)
 
-require_once '/home/erbielqv/envelop.php';
+require_once __DIR__ . '/../envelop.php';
 require_once 'aggiornaCartellaImmagini.php';
 
 $directory = 'belle/';
 $table_name = 'DB_immagini_belle';
 $data = getImageDataFromFolder($pdo, $directory, $table_name);
-
+  
 $mainImage = '';
 $mainImageDate = 'Data non disponibile';
 $records = [];
