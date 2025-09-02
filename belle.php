@@ -36,7 +36,6 @@ if (isset($data['error'])) {
     }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="it">
 <head>

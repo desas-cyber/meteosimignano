@@ -1,0 +1,147 @@
+==================================
+DEPENDENCIES AUDIT REPORT
+==================================
+Site: meteosimignano
+Path: /Applications/MAMP/htdocs/meteosimignano
+Date: Mar  2 Set 2025 01:03:32 CEST
+Max Depth: 5
+Target Extensions: html js php
+
+SUMMARY:
+--------
+HTML files: 2
+JavaScript files: 3
+PHP files: 20
+Total target files: 25
+
+DETAILED ANALYSIS:
+==================
+
+  [0;35m📁[0m aggiornaCartellaImmagini.php
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-10 00:54
+    📄 PHP Dependencies:
+
+  [0;35m📁[0m aggiorna_dati_meteo.js
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 JavaScript Dependencies:
+
+  [0;35m📁[0m aggiorna_dati_meteo.php
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-12 23:28
+    📄 PHP Dependencies:
+
+  [0;35m📁[0m aggiorna_galleria.js
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 JavaScript Dependencies:
+
+  [0;35m📁[0m aggiorna_galleria.php
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-12 23:28
+    📄 PHP Dependencies:
+
+  [0;35m📁[0m backup/backup_settimanale_db_dati_meteo_simignano.php
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 PHP Dependencies:
+
+  [0;35m📁[0m belle.php
+    📊 Size: 8,0K
+    📅 Modified: 2025-07-28 23:57
+    📄 PHP Dependencies:
+
+  [0;35m📁[0m datetime_helper.php
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-24 00:53
+    📄 PHP Dependencies:
+
+  [0;35m📁[0m default.html
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 HTML Dependencies:
+
+  [0;35m📁[0m galleria-lightbox.js
+    📊 Size:  20K
+    📅 Modified: 2025-06-09 00:32
+    📄 JavaScript Dependencies:
+
+  [0;35m📁[0m index.php
+    📊 Size:  12K
+    📅 Modified: 2025-06-12 23:28
+    📄 PHP Dependencies:
+
+  [0;35m📁[0m meteobridge/MBtags.php
+    📊 Size:  48K
+    📅 Modified: 2025-06-09 00:32
+    📄 PHP Dependencies:
+      🔗 PHP: MB-defs.php
+        ✗ MISSING: /Applications/MAMP/htdocs/meteosimignano/meteobridge/MB-defs.php
+      🔗 PHP: MB-defs.php
+        ✗ MISSING: /Applications/MAMP/htdocs/meteosimignano/meteobridge/MB-defs.php
+
+  [0;35m📁[0m meteobridge/tabella_home.php
+    📊 Size: 8,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 PHP Dependencies:
+
+  [0;35m📁[0m meteobridge/tabella_home_test.php
+    📊 Size: 8,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 PHP Dependencies:
+
+  [0;35m📁[0m meteobridge/tabella_meteo_DB_simignano.php
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 PHP Dependencies:
+
+  [0;35m📁[0m public_php/agg_DB_belle.php
+    📊 Size: 8,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 PHP Dependencies:
+
+  [0;35m📁[0m public_php/agg_DB_belle_test.php
+    📊 Size: 8,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 PHP Dependencies:
+
+  [0;35m📁[0m public_php/elimina_mag_24h.php
+    📊 Size:  12K
+    📅 Modified: 2025-06-27 00:30
+    📄 PHP Dependencies:
+
+  [0;35m📁[0m public_php/elimina_mag_24h_test.php
+    📊 Size:  12K
+    📅 Modified: 2025-06-09 00:32
+    📄 PHP Dependencies:
+
+  [0;35m📁[0m public_php/pagina.html
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 HTML Dependencies:
+
+  [0;35m📁[0m public_php/prova.php
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 PHP Dependencies:
+
+  [0;35m📁[0m sql/aggiorna_radianza.php
+    📊 Size:  12K
+    📅 Modified: 2025-06-09 00:32
+    📄 PHP Dependencies:
+
+  [0;35m📁[0m sql/popola_db_radianza.php
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 PHP Dependencies:
+
+  [0;35m📁[0m sql/reintegro_db.php
+    📊 Size: 4,0K
+    📅 Modified: 2025-07-09 01:20
+    📄 PHP Dependencies:
+
+  [0;35m📁[0m tabella_home_display.php
+    📊 Size:  28K
+    📅 Modified: 2025-06-26 23:45
+    📄 PHP Dependencies:

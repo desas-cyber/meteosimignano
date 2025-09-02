@@ -1,0 +1,393 @@
+==================================
+DEPENDENCIES AUDIT REPORT
+==================================
+Site: meteosimignano
+Path: /Applications/MAMP/htdocs/meteosimignano
+Date: Mar  2 Set 2025 01:07:02 CEST
+Max Depth: 5
+Target Extensions: html js php
+
+SUMMARY:
+--------
+HTML files: 2
+JavaScript files: 3
+PHP files: 20
+Total target files: 25
+
+DETAILED ANALYSIS:
+==================
+
+  [0;35m📁[0m aggiornaCartellaImmagini.php
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-10 00:54
+    📄 PHP Dependencies:
+      🔍 DEBUG - Prime righe del file:
+        <?php
+        function getImageDataFromFolder($pdo, $directory, $table_name) {
+            // Controlla se la cartella esiste
+            if (!is_dir($directory)) {
+                return [
+
+      ℹ️  No standard include/require patterns found
+      💡 This might be a standalone file or uses dynamic includes
+
+  [0;35m📁[0m aggiorna_dati_meteo.js
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 JavaScript Dependencies:
+
+  [0;35m📁[0m aggiorna_dati_meteo.php
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-12 23:28
+    📄 PHP Dependencies:
+      🔍 DEBUG - Prime righe del file:
+        
+        <?php
+        $directory = __DIR__ . '/tabella_home_display.php';
+        
+        // Controlla se il file esiste
+
+      ℹ️  No standard include/require patterns found
+      💡 This might be a standalone file or uses dynamic includes
+
+  [0;35m📁[0m aggiorna_galleria.js
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 JavaScript Dependencies:
+
+  [0;35m📁[0m aggiorna_galleria.php
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-12 23:28
+    📄 PHP Dependencies:
+      🔍 DEBUG - Prime righe del file:
+        <?php
+        // 1. Connessione al database
+        require_once __DIR__ . '/../envelop.php';
+        
+        // 2. Percorsi
+
+      ℹ️  No standard include/require patterns found
+      💡 This might be a standalone file or uses dynamic includes
+
+  [0;35m📁[0m backup/backup_settimanale_db_dati_meteo_simignano.php
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 PHP Dependencies:
+      🔍 DEBUG - Prime righe del file:
+        <?php
+        if (php_sapi_name() !== "cli") {
+            http_response_code(403);
+            exit("Accesso negato.");
+        }
+
+      🔍 FOUND LINE (no parens): require_once '/home/erbielqv/envelop.php';
+      🔗 PHP: /home/erbielqv/envelop.php
+        ✗ MISSING: /Applications/MAMP/htdocs/meteosimignano/backup/home/erbielqv/envelop.php
+      ℹ️  No standard include/require patterns found
+      💡 This might be a standalone file or uses dynamic includes
+
+  [0;35m📁[0m belle.php
+    📊 Size: 8,0K
+    📅 Modified: 2025-07-28 23:57
+    📄 PHP Dependencies:
+      🔍 DEBUG - Prime righe del file:
+        <?php
+        // Connessione al database (assicurati che il file envelop.php esista e configuri $pdo correttamente)
+        
+        require_once __DIR__ . '/../envelop.php';
+        require_once 'aggiornaCartellaImmagini.php';
+
+      🔍 FOUND LINE (no parens): require_once 'aggiornaCartellaImmagini.php';
+      🔗 PHP: aggiornaCartellaImmagini.php
+        ✓ EXISTS: /Applications/MAMP/htdocs/meteosimignano/aggiornaCartellaImmagini.php
+      ℹ️  No standard include/require patterns found
+      💡 This might be a standalone file or uses dynamic includes
+
+  [0;35m📁[0m datetime_helper.php
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-24 00:53
+    📄 PHP Dependencies:
+      🔍 DEBUG - Prime righe del file:
+        
+        <?php
+        define('USE_TEST_MODE', true);
+        define('TEST_DATETIME', '2025-06-08 13:30:00');
+        
+
+      ℹ️  No standard include/require patterns found
+      💡 This might be a standalone file or uses dynamic includes
+
+  [0;35m📁[0m default.html
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 HTML Dependencies:
+
+  [0;35m📁[0m galleria-lightbox.js
+    📊 Size:  20K
+    📅 Modified: 2025-06-09 00:32
+    📄 JavaScript Dependencies:
+
+  [0;35m📁[0m index.php
+    📊 Size:  12K
+    📅 Modified: 2025-06-12 23:28
+    📄 PHP Dependencies:
+      🔍 DEBUG - Prime righe del file:
+        
+        <?php
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
+
+      🔍 FOUND LINE (no parens): //require_once '/home/erbielqv/envelop.php'; DA USARE IN INTERNET
+      🔗 PHP: /home/erbielqv/envelop.php
+        ✗ MISSING: /Applications/MAMP/htdocs/meteosimignano/home/erbielqv/envelop.php
+      🔍 FOUND LINE (no parens): require_once 'aggiornaCartellaImmagini.php';
+      🔗 PHP: aggiornaCartellaImmagini.php
+        ✓ EXISTS: /Applications/MAMP/htdocs/meteosimignano/aggiornaCartellaImmagini.php
+      ℹ️  No standard include/require patterns found
+      💡 This might be a standalone file or uses dynamic includes
+
+  [0;35m📁[0m meteobridge/MBtags.php
+    📊 Size:  48K
+    📅 Modified: 2025-06-09 00:32
+    📄 PHP Dependencies:
+      🔍 DEBUG - Prime righe del file:
+        <?php
+        /*
+         File: MBtags.php
+        
+         Purpose: load Meteobridge variables into a $WX[] array for use with the Canada/World/USA template sets
+
+      🔍 FOUND LINE: if(file_exists("MB-defs.php")) { include_once("MB-defs.php"); }
+      🔗 PHP: MB-defs.php
+        ✗ MISSING: /Applications/MAMP/htdocs/meteosimignano/meteobridge/MB-defs.php
+      ℹ️  No standard include/require patterns found
+      💡 This might be a standalone file or uses dynamic includes
+
+  [0;35m📁[0m meteobridge/tabella_home.php
+    📊 Size: 8,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 PHP Dependencies:
+      🔍 DEBUG - Prime righe del file:
+        <?php
+        
+        // Mappatura delle chiavi con le descrizioni (mantieni questa per compatibilità)
+        $parametri = [
+            "mbsystem-sunrise"         => "Ora alba e tramonto",
+
+      🔍 FOUND LINE (no parens): require_once '/home/erbielqv/envelop_lettura.php';
+      🔗 PHP: /home/erbielqv/envelop_lettura.php
+        ✗ MISSING: /Applications/MAMP/htdocs/meteosimignano/meteobridge/home/erbielqv/envelop_lettura.php
+      ℹ️  No standard include/require patterns found
+      💡 This might be a standalone file or uses dynamic includes
+
+  [0;35m📁[0m meteobridge/tabella_home_test.php
+    📊 Size: 8,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 PHP Dependencies:
+      🔍 DEBUG - Prime righe del file:
+        <?php
+        
+        // Mappatura delle chiavi con le descrizioni (mantieni questa per compatibilità)
+        $parametri = [
+            "mbsystem-sunrise"         => "Ora alba e tramonto",
+
+      🔍 FOUND LINE (no parens): require_once '/home/erbielqv/envelop_lettura.php';
+      🔗 PHP: /home/erbielqv/envelop_lettura.php
+        ✗ MISSING: /Applications/MAMP/htdocs/meteosimignano/meteobridge/home/erbielqv/envelop_lettura.php
+      ℹ️  No standard include/require patterns found
+      💡 This might be a standalone file or uses dynamic includes
+
+  [0;35m📁[0m meteobridge/tabella_meteo_DB_simignano.php
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 PHP Dependencies:
+      🔍 DEBUG - Prime righe del file:
+        <?php
+        // Connessione al database (assicurati che il file envelop.php esista e configuri $pdo correttamente)
+        require_once '/home/erbielqv/envelop.php';
+        
+        
+
+      🔍 FOUND LINE (no parens): require_once '/home/erbielqv/envelop.php';
+      🔗 PHP: /home/erbielqv/envelop.php
+        ✗ MISSING: /Applications/MAMP/htdocs/meteosimignano/meteobridge/home/erbielqv/envelop.php
+      ℹ️  No standard include/require patterns found
+      💡 This might be a standalone file or uses dynamic includes
+
+  [0;35m📁[0m public_php/agg_DB_belle.php
+    📊 Size: 8,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 PHP Dependencies:
+      🔍 DEBUG - Prime righe del file:
+        
+        <?php
+        if (php_sapi_name() !== "cli") {
+            http_response_code(403);
+            exit("Accesso negato.");
+
+      🔍 FOUND LINE (no parens): require_once '/home/erbielqv/envelop.php'; // Connessione via $pdo - scrittura, lettura
+      🔗 PHP: /home/erbielqv/envelop.php
+        ✗ MISSING: /Applications/MAMP/htdocs/meteosimignano/public_php/home/erbielqv/envelop.php
+      🔍 FOUND LINE (no parens): require_once '/home/erbielqv/envelop_lettura.php'; // Connessione via $pdo - lettura
+      🔗 PHP: /home/erbielqv/envelop_lettura.php
+        ✗ MISSING: /Applications/MAMP/htdocs/meteosimignano/public_php/home/erbielqv/envelop_lettura.php
+      🔍 FOUND VARIABLE LINE: require_once '/home/erbielqv/envelop.php'; // Connessione via $pdo - scrittura, lettura
+      ⚠️  Contains PHP variable - manual check needed
+      🔍 FOUND VARIABLE LINE: require_once '/home/erbielqv/envelop_lettura.php'; // Connessione via $pdo - lettura
+      ⚠️  Contains PHP variable - manual check needed
+      ℹ️  No standard include/require patterns found
+      💡 This might be a standalone file or uses dynamic includes
+
+  [0;35m📁[0m public_php/agg_DB_belle_test.php
+    📊 Size: 8,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 PHP Dependencies:
+      🔍 DEBUG - Prime righe del file:
+        <?php
+        if (php_sapi_name() !== "cli") {
+            http_response_code(403);
+            exit("Accesso negato.");
+            }
+
+      🔍 FOUND LINE (no parens): require_once '/home/erbielqv/envelop.php'; // Connessione via $pdo - scrittura, lettura
+      🔗 PHP: /home/erbielqv/envelop.php
+        ✗ MISSING: /Applications/MAMP/htdocs/meteosimignano/public_php/home/erbielqv/envelop.php
+      🔍 FOUND LINE (no parens): require_once '/home/erbielqv/envelop_lettura.php'; // Connessione via $pdo - lettura
+      🔗 PHP: /home/erbielqv/envelop_lettura.php
+        ✗ MISSING: /Applications/MAMP/htdocs/meteosimignano/public_php/home/erbielqv/envelop_lettura.php
+      🔍 FOUND VARIABLE LINE: require_once '/home/erbielqv/envelop.php'; // Connessione via $pdo - scrittura, lettura
+      ⚠️  Contains PHP variable - manual check needed
+      🔍 FOUND VARIABLE LINE: require_once '/home/erbielqv/envelop_lettura.php'; // Connessione via $pdo - lettura
+      ⚠️  Contains PHP variable - manual check needed
+      ℹ️  No standard include/require patterns found
+      💡 This might be a standalone file or uses dynamic includes
+
+  [0;35m📁[0m public_php/elimina_mag_24h.php
+    📊 Size:  12K
+    📅 Modified: 2025-06-27 00:30
+    📄 PHP Dependencies:
+      🔍 DEBUG - Prime righe del file:
+        
+        <?php
+        /*if (php_sapi_name() !== "cli") {
+            http_response_code(403);
+            exit("Accesso negato.");
+
+      🔍 FOUND VARIABLE LINE: require_once __DIR__ . '/../../envelop.php';// Connessione via $pdo - scrittura, lettura
+      ⚠️  Contains PHP variable - manual check needed
+      🔍 FOUND VARIABLE LINE: require_once __DIR__ . '/../../envelop_lettura.php'; // Connessione via $pdo - lettura
+      ⚠️  Contains PHP variable - manual check needed
+      ℹ️  No standard include/require patterns found
+      💡 This might be a standalone file or uses dynamic includes
+
+  [0;35m📁[0m public_php/elimina_mag_24h_test.php
+    📊 Size:  12K
+    📅 Modified: 2025-06-09 00:32
+    📄 PHP Dependencies:
+      🔍 DEBUG - Prime righe del file:
+        
+        <?php
+        if (php_sapi_name() !== "cli") {
+            http_response_code(403);
+            exit("Accesso negato.");
+
+      🔍 FOUND LINE (no parens): require_once '/home/erbielqv/envelop.php'; // Connessione via $pdo - scrittura, lettura
+      🔗 PHP: /home/erbielqv/envelop.php
+        ✗ MISSING: /Applications/MAMP/htdocs/meteosimignano/public_php/home/erbielqv/envelop.php
+      🔍 FOUND LINE (no parens): require_once '/home/erbielqv/envelop_lettura.php'; // Connessione via $pdo - lettura
+      🔗 PHP: /home/erbielqv/envelop_lettura.php
+        ✗ MISSING: /Applications/MAMP/htdocs/meteosimignano/public_php/home/erbielqv/envelop_lettura.php
+      🔍 FOUND VARIABLE LINE: require_once '/home/erbielqv/envelop.php'; // Connessione via $pdo - scrittura, lettura
+      ⚠️  Contains PHP variable - manual check needed
+      🔍 FOUND VARIABLE LINE: require_once '/home/erbielqv/envelop_lettura.php'; // Connessione via $pdo - lettura
+      ⚠️  Contains PHP variable - manual check needed
+      ℹ️  No standard include/require patterns found
+      💡 This might be a standalone file or uses dynamic includes
+
+  [0;35m📁[0m public_php/pagina.html
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 HTML Dependencies:
+
+  [0;35m📁[0m public_php/prova.php
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 PHP Dependencies:
+      🔍 DEBUG - Prime righe del file:
+        <?php
+        $directory = "/home/erbielqv/public_html/FoscamCamera_E8ABFAA799FE/snap";
+        
+        // Controlla se la directory esiste
+        if (file_exists($directory)) {
+
+      ℹ️  No standard include/require patterns found
+      💡 This might be a standalone file or uses dynamic includes
+
+  [0;35m📁[0m sql/aggiorna_radianza.php
+    📊 Size:  12K
+    📅 Modified: 2025-06-09 00:32
+    📄 PHP Dependencies:
+      🔍 DEBUG - Prime righe del file:
+        <?php
+        require_once '/home/erbielqv/envelop.php';
+        echo "=== CORREZIONE INTEGRALE RADIANZA - PROBLEMA 22:16 ===\n\n";
+        
+        try {
+
+      🔍 FOUND LINE (no parens): require_once '/home/erbielqv/envelop.php';
+      🔗 PHP: /home/erbielqv/envelop.php
+        ✗ MISSING: /Applications/MAMP/htdocs/meteosimignano/sql/home/erbielqv/envelop.php
+      ℹ️  No standard include/require patterns found
+      💡 This might be a standalone file or uses dynamic includes
+
+  [0;35m📁[0m sql/popola_db_radianza.php
+    📊 Size: 4,0K
+    📅 Modified: 2025-06-09 00:32
+    📄 PHP Dependencies:
+      🔍 DEBUG - Prime righe del file:
+        <?php
+        
+        // Percorso del file da importare
+        $filename = __DIR__ . '/siena_solar_data_2025.txt';
+        
+
+      🔍 FOUND LINE (no parens): require_once '/home/erbielqv/envelop.php';
+      🔗 PHP: /home/erbielqv/envelop.php
+        ✗ MISSING: /Applications/MAMP/htdocs/meteosimignano/sql/home/erbielqv/envelop.php
+      ℹ️  No standard include/require patterns found
+      💡 This might be a standalone file or uses dynamic includes
+
+  [0;35m📁[0m sql/reintegro_db.php
+    📊 Size: 4,0K
+    📅 Modified: 2025-07-09 01:20
+    📄 PHP Dependencies:
+      🔍 DEBUG - Prime righe del file:
+        <?php
+        
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
+
+      🔍 FOUND LINE (no parens): require_once '/home/erbielqv/envelop.php';
+      🔗 PHP: /home/erbielqv/envelop.php
+        ✗ MISSING: /Applications/MAMP/htdocs/meteosimignano/sql/home/erbielqv/envelop.php
+      ℹ️  No standard include/require patterns found
+      💡 This might be a standalone file or uses dynamic includes
+
+  [0;35m📁[0m tabella_home_display.php
+    📊 Size:  28K
+    📅 Modified: 2025-06-26 23:45
+    📄 PHP Dependencies:
+      🔍 DEBUG - Prime righe del file:
+        <?php
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
+        
+
+      🔍 FOUND LINE (no parens): //require_once '/home/erbielqv/envelop_lettura.php';DA USARE IN INTERNET
+      🔗 PHP: /home/erbielqv/envelop_lettura.php
+        ✗ MISSING: /Applications/MAMP/htdocs/meteosimignano/home/erbielqv/envelop_lettura.php
+      ℹ️  No standard include/require patterns found
+      💡 This might be a standalone file or uses dynamic includes

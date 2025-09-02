@@ -11,4 +11,10 @@ cumulato_radianza.txt
 aggiorna_log.txt
 FoscamCamera_E8ABFAA799FE/
 belle/
- 
+meteobridge/driver_mb_non_in_uso/
+meteobridge/obs/
+meteobridge/saratoga/
+meteobridge/versioni_ok/
+obs/
+meteobridge/obs
+
