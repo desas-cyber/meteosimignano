@@ -1,4 +1,3 @@
-
 <?php
 /*if (php_sapi_name() !== "cli") {
     http_response_code(403);
@@ -11,16 +10,17 @@
     // === INCLUDI CONNESSIONE PDO ===
     require_once __DIR__ . '/../../envelop.php';// Connessione via $pdo - scrittura, lettura
     require_once __DIR__ . '/../../envelop_lettura.php'; // Connessione via $pdo - lettura
+    require_once __DIR__ . '/../datetime_helper.php';
     
     // === CONFIGURAZIONE ===
     $directory = __DIR__ . "/../FoscamCamera_E8ABFAA799FE/snap";
     $debug = true; // 👉 Mostra output a schermo
-    $now = time();
+    $now = get_time(); // 🔧 USA HELPER invece di time()
     $threshold_sec = 128400;
     
     // === FUNZIONI ===
     function scriviLog($messaggio) {
-        $data = date("Y-m-d H:i:s");
+        $data = get_now(); // 🔧 USA HELPER invece di date("Y-m-d H:i:s")
         $logfile = __DIR__ . "/aggiorna_log.txt";
         file_put_contents($logfile, "[$data] $messaggio" . PHP_EOL, FILE_APPEND);
     }
@@ -31,44 +31,44 @@
     }
     
     function separatoreEsecuzione() {
-        $data = date("Y-m-d H:i:s");
+        $data = get_now(); // 🔧 USA HELPER invece di date("Y-m-d H:i:s")
         $logfile = __DIR__ . "/aggiorna_log.txt";
         file_put_contents($logfile, "------ ESECUZIONE: $data ------" . PHP_EOL, FILE_APPEND);
     }
     
     function filtraFileVivi($directory, $threshold_sec) {
-    $file_list = scandir($directory);
-    $now = time();
-    $files_vivi = [];
+        $file_list = scandir($directory);
+        $now = get_time(); // 🔧 USA HELPER invece di time()
+        $files_vivi = [];
 
-    foreach ($file_list as $file) {
-        $path = "$directory/$file";
+        foreach ($file_list as $file) {
+            $path = "$directory/$file";
 
-        if ($file !== '.' && $file !== '..' && is_file($path)) {
-            $data_ora_str = estraiDataOraDaFilename($file);
-            if ($data_ora_str === null) {
-                continue; // scarta file con nome non valido
-            }
+            if ($file !== '.' && $file !== '..' && is_file($path)) {
+                $data_ora_str = estraiDataOraDaFilename($file);
+                if ($data_ora_str === null) {
+                    continue; // scarta file con nome non valido
+                }
 
-            $timestamp_file = strtotime($data_ora_str);
-            if ($timestamp_file === false) {
-                continue; // scarta se parsing fallito
-            }
+                $timestamp_file = get_strtotime($data_ora_str); // 🔧 USA HELPER
+                if ($timestamp_file === false) {
+                    continue; // scarta se parsing fallito
+                }
 
-            $file_age = $now - $timestamp_file;
+                $file_age = $now - $timestamp_file;
 
-            if ($file_age <= $threshold_sec) {
-                $files_vivi[$file] = true;  // oppure puoi salvare $timestamp_file se serve
-            } else {
-                if (unlink($path)) {
-                    debugEcho("🗑️ Eliminato file troppo vecchio: $file");
+                if ($file_age <= $threshold_sec) {
+                    $files_vivi[$file] = true;  // oppure puoi salvare $timestamp_file se serve
+                } else {
+                    if (unlink($path)) {
+                        debugEcho("🗑️ Eliminato file troppo vecchio: $file");
+                    }
                 }
             }
         }
-    }
 
-    return $files_vivi;
-}
+        return $files_vivi;
+    }
     
 function leggiImmaginiDaDatabase(PDO $pdo) {
     $files_nel_db = []; // 🧠 Hash map: nome file => timestamp
@@ -80,7 +80,6 @@ function leggiImmaginiDaDatabase(PDO $pdo) {
         while ($riga = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $filename = $riga['FILE'];
             $data_ora = $riga['DATA_ORA'];
-
 
             $files_nel_db[$filename] = true;
         }
@@ -123,8 +122,6 @@ function leggiImmaginiDaDatabase(PDO $pdo) {
         return;
     }
     
-    
-
     // 🔁 INSERISCI nuovi file
     foreach ($file_map_dir as $filename => $val) {
         if (!isset($file_map_db[$filename])) {
@@ -224,20 +221,20 @@ function leggiImmaginiDaDatabase(PDO $pdo) {
     }
     
     function estraiDataOraDaFilename($filename) {
-    if (!preg_match('/Schedule_\d{8}-\d{6}\.jpg$/', $filename)) {
-        scriviLog("⚠️ Nome file non conforme al formato atteso: $filename");
-        return null;
-    }
+        if (!preg_match('/Schedule_\d{8}-\d{6}\.jpg$/', $filename)) {
+            scriviLog("⚠️ Nome file non conforme al formato atteso: $filename");
+            return null;
+        }
 
-    $data_str = substr($filename, 9, 15);
-    $dt = DateTime::createFromFormat('Ymd-His', $data_str);
-    if (!$dt) {
-        scriviLog("⚠️ Errore nel parsing data dal filename: $filename");
-        return null;
-    }
+        $data_str = substr($filename, 9, 15);
+        $dt = DateTime::createFromFormat('Ymd-His', $data_str);
+        if (!$dt) {
+            scriviLog("⚠️ Errore nel parsing data dal filename: $filename");
+            return null;
+        }
 
-    return $dt->format('Y-m-d H:i:s');
-}
+        return $dt->format('Y-m-d H:i:s');
+    }
     
     
     // === ESECUZIONE ===
@@ -250,6 +247,4 @@ function leggiImmaginiDaDatabase(PDO $pdo) {
     $durata = round(microtime(true) - $start, 2);
     debugEcho("⏱️ Tempo di esecuzione: {$durata} secondi.");
     scriviLog("⏱️ Tempo di esecuzione script: {$durata} secondi.");
-
 ?>
-

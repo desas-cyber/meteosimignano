@@ -35,6 +35,8 @@ $parametri = [
     "wind0wind-age"            => "Ultima dato vento"
 ];
 
+require_once __DIR__ . '/../datetime_helper.php';
+
 // associo i valori della funzione calcola delta alle posizioni nella stringa parametri
     $funzioni_multiple = [
         "calcolaTemperaturaDelta24hConParametro" => [5, 17]
@@ -66,7 +68,7 @@ if (!isset($pdo_lettura)) {
     return ['Err', 'Err'];
 }
 
-// ✅ Query solida, senza parametri
+// ✅ Query solida, senza parametri 
 $sql = "SELECT temperatura_C, pressione_hPa, data_ora
         FROM dati_meteo_simignano
         ORDER BY ABS(TIMESTAMPDIFF(SECOND, data_ora, DATE_SUB(NOW(), INTERVAL 24 HOUR)))
