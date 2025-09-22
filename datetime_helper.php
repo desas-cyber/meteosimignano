@@ -1,8 +1,8 @@
 
 <?php
 define('USE_TEST_MODE', true);
-define('TEST_DATETIME', '2025-09-03 00:05:00');
-
+define('TEST_DATETIME', '2025-09-09 00:25:00');
+date_default_timezone_set('Europe/Rome');
 /**
  * Restituisce la data/ora corrente o di test nel formato specificato
  */
@@ -51,4 +51,7 @@ function get_strtotime($datestring, $baseTimestamp = null) {
     
     return $baseTimestamp ? strtotime($datestring, $baseTimestamp) : strtotime($datestring);
 }
+
+/*-------chiamato da tabella_home_display.php;modifica_mag_24h.php---------*/
+
 ?>

@@ -1,4 +1,21 @@
 <?php
+
+/*
+Script: sincronizza directory snapshot Foscam con tabella DB_immagini_36h(_test).
+- Ambiente: deciso da env_tables_helper.php (USE_TEST_MODE); table_name() risolve la tabella.
+- Dipendenze: envelop.php (PDO R/W), envelop_lettura.php (PDO R/O), datetime_helper.php.
+- Fuso orario: Europe/Rome; usa get_time()/get_now() per tempi consistenti.
+- Directory sorgente: ../FoscamCamera_E8ABFAA799FE/snap (pattern: Schedule_YYYYMMDD-HHMMSS.jpg).
+- Log: ./aggiorna_log.txt con separatori di esecuzione e messaggi operativi.
+- Funzioni chiave:
+  * filtraFileVivi(): mantiene file ≤ threshold_sec, elimina gli altri dal FS.
+  * leggiImmaginiDaDatabase(): mappa FILE presenti in tabella.
+  * sincronizzaDatabase(): INSERT nuovi file, DELETE assenti (prepared statements).
+  * aggiornaDatiMeteo(): compila Temp/HR/P_hPa/vento/Dir_text da dati_meteo_simignano (±900s).
+- Sicurezza: nomi tabella via helper; per colonne/identificatori usare backtick se necessario.
+- Esecuzione: via CLI/cron o web; flag $debug abilita output a schermo.
+*/
+
 /*if (php_sapi_name() !== "cli") {
     http_response_code(403);
     exit("Accesso negato.");
@@ -11,6 +28,17 @@
     require_once __DIR__ . '/../../envelop.php';// Connessione via $pdo - scrittura, lettura
     require_once __DIR__ . '/../../envelop_lettura.php'; // Connessione via $pdo - lettura
     require_once __DIR__ . '/../datetime_helper.php';
+    require_once __DIR__ . '/../env_tables_helper.php';   // helper
+
+    // Nome tabella corretto in base a USE_TEST_MODE da env_tables_helper.php
+    $table_name = table_name('DB_immagini_36h');
+
+    // Messaggio visivo di sicurezza
+    if (is_test_mode()) {
+        echo "⚠️ Sei in AMBIENTE TEST — uso tabella {$table_name}<br>\n";
+    } else {
+        echo "✅ Sei in PRODUZIONE — uso tabella {$table_name}<br>\n";
+    }
     
     // === CONFIGURAZIONE ===
     $directory = __DIR__ . "/../FoscamCamera_E8ABFAA799FE/snap";
@@ -70,10 +98,10 @@
         return $files_vivi;
     }
     
-function leggiImmaginiDaDatabase(PDO $pdo) {
+function leggiImmaginiDaDatabase(PDO $pdo, string $table_name): array  {
     $files_nel_db = []; // 🧠 Hash map: nome file => timestamp
 
-    $sql = "SELECT FILE, DATA_ORA FROM DB_immagini_36h";
+    $sql = "SELECT FILE, DATA_ORA FROM " . $table_name . "";
     $stmt = $pdo->query($sql);
 
     if ($stmt) {
@@ -88,9 +116,9 @@ function leggiImmaginiDaDatabase(PDO $pdo) {
     return $files_nel_db;
 }    
     
- function sincronizzaDatabase(PDO $pdo, array $file_map_dir, array $file_map_db) {
-    $stmt_insert = $pdo->prepare("INSERT INTO DB_immagini_36h (FILE, DATA_ORA) VALUES (:file, :data_ora)");
-    $stmt_delete = $pdo->prepare("DELETE FROM DB_immagini_36h WHERE FILE = :file");
+ function sincronizzaDatabase(PDO $pdo, array $file_map_dir, array $file_map_db, string $table_name) {
+    $stmt_insert = $pdo->prepare("INSERT INTO " . $table_name . " (FILE, DATA_ORA) VALUES (:file, :data_ora)");
+    $stmt_delete = $pdo->prepare("DELETE FROM " . $table_name . " WHERE FILE = :file");
 
     $inseriti = 0;
     $eliminati = 0;
@@ -162,8 +190,8 @@ function leggiImmaginiDaDatabase(PDO $pdo) {
     debugEcho("🗑️ Eliminati dal DB: $eliminati file non più presenti.");
 }   
     
-    function aggiornaDatiMeteo(PDO $pdo, PDO $pdo_lettura) {
-        $sql = "SELECT ID, DATA_ORA FROM DB_immagini_36h
+    function aggiornaDatiMeteo(PDO $pdo, PDO $pdo_lettura, string $table_name) {
+        $sql = "SELECT ID, DATA_ORA FROM " . $table_name . "
         WHERE Temp IS NULL OR HR IS NULL OR P_hPa IS NULL OR vento_kmh IS NULL OR Dir_text IS NULL";
         $records = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     
@@ -181,7 +209,7 @@ function leggiImmaginiDaDatabase(PDO $pdo) {
         ");
     
         $stmt_update = $pdo->prepare("
-            UPDATE DB_immagini_36h 
+            UPDATE $table_name 
             SET Temp = :temp, HR = :hr, P_hPa = :P, vento_kmh = :vento, Dir_text = :dir
             WHERE ID = :id
         ");
@@ -241,9 +269,9 @@ function leggiImmaginiDaDatabase(PDO $pdo) {
     $start = microtime(true);
     separatoreEsecuzione();
     $files_vivi = filtraFileVivi($directory, $threshold_sec);
-    $files_nel_db = leggiImmaginiDaDatabase($pdo);
-    sincronizzaDatabase($pdo, $files_vivi, $files_nel_db);
-    aggiornaDatiMeteo($pdo, $pdo_lettura);
+    $files_nel_db = leggiImmaginiDaDatabase($pdo,$table_name);
+    sincronizzaDatabase($pdo, $files_vivi, $files_nel_db, $table_name);
+    aggiornaDatiMeteo($pdo, $pdo_lettura, $table_name);
     $durata = round(microtime(true) - $start, 2);
     debugEcho("⏱️ Tempo di esecuzione: {$durata} secondi.");
     scriviLog("⏱️ Tempo di esecuzione script: {$durata} secondi.");
