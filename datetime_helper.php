@@ -52,6 +52,6 @@ function get_strtotime($datestring, $baseTimestamp = null) {
     return $baseTimestamp ? strtotime($datestring, $baseTimestamp) : strtotime($datestring);
 }
 
-/*-------chiamato da tabella_home_display.php;modifica_mag_24h.php---------*/
+/*-------chiamato da tabella_home_display.php;modifica_mag_24h.php;tabella_home.php---------*/
 
 ?>

@@ -4,7 +4,7 @@ declare(strict_types=1);
 // Imposta qui l'ambiente: true = TEST, false = PRODUZIONE
 // Definisci solo se non già definita
 
-    define('USE_TEST_MODE_TABLES', true); // o false per PROD
+    define('USE_TEST_MODE_TABLES', false); // o false per PROD
 
 
 /**

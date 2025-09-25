@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 
 // Mappatura delle chiavi con le descrizioni (mantieni questa per compatibilità)
 $parametri = [
@@ -36,115 +40,102 @@ $parametri = [
 ];
 
 require_once __DIR__ . '/../datetime_helper.php';
+require_once __DIR__ . '/../env_tables_helper.php';   // helper per ambiente test globale
+// Nome tabella corretto in base a USE_TEST_MODE da env_tables_helper.php
+$table_name = table_name('dati_meteo_simignano');
 
 // associo i valori della funzione calcola delta alle posizioni nella stringa parametri
-    $funzioni_multiple = [
-        "calcolaTemperaturaDelta24hConParametro" => [5, 17]
-    ];
+$funzioni_multiple = [
+    "calcolaTemperaturaDelta24hConParametro" => [5, 17]
+];
 
 function estraiNumero($stringa) {
     $pulito = preg_replace('/[^0-9\.\-]/', '', $stringa);
-    $valore = floatval($pulito);
-    return $valore;
+    return floatval($pulito);
 }
 
-// Versione alternativa che accetta temp_attuale come parametro
+// Calcola delta temperatura e pressione 24h fa rispetto ad ora
 function calcolaTemperaturaDelta24hConParametro($temp_attuale, $pressione_attuale) {
-    
-    // Data e ora attuale  
-    $data_ora_attuale = date('d/m/Y,H:i');
-    
-    // Calcola data e ora di 24h fa
-    $timestamp_24h_fa = strtotime('-24 hours');
-    $data_24h_fa = date('d/m/Y', $timestamp_24h_fa);
-    $ora_24h_fa = date('H:i', $timestamp_24h_fa);
-    
-    
+    global $table_name;
+    $data_ora_attuale = get_now('d/m/Y,H:i');
+    $timestamp_24h_fa = get_strtotime('-24 hours', get_time());
+    $data_24h_fa_SQL = get_date('Y-m-d H:i:s', $timestamp_24h_fa);
+    $logfile = __DIR__ . '/log_delta.txt';// Percorso al file di log
     try {
-        // Connessione al database usando envelop.php
-        require_once '/home/erbielqv/envelop_lettura.php';
-if (!isset($pdo_lettura)) {
-    file_put_contents('log_delta.txt', "[DEBUG] ❌ Errore: \$pdo non definito\n", FILE_APPEND);
-    return ['Err', 'Err'];
-}
-
-// ✅ Query solida, senza parametri 
-$sql = "SELECT temperatura_C, pressione_hPa, data_ora
-        FROM dati_meteo_simignano
-        ORDER BY ABS(TIMESTAMPDIFF(SECOND, data_ora, DATE_SUB(NOW(), INTERVAL 24 HOUR)))
-        LIMIT 1";
-
-$stmt = $pdo_lettura->prepare($sql);
-$stmt->execute();
-
-$risultato = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if ($risultato) {
-    $temp_24h_fa = floatval($risultato['temperatura_C']);
-    $pressione_24h_fa = floatval($risultato['pressione_hPa']);
-    $data_ora_db = $risultato['data_ora'];
-
-    $delta_temp_24h = $temp_attuale - $temp_24h_fa;
-    $delta_pressione_24h = $pressione_attuale - $pressione_24h_fa;
-
-    $log = "[DEBUG " . date('Y-m-d H:i:s') . "]\n";
-    $log .= "→ Temperatura attuale: {$temp_attuale}°C\n";
-    $log .= "→ Pressione attuale: {$pressione_attuale} hPa\n";
-    $log .= "→ Valore DB @ {$data_ora_db}:\n";
-    $log .= "   - Temp 24h fa: {$temp_24h_fa}°C\n";
-    $log .= "   - Pressione 24h fa: {$pressione_24h_fa} hPa\n";
-    $log .= "📉 Δ Temp: " . number_format($delta_temp_24h, 1) . "°C\n";
-    $log .= "📉 Δ Pressione: " . number_format($delta_pressione_24h, 1) . " hPa\n\n";
-
-    file_put_contents('log_delta.txt', $log, FILE_APPEND);
-
-    return [
-        number_format($delta_temp_24h, 1) . '°C',
-        number_format($delta_pressione_24h, 1) . 'hPa'
-    ];
-}
-                
-            } catch (PDOException $e) {
-                error_log("Errore database: " . $e->getMessage());
-                
-                return 'Err';
-            }   
+        require_once __DIR__ . '/../../envelop_lettura.php'; // Connessione via $pdo - lettura
+        if (!isset($pdo_lettura)) {
+            file_put_contents($logfile, "[DEBUG] ❌ Errore: \$pdo_lettura non definito\n", FILE_APPEND);
+            return ['Err', 'Err'];
         }
 
+        // Query corretta con nome tabella
+        $sql = "SELECT temperatura_C, pressione_hPa, data_ora
+                FROM $table_name
+                ORDER BY ABS(TIMESTAMPDIFF(SECOND, data_ora, :data_24h_fa_SQL))
+                LIMIT 1";
+        $stmt = $pdo_lettura->prepare($sql);
+        $stmt->execute([':data_24h_fa_SQL' => $data_24h_fa_SQL]);
+        $risultato = $stmt->fetch(PDO::FETCH_ASSOC);
 
+        if ($risultato) {
+            $temp_24h_fa = floatval($risultato['temperatura_C']);
+            $pressione_24h_fa = floatval($risultato['pressione_hPa']);
+            $data_ora_db = $risultato['data_ora'];
+
+            $delta_temp_24h = $temp_attuale - $temp_24h_fa;
+            $delta_pressione_24h = $pressione_attuale - $pressione_24h_fa;
+
+            $log = "[DEBUG " . date('Y-m-d H:i:s') . "]\n";
+            $log .= "→ Temperatura attuale: {$temp_attuale}°C\n";
+            $log .= "→ Pressione attuale: {$pressione_attuale} hPa\n";
+            $log .= "→ Valore DB @ {$data_ora_db}:\n";
+            $log .= "   - Temp 24h fa: {$temp_24h_fa}°C\n";
+            $log .= "   - Pressione 24h fa: {$pressione_24h_fa} hPa\n";
+            $log .= "📉 Δ Temp: " . number_format($delta_temp_24h, 1) . "°C\n";
+            $log .= "📉 Δ Pressione: " . number_format($delta_pressione_24h, 1) . " hPa\n\n";
+            
+            file_put_contents($logfile, $log, FILE_APPEND);
+
+            echo "<pre>$log</pre>";//debug a schermo
+
+            return [
+                number_format($delta_temp_24h, 1) . '°C',
+                number_format($delta_pressione_24h, 1) . 'hPa'
+            ];
+        } else {
+            file_put_contents($logfile, "[DEBUG] Nessun risultato DB per delta 24h\n", FILE_APPEND);
+            return ['Err', 'Err'];
+        }
+    } catch (PDOException $e) {
+        error_log("Errore database: " . $e->getMessage());
+        return ['Err', 'Err'];
+    }
+}
 
 // Funzione principale per processare i valori
 function processaValori($stringa_dati) {
     global $funzioni_multiple;
 
-    $valori = explode(',', $stringa_dati); // ✅ Prima cosa!
-
-    // Debug dell'intero array
-    foreach ($valori as $index => $val) {
-        
-    }
+    $valori = explode(',', $stringa_dati);
 
     foreach ($funzioni_multiple as $nome_funzione => $posizioni) {
-    if (function_exists($nome_funzione)) {
-        
-        $temp_attuale = estraiNumero($valori[6]);
-        $pressione_attuale = estraiNumero($valori[18]);
+        if (function_exists($nome_funzione)) {
+            $temp_attuale = estraiNumero($valori[6]);
+            $pressione_attuale = estraiNumero($valori[18]);
+            $risultati = $nome_funzione($temp_attuale, $pressione_attuale);
 
-
-        // ✅ QUI CHIAMI LA FUNZIONE
-        $risultati = $nome_funzione($temp_attuale, $pressione_attuale);
-
-        if (is_array($risultati) && count($risultati) === count($posizioni)) {
-            foreach ($posizioni as $i => $posizione) {
-                $valori[$posizione] = $risultati[$i];
+            if (is_array($risultati) && count($risultati) === count($posizioni)) {
+                foreach ($posizioni as $i => $posizione) {
+                    $valori[$posizione] = $risultati[$i];
+                }
             }
         }
     }
-}
 
     return implode(',', $valori);
 }
 
+//calcolaTemperaturaDelta24hConParametro(15, 18); 
 
 // Funzione per salvare i dati in un file
 function saveDataToFile($data) {

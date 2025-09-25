@@ -27,8 +27,8 @@ Script: sincronizza directory snapshot Foscam con tabella DB_immagini_36h(_test)
     // === INCLUDI CONNESSIONE PDO ===
     require_once __DIR__ . '/../../envelop.php';// Connessione via $pdo - scrittura, lettura
     require_once __DIR__ . '/../../envelop_lettura.php'; // Connessione via $pdo - lettura
-    require_once __DIR__ . '/../datetime_helper.php';
-    require_once __DIR__ . '/../env_tables_helper.php';   // helper
+    require_once __DIR__ . '/../datetime_helper.php';// helper per ambiente test locale
+    require_once __DIR__ . '/../env_tables_helper.php';   // helper per ambiente test globale
 
     // Nome tabella corretto in base a USE_TEST_MODE da env_tables_helper.php
     $table_name = table_name('DB_immagini_36h');
