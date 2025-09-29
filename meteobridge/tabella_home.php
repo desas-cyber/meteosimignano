@@ -1,4 +1,24 @@
 <?php
+
+/*
+FILE: tabella_home.php — scopo e orientamento rapido
+1. Scopo: processa stringhe CSV ricevute via GET['temp'] e salva dati in dati_temperatura.txt.
+2. Entry point: if (isset($_GET['temp'])) -> processaValori() -> saveDataToFile().
+3. Input atteso: stringa CSV con almeno 19 campi; temperatura indice 6, pressione indice 18.
+4. Funzioni principali:
+   - processaValori($stringa_dati): explode, applica funzioni multiple e restituisce CSV modificato.
+   - calcolaTemperaturaDelta24hConParametro($t,$p): estrae dal DB valori 24h fa e calcola ΔT/ΔP.
+   - estraiNumero($stringa): pulisce e ritorna float.
+   - saveDataToFile($data): scrive dati_temperatura.txt.
+5. Dipendenze esterne: datetime_helper.php, env_tables_helper.php, ../../envelop_lettura.php (per $pdo_lettura).
+6. DB: usa table_name('dati_meteo_simignano') da env_tables_helper; calcola delta tramite query su $pdo_lettura.
+7. Logging/Debug: scrive su __DIR__/log_delta.txt e può echoare <pre> per debug browser.
+8. Error handling: le funzioni ritornano ['Err','Err'] in caso di problemi; verificare log per dettagli.
+9. Ambito variabili: dichiarare global $table_name o $pdo_lettura dove necessario nelle funzioni.
+10. Note sicurezza: input da GET non sanitizzato completamente; validare in ingresso in produzione.
+11. Consigli operativi: usare __DIR__ per path, controllare permessi cartella, testare include paths.
+*/
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -94,7 +114,7 @@ function calcolaTemperaturaDelta24hConParametro($temp_attuale, $pressione_attual
             $log .= "📉 Δ Temp: " . number_format($delta_temp_24h, 1) . "°C\n";
             $log .= "📉 Δ Pressione: " . number_format($delta_pressione_24h, 1) . " hPa\n\n";
             
-            file_put_contents($logfile, $log, FILE_APPEND);
+            //file_put_contents($logfile, $log, FILE_APPEND);
 
             echo "<pre>$log</pre>";//debug a schermo
 
@@ -135,7 +155,7 @@ function processaValori($stringa_dati) {
     return implode(',', $valori);
 }
 
-//calcolaTemperaturaDelta24hConParametro(15, 18); 
+//calcolaTemperaturaDelta24hConParametro(15, 1018.75); 
 
 // Funzione per salvare i dati in un file
 function saveDataToFile($data) {

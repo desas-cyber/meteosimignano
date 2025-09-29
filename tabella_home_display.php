@@ -1,143 +1,168 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
 
-// $parametri arriva da questo file
-require_once __DIR__ . '/meteobridge/tabella_home.php';
-require_once __DIR__ . '/datetime_helper.php';
+/*
+FILE: tabella_home_display.php — guida rapida per sviluppatori
+1. Scopo: legge dati da meteobridge/dati_temperatura.txt e costruisce la tabella HTML di riepilogo meteo.
+2. Entry point: include meteobridge/tabella_home.php per mappature e poi legge il file tramite readDataFromFile().
+3. Input atteso: CSV in dati_temperatura.txt con campi in ordine corrispondente a $parametri (data, ora, ...).
+4. Dipendenze: require_once 'meteobridge/tabella_home.php' (mappature), require_once 'envelop_lettura.php' per $pdo_lettura.
+5. Funzione readDataFromFile(): ritorna contenuto raw del file dati_temperatura.txt o null se inesistente.
+6. Funzione pulisciValoreNumerico(): pulisce e valida singoli valori testuali prima della visualizzazione.
+7. Funzione getSolareMassimoGiornaliero(PDO $pdo_lettura): legge massimo teorico/ora da solar_data_siena e converte UTC→Europe/Rome.
+8. Funzione getSolareteoricoMezzaGiornata(PDO $pdo_lettura): calcola percentuali cumulato 12h/24h comparando dati effettivi e teorici.
+9. Indicatori UI: createDeltaIndicator, createPressureTrendIndicator, createComfortIndicator, createWindchillHeatIndicator => generano SVG colorati per tendenze.
+10. Funzione processLunarValue(): normalizza il campo luna in descrizione leggibile (fase + percentuale).
+11. Mappatura parametri: costruisce $valoriParametri associando chiavi tecniche a valori estratti dal CSV.
+12. Costruzione output: genera array $datiFinali con descrizione, nota e valore; poi stampa CSS + tabella HTML responsive.
+13. Log e debug: usa file come log_funz.txt, debug.txt, cumulato_radianza.txt per diagnostica; usare __DIR__ per path assoluti.
+14. Controlli importanti: verificare che $pdo_lettura sia definito, che dati_temperatura.txt esista e permessi di scrittura/lettura della cartella.
+15. Note operative: per debug usare richieste dirette al file o abilitare echo; validare/sanitizzare input upstream prima di produrre il file dati_temperatura.txt.
+*/
 
-// Funzione per leggere i dati dal file
-function readDataFromFile() {
-    $file = 'meteobridge/dati_temperatura.txt';
-    if (file_exists($file)) {
-        return file_get_contents($file);
-    }
-    return null;
-}
+
+        // $parametri arriva da questo file
+        require_once __DIR__ . '/meteobridge/tabella_home.php';
+        require_once __DIR__ . '/datetime_helper.php';
+        require_once __DIR__ . '/env_tables_helper.php';   // helper per ambiente test globale
+        // Nome tabella corretto in base a USE_TEST_MODE da env_tables_helper.php
+        $table_name = table_name('dati_meteo_simignano');
+        
+        
+        // Funzione per leggere i dati dal file
+        function readDataFromFile() {
+            $file = 'meteobridge/dati_temperatura.txt';
+            if (file_exists($file)) {
+                return file_get_contents($file);
+            }
+            return null;
+        }
 
 
 // Connessione al database usando envelop.php
         //require_once '/home/erbielqv/envelop_lettura.php';DA USARE IN INTERNET
         require_once __DIR__ . '/../envelop_lettura.php';
 
-if (!isset($pdo_lettura)) {
-    file_put_contents('log_delta.txt', "[DEBUG] ❌ Errore: \$pdo _lettura non definito\n", FILE_APPEND);
-    return ['Err', 'Err'];
-}
+        if (!isset($pdo_lettura)) {
+            file_put_contents('log_delta.txt', "[DEBUG] ❌ Errore: \$pdo _lettura non definito\n", FILE_APPEND);
+            return ['Err', 'Err'];
+        }
 //funzione che return null se il valore non è numerico; serve per gestire i valori possono essere vuoti o non numerici
 //in php il valore non numerico è convertito fa float($val) come zero e quindi è ambiguo
-function pulisciValoreNumerico($valore) {
-    // Prende solo i primi 3 caratteri da sinistra
-    $val = ltrim($valore); // rimuove solo spazi a sinistra
-    $val = substr($val, 0, 6); // prendiamo fino a 6 caratteri utili (es. ' 27.1°C')
-
-    // Elimina tutto tranne cifre, punto e meno
-    $val = preg_replace('/[^0-9\.\-]/', '', $val);
-
-    // Se non è numerico dopo la pulizia, ritorna 'NA'
-    return is_numeric($val) ? $valore : 'NA';
-}
-
-
-
-//restituisce massimo solare e ora
-function getSolareMassimoGiornaliero(?PDO $pdo_lettura): string
-{
-    // 1) Se non ho un PDO valido, torno subito fallback
-    if ($pdo_lettura === null) {
-        return "Teor Max e ora: N/A";
-    }
-
-    try {
-        // 2) Calcolo oggi come giorno dell'anno (1-based)
-        //$oggi = intval(date('z')) + 1;  // es. 152 per il 31 maggio 2025
-        $oggi = get_day_of_year();
-
-        // 3) Eseguo la query per irradianza e ora UTC
-        $sql = "
-            SELECT 
-                irradianza_max_w_m2, 
-                ora_massima_utc, 
-                giorno_anno
-            FROM 
-                solar_data_siena 
-            WHERE 
-                giorno_anno = :oggi
-            ORDER BY 
-                ora_massima_utc DESC
-            LIMIT 1
-        ";
-        $stmt = $pdo_lettura->prepare($sql);
-        $stmt->execute([':oggi' => $oggi]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // 4) Se non c’è alcun record per il giorno_anno, fallback
-        if (!$row) {
-            return "Teor Max e ora: N/A";
+        function pulisciValoreNumerico($valore) {
+            // Prende solo i primi 3 caratteri da sinistra
+            $val = ltrim($valore); // rimuove solo spazi a sinistra
+            $val = substr($val, 0, 6); // prendiamo fino a 6 caratteri utili (es. ' 27.1°C')
+        
+            // Elimina tutto tranne cifre, punto e meno
+            $val = preg_replace('/[^0-9\.\-]/', '', $val);
+        
+            // Se non è numerico dopo la pulizia, ritorna 'NA'
+            return is_numeric($val) ? $valore : 'NA';
         }
 
-        // 5) Prelevo i valori dal DB
-        $irradianza = $row['irradianza_max_w_m2'];   // es. 970.83
-        $oraUtc     = $row['ora_massima_utc'];       // es. "11:15:00"
-        $giornoAnno = intval($row['giorno_anno']);   // es. 152
 
-        // 6) Ricostruisco il DateTime UTC partendo da:
-        //    - Anno corrente
-        //    - Giorno dell'anno (0-based per DateTime crea da 1° gennaio)
-        $annoCorrente = intval(date('Y'));       // es. 2025
-        $zUtc         = $giornoAnno - 1;         // per createFromFormat('Y z H:i:s'), z è 0-based
 
-        // Creo la stringa "YYYY z HH:MM:SS"
-        //   ad esempio "2025 151 11:15:00" per il 152° giorno a ore 11:15 UTC
-        $datetimeUtcStr = sprintf('%d %d %s', $annoCorrente, $zUtc, $oraUtc);
-
-        // 7) Creo l’oggetto DateTime in UTC
-        $dtUtc = DateTime::createFromFormat(
-            'Y z H:i:s',
-            $datetimeUtcStr,
-            new DateTimeZone('UTC')
-        );
-        if (!$dtUtc) {
-            // Se il parsing fallisce per qualche motivo, fallback con sola irradianza
-            return "Teor Max e ora: {$irradianza} @ N/A";
+        //restituisce massimo solare e ora
+        function getSolareMassimoGiornaliero(?PDO $pdo_lettura): string
+        {
+            // 1) Se non ho un PDO valido, torno subito fallback
+            if ($pdo_lettura === null) {
+                return "Teor Max e ora: N/A";
+            }
+        
+            try {
+                // 2) Calcolo oggi come giorno dell'anno (1-based)
+                //$oggi = intval(date('z')) + 1;  // es. 152 per il 31 maggio 2025
+                $oggi = get_day_of_year();
+        
+                // 3) Eseguo la query per irradianza e ora UTC
+                $sql = "
+                    SELECT 
+                        irradianza_max_w_m2, 
+                        ora_massima_utc, 
+                        giorno_anno
+                    FROM 
+                        solar_data_siena 
+                    WHERE 
+                        giorno_anno = :oggi
+                    ORDER BY 
+                        ora_massima_utc DESC
+                    LIMIT 1
+                ";
+                $stmt = $pdo_lettura->prepare($sql);
+                $stmt->execute([':oggi' => $oggi]);
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+                // 4) Se non c’è alcun record per il giorno_anno, fallback
+                if (!$row) {
+                    return "Teor Max e ora: N/A";
+                }
+        
+                // 5) Prelevo i valori dal DB
+                $irradianza = $row['irradianza_max_w_m2'];   // es. 970.83
+                $oraUtc     = $row['ora_massima_utc'];       // es. "11:15:00"
+                $giornoAnno = intval($row['giorno_anno']);   // es. 152
+        
+                // 6) Ricostruisco il DateTime UTC partendo da:
+                //    - Anno corrente
+                //    - Giorno dell'anno (0-based per DateTime crea da 1° gennaio)
+                $annoCorrente = intval(date('Y'));       // es. 2025
+                $zUtc         = $giornoAnno - 1;         // per createFromFormat('Y z H:i:s'), z è 0-based
+        
+                // Creo la stringa "YYYY z HH:MM:SS"
+                //   ad esempio "2025 151 11:15:00" per il 152° giorno a ore 11:15 UTC
+                $datetimeUtcStr = sprintf('%d %d %s', $annoCorrente, $zUtc, $oraUtc);
+        
+                // 7) Creo l’oggetto DateTime in UTC
+                $dtUtc = DateTime::createFromFormat(
+                    'Y z H:i:s',
+                    $datetimeUtcStr,
+                    new DateTimeZone('UTC')
+                );
+                if (!$dtUtc) {
+                    // Se il parsing fallisce per qualche motivo, fallback con sola irradianza
+                    return "Teor Max e ora: {$irradianza} @ N/A";
+                }
+        
+                // 8) Converto UTC -> Europe/Rome (PHP applica automaticamente DST)
+                $dtUtc->setTimezone(new DateTimeZone('Europe/Rome'));
+                $oraLocale = $dtUtc->format('H:i');       // es. "13:15"
+        
+                // 9) Ritorno la stringa finale
+                return "Teor Max e ora: {$irradianza} @ {$oraLocale}";
+        
+            } catch (\Throwable $e) {
+                // 10) In caso di qualunque errore PDO o altro, loggo e ritorno fallback
+                file_put_contents(
+                    __DIR__ . '/log_funz.txt',
+                    "[DEBUG] ❌ Errore getSolareMassimoGiornaliero: " 
+                     . $e->getMessage() . ' (' . date('Y-m-d H:i:s') . ")\n",
+                    FILE_APPEND
+                );
+                return "Max e ora: N/A";
+            }
         }
-
-        // 8) Converto UTC -> Europe/Rome (PHP applica automaticamente DST)
-        $dtUtc->setTimezone(new DateTimeZone('Europe/Rome'));
-        $oraLocale = $dtUtc->format('H:i');       // es. "13:15"
-
-        // 9) Ritorno la stringa finale
-        return "Teor Max e ora: {$irradianza} @ {$oraLocale}";
-
-    } catch (\Throwable $e) {
-        // 10) In caso di qualunque errore PDO o altro, loggo e ritorno fallback
-        file_put_contents(
-            __DIR__ . '/log_funz.txt',
-            "[DEBUG] ❌ Errore getSolareMassimoGiornaliero: " 
-             . $e->getMessage() . ' (' . date('Y-m-d H:i:s') . ")\n",
-            FILE_APPEND
-        );
-        return "Max e ora: N/A";
-    }
-}
-//cumulato radianza solare********************
-function getSolareteoricoMezzaGiornata(?PDO $pdo_lettura)
-{
-    if ($pdo_lettura === null) {
-        return "cumulato_12_24h: N/A";
-    }
+        //cumulato radianza solare********************
+        function getSolareteoricoMezzaGiornata(?PDO $pdo_lettura)
+        {
+            if ($pdo_lettura === null) {
+                return "cumulato_12_24h: N/A";
+            }
     
     try {
-        
-        
         // dichiarazione iniziale
         $cumulato_percent_12h = "N/A"; 
         $cumulato_percent_24h = "N/A";
         $oggi = (int)date('z') + 1;  // 'z' = zero-based day of year
-        //echo "📅 Oggi: $oggi";
+//echo "📅 Oggi: $oggi";
         //$ora_attuale = (new DateTime('now', new DateTimeZone('Europe/Rome')))->format('H:i:s');
-        $ora_attuale = (new DateTime(get_now(), new DateTimeZone('Europe/Rome')))->format('H:i:s');
+        //$ora_attuale = new DateTime("17:25:22", new DateTimeZone('Europe/Rome'));
+        $ora_attuale = get_datetime();
+//echo "⏰ Ora attuale: " . $ora_attuale->format('H:i:s') . "\n";
+//echo "ora_attuale: $ora_attuale";
         $pdo_lettura->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         //CHIAMATA PARAMETRI RADIANZA TEORICA 
         $sql = "
@@ -177,26 +202,26 @@ function getSolareteoricoMezzaGiornata(?PDO $pdo_lettura)
 echo "<pre>";
 print_r($row2);
 echo "</pre>";
-*/ 
+ */
 
             //CHIAMATA PARAMETRI RADIANZA CUMULATA ALLE 12 H
 
             $radianza_max_cumulo_12h = "N/A";
-            // Usa TEST_DATETIME o data reale
-$testDatetime = USE_TEST_MODE ? TEST_DATETIME : date("Y-m-d H:i:s");
-$oggi = date("Y-m-d", strtotime($testDatetime));
-
-$ora_massima_utc_obj = new DateTime($ora_massima_utc, new DateTimeZone('UTC'));
-$ora_massima_loc = $ora_massima_utc_obj->setTimezone(new DateTimeZone('Europe/Rome'));
-
-// Clona e modifica per start e end ±5 minuti
-$start_dt = clone $ora_massima_loc;
-$start_dt->modify('-5 minutes');
-$ora_massima_loc_start = $start_dt->format('Y-m-d H:i:s');
-
-$end_dt = clone $ora_massima_loc;
-$end_dt->modify('+5 minutes');
-$ora_massima_loc_end = $end_dt->format('Y-m-d H:i:s');
+            
+            $now = get_datetime();                 // DateTime già nel fuso di default (Europe/Rome)
+            $oggi = $now->format('Y-m-d'); 
+            
+            $ora_massima_utc_obj = new DateTime($ora_massima_utc, new DateTimeZone('UTC'));
+            $ora_massima_loc = $ora_massima_utc_obj->setTimezone(new DateTimeZone('Europe/Rome'));
+//echo "ora massima locale: " . $ora_massima_loc->format('Y-m-d H:i:s') . "<br>";
+            // Clona e modifica per start e end ±5 minuti
+            $start_dt = clone $ora_massima_loc;
+            $start_dt->modify('-5 minutes');
+            $ora_massima_loc_start = $start_dt->format('Y-m-d H:i:s');
+            
+            $end_dt = clone $ora_massima_loc;
+            $end_dt->modify('+5 minutes');
+            $ora_massima_loc_end = $end_dt->format('Y-m-d H:i:s');
                 
             $sql = "
                 SELECT radianza_int_whm2 AS radianza_max_cumulo_12h
@@ -222,9 +247,9 @@ $ora_massima_loc_end = $end_dt->format('Y-m-d H:i:s');
         $teorico_12h = $row1['teorico_12h'] ?? null;
         $radianza_max_cumulo_12h = $row3['radianza_max_cumulo_12h'] ?? null;
         
-        /*echo "💡 radianza massima: $radianza_max_cumulo_12h<br>";
-        echo "📐 teorico 12h: $teorico_12h<br>";
-        */
+//echo "💡 radianza cumulo12h max: $radianza_max_cumulo_12h<br>";
+//echo "📐 teorico 12h: $teorico_12h<br>";
+        
         //CUMULATO 12H
         if ($ora_massima_loc !== null && $ora_attuale <= $ora_massima_loc) {
             if ($teorico_12h === null || $radianza_int_whm2 === null) {
@@ -251,8 +276,8 @@ $ora_massima_loc_end = $end_dt->format('Y-m-d H:i:s');
         }
         
         // 🔽 scrivi entrambi solo ora
-        
-/*echo "<pre>";
+/*        
+echo "<pre>";
 echo '💡 teorico_12h: ' . var_export(round($teorico_12h), true)
      . '  💡 teorico_24h: ' . var_export(round($teorico_24h), true)
      . '<br>';
@@ -471,142 +496,142 @@ function processLunarValue($valoreLuna) {
 
 
 
-// Creiamo una mappa diretta parametro -> valore
-$valoriParametri = [];
-$keys = array_keys($parametri);
-for ($i = 0; $i < count($keys); $i++) {
-    $valoriParametri[$keys[$i]] = $values[$i + 2] ?? null;
-}
-if (!array_key_exists('th0temp-wchill', $valoriParametri)) {
-    
-}
-/// Funzione helper per estrarre il valore numerico dalla stringa temperatura
-function extractTemperatureValue($tempString) {
-    if (empty($tempString) || $tempString === 'N/A') {
-        return null;
+    // Creiamo una mappa diretta parametro -> valore)(),// Creiamo una mappa diretta parametro -> valore// Creiamo una mappa diretta parametro -> valore
+    $valoriParametri = [];
+    $keys = array_keys($parametri);
+    for ($i = 0; $i < count($keys); $i++) {
+        $valoriParametri[$keys[$i]] = $values[$i + 2] ?? null;
     }
-    // Rimuove gli ultimi 8 caratteri (spazio + ora formato " HH:MM")
-    $tempWithoutTime = substr($tempString, 0, -8);
-    // Rimuove il simbolo °C e converte in float
-    $tempValue = str_replace('°C', '', $tempWithoutTime);
-    return floatval($tempValue);
-}
-
-// NOTE CENTRALI, associate a parametri principali
-$noteCentrali = [
-    // Temperatura attuale → mostra anche delta24 con pallino
-    "th0temp-act" => createDeltaIndicator($valoriParametri["th0temp-delta24"] ?? 0) . "\u{0394}24h: " . ($valoriParametri["th0temp-delta24"] ?? 'N/A'),
+    if (!array_key_exists('th0temp-wchill', $valoriParametri)) {
+        
+    }
+    /// Funzione helper per estrarre il valore numerico dalla stringa temperatura
+    function extractTemperatureValue($tempString) {
+        if (empty($tempString) || $tempString === 'N/A') {
+            return null;
+        }
+        // Rimuove gli ultimi 8 caratteri (spazio + ora formato " HH:MM")
+        $tempWithoutTime = substr($tempString, 0, -8);
+        // Rimuove il simbolo °C e converte in float
+        $tempValue = str_replace('°C', '', $tempWithoutTime);
+        return floatval($tempValue);
+    }
     
-    // Temperatura max → calcola differenza con ieri e mostra pallino + valore di ieri
-    "th0temp-dmax" => (function() use ($valoriParametri) {
-        $oggi = extractTemperatureValue($valoriParametri["th0temp-dmax"] ?? '');
-        $ieri = floatval($valoriParametri["th0temp-ydmax"] ?? 'N/A');
-        $delta = ($oggi !== null && $ieri !== null) ? ($ieri-$oggi) : 0;
+    // NOTE CENTRALI, associate a parametri principali
+    $noteCentrali = [
+        // Temperatura attuale → mostra anche delta24 con pallino
+        "th0temp-act" => createDeltaIndicator($valoriParametri["th0temp-delta24"] ?? 0) . "\u{0394}24h: " . ($valoriParametri["th0temp-delta24"] ?? 'N/A'),
         
-        /* Stampa la differenza e il risultato
-    echo "<p>Delta temperatura max (oggi vs ieri): <strong>" 
-         . number_format($delta, 1) 
-         . "°C</strong> – ";
-        */ 
+        // Temperatura max → calcola differenza con ieri e mostra pallino + valore di ieri
+        "th0temp-dmax" => (function() use ($valoriParametri) {
+            $oggi = extractTemperatureValue($valoriParametri["th0temp-dmax"] ?? '');
+            $ieri = floatval($valoriParametri["th0temp-ydmax"] ?? 'N/A');
+            $delta = ($oggi !== null && $ieri !== null) ? ($ieri-$oggi) : 0;
+            
+            /* Stampa la differenza e il risultato
+        echo "<p>Delta temperatura max (oggi vs ieri): <strong>" 
+             . number_format($delta, 1) 
+             . "°C</strong> – ";
+            */ 
+            
+            
+            return createDeltaIndicator($delta) . "ieri: " . ($valoriParametri["th0temp-ydmax"] ?? 'N/A');
+        })(),
+        
+        // Temperatura min → calcola differenza con ieri e mostra pallino + valore di ieri
+        "th0temp-dmin" => (function() use ($valoriParametri) {
+            $oggi = extractTemperatureValue($valoriParametri["th0temp-dmin"] ?? '');
+            $ieri = floatval($valoriParametri["th0temp-ydmin"] ?? 'N/A');
+            $delta = ($oggi !== null && $ieri !== null) ? ($ieri-$oggi) : 0;
+/* Stampa la differenza e il risultato
+echo "<p>Delta temperatura minima (oggi vs ieri): <strong>" 
+. number_format($delta, 1) 
+. "°C</strong> – ";
+*/
+             
+            return createDeltaIndicator($delta) . "ieri: " . ($valoriParametri["th0temp-ydmin"] ?? 'N/A');
+        })(),
         
         
-        return createDeltaIndicator($delta) . "ieri: " . ($valoriParametri["th0temp-ydmax"] ?? 'N/A');
-    })(),
-    
-    // Temperatura min → calcola differenza con ieri e mostra pallino + valore di ieri
-    "th0temp-dmin" => (function() use ($valoriParametri) {
-        $oggi = extractTemperatureValue($valoriParametri["th0temp-dmin"] ?? '');
-        $ieri = floatval($valoriParametri["th0temp-ydmin"] ?? 'N/A');
-        $delta = ($oggi !== null && $ieri !== null) ? ($ieri-$oggi) : 0;
-        /* Stampa la differenza e il risultato
-    echo "<p>Delta temperatura minima (oggi vs ieri): <strong>" 
-         . number_format($delta, 1) 
-         . "°C</strong> – ";
-         */
+        
+        // Confort: pallino colorato basato sul valore dewpoint
+        "th0dew-act" => "Confort: " . createComfortIndicator($valoriParametri["th0dew-act"] ?? 0),
+        
+        // Pressione → mostra anche delta24 con pallino
+        "thb0press-act" => createPressureTrendIndicator($valoriParametri["thb0press-delta24"] ?? 0) . 
+                           "\u{0394}24h: " . ($valoriParametri["thb0press-delta24"] ?? 'N/A'),
+        
+        // Windchill → pallini per differenza
+        "wind0chill-act" => "Impatto " . 
+                            createWindchillHeatIndicator($valoriParametri["wind0chill-act"] ?? 0),
+        
+        // Heat Index → pallini per differenza  
+        "th0heatindex-act" => "Impatto " . 
+                            createWindchillHeatIndicator($valoriParametri["th0heatindex-act"] ?? 0),
+                            
+          // radiazione solare: cumulato 12h                  
+         "sol0rad-act" => getSolareMassimoGiornaliero($pdo_lettura),
          
-        return createDeltaIndicator($delta) . "ieri: " . ($valoriParametri["th0temp-ydmin"] ?? 'N/A');
-    })(),
+         // radiazione solare: cumulato mezza giornata
+         //"sol0rad-sum24h" => "Mezza giornata: "                   
+    ];
     
     
     
-    // Confort: pallino colorato basato sul valore dewpoint
-    "th0dew-act" => "Confort: " . createComfortIndicator($valoriParametri["th0dew-act"] ?? 0),
+    // COSTRUZIONE ARRAY DATI FINALI
+    $datiFinali = [];
     
-    // Pressione → mostra anche delta24 con pallino
-    "thb0press-act" => createPressureTrendIndicator($valoriParametri["thb0press-delta24"] ?? 0) . 
-                       "\u{0394}24h: " . ($valoriParametri["thb0press-delta24"] ?? 'N/A'),
+    // Aggiungi data e ora all'inizio
+    $datiFinali[] = [
+        'descrizione' => 'Ultima connessione',
+        'valore' => $data_ora . ' - ' . $ora,
+        'nota' => ''
+    ];
     
-    // Windchill → pallini per differenza
-    "wind0chill-act" => "Impatto " . 
-                        createWindchillHeatIndicator($valoriParametri["wind0chill-act"] ?? 0),
     
-    // Heat Index → pallini per differenza  
-    "th0heatindex-act" => "Impatto " . 
-                        createWindchillHeatIndicator($valoriParametri["th0heatindex-act"] ?? 0),
-                        
-      // radiazione solare: cumulato 12h                  
-     "sol0rad-act" => getSolareMassimoGiornaliero($pdo_lettura),
-     
-     // radiazione solare: cumulato mezza giornata
-     //"sol0rad-sum24h" => "Mezza giornata: "                   
-];
-
-
-
-// COSTRUZIONE ARRAY DATI FINALI
-$datiFinali = [];
-
-// Aggiungi data e ora all'inizio
-$datiFinali[] = [
-    'descrizione' => 'Ultima connessione',
-    'valore' => $data_ora . ' - ' . $ora,
-    'nota' => ''
-];
-
-
-
-
-
-foreach ($keys as $key) {
-    // Se questo parametro è usato come NOTA per un altro, lo saltiamo
-    if (in_array($key, [
-        "th0temp-delta24",
-        "th0temp-ydmax", 
-        "th0temp-ydmin",
-        "thb0press-delta24"
-        // NOTA: "th0dew-act" non si salta, perché è la riga principale con la nota
-])) {
-    continue;
-}
-
-$nota = '';
-if (isset($noteCentrali[$key])) {
-    $nota = $noteCentrali[$key];
-}
-
-// Prendi il valore dalla mappa
-$valore = $valoriParametri[$key];
-
-// Gestione speciale per il valore della luna
-if ($key === 'mbsystem-lunarpercent') {
-    $valore = processLunarValue($valore);
-} elseif ($key === 'wind0dir-act') {
-    // Non fare nulla, lascia invariato
-    $valore = $valore;
-} else {
-    $valore = pulisciValoreNumerico($valore);
-}
-
-$datiFinali[] = [
-    'descrizione' => $parametri[$key],
-    'nota' => $nota,
-    'valore' => $valore
-];
-}
-
-// Visualizzazione dei dati
-//echo "<h2>Dati Meteo</h2>";
-echo "<style>
+    
+    
+    
+    foreach ($keys as $key) {
+        // Se questo parametro è usato come NOTA per un altro, lo saltiamo
+        if (in_array($key, [
+            "th0temp-delta24",
+            "th0temp-ydmax", 
+            "th0temp-ydmin",
+            "thb0press-delta24"
+            // NOTA: "th0dew-act" non si salta, perché è la riga principale con la nota
+    ])) {
+        continue;
+    }
+    
+    $nota = '';
+    if (isset($noteCentrali[$key])) {
+        $nota = $noteCentrali[$key];
+    }
+    
+    // Prendi il valore dalla mappa
+    $valore = $valoriParametri[$key];
+    
+    // Gestione speciale per il valore della luna
+    if ($key === 'mbsystem-lunarpercent') {
+        $valore = processLunarValue($valore);
+    } elseif ($key === 'wind0dir-act') {
+        // Non fare nulla, lascia invariato
+        $valore = $valore;
+    } else {
+        $valore = pulisciValoreNumerico($valore);
+    }
+    
+    $datiFinali[] = [
+        'descrizione' => $parametri[$key],
+        'nota' => $nota,
+        'valore' => $valore
+    ];
+    }
+    
+    // Visualizzazione dei dati
+    //echo "<h2>Dati Meteo</h2>";
+    echo "<style>
   /* =========================
      Stili base – Mobile first
      ========================= */

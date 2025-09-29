@@ -7,10 +7,12 @@ error_reporting(E_ALL);
 
 //require_once '/home/erbielqv/envelop.php'; DA USARE IN INTERNET
 require_once __DIR__ . '/../envelop.php';
-require_once 'aggiornaCartellaImmagini.php';
+require_once __DIR__ . '/aggiornaCartellaImmagini.php';
 
-$directory = 'FoscamCamera_E8ABFAA799FE/snap/';
-$table_name = 'DB_immagini_36h';
+$directory = __DIR__ .'/FoscamCamera_E8ABFAA799FE/snap/';
+require_once __DIR__ . '/env_tables_helper.php';   // helper per ambiente test globale
+// Nome tabella corretto in base a USE_TEST_MODE da env_tables_helper.php
+$table_name = table_name('dati_meteo_simignano');
 $data = getImageDataFromFolder($pdo, $directory, $table_name);
 
 $mainImage = '';
