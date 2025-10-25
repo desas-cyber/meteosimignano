@@ -42,7 +42,7 @@ try {
     $stmt = $pdo->prepare("
         CREATE TEMPORARY TABLE backup_radianza AS 
         SELECT id, data_ora, radianza_wm2, radianza_int_whm2 
-        FROM dati_meteo_simignano 
+        FROM $table_name 
         WHERE DATE(data_ora) >= ?
     ");
     $stmt->execute([$data_inizio]);
@@ -52,7 +52,7 @@ try {
     echo "📅 Identificazione giorni da processare...\n";
     $stmt = $pdo->prepare("
         SELECT DISTINCT DATE(data_ora) as giorno
-        FROM dati_meteo_simignano 
+        FROM $table_name 
         WHERE DATE(data_ora) >= ?
         AND (radianza_int_whm2 IS NULL OR radianza_int_whm2 = 0)
         ORDER BY DATE(data_ora)
@@ -69,7 +69,7 @@ try {
         // Recupera tutti i record del giorno ordinati per timestamp
         $stmt = $pdo->prepare("
             SELECT id, data_ora, radianza_wm2, radianza_int_whm2
-            FROM dati_meteo_simignano 
+            FROM $table_name 
             WHERE DATE(data_ora) = ?
             ORDER BY data_ora ASC
         ");
@@ -124,7 +124,7 @@ try {
             // Aggiorna solo se il valore è NULL
             if ($record['radianza_int_whm2'] === null) {
                 $update_stmt = $pdo->prepare("
-                    UPDATE dati_meteo_simignano 
+                    UPDATE $table_name 
                     SET radianza_int_whm2 = ? 
                     WHERE id = ?
                 ");
@@ -142,7 +142,7 @@ try {
     echo "\n🔍 Verifica giorni con possibili discontinuità...\n";
     $stmt = $pdo->prepare("
         SELECT DISTINCT DATE(data_ora) as giorno
-        FROM dati_meteo_simignano 
+        FROM $table_name 
         WHERE DATE(data_ora) >= ?
         ORDER BY DATE(data_ora)
     ");
@@ -157,7 +157,7 @@ try {
                 COUNT(radianza_int_whm2) as con_integrale,
                 MIN(radianza_int_whm2) as min_integrale,
                 MAX(radianza_int_whm2) as max_integrale
-            FROM dati_meteo_simignano 
+            FROM $table_name 
             WHERE DATE(data_ora) = ?
         ");
         $stmt->execute([$giorno]);
@@ -189,7 +189,7 @@ try {
             MAX(radianza_int_whm2) as max_integrale,
             AVG(radianza_wm2) as media_radianza,
             MAX(data_ora) as ultimo_record
-        FROM dati_meteo_simignano 
+        FROM $table_name 
         WHERE DATE(data_ora) >= ?
         GROUP BY DATE(data_ora)
         ORDER BY DATE(data_ora) DESC
@@ -224,7 +224,7 @@ try {
             data_ora,
             radianza_wm2,
             radianza_int_whm2
-        FROM dati_meteo_simignano 
+        FROM $table_name 
         WHERE DATE(data_ora) >= ?
         ORDER BY data_ora DESC 
         LIMIT 10
@@ -248,7 +248,7 @@ try {
             COUNT(radianza_int_whm2) as record_con_integrale,
             AVG(radianza_int_whm2) as media_integrale,
             MAX(radianza_int_whm2) as max_integrale_globale
-        FROM dati_meteo_simignano 
+        FROM $table_name 
         WHERE DATE(data_ora) >= ?
     ");
     $stmt->execute([$data_inizio]);

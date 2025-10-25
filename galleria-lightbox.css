@@ -1,235 +1,321 @@
+/* ==========================================================================
+   BASE / VARIABILI
+   - Piccole variabili per spaziature e dimensioni tipiche.
+   ========================================================================== */
+:root {
+  --gap: 10px;
+  --thumb-radius: 8px;
+  --thumb-border: 4px;
+  --overlay-gap: 2px;
 
+  --lb-backdrop: rgba(0, 0, 0, 0.85);
+  --btn-hover-bg: rgba(255, 255, 255, 0.8);
+  --accent-red: #ff1e1e;
+  --accent-green: #00ff6a;
+}
+
+/* ==========================================================================
+   GALLERIA (griglia thumbnail)
+   - 3 colonne responsive con gap coerente, scroll verticale se serve.
+   ========================================================================== */
 .gallery {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); /* Tre immagini per riga */
-            gap: 10px;
-            max-width: 1000px;
-            margin: auto;
-            max-height: calc(4 * 150px + 30px); /* Calcola l'altezza massima: 4 righe di 150px piÃ¹ 30px di gap */
-            overflow-y: auto; /* Aggiunge lo scrolling verticale se necessario */
-            }
-        .gallery img {
-            width: 100%;
-            cursor: pointer;
-            border: 4px solid #ddd;
-            border-radius: 8px;
-            transition: transform 0.2s ease;
-        }
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 immagini per riga */
+  gap: var(--gap);
+  max-width: 1000px;
+  margin: 0 auto;
 
-        .gallery img:hover {
-            transform: scale(1.1);
-        }
+  /* Altezza massima: ~4 righe (150px ciascuna) + gap verticali (3 * gap) */
+  max-height: calc((4 * 150px) + (3 * var(--gap)));
+  overflow-y: auto; /* scroll verticale se necessario */
+}
 
-       /* Lightbox - sfondo scuro */
-        .lightbox {
-            display: none;
-            justify-content: center;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 1000; /* Assicura che la lightbox sia sopra altri elementi */
-        }
-        
-        .lightbox.active {
-            display: flex;
-        }
-        
-        /* Contenuto della Lightbox */
-        .lightbox-content {
-          display: inline-block;   /* rimane shrink‐to‐content */
-          position: relative;  
-          align-items: center;   /* centra i figli orizzontalmente */
-          margin: 0 auto;        /* centra il wrapper nella lightbox */
-        }
-        
-        
-        .lightbox img {
-          max-width: 95vw !important;
-          max-height: 95vh !important;
-          width: auto !important;
-          height: auto !important;
-          object-fit: contain !important;
-          
-        }
-        
-        
-        
-        .lightbox-date, .lightbox-info {
-            width: 100%;
-            position: absolute;      /* fuori dal flow, dentro al wrapper */
-            left: 0;                 /* allinea al bordo sinistro del wrapper */
-            right: 0;                /* allinea al bordo destro del wrapper */
-            text-align: center;
-            background: rgba(0, 0, 0, 0.6);
-            color: white;
-            font-size: 0.9rem;
-            font-weight: normal;
-            padding: 3px 6px;
-            box-sizing: border-box;
-            line-height: 1.2;
-            border-radius: 5px !important;
-        }
-        
-        /* Pulsanti di navigazione */
-        .lightbox .nav-btn {
-            position: fixed;
-            top: 90%;
-            transform: translateY(-50%);
-            background: transparent;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            border-radius: 50%;
-        }
-        
-        .lightbox .nav-btn:hover {
-            background: rgba(255, 255, 255, 0.8);
-        }
-        
-        .prev { right: 10px; }
-        .next { left: 10px; }
-        
-        /* Media query per limitare la dimensione massima del font */
-        @media (min-width: 600px) {
-            .date-text {
-                font-size: 20px;
-            }
-        }
-        
-        /*********** PULSANTE CHIUDI e rewind ***********/
-        
-        /* Pulsante Close al centro orizzontale in alto */
-        #close-btn.lightbox-close {
-            position: fixed; /* Posizionamento fisso */
-            top: 15px; /* Distanza dal bordo superiore */
-            left: 50%; /* Centrato orizzontalmente */
-            transform: translateX(-50%); /* Centra esattamente */
-            appearance: none;
-            background: transparent;
-            color: red;
-            font-size: 2rem;
-            border: none;
-            cursor: pointer;
-            z-index: 1001; /* Sopra la lightbox */
-        }
-        
-        /* Pulsanti Rewind e Forward */
-        #rewind-btn,
-        #forward-btn {
-            position: fixed; /* Posizionamento fisso */
-            top: 10px; /* Distanza dal bordo superiore */
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            z-index: 1001; /* Sopra la lightbox */
-        }
-        
-        #rewind-btn {
-            left: 10px; /* Angolo in alto a sinistra */
-            padding: 10px;   /* garantisce spazio per il dot */
-        }
-        
-        #forward-btn {
-            right: 10px; /* Angolo in alto a destra */
-            padding: 10px;   /* garantisce spazio per il dot */
-        }
-        
-        /* Stili interni ai bottoni (trasformazioni icona, dot, hover) */
-        .lightbox-control-btn {
-            display: flex;
-            align-items: center;
-            gap: 10px; /* Piccolo spazio tra icona e dot */
-        }
-        
-        .lightbox-control-btn:hover {
-            opacity: 0.8;
-        }
-        
-        .lightbox-control-btn svg {
-            transition: transform 0.3s ease;
-        }
-        
-        .lightbox-control-btn:hover svg {
-            transform: scale(1.1);
-        }
-        
-        #forward-btn:disabled svg,
-        #rewind-btn:disabled svg {
-          opacity: 0.4;
-          filter: grayscale(100%);
-          cursor: not-allowed;
-        }
-        /* Dot rossa */
-        .dot {
-            display: inline-block;  
-            width: 8px;
-            height: 8px;
-            background-color: red;
-            border-radius: 50%;
-            z-index: 1;    /* ora sta sopra lo SVG */
-        }
-        
-        #rewind-btn .dot {/*sinistra*/
-          position: relative;
-          top: -1px;  /* magari serve un px in più per bilanciare */
-          margin-right: -10px;  /* allontana il pallino dall’icona */
-        }
-        #forward-btn .dot {/*destra*/
-          position: relative;
-          margin-left: -10px;  /* allontana il pallino dall’icona */
-        }
-                
-        .nav-btn:disabled {
-            opacity: 0.1; /* Rende il pulsante meno visibile */
-            cursor: not-allowed; /* Cambia il cursore per indicare che Ã¨ disabilitato */
-        }
-        
-        .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px;
-        }
-        
-        
-        .gallery-title {
-            text-align: left; /* Centra il titolo */
-            font-size: 3.5vw; /* Dimensione del font */
-            margin-bottom: 0; /* Spazio sotto il titolo */
-        
-        }
-        
-        .button {
-            width: 25vw; /* dimensione del pulsante */
-            height: 15vh; /* dimensione del pulsante */
-            max-width: 200px;
-            max-height: 50px;
-            background-color: rgba(5, 5, 5, 0.9); /* colore di sfondo con trasparenza */
-            color: red; /* colore del testo */
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            text-decoration: none;
-            font-size: clamp(10px, 3.5vw, 15px);
-            transition: background-color 0.3s;
-        }
+/* Thumbnail come "card": bordo, raggio e hover dolce */
+.gallery .thumb {
+  position: relative;           /* necessario per posizionare l'overlay */
+  display: inline-block;
+  overflow: hidden;
+  border: var(--thumb-border) solid #ddd;
+  border-radius: var(--thumb-radius);
+}
 
-        .button:hover {
-            background-color: rgba(5, 5, 5, 0.4); /* colore scuro al passaggio del mouse */
-        }
-        
-        
-        /* Media query per limitare la dimensione massima del font */
-        @media (min-width: 600px) {
-            .gallery-title {
-                font-size: 30px; /* Imposta una dimensione fissa per schermi piÃ¹ grandi */
-            }
-        }
+.gallery .thumb > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 0.2s ease, clip-path 0.2s ease;
+  /* Ritaglio inferiore per non sovrapporsi a elementi esterni (se presenti) */
+  clip-path: inset(0% 0 18px 0);
+  cursor: pointer;
+}
+
+.gallery .thumb > img:hover {
+  transform: scale(1.1);
+}
+
+/* ==========================================================================
+   OVERLAY MINIATURE (dati nel nono centrale)
+   - Tutto centrato nella colonna centrale.
+   ========================================================================== */
+.overlay-mini {
+  position: absolute;
+  left: 33.3333%;
+  top: 33.3333%;
+  width: 33.3333%;
+  height: 33.3333%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--overlay-gap);
+  user-select: none;
+  pointer-events: none; /* i click passano all'immagine */
+}
+
+/* Righe testo overlay */
+.temp-line {
+  font-weight: 700;
+  font-size: clamp(12px, 2.4vw, 18px); /* scala dolcemente con la thumb */
+  white-space: nowrap;
+}
+
+.ora-line {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75em;
+  font-weight: 600;
+  color: var(--accent-red); /* ora sempre rossa */
+  white-space: nowrap;
+}
+
+.meta-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;                  /* un filo più ariose per leggibilità */
+  font-size: 0.72em;
+  font-weight: 600;
+  color: var(--accent-green); /* vento / HR / pressione in verde elettrico */
+  white-space: nowrap;
+}
+
+/* Icone SVG: ereditano il colore del testo */
+.icon {
+  width: 0.95em;
+  height: 0.95em;
+  vertical-align: -1px;
+  fill: currentColor;
+}
+
+/* Variante outline (clessidra / molla / vento) */
+.icon-outline {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Colori temperatura applicati all'overlay (coerenti con il main) */
+.temp-red       { color: #ec0835; }
+.temp-orange    { color: #cf7618; }
+.temp-green     { color: #79f603; } /* leggermente meno saturo per leggibilità */
+.temp-lightblue { color: #3fa9f5; }
+.temp-blue      { color: #0044ff; }
+.temp-default   { color: #cccccc; }
+
+/* Miniature piccole: stringhe più compatte */
+@media (max-width: 480px) {
+  .overlay-mini { gap: 1px; }
+  .overlay-mini .meta-line { font-size: 0.68em; }
+}
+
+/* ==========================================================================
+   LIGHTBOX (overlay a schermo intero)
+   ========================================================================== */
+.lightbox {
+  display: none; /* visibile solo con .active */
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  inset: 0;                   /* top/left/right/bottom = 0 */
+  background: var(--lb-backdrop);
+  z-index: 1000;
+}
+
+.lightbox.active {
+  display: flex;
+}
+
+/* Contenitore immagine dentro la lightbox */
+.lightbox-content {
+  display: inline-block; /* shrink-to-content */
+  position: relative;    /* overlay interni assoluti si ancorano qui */
+  margin: 0 auto;
+}
+
+/* Immagine ingrandita: contenuta nello schermo senza deformarsi */
+.lightbox img {
+  max-width: 95vw !important;
+  max-height: 95vh !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+  clip-path: none !important; /* chiarisce l’intento: nessun ritaglio */
+}
+
+/* Barre informative sopra/sotto l’immagine nella lightbox */
+.lightbox-date,
+.lightbox-info {
+  position: absolute;   /* overlay sopra l'immagine */
+  left: 0;
+  right: 0;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: normal;
+  padding: 3px 6px;
+  box-sizing: border-box;
+  line-height: 1.2;
+  border-radius: 5px !important;
+  /* Nota: aggiungi .lightbox-date { bottom: X } e .lightbox-info { top: X } nel tuo CSS
+     se vuoi fissare le posizioni esatte rispetto alla lightbox-content */
+}
+
+/* ==========================================================================
+   LIGHTBOX: NAVIGAZIONE (prec/next) e controlli
+   ========================================================================== */
+/* Pulsanti prec/next */
+.lightbox .nav-btn {
+  position: fixed;   /* rispetto alla viewport, sempre visibili */
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 50%;
+  z-index: 1001;
+}
+
+.lightbox .nav-btn:hover {
+  background: var(--btn-hover-bg);
+}
+
+/* Posizioni coerenti: prev a sinistra, next a destra */
+.prev { left: 10px; }
+.next { right: 10px; }
+
+/* Stato disabilitato */
+.nav-btn:disabled {
+  opacity: 0.1;
+  cursor: not-allowed;
+}
+
+/* Pulsante Close centrato in alto */
+#close-btn.lightbox-close {
+  position: fixed;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  appearance: none;
+  background: transparent;
+  color: red;
+  font-size: 2rem;
+  border: none;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+/* Pulsanti "Rewind" e "Forward" agli angoli alti */
+#rewind-btn,
+#forward-btn {
+  position: fixed;
+  top: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 1001;
+  padding: 10px; /* spazio per eventuale dot */
+}
+
+#rewind-btn  { left: 10px; }
+#forward-btn { right: 10px; }
+
+.lightbox-control-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* spazio tra icona e dot */
+}
+
+.lightbox-control-btn:hover { opacity: 0.8; }
+
+.lightbox-control-btn svg { transition: transform 0.3s ease; }
+.lightbox-control-btn:hover svg { transform: scale(1.1); }
+
+#forward-btn:disabled svg,
+#rewind-btn:disabled  svg {
+  opacity: 0.4;
+  filter: grayscale(100%);
+  cursor: not-allowed;
+}
+
+/* Dot rosso decorativo per i controlli */
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+#rewind-btn .dot {        /* lato sinistro */
+  position: relative;
+  top: -1px;
+  margin-right: -10px;
+}
+#forward-btn .dot {       /* lato destro */
+  position: relative;
+  margin-left: -10px;
+}
+
+/* ==========================================================================
+   TITOLI / BOTTONI ESTERNI ALLA LIGHTBOX
+   ========================================================================== */
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.gallery-title {
+  text-align: left;
+  font-size: clamp(24px, 3.5vw, 30px); /* responsive ma limitata */
+  margin-bottom: 0;
+}
+
+.button {
+  width: 25vw;
+  height: 15vh;
+  max-width: 200px;
+  max-height: 50px;
+  background-color: rgba(5, 5, 5, 0.9);
+  color: red;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+  font-size: clamp(10px, 3.5vw, 15px);
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: rgba(5, 5, 5, 0.4);
+}

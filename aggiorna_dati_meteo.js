@@ -1,26 +1,25 @@
-function aggiornaDati() {
-    fetch('aggiorna_dati_meteo.php')
-        .then(response => {
-            // Se la risposta non è OK, esci
-            if (!response.ok) throw new Error('Errore di rete');
-            
-            return response.json();
-        })
-        .then(data => {
-            if (data.html) {
-                document.getElementById("tabella-meteo").innerHTML = data.html;
-            } else {
-                console.warn('Nessun contenuto trovato.');
-            }
-        })
-        .catch(error => {
-            console.error('Errore:', error);
-        });
-        console.log('Aggiornato iframe meteo');
+function reloadIframeMeteo() {
+  const iframe = document.getElementById('tabella-meteo-iframe')
+              || document.querySelector('.tabella-meteo iframe');
+
+  if (!iframe) {
+    console.warn('⚠️ Iframe meteo non trovato → aggiornaDati saltato');
+    return;
+  }
+
+  // Evita cache con timestamp
+  const base = (iframe.getAttribute('data-src') || iframe.src).split('?')[0];
+  iframe.src = `${base}?t=${Date.now()}`;
+  console.log('🔄 Iframe meteo ricaricato');
 }
 
-// Esegui l'aggiornamento 5 minuti
-setInterval(aggiornaDati, 300000);
+// Ricarica al caricamento pagina
+document.addEventListener('DOMContentLoaded', reloadIframeMeteo);
 
-// Esegui l'aggiornamento all'avvio della pagina
-document.addEventListener('DOMContentLoaded', aggiornaDati);
+// Ricarica ogni 5 minuti
+setInterval(reloadIframeMeteo, 5 * 60 * 1000);
+
+// (opzionale) se la tab torna visibile, ricarica
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') reloadIframeMeteo();
+});
