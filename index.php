@@ -264,10 +264,10 @@ if (!isset($data['error'])) {
         }
 
         /* Il contenitore dell’immagine principale DEVE essere relative */
-#main-image-wrapper,
-.main-image-wrapper {
-  position: relative;
-}
+    #main-image-wrapper,
+    .main-image-wrapper {
+    position: relative;
+    }
 
 /* Overlay data/ora principale centrato */
 #main-image-date {
@@ -333,6 +333,83 @@ if (!isset($data['error'])) {
         .temp-lightblue { color: #007bff; }  /* 0°C - 15°C: Azzurro */
         .temp-blue { color: #ee28c3ff; }       /* < 0°C: Blu scuro */
         .temp-default { color: #6c757d; }    /* N/D: Grigio */
+
+/* ================================================================
+   HEADER GALLERIA: layout 3/4 + 1/4
+   ================================================================ */
+.gallery-header {
+  container-type: inline-size;       /* abilita unità cqw */
+  display: grid;
+  grid-template-columns: 3fr 1fr;    /* 75% titolo / 25% bottone */
+  align-items: center;
+  gap: 10px;
+
+  width: 100%;
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+/* ================================================================
+   TITOLO — adatta il font al 75% disponibile senza andare a capo
+   ================================================================ */
+.gallery-title {
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  min-width: 0;  
+  font-weight: bold;
+  color: black;
+  text-align: left;
+  font-size: clamp(14px, 3.6vw, 36px);
+}
+
+@supports (font-size: 1cqw) {
+  .gallery-title {
+    font-size: clamp(12px, 4.6cqw, 34px);
+  }
+}
+
+/* ================================================================
+   BOTTONE — stile originale: sfondo nero, testo rosso
+   ================================================================ */
+.gallery-cta {
+  display: flex;                   /* usa flexbox */
+  align-items: center;             /* centra verticalmente il testo */
+  justify-content: center;         /* centra orizzontalmente */
+
+  background-color: black;
+  color: red;
+
+  
+
+  font-weight: bold;
+  font-size: clamp(12px, 2.8cqw, 18px);
+  line-height: 1.2;
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+/* Effetto hover coerente con tuo stile */
+.gallery-cta:hover {
+  background-color: grey;
+  color: red;
+}
+
+@supports (font-size: 1cqw) {
+  .gallery-cta {
+    font-size: clamp(12px, 2.6cqw, 18px);
+  }
+}
+
+/* Su mobile molto stretto: leggermente più compatto */
+@media (max-width: 420px) {
+  .gallery-header { gap: 8px; padding: 0 6px; }
+}
+
     </style>
 </head>
 
@@ -387,13 +464,13 @@ if (!isset($data['error'])) {
         </div>
         
         <!-- ================================================================
-             TITOLO GALLERIA E LINK
-             ================================================================ -->
-        
-        <div class="container">
-            <h2 class="gallery-title">Galleria ultime 36 h (agg. 20 min)</h2>
-            <a href="belle.php" class="button">Vai ai cieli più belli</a>
-        </div>
+     TITOLO GALLERIA E LINK (3/4 titolo + 1/4 bottone)
+     ================================================================ -->
+<div class="gallery-header">
+  <h2 class="gallery-title">Galleria ultime 36 h (agg. 20 min)</h2>
+  <a href="belle.php" class="button gallery-cta">Diario delle nuvole</a>
+</div>
+
         
         <!-- ================================================================
              GALLERIA MINIATURE
