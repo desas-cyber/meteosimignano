@@ -1,149 +1,161 @@
 /* ==========================================================================
-   BASE / VARIABILI
-   - Piccole variabili per spaziature e dimensioni tipiche.
-   ========================================================================== */
-:root {
-  --gap: 10px;
-  --thumb-radius: 8px;
-  --thumb-border: 4px;
-  --overlay-gap: 2px;
-
-  --lb-backdrop: rgba(0, 0, 0, 0.85);
-  --btn-hover-bg: rgba(255, 255, 255, 0.8);
-  --accent-red: #ff1e1e;
-  --accent-green: #00ff6a;
-}
-
-/* ==========================================================================
-   GALLERIA (griglia thumbnail)
-   - 3 colonne responsive con gap coerente, scroll verticale se serve.
+   1) GALLERIA (layout flex: 3 per riga)
    ========================================================================== */
 .gallery {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 immagini per riga */
-  gap: var(--gap);
+  display: flex;
+  flex-wrap: wrap;
   max-width: 1000px;
   margin: 0 auto;
-
-  /* Altezza massima: ~4 righe (150px ciascuna) + gap verticali (3 * gap) */
-  max-height: calc((4 * 150px) + (3 * var(--gap)));
-  overflow-y: auto; /* scroll verticale se necessario */
+  overflow-y: auto;
+  padding: 5px;
+  box-sizing: border-box;
 }
 
-/* Thumbnail come "card": bordo, raggio e hover dolce */
+/* Card miniatura (~33.33% - margini) */
 .gallery .thumb {
-  position: relative;           /* necessario per posizionare l'overlay */
+  position: relative;              /* ancora per overlay assoluto */
   display: inline-block;
+  width: calc(33.333% - 20px);
+  margin: 10px;
   overflow: hidden;
-  border: var(--thumb-border) solid #ddd;
-  border-radius: var(--thumb-radius);
+  border: 4px solid #ddd;
+  border-radius: 8px;
+  box-sizing: border-box;
+  container-type: inline-size;     /* abilita unità cqw/cqh (se supportate) */
+  aspect-ratio: 4 / 2.79;
 }
 
+/* Immagine miniatura */
 .gallery .thumb > img {
   display: block;
-  width: 100%;
-  height: auto;
+  width: 110%;
+  height: 110%;
+  object-fit: cover;          /* riempi senza deformare */
+  object-position: center;    /* sposta il punto focale: top / 30% 40% ecc. */
   transition: transform 0.2s ease, clip-path 0.2s ease;
-  /* Ritaglio inferiore per non sovrapporsi a elementi esterni (se presenti) */
-  clip-path: inset(0% 0 18px 0);
+  clip-path: inset(0% 0 7% 0);   /* evita sovrapposizioni sotto */
   cursor: pointer;
 }
-
-.gallery .thumb > img:hover {
-  transform: scale(1.1);
-}
+.gallery .thumb > img:hover { transform: scale(1.1); }
 
 /* ==========================================================================
-   OVERLAY MINIATURE (dati nel nono centrale)
-   - Tutto centrato nella colonna centrale.
+   2) OVERLAY MINIATURE (centrato)
    ========================================================================== */
+
+/* Contenitore overlay: centratura perfetta e blocco compatto */
 .overlay-mini {
   position: absolute;
-  left: 33.3333%;
-  top: 33.3333%;
-  width: 33.3333%;
-  height: 33.3333%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--overlay-gap);
-  user-select: none;
-  pointer-events: none; /* i click passano all'immagine */
+
+  /* Fallback dimensioni: percentuali + max in px  */
+  width: 60%;
+  max-width: 180px;
+
+  text-align: center;
+  line-height: 1.05;               /* interlinea più compatta */
+  pointer-events: none;            /* non intercetta i click */
 }
 
-/* Righe testo overlay */
-.temp-line {
-  font-weight: 700;
-  font-size: clamp(12px, 2.4vw, 18px); /* scala dolcemente con la thumb */
+/* Ogni “pillola” di testo: centrata e compatta */
+.overlay-mini > * {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1px;              /* distanza verticale ridotta */
+}
+.overlay-mini > *:last-child { margin-bottom: 0; }
+
+/* Righe testo overlay (outline per leggibilità) */
+.temp-line,
+.ora-line,
+.meta-line {
+  text-shadow:
+    0 0 3px rgba(0,0,0,0.9),
+    0 0 2px rgba(0,0,0,0.9);
   white-space: nowrap;
 }
 
+/* Temperatura: centrata e con gestione eventuale <sup> */
+.temp-line {
+  font-weight: 700;
+}
+.temp-line sup, .temp-line .sup {
+  vertical-align: baseline;
+  position: relative;
+  top: -0.1em;
+  font-size: 0.8em;
+}
+
+/* Ora: inline con micro-gap locale */
 .ora-line {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 0.75em;
   font-weight: 600;
-  color: var(--accent-red); /* ora sempre rossa */
-  white-space: nowrap;
+  color: #ff1e1e;                 /* ora rossa fissa */
 }
+.ora-line > * { margin-right: 4px; }
+.ora-line > *:last-child { margin-right: 0; }
 
+/* Meta (vento / UR / pressione): inline */
 .meta-line {
   display: flex;
   align-items: center;
-  gap: 8px;                  /* un filo più ariose per leggibilità */
-  font-size: 0.72em;
   font-weight: 600;
-  color: var(--accent-green); /* vento / HR / pressione in verde elettrico */
-  white-space: nowrap;
+  color: #00ff6a;                 /* verde elettrico */
 }
+.meta-line > * { margin-right: 8px; }
+.meta-line > *:last-child { margin-right: 0; }
 
-/* Icone SVG: ereditano il colore del testo */
+
+/* ==========================================================================
+   3) ICONOGRAFIA
+   ========================================================================== */
 .icon {
-  width: 0.95em;
-  height: 0.95em;
+  width: 1em;                      /* scala con il font */
+  height: 1em;
   vertical-align: -1px;
   fill: currentColor;
 }
+.icon-outline { fill: currentColor; }
 
-/* Variante outline (clessidra / molla / vento) */
-.icon-outline {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-/* Colori temperatura applicati all'overlay (coerenti con il main) */
+/* Colori temperatura (classi applicate dinamicamente) */
 .temp-red       { color: #ec0835; }
 .temp-orange    { color: #cf7618; }
-.temp-green     { color: #79f603; } /* leggermente meno saturo per leggibilità */
+.temp-green     { color: #79f603; }
 .temp-lightblue { color: #3fa9f5; }
 .temp-blue      { color: #0044ff; }
 .temp-default   { color: #cccccc; }
 
-/* Miniature piccole: stringhe più compatte */
-@media (max-width: 480px) {
-  .overlay-mini { gap: 1px; }
-  .overlay-mini .meta-line { font-size: 0.68em; }
-}
-
 /* ==========================================================================
-   LIGHTBOX (overlay a schermo intero)
+   4) LIGHTBOX (overlay a schermo intero)
    ========================================================================== */
 .lightbox {
   display: none; /* visibile solo con .active */
-  justify-content: center;
-  align-items: center;
   position: fixed;
-  inset: 0;                   /* top/left/right/bottom = 0 */
-  background: var(--lb-backdrop);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
   z-index: 1000;
-}
 
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: none;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
 .lightbox.active {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
 }
 
@@ -154,72 +166,58 @@
   margin: 0 auto;
 }
 
-/* Immagine ingrandita: contenuta nello schermo senza deformarsi */
+/* Immagine ingrandita */
 .lightbox img {
   max-width: 95vw !important;
   max-height: 95vh !important;
   width: auto !important;
   height: auto !important;
   object-fit: contain !important;
-  clip-path: none !important; /* chiarisce l’intento: nessun ritaglio */
+  clip-path: none !important;
 }
 
-/* Barre informative sopra/sotto l’immagine nella lightbox */
+/* Barre informative (sopra/sotto l’immagine) */
 .lightbox-date,
 .lightbox-info {
-  position: absolute;   /* overlay sopra l'immagine */
-  left: 0;
-  right: 0;
+  position: absolute;
+  left: 0; right: 0;
   text-align: center;
   background: rgba(0, 0, 0, 0.6);
   color: #fff;
-  font-size: 0.9rem;
+  font-size: 14px;
   font-weight: normal;
   padding: 3px 6px;
   box-sizing: border-box;
   line-height: 1.2;
   border-radius: 5px !important;
-  /* Nota: aggiungi .lightbox-date { bottom: X } e .lightbox-info { top: X } nel tuo CSS
-     se vuoi fissare le posizioni esatte rispetto alla lightbox-content */
 }
+/* Facoltativo:
+.lightbox-date { bottom: 8px; }
+.lightbox-info { top: 8px; }
+*/
 
 /* ==========================================================================
-   LIGHTBOX: NAVIGAZIONE (prec/next) e controlli
+   5) LIGHTBOX: NAVIGAZIONE & CONTROLLI
    ========================================================================== */
-/* Pulsanti prec/next */
 .lightbox .nav-btn {
-  position: fixed;   /* rispetto alla viewport, sempre visibili */
-  top: 50%;
-  transform: translateY(-50%);
-  background: transparent;
+  position: fixed;
+  bottom: 12px;
+  background: rgba(0,0,0,0.35);
   border: none;
-  padding: 10px;
+  padding: 10px 12px;
+  border-radius: 999px;
   cursor: pointer;
-  border-radius: 50%;
-  z-index: 1001;
+  z-index: 2000;
 }
+.lightbox .nav-btn.prev { right: 12px; }
+.lightbox .nav-btn.next { left: 12px; }
+.lightbox .nav-btn:hover { background: rgba(255,255,255,0.8); }
+.lightbox .nav-btn:disabled { opacity: .25; pointer-events: none; }
 
-.lightbox .nav-btn:hover {
-  background: var(--btn-hover-bg);
-}
-
-/* Posizioni coerenti: prev a sinistra, next a destra */
-.prev { left: 10px; }
-.next { right: 10px; }
-
-/* Stato disabilitato */
-.nav-btn:disabled {
-  opacity: 0.1;
-  cursor: not-allowed;
-}
-
-/* Pulsante Close centrato in alto */
 #close-btn.lightbox-close {
   position: fixed;
-  top: 15px;
-  left: 50%;
-  transform: translateX(-50%);
-  appearance: none;
+  top: 15px; left: 50%;
+  margin-left: -1.5rem;
   background: transparent;
   color: red;
   font-size: 2rem;
@@ -228,7 +226,6 @@
   z-index: 1001;
 }
 
-/* Pulsanti "Rewind" e "Forward" agli angoli alti */
 #rewind-btn,
 #forward-btn {
   position: fixed;
@@ -237,85 +234,180 @@
   border: none;
   cursor: pointer;
   z-index: 1001;
-  padding: 10px; /* spazio per eventuale dot */
+  padding: 10px;
 }
-
 #rewind-btn  { left: 10px; }
 #forward-btn { right: 10px; }
 
-.lightbox-control-btn {
-  display: flex;
-  align-items: center;
-  gap: 10px; /* spazio tra icona e dot */
-}
-
-.lightbox-control-btn:hover { opacity: 0.8; }
-
-.lightbox-control-btn svg { transition: transform 0.3s ease; }
-.lightbox-control-btn:hover svg { transform: scale(1.1); }
-
+.lightbox-control-btn { display: inline-flex; align-items: center; }
 #forward-btn:disabled svg,
-#rewind-btn:disabled  svg {
-  opacity: 0.4;
-  filter: grayscale(100%);
-  cursor: not-allowed;
-}
+#rewind-btn:disabled  svg { opacity: 0.4; filter: grayscale(100%); cursor: not-allowed; }
 
-/* Dot rosso decorativo per i controlli */
+/* Dot rosso (decorazione) */
 .dot {
   display: inline-block;
-  width: 8px;
-  height: 8px;
+  width: 8px; height: 8px;
   background-color: red;
   border-radius: 50%;
   z-index: 1;
 }
-
-#rewind-btn .dot {        /* lato sinistro */
-  position: relative;
-  top: -1px;
-  margin-right: -10px;
-}
-#forward-btn .dot {       /* lato destro */
-  position: relative;
-  margin-left: -10px;
-}
+#rewind-btn .dot { position: relative; top: -1px; margin-right: -10px; }
+#forward-btn .dot { position: relative; margin-left: -10px; }
 
 /* ==========================================================================
-   TITOLI / BOTTONI ESTERNI ALLA LIGHTBOX
+   7) TITOLI / BOTTONI ESTERNI
    ========================================================================== */
 .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 20px;
+  box-sizing: border-box;
 }
-
-.gallery-title {
-  text-align: left;
-  font-size: clamp(24px, 3.5vw, 30px); /* responsive ma limitata */
-  margin-bottom: 0;
-}
+.gallery-title { text-align: left; font-size: 28px; margin-bottom: 0; }
 
 .button {
-  width: 25vw;
-  height: 15vh;
-  max-width: 200px;
-  max-height: 50px;
+  width: 25vw; height: 15vh;
+  max-width: 200px; max-height: 50px;
   background-color: rgba(5, 5, 5, 0.9);
   color: red;
-  border: none;
-  border-radius: 8px;
+  border: none; border-radius: 8px;
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  text-decoration: none;
-  font-size: clamp(10px, 3.5vw, 15px);
+  display: inline-flex; align-items: center; justify-content: center;
+  text-align: center; text-decoration: none;
+  font-size: 15px;
   transition: background-color 0.3s;
 }
+.button:hover { background-color: rgba(5, 5, 5, 0.4); }
 
-.button:hover {
-  background-color: rgba(5, 5, 5, 0.4);
+/* ==========================================================================
+   6) MOBILE-ONLY (≤ 480px)
+   - UR + PRESSIONE nella stessa riga
+   - leggera compattazione overlay/meta
+   ========================================================================== */
+@media (max-width: 480px) {
+
+  /* UR + PRESSIONE: una sola riga, centrata */
+  .meta-line {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap !important;
+    white-space: nowrap !important;
+    min-width: 0;
+  }
+  .meta-line > * {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 1 auto;
+    min-width: 0;
+    margin-right: 4px;
+    white-space: nowrap;
+  }
+  .meta-line > *:last-child { margin-right: 0; }
+
+  /* Un filo di spazio orizzontale in più per l’overlay */
+  .overlay-mini {
+    width: 72%;
+    max-width: 190px;
+    line-height: 1.05;
+  }
 }
+
+/* ==========================================================================
+   7) PROGRESSIVE ENHANCEMENT (se supporta cqw)
+   - sovrascrive solo dimensioni/scala per precisione su container
+   ========================================================================== */
+@supports (font-size: 1cqw) {
+  .overlay-mini {
+    width: min(60cqw, 180px);
+    max-width: 70cqw;
+  }
+  .temp-line { font-size: clamp(12px, 5cqw, 18px); }
+  .ora-line  { font-size: clamp(11px, 3.8cqw, 16px); }
+  .meta-line { font-size: clamp(10px, 3.4cqw, 15px); }
+}
+
+
+/* =========================
+   8) Overlay: font-size unico
+   ========================= */
+
+/* Valori “base” in vw */
+:root{
+  --overlay-fs-min: 12px;
+  --overlay-fs-fluid: 2.8vw;
+  --overlay-fs-max: 18px;
+}
+
+/* Tutte le righe dell’overlay con lo stesso font-size della temperatura */
+.overlay-mini .temp-line,
+.overlay-mini .ora-line,
+.overlay-mini .meta-line {
+  font-size: clamp(var(--overlay-fs-min), var(--overlay-fs-fluid), var(--overlay-fs-max)) !important;
+}
+
+/* Mobile: mantieni lo stesso size anche qui */
+@media (max-width: 480px) {
+  .overlay-mini .temp-line,
+  .overlay-mini .ora-line,
+  .overlay-mini .meta-line {
+    font-size: clamp(var(--overlay-fs-min), var(--overlay-fs-fluid), var(--overlay-fs-max)) !important;
+  }
+}
+
+/* Se il browser supporta cqw, usa misurazione relativa al contenitore ma UNIFORME */
+@supports (font-size: 1cqw) {
+  .overlay-mini .temp-line,
+  .overlay-mini .ora-line,
+  .overlay-mini .meta-line {
+    font-size: clamp(12px, 5cqw, 18px) !important;
+  }
+}
+
+/* =========================
+   MOBILE ≤ 480px — versione con margini più piccoli
+   ========================= */
+@media (max-width: 480px) {
+
+  /* 2 miniature per riga con margini ridotti */
+  .gallery .thumb {
+    width: calc(50% - 16px);  /* 50% - (2 * 8px) */
+    margin: 8px;              /* ridotto da 10px → 8px */
+  }
+
+  /* Testi overlay leggermente più piccoli (base mobile) */
+.overlay-mini .ora-line,
+.overlay-mini .meta-line {
+  font-size: clamp(11px, 2.2vw, 16px) !important;
+}
+
+/* Temperatura SOLO un po' più grande su mobile */
+.overlay-mini .temp-line {
+  font-size: clamp(12px, 3.4vw, 18px) !important;
+}
+
+  /* Overlay un po' più compatto */
+  .overlay-mini {
+    width: 72%;
+    max-width: 175px;   /* ridotto un filo per equilibrio */
+    line-height: 1.05;
+  }
+}
+
+@supports (font-size: 1cqw) {
+  @media (max-width: 480px) {
+    /* Ora + meta-line: più piccole */
+    .overlay-mini .ora-line,
+    .overlay-mini .meta-line {
+      font-size: clamp(11px, 4cqw, 16px) !important;
+    }
+
+    /* Temperatura: leggermente più grande */
+    .overlay-mini .temp-line {
+      font-size: clamp(12px, 5cqw, 18px) !important;
+    }
+  }
+}
+
+

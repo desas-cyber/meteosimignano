@@ -1,123 +1,112 @@
-/**
- * ==========================================================================
- *  AGGIORNAMENTO AUTOMATICO GALLERIA METEO
- * ==========================================================================
+/* ============================================================================
+ *  GALLERIA METEO – Aggiornamento automatico (ES5-compatible)
+ * ============================================================================
  *
- *  Cosa fa questo script:
- *  - Aggiorna periodicamente l'immagine principale e la griglia delle miniature
- *  - Sincronizza i dati meteo dal backend (PHP) e li visualizza in overlay
- *  - Gestisce il click sulle miniature per aprire la lightbox
+ *  Cosa fa:
+ *  - Scarica periodicamente i record dal backend (JSON)
+ *  - Aggiorna immagine principale + overlay data/temperatura
+ *  - Ricostruisce la griglia di miniature con overlay centrato (temp/ora/vento/HR/pressione)
+ *  - Gestisce click su miniature (apre lightbox se disponibile)
  *
  *  Dipendenze:
- *  - window.images: array popolato dal backend con i record immagini+meteo
- *  - galleria-lightbox.js: fornisce openLightbox() e updateNavButtons()
- *  - CSS: classi per overlay (overlay-mini, temp-line, ora-line, meta-line, …)
+ *  - Backend: ENDPOINT_AGGIORNAMENTO → restituisce array di record:
+ *      [{ src, data_ora, temp, hr, p_hpa, vento, dir, ... }, ...]
+ *  - CSS: classi .overlay-mini, .temp-line, .ora-line, .meta-line, .icon, .icon-outline
+ *  - JS esterno: openLightbox(index) e updateNavButtons() se presenti
  *
- *  Backend:
- *  - ENDPOINT_AGGIORNAMENTO (aggiorna_galleria.php) restituisce JSON:
- *    [{ src, data_ora, temp, hr, p_hpa, vento, dir }, ...]
- *
- *  Convenzioni colore temperatura (CSS):
- *  - temp-blue       (<   0°C)
- *  - temp-lightblue  (0–14°C)
- *  - temp-green      (15–24.9°C)
- *  - temp-orange     (≥25–35°C)
- *  - temp-red        (>  35°C)
- *  - temp-default    (valore non valido)
- *
- *  Manutenzione:
- *  - Tutto l'I/O di rete è in aggiornaGalleria()
- *  - Rendering main image in renderMainDate()
- *  - Creazione singola miniatura: createThumbnailNode(item, index)
- *
- *  Autore: MeteoSimignano
- *  Versione: 2.1 (refactor commenti e leggibilità)
- */
-
-/* ==========================================================================
- *  COSTANTI DI CONFIGURAZIONE
+ *  Note compatibilità:
+ *  - Niente optional chaining (?.) / nullish coalescing (??) / let/const / => / template string
+ *  - Solo ES5 puro per motori JS legacy (anche embedded in device/webview)
  * ========================================================================== */
 
-/** Intervallo aggiornamento (5 minuti); 59s per ridurre drift */
-const AGGIORNAMENTO_INTERVALLO = 5 * 59 * 1000;
+/* =============================== Config ================================== */
 
-/** Endpoint backend che restituisce l’array di record */
-const ENDPOINT_AGGIORNAMENTO = 'aggiorna_galleria.php';
+/** Intervallo aggiornamento (5 minuti) – 59s per ridurre drift */
+var AGGIORNAMENTO_INTERVALLO = 5 * 59 * 1000;
+
+/** Endpoint backend che fornisce i dati JSON */
+var ENDPOINT_AGGIORNAMENTO = 'aggiorna_galleria.php';
 
 
-/* ==========================================================================
- *  HELPER GENERICI (numeri, direzione vento, parsing ora)
- * ========================================================================== */
+/* ============================== Helpers ================================== */
 
-/**
- * Converte un valore in numero oppure torna null se non valido.
- */
-function numOrNull(v) {
-  return (v !== null && v !== undefined && v !== '' && Number.isFinite(+v)) ? +v : null;
+/** Uguaglianza stretta a numero finito (poly-like) */
+function isFiniteNumber(n) {
+  return typeof n === 'number' && isFinite(n);
 }
 
-/**
- * Converte gradi in direzione bussola (N, NE, …).
- */
+/** Converte un valore in numero, oppure null se assente/non numerico */
+function numOrNull(v) {
+  return (v === null || v === '' || !isFinite(+v)) ? null : (+v);
+}
+
+/** Sicuro: ritorna obj[key] se definito, altrimenti null */
+function get(obj, key) {
+  return (obj && obj[key] !== null) ? obj[key] : null;
+}
+
+/** Sicuro: come sopra ma sempre stringa ("" se assente) */
+function getStr(obj, key) {
+  var v = get(obj, key);
+  return (v === null) ? '' : String(v);
+}
+
+/** Ritorna il primo campo definito tra quelli passati (altrimenti null) */
+function pickFirstDefined(obj, keys) {
+  if (!obj) return null;
+  for (var i = 0; i < keys.length; i++) {
+    if (obj[keys[i]] !== null) return obj[keys[i]];
+  }
+  return null;
+}
+
+/** Converte gradi in direzione bussola (N, NE, …) */
 function degToCompass(deg) {
-  const dirs = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
-  const i = Math.round(((deg % 360) / 22.5)) % 16;
+  var dirs = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
+  var d = +deg;
+  if (!isFinite(d)) return null;
+  var i = Math.round(((d % 360) / 22.5)) % 16;
   return dirs[i < 0 ? i + 16 : i];
 }
 
-/**
- * Estrae l’ora in formato HH:MM dal campo item.data_ora (es. "dd/mm/yyyy HH:MM").
- * Se non trovata, restituisce "N/D".
- */
+/** Estrae HH:MM da item.data_ora (es. "dd/mm/yyyy HH:MM") */
 function estraiOraDaItem(item) {
-  const s = item?.data_ora || '';
-  const m = s.match(/\b(\d{2}):(\d{2})\b/);
-  return m ? `${m[1]}:${m[2]}` : 'N/D';
+  var s = getStr(item, 'data_ora');
+  var m = s.match(/\b(\d{2}):(\d{2})\b/);
+  return m ? (m[1] + ':' + m[2]) : 'N/D';
 }
 
-
-/* ==========================================================================
- *  COLORI TEMPERATURA → CLASSI CSS
- * ========================================================================== */
 /**
- * Ritorna la classe CSS per colorare la temperatura.
- * Soglie:
- *   > 35           → temp-red
- *   25 ≤ t ≤ 35    → temp-orange
- *   15 ≤ t < 25    → temp-green
- *    0 ≤ t < 15    → temp-lightblue
- *   t < 0          → temp-blue
- *   altro          → temp-default
+ * Mappa temperatura → classe colore CSS
+ *  >35        → temp-red
+ *  25..35     → temp-orange
+ *  15..24.9   → temp-green
+ *   0..14.9   → temp-lightblue
+ *  <0         → temp-blue
+ *  altrimenti → temp-default
  */
 function getTempColorClassJS(temp) {
-  const t = parseFloat(temp);
+  var t = parseFloat(temp);
   if (isNaN(t)) return 'temp-default';
-
   if (t > 35)              return 'temp-red';
   if (t >= 25 && t <= 35)  return 'temp-orange';
   if (t >= 15 && t < 25)   return 'temp-green';
   if (t >= 0 && t < 15)    return 'temp-lightblue';
   if (t < 0)               return 'temp-blue';
-
   return 'temp-default';
 }
 
 
-/* ==========================================================================
- *  RENDER OVERLAY IMMAGINE PRINCIPALE (data + temperatura)
- * ========================================================================== */
+/* ===================== Main image: render overlay ======================== */
 /**
  * Aggiorna la scritta “Ultima immagine (dir. NO): …” e la temperatura
  * nell’overlay dell’immagine principale.
- *
- * @param {string} nuovaData - es. "09/01/2025 14:30"
- * @param {number|string} temp - temperatura in °C (arrotondata in output)
+ * @param {string} nuovaData  es. "09/01/2025 14:30"
+ * @param {number|string} temp in °C (arrotondata all’unità)
  */
 function renderMainDate(nuovaData, temp) {
-  console.log('🔧 renderMainDate:', nuovaData, temp);
-
-  const dateSpan = document.getElementById('date-label');
-  const tempSpan = document.getElementById('temp-label');
+  var dateSpan = document.getElementById('date-label');
+  var tempSpan = document.getElementById('temp-label');
 
   if (!dateSpan || !tempSpan) {
     console.error('❌ Mancano #date-label o #temp-label nel DOM');
@@ -125,113 +114,126 @@ function renderMainDate(nuovaData, temp) {
   }
 
   // Data/ora
-  dateSpan.textContent = `Ultima immagine (dir. NO): ${nuovaData || 'N/D'}`;
+  dateSpan.textContent = 'Ultima immagine (dir. NO): ' + (nuovaData || 'N/D');
 
-  // Temperatura (arrotondata all’unità) + colore dinamico
-  const t = numOrNull(temp);
-  const display = (t != null) ? Math.round(t) : null;
-  const colorClass = (t != null) ? getTempColorClassJS(t) : 'temp-default';
+  // Temperatura arrotondata all’unità + colore dinamico
+  var t = numOrNull(temp);
+  var display = (t === null ? null : parseFloat(t).toFixed(1)); // 1 decimale // ESLint-friendly
+  var colorClass = (t === null ? 'temp-default' : getTempColorClassJS(t));
 
-  tempSpan.textContent = (display != null) ? `${display}°C` : 'N/D';
-  tempSpan.className = `temp-data ${colorClass}`;
-
-  console.log('✅ Main overlay aggiornato:', tempSpan.textContent, colorClass);
+  tempSpan.textContent = (display === null ? 'N/D' : (display + '°C'));
+  tempSpan.className = 'temp-data ' + colorClass;
 }
 
 
-/* ==========================================================================
- *  CREAZIONE SINGOLA MINIATURA (nodo DOM)
- * ========================================================================== */
+/* ==================== Miniatura: costruzione nodo DOM ==================== */
 /**
- * Costruisce il DOM per una singola miniatura (thumb) con overlay centrale.
- * Non appende alla galleria: delegato al chiamante.
+ * Costruisce il DOM per una miniatura (thumb) con overlay centrale.
+ * @param {Object} item  record immagine+meteo
+ * @param {Number} index indice per lightbox
+ * @returns {HTMLElement} wrapper completo pronto da appendere
  */
 function createThumbnailNode(item, index) {
   // Wrapper thumb
-  const wrap = document.createElement('div');
+  var wrap = document.createElement('div');
   wrap.className = 'thumb';
 
   // Immagine + cache-busting
-  const img = document.createElement('img');
-  img.src = (item?.src || '').trim() + '?t=' + Date.now();
+  var img = document.createElement('img');
+  var baseSrc = getStr(item, 'src').trim();
+  img.src = baseSrc + '?t=' + Date.now();
   img.alt = 'Immagine webcam';
 
   // Click → lightbox (se disponibile)
-  img.onclick = () => {
+  img.onclick = function () {
     if (typeof openLightbox === 'function') openLightbox(index);
   };
 
   // --- Parsing valori record ------------------------------------------------
-  const tNum  = numOrNull(item.temp);
-  const tDisplay = (tNum != null ? Math.round(tNum) : null);   // arrotondato all’unità
+  var tNum     = numOrNull(get(item, 'temp'));
+  var tDisplay = (tNum === null ? null : parseFloat(tNum).toFixed(1));
 
-  const ora   = estraiOraDaItem(item);
+  var ora      = estraiOraDaItem(item);
+  var hrVal    = numOrNull(get(item, 'hr'));
 
-  const hrVal = numOrNull(item.hr);                             // %
-  const vMs   = numOrNull(item.vento);                          // m/s
-  const wKmh  = (vMs != null) ? Math.round(vMs * 3.6) : null;   // km/h
+  // vento: backend storico "vento" (m/s) oppure "wind_kmh"
+  var vMs      = numOrNull(pickFirstDefined(item, ['vento', 'wind_ms']));
+  var wKmh     = (vMs !== null) ? Math.round(vMs * 3.6) : numOrNull(get(item, 'wind_kmh'));
 
-  const wDeg  = numOrNull(item.dir);
-  const wDir  = (wDeg != null) ? degToCompass(wDeg) : null;
+  // direzione: "dir" (gradi o testo) o "Dir_text"
+  var dirRaw   = pickFirstDefined(item, ['dir', 'dir_text', 'Dir_text']);
+  var dirDeg   = numOrNull(dirRaw);
+  var wDir     = (dirDeg !== null) ? degToCompass(dirDeg) : (dirRaw !== null ? String(dirRaw) : null);
 
-  const pVal  = numOrNull(
-    item.p_hpa ?? item.press_hpa ?? item.pressione_hpa ??
-    item.pressure_hpa ?? item.pressure ?? item.mbar ?? item.press_mb
-  );
+  // pressione: supporto alias multipli
+  var pRaw = pickFirstDefined(item, [
+    'p_hpa', 'press_hpa', 'pressione_hpa',
+    'pressure_hpa', 'pressure', 'mbar', 'press_mb'
+  ]);
+  var pVal = (pRaw === null ? null : +pRaw);
 
-  // --- Overlay centrale (usa solo classi CSS) ------------------------------
-  const overlay = document.createElement('span');
-  overlay.className =
-    'overlay-mini ' + (Number.isFinite(+item?.temp) ? getTempColorClassJS(+item.temp) : 'temp-default');
+  // --- Overlay centrale (solo classi CSS) ----------------------------------
+  var overlay = document.createElement('span');
+  var tempClass = (isFinite(+get(item, 'temp')) ? getTempColorClassJS(+get(item, 'temp')) : 'temp-default');
+  overlay.className = 'overlay-mini ' + tempClass;
 
-  // Riga 1: Temperatura (colore dinamico via classe su overlay)
-  const elTemp = document.createElement('span');
+  // RIGA 1: Temperatura
+  var elTemp = document.createElement('span');
   elTemp.className = 'temp-line';
-  elTemp.textContent = (tDisplay != null) ? (tDisplay + '°C') : 'N/D';
+  elTemp.textContent = (tDisplay === null ? 'N/D' : (tDisplay + '°C'));
 
-  // Riga 2: Ora (rossa) con icona clessidra (outline)
-  const elOra = document.createElement('span');
+  // RIGA 2: Ora (rossa) con icona clessidra (outline)
+  var dataSolo = estraiDataDaItem(item); // ← nuovo
+  /** Estrae la data dd/mm/yyyy da item.data_ora */
+  /** Estrae data breve "dd/mm" da item.data_ora */
+function estraiDataDaItem(item) {
+  var s = getStr(item, 'data_ora');
+  // match tipo "09/01/2025"
+  var m = s.match(/\b(\d{2}\/\d{2})\/\d{4}\b/);
+  return m ? m[1] : 'N/D';
+}
+
+  var elOra = document.createElement('span');
   elOra.className = 'ora-line';
-  elOra.innerHTML = `
-    <svg class="icon icon-outline" viewBox="0 0 24 24">
-      <path d="M6 2h12M6 22h12M6 2c0 5 6 6 6 10s-6 5-6 10M18 2c0 5-6 6-6 10s6 5 6 10"/>
-    </svg>
-    ${ora}
-  `;
+  elOra.innerHTML =
+    '<svg class="icon icon-outline" viewBox="0 0 24 24">' +
+    '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle>' +
+    '<line x1="12" y1="12" x2="12" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>' +
+    '<line x1="12" y1="12" x2="15" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>' +
+  '</svg> ' +
+    dataSolo + ' ' + ora; // <--- DATA + ORA
 
-  // Riga 3: Vento (km/h + direzione) — verde
-  const elVento = document.createElement('span');
+
+  // RIGA 3: Vento (km/h + direzione) — verde
+  var elVento = document.createElement('span');
   elVento.className = 'meta-line vento-line';
-  elVento.innerHTML = `
-    <svg class="icon icon-outline" viewBox="0 0 24 24">
-      <path d="M4 12h9a3 3 0 1 0-3-3" />
-      <path d="M4 18h11a4 4 0 1 0-4-4" />
-    </svg>
-    ${wKmh != null ? (wKmh + ' km/h') : 'N/D'}${wDir ? ' ' + wDir : ''}
-  `;
+  elVento.innerHTML =
+    '<svg class="icon icon-outline" viewBox="0 0 24 24">' +
+      '<path d="M4 12h9a3 3 0 1 0-3-3"></path>' +
+      '<path d="M4 18h11a4 4 0 1 0-4-4"></path>' +
+    '</svg> ' +
+    (wKmh !== null ? (wKmh + ' km/h') : 'N/D') + (wDir ? (' ' + wDir) : '');
 
-  // Riga 4: Umidità — verde
-  const elHR = document.createElement('span');
+  // RIGA 4: Umidità — verde
+  var elHR = document.createElement('span');
   elHR.className = 'meta-line hr-line';
-  elHR.innerHTML = `
-    <svg class="icon" viewBox="0 0 24 24">
-      <path d="M12 2s7 8 7 12a7 7 0 1 1-14 0C5 10 12 2 12 2Z"/>
-    </svg>
-    ${hrVal != null ? (Math.round(hrVal) + '%') : 'N/D'}
-  `;
+  elHR.innerHTML =
+    '<svg class="icon" viewBox="0 0 24 24">' +
+      '<path d="M12 2s7 8 7 12a7 7 0 1 1-14 0C5 10 12 2 12 2Z"></path>' +
+    '</svg> ' +
+    (hrVal !== null ? (Math.round(hrVal) + '%') : 'N/D');
 
-  // Riga 5: Pressione (molla outline) — verde
-  const elPress = document.createElement('span');
+  // RIGA 5: Pressione (molla outline) — verde
+  var elPress = document.createElement('span');
   elPress.className = 'meta-line press-line';
-  elPress.innerHTML = `
-    <svg class="icon icon-outline" viewBox="0 0 24 24">
-      <path d="M8 4c0 2 8 2 8 0" />
-      <path d="M8 8c0 2 8 2 8 0" />
-      <path d="M8 12c0 2 8 2 8 0" />
-      <path d="M8 16c0 2 8 2 8 0" />
-    </svg>
-    ${pVal != null ? Math.round(pVal) + ' hPa' : 'N/D'}
-  `;
+  elPress.innerHTML =
+    '<svg class="icon icon-outline" viewBox="0 0 24 24">' +
+      '<path d="M8 4c0 2 8 2 8 0"></path>' +
+      '<path d="M8 8c0 2 8 2 8 0"></path>' +
+      '<path d="M8 12c0 2 8 2 8 0"></path>' +
+      '<path d="M8 16c0 2 8 2 8 0"></path>' +
+    '</svg> ' +
+    (pVal != null ? (Math.round(pVal) + ' hPa') : 'N/D');
 
   // Montaggio overlay
   overlay.appendChild(elTemp);
@@ -248,114 +250,106 @@ function createThumbnailNode(item, index) {
 }
 
 
-/* ==========================================================================
- *  FETCH + RENDER COMPLETO (main image + griglia)
- * ========================================================================== */
+/* ========================== Fetch + Render all =========================== */
 /**
  * Scarica i dati dal backend, aggiorna main image/overlay e ricostruisce
  * la galleria delle miniature.
  */
 function aggiornaGalleria() {
-  const logTime = new Date().toLocaleTimeString();
-  console.log(`⏳ [${logTime}] ========================================`);
-  console.log(`⏳ [${logTime}] Inizio aggiornamento galleria...`);
+  var logTime = new Date().toLocaleTimeString();
+  console.log('⏳ [' + logTime + '] ========================================');
+  console.log('⏳ [' + logTime + '] Inizio aggiornamento galleria...');
 
   fetch(ENDPOINT_AGGIORNAMENTO)
-    .then((response) => {
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    .then(function (response) {
+      if (!response.ok) throw new Error('HTTP ' + response.status);
       return response.json();
     })
-    .then((dati) => {
-      console.log(`✅ [${logTime}] Ricevuti ${dati.length} record dal server`);
+    .then(function (dati) {
+      console.log('✅ [' + logTime + '] Ricevuti ' + dati.length + ' record dal server');
 
       // 1) Aggiorna array globale (usato anche altrove)
       window.images = dati;
 
       // 2) Main image + overlay data/temperatura
-      const mainImage = document.getElementById('main-image');
-      const mainDate  = document.getElementById('main-image-date');
+      var mainImage = document.getElementById('main-image');
+      var mainDate  = document.getElementById('main-image-date');
 
       if (mainImage && mainDate) {
-        const rec = window.images[0];
+        var rec = window.images[0];
         if (!rec) {
-          console.warn(`⚠️ [${logTime}] Nessun record disponibile per la main image`);
+          console.warn('⚠️ [' + logTime + '] Nessun record disponibile per la main image');
         } else {
-          const nuovoSrc = rec.src + '?t=' + Date.now(); // cache-busting
+          var nuovoSrc = getStr(rec, 'src') + '?t=' + Date.now(); // cache-busting
           mainImage.src = nuovoSrc;
-          mainImage.onclick = () => { if (typeof openLightbox === 'function') openLightbox(0); };
+          mainImage.onclick = function () {
+            if (typeof openLightbox === 'function') openLightbox(0);
+          };
 
-          const nuovaData = rec.data_ora || 'N/D';
-          renderMainDate(nuovaData, rec.temp);
+          var nuovaData = getStr(rec, 'data_ora') || 'N/D';
+          renderMainDate(nuovaData, get(rec, 'temp'));
 
-          console.log(`🖼️ [${logTime}] Main image aggiornata: ${nuovoSrc}`);
+          console.log('🖼️ [' + logTime + '] Main image aggiornata: ' + nuovoSrc);
         }
       } else {
-        console.warn(`⚠️ [${logTime}] mainImage o mainDate non trovati nel DOM`);
+        console.warn('⚠️ [' + logTime + '] mainImage o mainDate non trovati nel DOM');
       }
 
       // 3) Ricostruisci galleria miniature
-      const gallery = document.querySelector('.gallery');
+      var gallery = document.querySelector('.gallery');
       if (!gallery) {
-        console.warn(`⚠️ [${logTime}] .gallery non trovata nel DOM`);
+        console.warn('⚠️ [' + logTime + '] .gallery non trovata nel DOM');
       } else {
         gallery.innerHTML = '';
-        (window.images || []).forEach((item, index) => {
+        var list = window.images || [];
+        for (var i = 0; i < list.length; i++) {
           try {
-            const node = createThumbnailNode(item, index);
+            var node = createThumbnailNode(list[i], i);
             gallery.appendChild(node);
           } catch (e) {
-            console.error('❌ Errore costruendo miniatura', index, e);
+            console.error('❌ Errore costruendo miniatura', i, e);
           }
-        });
-        console.log(`🖼️ [${logTime}] Galleria ricostruita con ${ (window.images || []).length } miniature`);
+        }
+        console.log('🖼️ [' + logTime + '] Galleria ricostruita con ' + list.length + ' miniature');
       }
 
       // 4) Aggiorna stato bottoni navigazione lightbox (se definita)
       if (typeof updateNavButtons === 'function') {
         updateNavButtons();
-        console.log(`🔄 [${logTime}] Bottoni navigazione aggiornati`);
+        console.log('🔄 [' + logTime + '] Bottoni navigazione aggiornati');
       }
 
-      console.log(`✅ [${logTime}] Aggiornamento completato`);
-      console.log(`⏳ [${logTime}] ========================================`);
+      console.log('✅ [' + logTime + '] Aggiornamento completato');
+      console.log('⏳ [' + logTime + '] ========================================');
     })
-    .catch((err) => {
-      console.error(`❌ [${logTime}] Errore durante aggiornamento galleria:`, err);
-      console.log(`⏳ [${logTime}] ========================================`);
+    .catch(function (err) {
+      console.error('❌ [' + logTime + '] Errore durante aggiornamento galleria:', err);
+      console.log('⏳ [' + logTime + '] ========================================');
     });
 }
 
 
-/* ==========================================================================
- *  INIZIALIZZAZIONE / TIMER
- * ========================================================================== */
+/* ========================= Init / Timer / Debug ========================== */
 
 /** Avvio periodico */
-const intervalId = setInterval(aggiornaGalleria, AGGIORNAMENTO_INTERVALLO);
-console.log(`⏰ Timer aggiornamento automatico: ogni ${AGGIORNAMENTO_INTERVALLO / 1000} secondi`);
+var intervalId = setInterval(aggiornaGalleria, AGGIORNAMENTO_INTERVALLO);
+console.log('⏰ Timer aggiornamento automatico: ogni ' + (AGGIORNAMENTO_INTERVALLO / 1000) + ' secondi');
 
 /** Primo popolamento all’avvio pagina */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function () {
   console.log('🚀 Pagina caricata, eseguo primo aggiornamento…');
   aggiornaGalleria();
 });
 
-
-/* ==========================================================================
- *  UTILITÀ DEBUG (richiamabili da console)
- * ========================================================================== */
-
+/** Debug helpers (richiamabili da console) */
 function stopAggiornamentoAutomatico() {
   clearInterval(intervalId);
   console.log('⏹️ Aggiornamento automatico fermato');
 }
-
 function forzaAggiornamento() {
   console.log('🔄 Aggiornamento forzato manualmente');
   aggiornaGalleria();
 }
-
-// Espone le utility in window per comodità da console
 window.stopAggiornamentoAutomatico = stopAggiornamentoAutomatico;
 window.forzaAggiornamento = forzaAggiornamento;
 

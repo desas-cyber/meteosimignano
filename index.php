@@ -91,13 +91,22 @@ if (!isset($data['error'])) {
     // ma il browser ha bisogno di percorsi relativi (FoscamCamera_E8ABFAA799FE/snap/...)
     
     foreach ($records as &$record) {
-        // PRODUZIONE: usa '/home/erbielqv/public_html/meteosimignano/'
-        // SVILUPPO: usa '/Applications/MAMP/htdocs/meteosimignano/'
-        $record['src'] = str_replace(
-            '/Applications/MAMP/htdocs/meteosimignano/', 
-            '', 
-            $record['src']
-        );
+    // Array con tutti i percorsi filesystem da rimuovere
+    $pathsToRemove = [
+        '/home/erbielqv/public_html/test/public_html',      // TEST_SERVER
+        '/home/erbielqv/public_html/meteosimignano',        // PRODUZIONE
+        '/Applications/MAMP/htdocs/meteosimignano'          // TEST_LOCALE (Mac)
+    ];
+    
+    // Prova a sostituire ogni percorso finché uno non funziona
+    foreach ($pathsToRemove as $path) {
+        $newSrc = str_replace($path, '', $record['src']);
+        if ($newSrc !== $record['src']) {
+            // Sostituzione riuscita, esci dal loop
+            $record['src'] = $newSrc;
+            break;
+        }
+    }
     }
     unset($record); // Rimuove riferimento per evitare side effects
     
