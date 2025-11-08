@@ -1,19 +1,29 @@
 /* ==========================================================================
-   1) GALLERIA (layout flex: 3 per riga)
+   VARIABILI ROOT
+   ========================================================================== */
+:root {
+  --overlay-fs-min: 12px;
+  --overlay-fs-fluid: 2.8vw;
+  --overlay-fs-max: 18px;
+}
+
+/* ==========================================================================
+   1) GALLERIA (layout flex: 3 per riga desktop, 2 per riga mobile)
    ========================================================================== */
 .gallery {
   display: flex;
   flex-wrap: wrap;
   max-width: 1000px;
+  max-height: calc(4 * 150px + 30px);
   margin: 0 auto;
   overflow-y: auto;
   padding: 5px;
   box-sizing: border-box;
 }
 
-/* Card miniatura (~33.33% - margini) */
+/* Card miniatura (~33.33% - margini su desktop) */
 .gallery .thumb {
-  position: relative;              /* ancora per overlay assoluto */
+  position: relative;
   display: inline-block;
   width: calc(33.333% - 20px);
   margin: 10px;
@@ -21,7 +31,7 @@
   border: 4px solid #ddd;
   border-radius: 8px;
   box-sizing: border-box;
-  container-type: inline-size;     /* abilita unità cqw/cqh (se supportate) */
+  container-type: inline-size;
   aspect-ratio: 4 / 2.79;
 }
 
@@ -30,139 +40,236 @@
   display: block;
   width: 110%;
   height: 110%;
-  object-fit: cover;          /* riempi senza deformare */
-  object-position: center;    /* sposta il punto focale: top / 30% 40% ecc. */
+  object-fit: cover;
+  object-position: center;
   transition: transform 0.2s ease, clip-path 0.2s ease;
-  clip-path: inset(0% 0 7% 0);   /* evita sovrapposizioni sotto */
+  clip-path: inset(0% 0 7% 0);
   cursor: pointer;
 }
-.gallery .thumb > img:hover { transform: scale(1.1); }
+
+.gallery .thumb > img:hover {
+  transform: scale(1.1);
+}
+
+/* Pallino MIN/MAX in alto a destra sulla miniatura */
+.gallery .thumb::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #000;
+  box-shadow: 0 0 3px rgba(0,0,0,0.4);
+  display: none;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.gallery .thumb.is-min::after {
+  display: block;
+  background-color: #007bff;
+  box-shadow: 0 0 0 1px #ccff00;
+  animation: dot-breathe 1.6s infinite ease-in-out;
+}
+
+.gallery .thumb.is-max::after {
+  display: block;
+  background-color: #dc3545;
+  box-shadow: 0 0 0 1px #ccff00;
+  animation: dot-breathe 1.6s infinite ease-in-out;
+}
+
+@keyframes dot-breathe {
+  0%, 100% {
+    transform: scale(0.75);
+    opacity: 0.95;
+  }
+  50% {
+    transform: scale(1.0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-breath {
+  0%, 100% {
+    transform: scale(0.75);
+    opacity: 0.95;
+  }
+  50% {
+    transform: scale(1.0);
+    opacity: 1;
+  }
+}
 
 /* ==========================================================================
-   2) OVERLAY MINIATURE (centrato)
+   2) OVERLAY MINIATURE (centrato sulla card)
    ========================================================================== */
-
-/* Contenitore overlay: centratura perfetta e blocco compatto */
 .overlay-mini {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
-  /* Fallback dimensioni: percentuali + max in px  */
   width: 60%;
   max-width: 180px;
-
   text-align: center;
-  line-height: 1.05;               /* interlinea più compatta */
-  pointer-events: none;            /* non intercetta i click */
+  line-height: 1.05;
+  pointer-events: none;
 }
 
-/* Ogni “pillola” di testo: centrata e compatta */
-.overlay-mini > * {
+/* Ogni "pillola" di testo: centrata e compatta */
+.overlay-mini > *:not(.temp-line) { 
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 1px;              /* distanza verticale ridotta */
+  margin: 0 auto 1px;
 }
-.overlay-mini > *:last-child { margin-bottom: 0; }
 
-/* Righe testo overlay (outline per leggibilità) */
-.temp-line,
-.ora-line,
-.meta-line {
-  text-shadow:
-    0 0 3px rgba(0,0,0,0.9),
-    0 0 2px rgba(0,0,0,0.9);
+.overlay-mini > *:last-child {
+  margin-bottom: 0;
+}
+
+
+
+/* Font-size unificato per tutte le righe overlay */
+.overlay-mini .temp-line,
+.overlay-mini .ora-line,
+.overlay-mini .meta-line {
+  font-size: clamp(var(--overlay-fs-min), var(--overlay-fs-fluid), var(--overlay-fs-max)) !important;
+  text-shadow: 0 0 3px rgba(0,0,0,0.9), 0 0 2px rgba(0,0,0,0.9);
   white-space: nowrap;
 }
 
-/* Temperatura: centrata e con gestione eventuale <sup> */
+/* Temperatura: gestione <sup> */
 .temp-line {
   font-weight: 700;
+  display: flex !important; /* Forziamo a comportarsi come blocco... */
+  width: 100%;             /* ...per occupare tutta la larghezza di .overlay-mini. */
+  justify-content: center; /* Centra dinamicamente tutto il contenuto */
+  align-self: center;
+  
 }
-.temp-line sup, .temp-line .sup {
+
+.temp-line sup,
+.temp-line .sup {
   vertical-align: baseline;
-  position: relative;
+  position: static;
   top: -0.1em;
   font-size: 0.8em;
 }
 
-/* Ora: inline con micro-gap locale */
+/* Ora: inline con micro-gap */
 .ora-line {
   display: flex;
   align-items: center;
   font-weight: 600;
-  color: #ff1e1e;                 /* ora rossa fissa */
+  color: #ff1e1e;
 }
-.ora-line > * { margin-right: 4px; }
-.ora-line > *:last-child { margin-right: 0; }
+
+.ora-line > * {
+  margin-right: 4px;
+}
+
+.ora-line > *:last-child {
+  margin-right: 0;
+}
 
 /* Meta (vento / UR / pressione): inline */
 .meta-line {
   display: flex;
   align-items: center;
   font-weight: 600;
-  color: #00ff6a;                 /* verde elettrico */
+  color: #00ff6a;
 }
-.meta-line > * { margin-right: 8px; }
-.meta-line > *:last-child { margin-right: 0; }
 
+.meta-line > * {
+  margin-right: 8px;
+}
+
+.meta-line > *:last-child {
+  margin-right: 0;
+}
 
 /* ==========================================================================
-   3) ICONOGRAFIA
+   3) ICONOGRAFIA E COLORI TEMPERATURA
    ========================================================================== */
 .icon {
-  width: 1em;                      /* scala con il font */
+  width: 1em;
   height: 1em;
   vertical-align: -1px;
   fill: currentColor;
 }
-.icon-outline { fill: currentColor; }
+
+.icon-outline {
+  fill: currentColor;
+}
 
 /* Colori temperatura (classi applicate dinamicamente) */
-.temp-red       { color: #ec0835; }
-.temp-orange    { color: #cf7618; }
-.temp-green     { color: #79f603; }
-.temp-lightblue { color: #3fa9f5; }
-.temp-blue      { color: #0044ff; }
-.temp-default   { color: #cccccc; }
+.temp-red { color: #ec0835; }
+.temp-orange { color: #cf7618; }
+.temp-green { color: #79f603; }
+.temp-lightblue { color: #09e3ce; }
+.temp-blue { color: #007bff; }
+.temp-violet { color: #8b00ff; }
+.temp-default { color: #cccccc; }
 
 /* ==========================================================================
-   4) LIGHTBOX (overlay a schermo intero)
+   4) STILE LAMPEGGIAMENTO MIN/MAX (main image)
+   ========================================================================== */
+.temp-data {
+  display: inline-flex;
+  align-items: center;
+}
+
+.temp-data::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 6px;
+  animation: none;
+  vertical-align: middle;
+}
+
+.temp-data.is-min::before {
+  background-color: #007bff;
+  border: 2px solid #000;
+  animation: pulse-breath 1.6s infinite ease-in-out;
+}
+
+.temp-data.is-max::before {
+  background-color: #dc3545;
+  border: 2px solid #000;
+  animation: pulse-breath 1.6s infinite ease-in-out;
+}
+
+/* ==========================================================================
+   5) LIGHTBOX (overlay a schermo intero)
    ========================================================================== */
 .lightbox {
-  display: none; /* visibile solo con .active */
+  display: none;
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.85);
   z-index: 1000;
-
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: none;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  align-items: center;
+  justify-content: center;
 }
+
 .lightbox.active {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
 }
 
 /* Contenitore immagine dentro la lightbox */
 .lightbox-content {
-  display: inline-block; /* shrink-to-content */
-  position: relative;    /* overlay interni assoluti si ancorano qui */
+  display: inline-block;
+  position: relative;
   margin: 0 auto;
 }
 
@@ -176,11 +283,12 @@
   clip-path: none !important;
 }
 
-/* Barre informative (sopra/sotto l’immagine) */
+/* Barre informative (sopra/sotto l'immagine) */
 .lightbox-date,
 .lightbox-info {
   position: absolute;
-  left: 0; right: 0;
+  left: 0;
+  right: 0;
   text-align: center;
   background: rgba(0, 0, 0, 0.6);
   color: #fff;
@@ -191,13 +299,9 @@
   line-height: 1.2;
   border-radius: 5px !important;
 }
-/* Facoltativo:
-.lightbox-date { bottom: 8px; }
-.lightbox-info { top: 8px; }
-*/
 
 /* ==========================================================================
-   5) LIGHTBOX: NAVIGAZIONE & CONTROLLI
+   6) LIGHTBOX: NAVIGAZIONE & CONTROLLI
    ========================================================================== */
 .lightbox .nav-btn {
   position: fixed;
@@ -209,14 +313,28 @@
   cursor: pointer;
   z-index: 2000;
 }
-.lightbox .nav-btn.prev { right: 12px; }
-.lightbox .nav-btn.next { left: 12px; }
-.lightbox .nav-btn:hover { background: rgba(255,255,255,0.8); }
-.lightbox .nav-btn:disabled { opacity: .25; pointer-events: none; }
+
+.lightbox .nav-btn.prev {
+  right: 12px;
+}
+
+.lightbox .nav-btn.next {
+  left: 12px;
+}
+
+.lightbox .nav-btn:hover {
+  background: rgba(255,255,255,0.8);
+}
+
+.lightbox .nav-btn:disabled {
+  opacity: .25;
+  pointer-events: none;
+}
 
 #close-btn.lightbox-close {
   position: fixed;
-  top: 15px; left: 50%;
+  top: 15px;
+  left: 50%;
   margin-left: -1.5rem;
   background: transparent;
   color: red;
@@ -236,23 +354,47 @@
   z-index: 1001;
   padding: 10px;
 }
-#rewind-btn  { left: 10px; }
-#forward-btn { right: 10px; }
 
-.lightbox-control-btn { display: inline-flex; align-items: center; }
+#rewind-btn {
+  left: 10px;
+}
+
+#forward-btn {
+  right: 10px;
+}
+
+.lightbox-control-btn {
+  display: inline-flex;
+  align-items: center;
+}
+
 #forward-btn:disabled svg,
-#rewind-btn:disabled  svg { opacity: 0.4; filter: grayscale(100%); cursor: not-allowed; }
+#rewind-btn:disabled svg {
+  opacity: 0.4;
+  filter: grayscale(100%);
+  cursor: not-allowed;
+}
 
 /* Dot rosso (decorazione) */
 .dot {
   display: inline-block;
-  width: 8px; height: 8px;
+  width: 8px;
+  height: 8px;
   background-color: red;
   border-radius: 50%;
   z-index: 1;
 }
-#rewind-btn .dot { position: relative; top: -1px; margin-right: -10px; }
-#forward-btn .dot { position: relative; margin-left: -10px; }
+
+#rewind-btn .dot {
+  position: relative;
+  top: -1px;
+  margin-right: -2px;
+}
+
+#forward-btn .dot {
+  position: relative;
+  margin-left: -2px;
+}
 
 /* ==========================================================================
    7) TITOLI / BOTTONI ESTERNI
@@ -264,30 +406,70 @@
   padding: 20px;
   box-sizing: border-box;
 }
-.gallery-title { text-align: left; font-size: 28px; margin-bottom: 0; }
+
+.gallery-title {
+  text-align: left;
+  font-size: 28px;
+  margin-bottom: 0;
+}
 
 .button {
-  width: 25vw; height: 15vh;
-  max-width: 200px; max-height: 50px;
+  width: 25vw;
+  height: 15vh;
+  max-width: 200px;
+  max-height: 50px;
   background-color: rgba(5, 5, 5, 0.9);
   color: red;
-  border: none; border-radius: 8px;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
-  display: inline-flex; align-items: center; justify-content: center;
-  text-align: center; text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
   font-size: 15px;
   transition: background-color 0.3s;
 }
-.button:hover { background-color: rgba(5, 5, 5, 0.4); }
+
+.button:hover {
+  background-color: rgba(5, 5, 5, 0.4);
+}
 
 /* ==========================================================================
-   6) MOBILE-ONLY (≤ 480px)
-   - UR + PRESSIONE nella stessa riga
-   - leggera compattazione overlay/meta
+   8) PROGRESSIVE ENHANCEMENT (supporto cqw)
+   ========================================================================== */
+@supports (font-size: 1cqw) {
+  .overlay-mini {
+    width: min(60cqw, 180px);
+    max-width: 70cqw;
+  }
+
+  .overlay-mini .temp-line,
+  .overlay-mini .ora-line,
+  .overlay-mini .meta-line {
+    font-size: clamp(12px, 5cqw, 18px) !important;
+  }
+}
+
+/* ==========================================================================
+   9) MOBILE (≤ 480px)
    ========================================================================== */
 @media (max-width: 480px) {
+  /* 2 miniature per riga con margini ridotti */
+  .gallery .thumb {
+    width: calc(50% - 16px);
+    margin: 8px;
+  }
 
-  /* UR + PRESSIONE: una sola riga, centrata */
+  /* Overlay più compatto */
+  .overlay-mini {
+    width: 72%;
+    max-width: 175px;
+    line-height: 1.05;
+  }
+
+  /* UR + PRESSIONE nella stessa riga */
   .meta-line {
     display: inline-flex !important;
     align-items: center;
@@ -296,6 +478,7 @@
     white-space: nowrap !important;
     min-width: 0;
   }
+
   .meta-line > * {
     display: inline-flex;
     align-items: center;
@@ -304,110 +487,37 @@
     margin-right: 4px;
     white-space: nowrap;
   }
-  .meta-line > *:last-child { margin-right: 0; }
 
-  /* Un filo di spazio orizzontale in più per l’overlay */
-  .overlay-mini {
-    width: 72%;
-    max-width: 190px;
-    line-height: 1.05;
+  .meta-line > *:last-child {
+    margin-right: 0;
   }
-}
 
-/* ==========================================================================
-   7) PROGRESSIVE ENHANCEMENT (se supporta cqw)
-   - sovrascrive solo dimensioni/scala per precisione su container
-   ========================================================================== */
-@supports (font-size: 1cqw) {
-  .overlay-mini {
-    width: min(60cqw, 180px);
-    max-width: 70cqw;
-  }
-  .temp-line { font-size: clamp(12px, 5cqw, 18px); }
-  .ora-line  { font-size: clamp(11px, 3.8cqw, 16px); }
-  .meta-line { font-size: clamp(10px, 3.4cqw, 15px); }
-}
-
-
-/* =========================
-   8) Overlay: font-size unico
-   ========================= */
-
-/* Valori “base” in vw */
-:root{
-  --overlay-fs-min: 12px;
-  --overlay-fs-fluid: 2.8vw;
-  --overlay-fs-max: 18px;
-}
-
-/* Tutte le righe dell’overlay con lo stesso font-size della temperatura */
-.overlay-mini .temp-line,
-.overlay-mini .ora-line,
-.overlay-mini .meta-line {
-  font-size: clamp(var(--overlay-fs-min), var(--overlay-fs-fluid), var(--overlay-fs-max)) !important;
-}
-
-/* Mobile: mantieni lo stesso size anche qui */
-@media (max-width: 480px) {
-  .overlay-mini .temp-line,
+  /* Font-size mobile: ora e meta più piccole */
   .overlay-mini .ora-line,
   .overlay-mini .meta-line {
-    font-size: clamp(var(--overlay-fs-min), var(--overlay-fs-fluid), var(--overlay-fs-max)) !important;
+    font-size: clamp(11px, 2.2vw, 16px) !important;
+  }
+
+  /* Temperatura leggermente più grande */
+  .overlay-mini .temp-line {
+    font-size: clamp(12px, 3.4vw, 18px) !important;
   }
 }
 
-/* Se il browser supporta cqw, usa misurazione relativa al contenitore ma UNIFORME */
-@supports (font-size: 1cqw) {
-  .overlay-mini .temp-line,
-  .overlay-mini .ora-line,
-  .overlay-mini .meta-line {
-    font-size: clamp(12px, 5cqw, 18px) !important;
-  }
-}
-
-/* =========================
-   MOBILE ≤ 480px — versione con margini più piccoli
-   ========================= */
-@media (max-width: 480px) {
-
-  /* 2 miniature per riga con margini ridotti */
-  .gallery .thumb {
-    width: calc(50% - 16px);  /* 50% - (2 * 8px) */
-    margin: 8px;              /* ridotto da 10px → 8px */
-  }
-
-  /* Testi overlay leggermente più piccoli (base mobile) */
-.overlay-mini .ora-line,
-.overlay-mini .meta-line {
-  font-size: clamp(11px, 2.2vw, 16px) !important;
-}
-
-/* Temperatura SOLO un po' più grande su mobile */
-.overlay-mini .temp-line {
-  font-size: clamp(12px, 3.4vw, 18px) !important;
-}
-
-  /* Overlay un po' più compatto */
-  .overlay-mini {
-    width: 72%;
-    max-width: 175px;   /* ridotto un filo per equilibrio */
-    line-height: 1.05;
-  }
-}
-
+/* Progressive enhancement mobile con cqw */
 @supports (font-size: 1cqw) {
   @media (max-width: 480px) {
-    /* Ora + meta-line: più piccole */
     .overlay-mini .ora-line,
     .overlay-mini .meta-line {
       font-size: clamp(11px, 4cqw, 16px) !important;
     }
 
-    /* Temperatura: leggermente più grande */
     .overlay-mini .temp-line {
       font-size: clamp(12px, 5cqw, 18px) !important;
     }
   }
 }
 
-
+/* ==========================================================================
+   FINE FILE
+   ========================================================================== */

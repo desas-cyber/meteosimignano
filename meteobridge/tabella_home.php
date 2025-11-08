@@ -54,9 +54,8 @@ $parametri = [
     "th0heatindex-act"         => "\u{0394} per indice di calore",
     "sol0rad-act"              => "Radianza attuale",
     "sol0rad-sum24h"           => "Radianza cumulata giornaliera",
-    "th0temp-age"              => "Ultimo dato t/h",
-    "thb0press-age"            => "Ultima dato p",
-    "wind0wind-age"            => "Ultima dato vento"
+    "th0temp-age"              => "Ultimo dato sens. t/h-p-vento/rad"
+
 ];
 
 require_once __DIR__ . '/../datetime_helper.php';

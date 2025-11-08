@@ -1,22 +1,22 @@
 /* ============================================================================
- *  GALLERIA METEO – Aggiornamento automatico (ES5-compatible)
+ * GALLERIA METEO – Aggiornamento automatico (ES5-compatible)
  * ============================================================================
  *
- *  Cosa fa:
- *  - Scarica periodicamente i record dal backend (JSON)
- *  - Aggiorna immagine principale + overlay data/temperatura
- *  - Ricostruisce la griglia di miniature con overlay centrato (temp/ora/vento/HR/pressione)
- *  - Gestisce click su miniature (apre lightbox se disponibile)
+ * Cosa fa:
+ * - Scarica periodicamente i record dal backend (JSON)
+ * - Aggiorna immagine principale + overlay data/temperatura
+ * - Ricostruisce la griglia di miniature con overlay centrato (temp/ora/vento/HR/pressione)
+ * - Gestisce click su miniature (apre lightbox se disponibile)
  *
- *  Dipendenze:
- *  - Backend: ENDPOINT_AGGIORNAMENTO → restituisce array di record:
- *      [{ src, data_ora, temp, hr, p_hpa, vento, dir, ... }, ...]
- *  - CSS: classi .overlay-mini, .temp-line, .ora-line, .meta-line, .icon, .icon-outline
- *  - JS esterno: openLightbox(index) e updateNavButtons() se presenti
+ * Dipendenze:
+ * - Backend: ENDPOINT_AGGIORNAMENTO → restituisce array di record:
+ * [{ src, data_ora, temp, hr, p_hpa, vento, dir, ... }, ...]
+ * - CSS: classi .overlay-mini, .temp-line, .ora-line, .meta-line, .icon, .icon-outline
+ * - JS esterno: openLightbox(index) e updateNavButtons() se presenti
  *
- *  Note compatibilità:
- *  - Niente optional chaining (?.) / nullish coalescing (??) / let/const / => / template string
- *  - Solo ES5 puro per motori JS legacy (anche embedded in device/webview)
+ * Note compatibilità:
+ * - Niente optional chaining (?.) / nullish coalescing (??) / let/const / => / template string
+ * - Solo ES5 puro per motori JS legacy (anche embedded in device/webview)
  * ========================================================================== */
 
 /* =============================== Config ================================== */
@@ -29,6 +29,7 @@ var ENDPOINT_AGGIORNAMENTO = 'aggiorna_galleria.php';
 
 
 /* ============================== Helpers ================================== */
+                           
 
 /** Uguaglianza stretta a numero finito (poly-like) */
 function isFiniteNumber(n) {
@@ -69,31 +70,37 @@ function degToCompass(deg) {
   return dirs[i < 0 ? i + 16 : i];
 }
 
+
+/**
+ * Mappa temperatura → classe colore CSS */
+function getTempColorClassJS(temp) {
+  var t = parseFloat(temp);
+  if (isNaN(t)) return 'temp-default';
+  
+  if (t > 35)   return 'temp-red';        // > 35°C
+  if (t >= 25)  return 'temp-orange';     // 25-35°C
+  if (t >= 15)  return 'temp-green';      // 15-24.9°C
+  if (t >= 5)   return 'temp-lightblue';  // 5-14.9°C
+  if (t >= -3)  return 'temp-blue';       // -3-4.9°C
+  return 'temp-violet';                   // < -3°C
+}
+
+// 📌 SPOSTATA QUI: Funzione per estrarre la data breve (risolve ReferenceError)
+/**
+ * Estrae data breve "dd/mm" da item.data_ora (es. "09/01/2025 14:30" → "09/01")
+ */
+function estraiDataDaItem(item) {
+  var s = getStr(item, 'data_ora');
+  // match tipo "dd/mm/yyyy"
+  var m = s.match(/\b(\d{2}\/\d{2})\/\d{4}\b/);
+  return m ? m[1] : 'N/D';
+}
+
 /** Estrae HH:MM da item.data_ora (es. "dd/mm/yyyy HH:MM") */
 function estraiOraDaItem(item) {
   var s = getStr(item, 'data_ora');
   var m = s.match(/\b(\d{2}):(\d{2})\b/);
   return m ? (m[1] + ':' + m[2]) : 'N/D';
-}
-
-/**
- * Mappa temperatura → classe colore CSS
- *  >35        → temp-red
- *  25..35     → temp-orange
- *  15..24.9   → temp-green
- *   0..14.9   → temp-lightblue
- *  <0         → temp-blue
- *  altrimenti → temp-default
- */
-function getTempColorClassJS(temp) {
-  var t = parseFloat(temp);
-  if (isNaN(t)) return 'temp-default';
-  if (t > 35)              return 'temp-red';
-  if (t >= 25 && t <= 35)  return 'temp-orange';
-  if (t >= 15 && t < 25)   return 'temp-green';
-  if (t >= 0 && t < 15)    return 'temp-lightblue';
-  if (t < 0)               return 'temp-blue';
-  return 'temp-default';
 }
 
 
@@ -103,10 +110,14 @@ function getTempColorClassJS(temp) {
  * nell’overlay dell’immagine principale.
  * @param {string} nuovaData  es. "09/01/2025 14:30"
  * @param {number|string} temp in °C (arrotondata all’unità)
+ * @param {string} [isMinMaxClass=''] Classe di lampeggiamento ('is-min' o 'is-max'). 🆕
  */
-function renderMainDate(nuovaData, temp) {
+function renderMainDate(nuovaData, temp, isMinMaxClass) {
   var dateSpan = document.getElementById('date-label');
   var tempSpan = document.getElementById('temp-label');
+
+  // Assicura che il parametro opzionale sia trattato come stringa
+  isMinMaxClass = isMinMaxClass || ''; 
 
   if (!dateSpan || !tempSpan) {
     console.error('❌ Mancano #date-label o #temp-label nel DOM');
@@ -118,11 +129,13 @@ function renderMainDate(nuovaData, temp) {
 
   // Temperatura arrotondata all’unità + colore dinamico
   var t = numOrNull(temp);
-  var display = (t === null ? null : parseFloat(t).toFixed(1)); // 1 decimale // ESLint-friendly
+  var display = (t === null ? null : parseFloat(t).toFixed(1)); // 1 decimale
   var colorClass = (t === null ? 'temp-default' : getTempColorClassJS(t));
 
   tempSpan.textContent = (display === null ? 'N/D' : (display + '°C'));
-  tempSpan.className = 'temp-data ' + colorClass;
+  
+  // 📌 AGGIORNATO: Aggiunge la classe di lampeggiamento per la main image
+  tempSpan.className = 'temp-data ' + colorClass + ' ' + isMinMaxClass;
 }
 
 
@@ -183,16 +196,8 @@ function createThumbnailNode(item, index) {
   elTemp.textContent = (tDisplay === null ? 'N/D' : (tDisplay + '°C'));
 
   // RIGA 2: Ora (rossa) con icona clessidra (outline)
-  var dataSolo = estraiDataDaItem(item); // ← nuovo
-  /** Estrae la data dd/mm/yyyy da item.data_ora */
-  /** Estrae data breve "dd/mm" da item.data_ora */
-function estraiDataDaItem(item) {
-  var s = getStr(item, 'data_ora');
-  // match tipo "09/01/2025"
-  var m = s.match(/\b(\d{2}\/\d{2})\/\d{4}\b/);
-  return m ? m[1] : 'N/D';
-}
-
+  var dataSolo = estraiDataDaItem(item); // ← usa la funzione spostata
+  
   var elOra = document.createElement('span');
   elOra.className = 'ora-line';
   elOra.innerHTML =
@@ -257,8 +262,8 @@ function estraiDataDaItem(item) {
  */
 function aggiornaGalleria() {
   var logTime = new Date().toLocaleTimeString();
-  console.log('⏳ [' + logTime + '] ========================================');
-  console.log('⏳ [' + logTime + '] Inizio aggiornamento galleria...');
+  //console.log('⏳ [' + logTime + '] ========================================');
+  //console.log('⏳ [' + logTime + '] Inizio aggiornamento galleria...');
 
   fetch(ENDPOINT_AGGIORNAMENTO)
     .then(function (response) {
@@ -266,7 +271,7 @@ function aggiornaGalleria() {
       return response.json();
     })
     .then(function (dati) {
-      console.log('✅ [' + logTime + '] Ricevuti ' + dati.length + ' record dal server');
+      //console.log('✅ [' + logTime + '] Ricevuti ' + dati.length + ' record dal server');
 
       // 1) Aggiorna array globale (usato anche altrove)
       window.images = dati;
@@ -274,26 +279,6 @@ function aggiornaGalleria() {
       // 2) Main image + overlay data/temperatura
       var mainImage = document.getElementById('main-image');
       var mainDate  = document.getElementById('main-image-date');
-
-      if (mainImage && mainDate) {
-        var rec = window.images[0];
-        if (!rec) {
-          console.warn('⚠️ [' + logTime + '] Nessun record disponibile per la main image');
-        } else {
-          var nuovoSrc = getStr(rec, 'src') + '?t=' + Date.now(); // cache-busting
-          mainImage.src = nuovoSrc;
-          mainImage.onclick = function () {
-            if (typeof openLightbox === 'function') openLightbox(0);
-          };
-
-          var nuovaData = getStr(rec, 'data_ora') || 'N/D';
-          renderMainDate(nuovaData, get(rec, 'temp'));
-
-          console.log('🖼️ [' + logTime + '] Main image aggiornata: ' + nuovoSrc);
-        }
-      } else {
-        console.warn('⚠️ [' + logTime + '] mainImage o mainDate non trovati nel DOM');
-      }
 
       // 3) Ricostruisci galleria miniature
       var gallery = document.querySelector('.gallery');
@@ -310,34 +295,246 @@ function aggiornaGalleria() {
             console.error('❌ Errore costruendo miniatura', i, e);
           }
         }
-        console.log('🖼️ [' + logTime + '] Galleria ricostruita con ' + list.length + ' miniature');
+        //console.log('🖼️ [' + logTime + '] Galleria ricostruita con ' + list.length + ' miniature');
       }
+      
+      // === PASSO 5: Applica classi di lampeggiamento e prepara la classe per la Main Image ===
 
-      // 4) Aggiorna stato bottoni navigazione lightbox (se definita)
+// === PASSO 5: Applica classi di lampeggiamento e prepara la classe per la Main Image ===
+var minMaxData = trovaMinMaxTempOggi(window.images); 
+var list = window.images || [];
+var gallery = document.querySelector('.gallery');
+var thumbs = gallery ? gallery.querySelectorAll('.thumb') : [];
+var mainTempClass = ''; // Classe per la main image
+
+if (minMaxData && list.length > 0) {
+  var minTemp = minMaxData.min;
+  var maxTemp = minMaxData.max;
+
+  // 1) Data di riferimento valida (come fai già)
+  var dataPiuRecente = '';
+  for (var i = 0; i < list.length; i++) {
+    var fullDate = getStr(list[i], 'data_ora');
+    if (fullDate && fullDate.length >= 10) {
+      dataPiuRecente = estraiDataDaItem(list[i]);
+      break;
+    }
+  }
+  if (!dataPiuRecente || dataPiuRecente === 'N/D') {
+    console.log('⚠️ Impossibile trovare una data di riferimento valida per il lampeggiamento.');
+  } else {
+    // 2) Pulisci vecchie classi su TUTTE le thumb
+    for (var r = 0; r < thumbs.length; r++) {
+      thumbs[r].classList.remove('is-min', 'is-max');
+    }
+
+    // 3) Determina classe per la main image (resta uguale)
+    var mainTempRaw = numOrNull(get(list[0], 'temp'));
+    var mainTemp = mainTempRaw !== null ? Math.round(mainTempRaw * 10) / 10 : null;
+    if (mainTemp !== null && estraiDataDaItem(list[0]) === dataPiuRecente) {
+      if (mainTemp === minTemp) mainTempClass = 'is-min';
+      else if (mainTemp === maxTemp) mainTempClass = 'is-max';
+    }
+
+    // 4) Applica classi alle THUMB (non più alla .temp-line!)
+    for (var k = 0; k < list.length; k++) {
+      if (!thumbs[k]) continue;
+
+      var item = list[k];
+      var itemDate = estraiDataDaItem(item);
+      if (itemDate !== dataPiuRecente) continue;
+
+      var currentTempRaw = numOrNull(get(item, 'temp'));
+      var currentTemp = currentTempRaw !== null ? Math.round(currentTempRaw * 10) / 10 : null;
+      if (currentTemp === null) continue;
+
+      if (currentTemp === minTemp) thumbs[k].classList.add('is-min');
+      else if (currentTemp === maxTemp) thumbs[k].classList.add('is-max');
+    }
+  }
+
+
+    //console.log('✨ Classi min/max applicate correttamente solo ai record del', dataPiuRecente);
+}
+
+// 📌 Ritorna al punto 2 per aggiornare la Main Image ORA con la nuova classe.
+if (mainImage && mainDate) {
+    var rec = window.images[0];
+    if (!rec) {
+      console.warn('⚠️ [' + logTime + '] Nessun record disponibile per la main image');
+    } else {
+      var nuovoSrc = getStr(rec, 'src') + '?t=' + Date.now(); // cache-busting
+      mainImage.src = nuovoSrc;
+      mainImage.onclick = function () {
+        if (typeof openLightbox === 'function') openLightbox(0);
+      };
+
+      var nuovaData = getStr(rec, 'data_ora') || 'N/D';
+      
+      // 📌 CHIAMATA AGGIORNATA: Passa la classe di lampeggiamento
+      renderMainDate(nuovaData, get(rec, 'temp'), mainTempClass); 
+
+      //console.log('🖼️ [' + logTime + '] Main image aggiornata: ' + nuovoSrc);
+    }
+  } else {
+    console.warn('⚠️ [' + logTime + '] mainImage o mainDate non trovati nel DOM');
+  }
+
+// =======================================================
+// 4) Aggiorna stato bottoni navigazione lightbox (se definita)
       if (typeof updateNavButtons === 'function') {
         updateNavButtons();
-        console.log('🔄 [' + logTime + '] Bottoni navigazione aggiornati');
+        //console.log('🔄 [' + logTime + '] Bottoni navigazione aggiornati');
       }
 
       console.log('✅ [' + logTime + '] Aggiornamento completato');
-      console.log('⏳ [' + logTime + '] ========================================');
+      //console.log('⏳ [' + logTime + '] ========================================');
     })
     .catch(function (err) {
       console.error('❌ [' + logTime + '] Errore durante aggiornamento galleria:', err);
-      console.log('⏳ [' + logTime + '] ========================================');
+      //console.log('⏳ [' + logTime + '] ========================================');
     });
+
+}
+/* ===== Trova temperatura minima e massima tra le immagini della DATA CORRENTE ========================== */
+
+/**
+ * Trova temperatura minima e massima tra le immagini della DATA PIÙ RECENTE
+ * * @param {Array} arrayImmagini - Array ordinato per data (più recente per prima)
+ * @returns {Object|null} { min: number, max: number } oppure null se non applicabile
+ */
+function trovaMinMaxTempOggi(arrayImmagini) {
+  //console.log('🔍 === DEBUG TROVA MIN/MAX ===');
+  
+  // 1) Verifica che ci siano immagini
+  if (!arrayImmagini || arrayImmagini.length === 0) {
+    console.log('⚠️ Nessuna immagine disponibile');
+    return null;
+  }
+  
+  console.log('📊 Totale immagini ricevute:', arrayImmagini.length);
+  
+  // 2) Prendi la data più recente (dalla prima immagine)
+  // 2) Prendi la data più recente VALIDA
+var dataPiuRecente = null;
+var dataOraPiuRecente = null;
+
+for (var i = 0; i < arrayImmagini.length; i++) {
+    var item = arrayImmagini[i];
+    var fullDate = getStr(item, 'data_ora');
+    
+    // Controlla che la stringa abbia una lunghezza sufficiente (es. "DD/MM/YYYY")
+    if (fullDate && fullDate.length >= 10) { 
+        dataPiuRecente = fullDate.substring(0, 10);
+        dataOraPiuRecente = fullDate;
+        break; // Trovata la prima data valida, usciamo dal ciclo
+    }
 }
 
+if (!dataPiuRecente) {
+    console.log('⚠️ Nessuna data valida trovata in tutto l’array.');
+    return null;
+}
+
+console.log('🗓️ Data più recente VALIDA nel DB:', dataPiuRecente);
+console.log('🗓️ Data/ora prima immagine completa VALIDA:', dataOraPiuRecente);
+  // 3) Filtra immagini della data più recente
+  var immaginiDataRecente = [];
+  var immaginiConTemp = [];
+  
+  for (var i = 0; i < arrayImmagini.length; i++) {
+    var item = arrayImmagini[i];
+    var dataItemCompleta = getStr(item, 'data_ora');
+    var dataItem = dataItemCompleta.substring(0, 10);
+    var temp = numOrNull(get(item, 'temp'));
+    
+    console.log('Img ' + i + ': data=' + dataItem + ', temp=' + temp);
+    
+    if (dataItem === dataPiuRecente) {
+      immaginiDataRecente.push(item);
+      
+      if (temp !== null) {
+        immaginiConTemp.push({
+          index: i,
+          temp: temp,
+          data_ora: dataItemCompleta
+        });
+        console.log('  ✅ Temperatura valida aggiunta:', temp);
+      } else {
+        console.log('  ⚠️ Temperatura N/D');
+      }
+    }
+  }
+  
+  console.log('📸 Immagini totali della data più recente:', immaginiDataRecente.length);
+  console.log('📸 Immagini con temperatura valida:', immaginiConTemp.length);
+  
+  // Mostra tutte le temperature valide
+  if (immaginiConTemp.length > 0) {
+    var temps = [];
+    for (var k = 0; k < immaginiConTemp.length; k++) {
+      temps.push(immaginiConTemp[k].temp.toFixed(1));
+    }
+    console.log('🌡️ Temperature valide:', temps.join(', '));
+  }
+  
+  // 4) CONDIZIONE 1: Se NON ci sono temperature valide
+  if (immaginiConTemp.length === 0) {
+    console.log('❌ TUTTE le temperature sono N/D → nessun lampeggio');
+    return null;
+  }
+  
+  // 5) CONDIZIONE 2: Se c'è UNA SOLA temperatura valida
+  if (immaginiConTemp.length === 1) {
+    console.log('❌ Una sola temperatura valida → nessun lampeggio');
+    return null;
+  }
+  
+  // 6) Trova min e max
+  var tempMin = Infinity;
+  var tempMax = -Infinity;
+  
+  for (var j = 0; j < immaginiConTemp.length; j++) {
+    var t = immaginiConTemp[j].temp;
+    if (t < tempMin) tempMin = t;
+    if (t > tempMax) tempMax = t;
+  }
+  
+  console.log('🌡️ Min raw:', tempMin, '| Max raw:', tempMax);
+  
+  // 7) Arrotonda a 1 decimale
+  tempMin = Math.round(tempMin * 10) / 10;
+  tempMax = Math.round(tempMax * 10) / 10;
+  
+  console.log('🌡️ Min arrotondato:', tempMin, '| Max arrotondato:', tempMax);
+  
+  // 8) CONDIZIONE 3: Se min === max
+  if (tempMin === tempMax) {
+    console.log('❌ Tutte le temperature valide sono uguali (' + tempMin + '°C) → nessun lampeggio');
+    return null;
+  }
+  
+  console.log('✅ MIN=' + tempMin.toFixed(1) + '°C, MAX=' + tempMax.toFixed(1) + '°C');
+  console.log('🔍 === FINE DEBUG ===');
+  
+  return {
+    min: tempMin,
+    max: tempMax
+  };
+}
+/* ========================= funzioni helper ========================== */
+
+// Le funzioni helper estraiDataDaItem e estraiOraDaItem sono state spostate più in alto.
 
 /* ========================= Init / Timer / Debug ========================== */
 
 /** Avvio periodico */
 var intervalId = setInterval(aggiornaGalleria, AGGIORNAMENTO_INTERVALLO);
-console.log('⏰ Timer aggiornamento automatico: ogni ' + (AGGIORNAMENTO_INTERVALLO / 1000) + ' secondi');
+//console.log('⏰ Timer aggiornamento automatico: ogni ' + (AGGIORNAMENTO_INTERVALLO / 1000) + ' secondi');
 
 /** Primo popolamento all’avvio pagina */
 document.addEventListener('DOMContentLoaded', function () {
-  console.log('🚀 Pagina caricata, eseguo primo aggiornamento…');
+  //console.log('🚀 Pagina caricata, eseguo primo aggiornamento…');
   aggiornaGalleria();
 });
 
@@ -353,6 +550,6 @@ function forzaAggiornamento() {
 window.stopAggiornamentoAutomatico = stopAggiornamentoAutomatico;
 window.forzaAggiornamento = forzaAggiornamento;
 
-console.log('📋 Funzioni debug disponibili:');
-console.log('   - stopAggiornamentoAutomatico()');
-console.log('   - forzaAggiornamento()');
+//console.log('📋 Funzioni debug disponibili:');
+//console.log('   - stopAggiornamentoAutomatico()');
+//console.log('   - forzaAggiornamento()');

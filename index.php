@@ -158,20 +158,21 @@ if (!isset($data['error'])) {
      * @return string Nome classe CSS (temp-red, temp-orange, temp-green, ecc.)
      */
     function getTempColorClass($temp) {
-        if (!is_numeric($temp)) {
-            return 'temp-default';
-        }
-        
-        $temp = floatval($temp);
-        
-        if ($temp > 35)              return 'temp-red';        // Molto caldo
-        if ($temp >= 26 && $temp <= 35) return 'temp-orange';  // Caldo
-        if ($temp >= 15 && $temp <= 25) return 'temp-green';   // Temperato
-        if ($temp >= 0 && $temp < 15)   return 'temp-lightblue'; // Fresco
-        if ($temp < 0)               return 'temp-blue';       // Freddo
-        
-        return 'temp-default'; // Fallback
+    // Converti esplicitamente a float, anche se è stringa
+    if (!is_numeric($temp)) {
+        return 'temp-default';
     }
+    
+    $temp = floatval($temp);
+    
+    // Ordine corretto: dal più alto al più basso
+    if ($temp > 35)        return 'temp-red';        // > 35°C
+    if ($temp >= 25)       return 'temp-orange';     // 25-35°C
+    if ($temp >= 15)       return 'temp-green';      // 15-24°C
+    if ($temp >= 5)        return 'temp-lightblue';  // 5-14°C
+    if ($temp >= -3)       return 'temp-blue';       // -2-3°C
+    return 'temp-violet';                            // < -2°C
+}
     
     $tempColorClass = getTempColorClass($mainTemperature);
 }
@@ -203,7 +204,58 @@ if (!isset($data['error'])) {
         /* ====================================================================
            HEADER - Titolo e coordinate
            ==================================================================== */
-        
+        .main-header {
+    width: 100%;
+    max-width: 1000px;
+    text-align: center;
+    padding: 10px;
+    box-sizing: border-box;
+    
+    /* Layout Flexbox */
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    position: relative; 
+}
+
+.header-content {
+    flex-grow: 1; 
+    text-align: center; 
+    min-width: 0; 
+}
+
+.header-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #333; 
+    min-width: 20px; 
+    font-size: 0.7em;
+    padding: 0 5px;
+}
+
+.header-icon svg {
+    /* DEFAULT (Desktop-First): Si applica a tutti gli schermi, inclusi quelli grandi */
+    width: 36px;
+    height: 36px;
+    stroke-width: 2.5; 
+}
+
+/* MEDIA QUERY: Sovrascrive il default solo quando la larghezza è <= 599px (Mobile/Small) */
+@media (max-width: 599px) {
+    .header-icon svg {
+        width: 20px; /* Riduzione su schermi piccoli */
+        height: 20px;
+        padding-left: 20px; /* Esempio: Aumenta il rientro a 20px */
+        padding-right: 20px;
+        stroke-width: 2.5;
+    }
+}
+.header-icon .icon-label {
+    display: block; 
+    margin-top: 2px;
+}
         .main-title {
             font-size: 6vw;
             white-space: nowrap;
@@ -238,13 +290,21 @@ if (!isset($data['error'])) {
             display: inline-block;
             width: 100%;
             max-width: 1000px;
+            box-sizing: border-box;
         }
+
+        @media (max-width: 599px) {
+    .main-container {
+        padding: 0 10px;
+    }
+}
         
         .main-image {
             width: 100%;
             max-width: 1000px;
             display: block;
             cursor: pointer;
+            height: auto;
         }
         
         /* Overlay con data e temperatura sopra l'immagine principale */
@@ -252,16 +312,27 @@ if (!isset($data['error'])) {
             position: absolute;
             bottom: 0;
             left: 0;
+            right 0;
             width: 100%;
             margin: 0;
             text-align: center;
-            font-size: clamp(4px, 4vw, 25px);
+            font-size: clamp(10px, 3vw, 25px);
             line-height: 1.2;
             z-index: 2;
             color: white;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 4px 0;
+            background: rgba(8, 8, 8, 1);
+            padding: 4px 8px;
+            box-sizing: border-box
+            overflow: hidden;
         }
+
+        @media (max-width: 599px) {
+    .main-container > .date-text {
+        left: 10px;    /* AGGIUNGI QUESTA */
+        right: 10px;   /* AGGIUNGI QUESTA */
+        width: calc(100% - 20px); /* AGGIUNGI QUESTA */
+    }
+}
 
         /* Il contenitore dell’immagine principale DEVE essere relative */
     #main-image-wrapper,
@@ -312,58 +383,44 @@ if (!isset($data['error'])) {
             border: none;
         }
         
-        /* ====================================================================
-           TEMPERATURA - Colori dinamici
-           ==================================================================== */
+      
         
-        .temp-data {
-            display: inline-block;
-            padding: 2px 5px;
-            border-radius: 4px;
-            margin-left: 10px;
-            font-weight: bold;
-            background: none;
-            color: white;
-        }
-        
-        /* Classi colore temperatura */
-        .temp-green { color: #28a745; }      /* 15°C - 25°C: Verde */
-        .temp-orange { color: #ffc107; }     /* 26°C - 35°C: Arancione */
-        .temp-red { color: #dc3545; }        /* > 35°C: Rosso */
-        .temp-lightblue { color: #007bff; }  /* 0°C - 15°C: Azzurro */
-        .temp-blue { color: #ee28c3ff; }       /* < 0°C: Blu scuro */
-        .temp-default { color: #6c757d; }    /* N/D: Grigio */
 
 /* ================================================================
    HEADER GALLERIA: layout 3/4 + 1/4
    ================================================================ */
 .gallery-header {
-  container-type: inline-size;       /* abilita unità cqw */
+  container-type: inline-size;
   display: grid;
-  grid-template-columns: 3fr 1fr;    /* 75% titolo / 25% bottone */
+  grid-template-columns: 3fr 1fr;
   align-items: center;
   gap: 10px;
 
-  width: 100%;
+  width: 95%;  /* CAMBIA a 90% per centrare di più */
   max-width: 1000px;
   margin: 20px auto;
-  padding: 0 10px;
+  padding: 0;  /* RIMUOVI il padding se usi width ridotta */
   box-sizing: border-box;
 }
-
+@media (max-width: 599px) {
+  .gallery-header {
+    gap: 6px;
+    padding: 0 8px;
+  }
+}
 /* ================================================================
    TITOLO — adatta il font al 75% disponibile senza andare a capo
    ================================================================ */
 .gallery-title {
   margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
+  white-space: normal;
+  overflow: visible;
   text-overflow: clip;
   min-width: 0;  
   font-weight: bold;
   color: black;
   text-align: left;
-  font-size: clamp(14px, 3.6vw, 36px);
+  font-size: clamp(12px, 3.6vw, 36px);
 }
 
 @supports (font-size: 1cqw) {
@@ -371,24 +428,34 @@ if (!isset($data['error'])) {
     font-size: clamp(12px, 4.6cqw, 34px);
   }
 }
+@media (max-width: 599px) {
+  .gallery-title {
+    font-size: clamp(19px, 3.2vw, 18px);
+  }
+}
+
 
 /* ================================================================
    BOTTONE — stile originale: sfondo nero, testo rosso
    ================================================================ */
 .gallery-cta {
-  display: flex;                   /* usa flexbox */
-  align-items: center;             /* centra verticalmente il testo */
-  justify-content: center;         /* centra orizzontalmente */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   background-color: black;
   color: red;
 
-  
-
   font-weight: bold;
-  font-size: clamp(12px, 2.8cqw, 18px);
+  font-size: clamp(10px, 2.8cqw, 18px);
   line-height: 1.2;
   cursor: pointer;
+  padding: 4px 8px;
+  box-sizing: border-box;
+  
+  max-height: 30px;  /* AGGIUNGI QUESTA */
+  white-space: normal; /* AGGIUNGI QUESTA per andare a capo */
+  text-align: center;  /* AGGIUNGI QUESTA */
 
   transition: all 0.2s ease;
 }
@@ -418,10 +485,27 @@ if (!isset($data['error'])) {
          HEADER
          ==================================================================== -->
     
-    <header style="width: 100%; text-align: center; padding: 10px; box-sizing: border-box;">
+    <header class="main-header">
+    
+    <a href="pluvio.html" class="header-icon left-icon" title="Dati Pluviometro CFR Toscana" target="_blank">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2s7 8 7 12a7 7 0 1 1-14 0c0-4 7-12 7-12z"></path>
+            <path d="M16 16l-4 4-4-4"></path>
+        </svg>
+        <span class="icon-label">Pluvio</span>
+    </a>
+    
+    <div class="header-content">
         <h1 class="main-title">MeteoSimignano</h1>
         <h1 class="sub-title">43°17′32.5″N 11°10′01.49″E @ 418m slm</h1>
-    </header>
+    </div>
+    
+    <a href="indice.php" class="header-icon right-icon" title="Indice e Mappa del Sito">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </a>
+</header>
 
     <main>
         <!-- ================================================================
@@ -467,8 +551,8 @@ if (!isset($data['error'])) {
      TITOLO GALLERIA E LINK (3/4 titolo + 1/4 bottone)
      ================================================================ -->
 <div class="gallery-header">
-  <h2 class="gallery-title">Galleria ultime 36 h (agg. 20 min)</h2>
-  <a href="belle.php" class="button gallery-cta">Diario delle nuvole</a>
+  <h2 class="gallery-title">Galleria ultime 36 h</h2>
+  <a href="belle.php" class="button gallery-cta">Diario del cielo</a>
 </div>
 
         

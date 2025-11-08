@@ -546,7 +546,7 @@ $cumulato_24h = $risultati_solari['cumulato_percent_24h'];
 // =====================================
 $noteCentrali = [
     "th0temp-act" => createDeltaIndicator($valoriParametri["th0temp-delta24"] ?? 0) . 
-                     "\u{0394}24h: " . ($valoriParametri["th0temp-delta24"] ?? 'N/A'),
+                     "\u{0394}24h (attuale - 24h) = " . ($valoriParametri["th0temp-delta24"] ?? 'N/A'),
     
     "th0temp-dmax" => (function() use ($valoriParametri) {
         $oggi = extractTemperatureValue($valoriParametri["th0temp-dmax"] ?? '');
@@ -565,13 +565,15 @@ $noteCentrali = [
     "th0dew-act" => "Confort: " . createComfortIndicator($valoriParametri["th0dew-act"] ?? 0),
     
     "thb0press-act" => createPressureTrendIndicator($valoriParametri["thb0press-delta24"] ?? 0) . 
-                       "\u{0394}24h: " . ($valoriParametri["thb0press-delta24"] ?? 'N/A'),
+                       "\u{0394}24h (attuale - 24h) =  " . ($valoriParametri["thb0press-delta24"] ?? 'N/A'),
     
     "wind0chill-act" => "Impatto " . createWindchillHeatIndicator($valoriParametri["wind0chill-act"] ?? 0),
     
     "th0heatindex-act" => "Impatto " . createWindchillHeatIndicator($valoriParametri["th0heatindex-act"] ?? 0),
     
     "sol0rad-act" => getSolareMassimoGiornaliero($pdo_lettura),
+
+    "th0temp-age" => "minuti dall'ultima connessione"
 ];
 
 // =====================================
@@ -605,7 +607,7 @@ foreach ($keys as $key) {
     // Gestione speciale per alcuni parametri
     if ($key === 'mbsystem-lunarpercent') {
         $valore = processLunarValue($valore);
-    } elseif ($key !== 'wind0dir-act' && $key !== 'mbsystem-sunrise') {
+    } elseif ($key !== 'wind0dir-act' && $key !== 'mbsystem-sunrise' && $key !== 'th0temp-age') {
         $valore = pulisciValoreNumerico($valore);
     }
     
@@ -681,7 +683,7 @@ foreach ($keys as $key) {
 <table border='1' cellpadding='10' cellspacing='0'>
 <tr>
   <th style='vertical-align: top; background-color: rgba(173, 173, 173, 0.8);'>TABELLA METEO:<br>Parametro</th>
-  <th style='vertical-align: top; background-color: rgba(173, 173, 173, 0.8);'>Note<br><span style='font-style: italic; font-weight: normal; font-size: 0.8em;'>Δ24h = attuale - 24h</span></th>
+  <th style='vertical-align: top; background-color: rgba(173, 173, 173, 0.8);'>Note</th>
   <th style='vertical-align: top; background-color: rgba(173, 173, 173, 0.8);'>Dati</th>
 </tr>
 
@@ -697,7 +699,7 @@ $righe_con_bordo_spesso = [
     'Direzione del vento',
     'Δ per indice di calore',
     'Radianza cumulata giornaliera',
-    'Ultima dato vento'
+    'Agg. sens t/h-p-vento/rad (min fa)'
 ];
 
 foreach ($datiFinali as $dato) {
