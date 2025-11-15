@@ -204,46 +204,52 @@ if (!isset($data['error'])) {
         /* ====================================================================
            HEADER - Titolo e coordinate
            ==================================================================== */
-        .main-header {
-    width: 100%;
-    max-width: 1000px;
-    text-align: center;
-    padding: 10px;
-    box-sizing: border-box;
-    
-    /* Layout Flexbox */
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    position: relative; 
+            .main-header {
+        width: 100%;
+        max-width: 1000px;
+        text-align: center;
+        padding: 10px;
+        box-sizing: border-box;
+        
+        /* Layout Flexbox */
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        position: relative; 
+    }
+
+    .header-content {
+        flex-grow: 1; 
+        text-align: center; 
+        min-width: 0; 
+    }
+
+    .header-icon {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        color: #333; 
+        min-width: 20px; 
+        font-size: 0.7em;
+        padding: 0 5px;
+    }
+
+    /* Effetto hover coerente con tuo stile */
+.header-icon:hover {
+  
+  color: red;
 }
 
-.header-content {
-    flex-grow: 1; 
-    text-align: center; 
-    min-width: 0; 
-}
+    .header-icon svg {
+        /* DEFAULT (Desktop-First): Si applica a tutti gli schermi, inclusi quelli grandi */
+        width: 36px;
+        height: 36px;
+        stroke-width: 2.5; 
+    }
 
-.header-icon {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-decoration: none;
-    color: #333; 
-    min-width: 20px; 
-    font-size: 0.7em;
-    padding: 0 5px;
-}
-
-.header-icon svg {
-    /* DEFAULT (Desktop-First): Si applica a tutti gli schermi, inclusi quelli grandi */
-    width: 36px;
-    height: 36px;
-    stroke-width: 2.5; 
-}
-
-/* MEDIA QUERY: Sovrascrive il default solo quando la larghezza è <= 599px (Mobile/Small) */
-@media (max-width: 599px) {
+    /* MEDIA QUERY: Sovrascrive il default solo quando la larghezza è <= 599px (Mobile/Small) */
+    @media (max-width: 599px) {
     .header-icon svg {
         width: 20px; /* Riduzione su schermi piccoli */
         height: 20px;
@@ -291,16 +297,14 @@ if (!isset($data['error'])) {
             width: 100%;
             max-width: 1000px;
             box-sizing: border-box;
+
+            overflow: hidden;
         }
 
-        @media (max-width: 599px) {
-    .main-container {
-        padding: 0 10px;
-    }
-}
+       
         
         .main-image {
-            width: 100%;
+            width: calc(100% + 6px);
             max-width: 1000px;
             display: block;
             cursor: pointer;
@@ -309,10 +313,10 @@ if (!isset($data['error'])) {
         
         /* Overlay con data e temperatura sopra l'immagine principale */
         .main-container > .date-text {
-            position: absolute;
-            bottom: 0;
+            position: relative;
+            bottom: 0px;
             left: 0;
-            right 0;
+            right: 0;
             width: 100%;
             margin: 0;
             text-align: center;
@@ -320,47 +324,70 @@ if (!isset($data['error'])) {
             line-height: 1.2;
             z-index: 2;
             color: white;
-            background: rgba(8, 8, 8, 1);
             padding: 4px 8px;
-            box-sizing: border-box
-            overflow: hidden;
+            box-sizing: border-box;
+            overflow: visible;
         }
-
+        
+        
+        
+        /*INSERISCE UNA BANDIERA DI SFONDO AL TESTO + DATA+PALL+TEMP*/
+        .main-container > .date-text::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -0.8em;    /* scende quanto il font cresce */
+        height: 2.2em;     /* altezza proporzionata al testo */
+        background: rgba(8, 8, 8, 1); /* stesso colore */
+        z-index: -1;      /* dietro il testo */
+        }
+        
         @media (max-width: 599px) {
-    .main-container > .date-text {
-        left: 10px;    /* AGGIUNGI QUESTA */
-        right: 10px;   /* AGGIUNGI QUESTA */
-        width: calc(100% - 20px); /* AGGIUNGI QUESTA */
+    .main-container > .date-text::after {
+        height: 30px;
+        bottom: -10px;
+
+        /* CORREZIONE CHIAVE: 
+           Sposta a sinistra di 10px per coprire il padding del genitore (.main-container) */
+        left: -10px; 
+
+        /* Imposta la larghezza a 100% (del .date-text) + 20px (10px sx + 10px dx)
+           per coprire l'intera larghezza del .main-container. */
+        width: calc(100% + 20px); 
+        
+        right: auto; /* Rimuoviamo right per far prevalere width */
+        margin: 0;
     }
 }
 
         /* Il contenitore dell’immagine principale DEVE essere relative */
-    #main-image-wrapper,
-    .main-image-wrapper {
-    position: relative;
-    }
+        #main-image-wrapper,
+        .main-image-wrapper {
+        position: relative;
+        }
 
-/* Overlay data/ora principale centrato */
-#main-image-date {
-  position: absolute;
-  bottom: 0.1rem;        /* distanza dal bordo — puoi mettere 0 per attaccarlo */
-  left: 50%;
-  transform: translateX(-50%);
-  
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-
-  margin: 0;
-  padding: 0;
-  line-height: 1.2;
-}
-
-/* Eventuale testo di temperatura */
-#temp-label {
-  margin-left: 0.5rem;
-}
+        /* Overlay data/ora principale centrato */
+        #main-image-date {
+          position: absolute;
+          bottom: 0.3rem;        /* distanza dal bordo — puoi mettere 0 per attaccarlo */
+          left: 50%;
+          transform: translateX(-50%);
+          
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          white-space: nowrap;
+        
+          margin: 0;
+          padding: 0;
+          line-height: 1.2;
+        }
+        
+        /* Eventuale testo di temperatura */
+        #temp-label {
+          margin-left: 0.5rem;
+        }
 
         
         /* ====================================================================
@@ -442,9 +469,11 @@ if (!isset($data['error'])) {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;  /* 🆕 Spazio tra icona e testo */
 
-  background-color: black;
-  color: red;
+  background-color: transparent !important;  /* 🔧 Niente sfondo */
+  color: black;                   /* 🔧 Testo nero */
+  border: 2px solid black;        /* 🆕 Bordo nero */
 
   font-weight: bold;
   font-size: clamp(10px, 2.8cqw, 18px);
@@ -453,16 +482,16 @@ if (!isset($data['error'])) {
   padding: 4px 8px;
   box-sizing: border-box;
   
-  max-height: 30px;  /* AGGIUNGI QUESTA */
-  white-space: normal; /* AGGIUNGI QUESTA per andare a capo */
-  text-align: center;  /* AGGIUNGI QUESTA */
+  max-height: 30px;
+  white-space: normal;
+  text-align: center;
 
   transition: all 0.2s ease;
 }
 
 /* Effetto hover coerente con tuo stile */
 .gallery-cta:hover {
-  background-color: grey;
+  border-color: red;
   color: red;
 }
 
@@ -487,7 +516,7 @@ if (!isset($data['error'])) {
     
     <header class="main-header">
     
-    <a href="pluvio.html" class="header-icon left-icon" title="Dati Pluviometro CFR Toscana" target="_blank">
+    <a href="pluvio.html" class="header-icon left-icon" title="Dati Pluviometro CFR Toscana">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 2s7 8 7 12a7 7 0 1 1-14 0c0-4 7-12 7-12z"></path>
             <path d="M16 16l-4 4-4-4"></path>
@@ -504,6 +533,7 @@ if (!isset($data['error'])) {
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 6h16M4 12h16M4 18h16"></path>
         </svg>
+        <span class="icon-label">Menu</span>
     </a>
 </header>
 
@@ -552,7 +582,13 @@ if (!isset($data['error'])) {
      ================================================================ -->
 <div class="gallery-header">
   <h2 class="gallery-title">Galleria ultime 36 h</h2>
-  <a href="belle.php" class="button gallery-cta">Diario del cielo</a>
+  <a href="belle.php" class="button gallery-cta"><svg class="cta-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+    <line x1="10" y1="6" x2="16" y2="6"></line>
+    <line x1="10" y1="10" x2="16" y2="10"></line>
+    <line x1="10" y1="14" x2="16" y2="14"></line>
+  </svg>Diario del cielo</a>
 </div>
 
         

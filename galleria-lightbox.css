@@ -216,7 +216,7 @@
 .temp-lightblue { color: #09e3ce; }
 .temp-blue { color: #007bff; }
 .temp-violet { color: #8b00ff; }
-.temp-default { color: #cccccc; }
+.temp-default { color: #9c9c9c; }
 
 /* ==========================================================================
    4) STILE LAMPEGGIAMENTO MIN/MAX (main image)
@@ -298,6 +298,53 @@
   box-sizing: border-box;
   line-height: 1.2;
   border-radius: 5px !important;
+}
+/*-------------------------------------------*/
+/*pallino lampeggiante min/max nella lightbox*/
+.lightbox-content::after {
+  content: '';
+  position: absolute;
+  bottom: 20px;      /* 🔧 In basso */
+  left: 50px;        /* 🔧 A sinistra */
+  width: 15px;       /* 🔧 Piccolo come le miniature */
+  height: 15px;
+  border-radius: 50%;
+  border: 1px solid yellow;
+  display: none;
+  z-index: 99999;
+}
+@media (max-width: 580px) {
+  .lightbox-content::after {
+  
+  bottom: 20px;      /* 🔧 In basso */
+  left: 20px;        /* 🔧 A sinistra */
+    }
+  }
+/* MINIMA - BLU */
+.lightbox-content.is-min::after {
+  display: block;
+  background-color: #007bff;  /* BLU */
+  box-shadow: 0 0 0 2px #a2a39f;
+  animation: dot-breathe 1.6s infinite ease-in-out;
+}
+
+/* MASSIMA - ROSSO */
+.lightbox-content.is-max::after {
+  display: block;
+  background-color: #dc3545;  /* ROSSO */
+  box-shadow: 0 0 0 2px #a2a39f;
+  animation: dot-breathe 1.6s infinite ease-in-out;
+}
+
+@keyframes dot-breathe {
+  0%, 100% {
+    transform: scale(0.75);
+    opacity: 0.95;
+  }
+  50% {
+    transform: scale(1.0);
+    opacity: 1;
+  }
 }
 
 /* ==========================================================================
@@ -521,3 +568,5 @@
 /* ==========================================================================
    FINE FILE
    ========================================================================== */
+
+  

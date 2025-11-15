@@ -8,6 +8,7 @@
  *  - Navigazione: tastiera (← →, ESC), bottoni prev/next, swipe touch
  *  - “Rewind” e “Forward” automatici (play inverso/avanti) con toggle pausa
  *  - Aggiorna lo stato dei bottoni in modo consistente
+ * -* evidenzia sulla libreria e sulla imm lightbox la max e min con un pallino
  *
  *  Dipendenze:
  *  - window.images: array di record [{src, data_ora, temp, hr, p_hpa, vento/wind_ms/wind_kmh, dir/dir_text}, …]
@@ -132,6 +133,68 @@ function buildInfoText(record) {
   return d + ' | T ' + tTxt + ' | UR ' + hTxt + ' | ' + pTxt + ' | Vento ' + wTxt + (dTxt ? (', ' + dTxt) : '');
 }
 
+function applicaClassiMinMaxLightbox(index) {
+    console.log('🔍 === DEBUG applicaClassiMinMaxLightbox ===');
+    console.log('Index ricevuto:', index);
+    
+    var lightboxContent = document.querySelector('.lightbox-content');
+    if (!lightboxContent) {
+        console.log('❌ lightboxContent NON trovato!');
+        return;
+    }
+    console.log('✅ lightboxContent trovato');
+    
+    // Rimuovi vecchie classi
+    lightboxContent.classList.remove('is-min', 'is-max');
+    console.log('🧹 Classi rimosse');
+    
+    var items = window.images || [];
+    if (!items[index]) {
+        console.log('❌ Nessun item all\'index', index);
+        return;
+    }
+    
+    var item = items[index];
+    console.log('📸 Item:', item);
+    
+    var t = numOrNull(get(item, 'temp'));
+    console.log('🌡️ Temperatura:', t);
+    
+    var minMaxData = trovaMinMaxTempOggi(window.images);
+    console.log('📊 MinMax data:', minMaxData);
+    
+    if (minMaxData && t !== null) {
+        var dataPiuRecente = estraiDataDaItem(items[0]);
+        var dataItem = estraiDataDaItem(item);
+        
+        console.log('📅 Data più recente:', dataPiuRecente);
+        console.log('📅 Data item corrente:', dataItem);
+        
+        if (dataItem === dataPiuRecente) {
+            var tempArrotondata = Math.round(t * 10) / 10;
+            console.log('🌡️ Temp arrotondata:', tempArrotondata);
+            console.log('🌡️ Min:', minMaxData.min, '| Max:', minMaxData.max);
+            
+            if (tempArrotondata === minMaxData.min) {
+                lightboxContent.classList.add('is-min');
+                console.log('❄️ APPLICATA classe is-min');
+            } else if (tempArrotondata === minMaxData.max) {
+                lightboxContent.classList.add('is-max');
+                console.log('🔥 APPLICATA classe is-max');
+            } else {
+                console.log('⚪ Nessuna classe (temp intermedia)');
+            }
+        } else {
+            console.log('⚠️ Data diversa, nessuna classe applicata');
+        }
+    } else {
+        console.log('⚠️ Nessun minMaxData o temperatura null');
+    }
+    
+    console.log('🏁 Classi finali:', lightboxContent.className);
+    console.log('🔍 === FINE DEBUG ===');
+}
+
 /* ======================= RENDERING CORE =========================== */
 
 /**
@@ -180,6 +243,10 @@ function openLightbox(index) {
     var btn = document.getElementById(map[i].id);
     if (btn) { btn.style.display = map[i].display; btn.disabled = false; }
   }
+
+  // APPLICA classi min/max
+  applicaClassiMinMaxLightbox(currentIndex);
+
   updateNavButtons();
 }
 
@@ -219,6 +286,8 @@ function prevImage(event) {
   if (currentIndex > 0) {
     currentIndex--;
     aggiornaLightbox();
+    // APPLICA classi min/max
+  applicaClassiMinMaxLightbox(currentIndex);
     updateNavButtons();
   }
 }
@@ -229,6 +298,8 @@ function nextImage(event) {
   if (currentIndex < items.length - 1) {
     currentIndex++;
     aggiornaLightbox();
+    // APPLICA classi min/max
+  applicaClassiMinMaxLightbox(currentIndex);
     updateNavButtons();
   }
 }

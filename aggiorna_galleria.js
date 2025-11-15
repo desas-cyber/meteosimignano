@@ -193,25 +193,36 @@ function createThumbnailNode(item, index) {
   // RIGA 1: Temperatura
   var elTemp = document.createElement('span');
   elTemp.className = 'temp-line';
+  
+  if (tDisplay === null) {
+      elTemp.classList.add('temp-default');
+      }
   elTemp.textContent = (tDisplay === null ? 'N/D' : (tDisplay + '°C'));
 
   // RIGA 2: Ora (rossa) con icona clessidra (outline)
   var dataSolo = estraiDataDaItem(item); // ← usa la funzione spostata
-  
   var elOra = document.createElement('span');
   elOra.className = 'ora-line';
+  // Se uno dei due è N/D → testo grigio
+if (dataSolo === 'N/D' || ora === 'N/D') {
+  elOra.classList.add('temp-default');
+}
   elOra.innerHTML =
     '<svg class="icon icon-outline" viewBox="0 0 24 24">' +
     '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle>' +
     '<line x1="12" y1="12" x2="12" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>' +
     '<line x1="12" y1="12" x2="15" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>' +
   '</svg> ' +
-    dataSolo + ' ' + ora; // <--- DATA + ORA
+    ((dataSolo === 'N/D' || ora === 'N/D') ? 'N/D' : (dataSolo + ' ' + ora));
 
 
   // RIGA 3: Vento (km/h + direzione) — verde
   var elVento = document.createElement('span');
   elVento.className = 'meta-line vento-line';
+  // Se non c'è il valore → aggiungi colore "temp-default"
+  if (wKmh === null) {
+      elVento.classList.add('temp-default');
+      }
   elVento.innerHTML =
     '<svg class="icon icon-outline" viewBox="0 0 24 24">' +
       '<path d="M4 12h9a3 3 0 1 0-3-3"></path>' +
@@ -222,6 +233,9 @@ function createThumbnailNode(item, index) {
   // RIGA 4: Umidità — verde
   var elHR = document.createElement('span');
   elHR.className = 'meta-line hr-line';
+  if (hrVal === null) {
+      elHR.classList.add('temp-default');
+      }
   elHR.innerHTML =
     '<svg class="icon" viewBox="0 0 24 24">' +
       '<path d="M12 2s7 8 7 12a7 7 0 1 1-14 0C5 10 12 2 12 2Z"></path>' +
@@ -231,6 +245,9 @@ function createThumbnailNode(item, index) {
   // RIGA 5: Pressione (molla outline) — verde
   var elPress = document.createElement('span');
   elPress.className = 'meta-line press-line';
+  if (pVal === null || pVal === "" || isNaN(pVal)) {
+      elPress.classList.add('temp-default');
+      }
   elPress.innerHTML =
     '<svg class="icon icon-outline" viewBox="0 0 24 24">' +
       '<path d="M8 4c0 2 8 2 8 0"></path>' +
@@ -238,7 +255,8 @@ function createThumbnailNode(item, index) {
       '<path d="M8 12c0 2 8 2 8 0"></path>' +
       '<path d="M8 16c0 2 8 2 8 0"></path>' +
     '</svg> ' +
-    (pVal != null ? (Math.round(pVal) + ' hPa') : 'N/D');
+    (pVal != null && !isNaN(pVal) ? (Math.round(pVal) + ' hPa') : 'N/D');
+
 
   // Montaggio overlay
   overlay.appendChild(elTemp);

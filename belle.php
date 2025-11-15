@@ -10,44 +10,32 @@ require_once __DIR__ .'/aggiornaCartellaImmagini.php';
 
 $directory = 'belle/';
 $table_name = 'DB_immagini_belle';
+
+// Ottiene i dati delle immagini (inclusa la conversione in records)
 $data = getImageDataFromFolder($pdo, $directory, $table_name);
   
-$mainImage = '';
-$mainImageDate = 'Data non disponibile';
 $records = []; 
 
 if (isset($data['error'])) {
+    // Gestione errore
     echo "<p>Errore: " . htmlspecialchars($data['error']) . "</p>";
 } else {
     $records = $data['records'];
-    $images = array_column($records, 'src');
 
-    $maxTimestamp = 0;
-
+    // Ciclo per formattare la data per l'uso nella galleria/lightbox
     foreach ($records as &$rec) { 
-            if (!empty($rec['data_ora'])) {
-                $timestamp = strtotime($rec['data_ora']); 
-                if ($timestamp !== false && $timestamp > $maxTimestamp) {
-                    $maxTimestamp = $timestamp;
-                    $mainImage = $rec['src'];
-                    $mainImageDate = (new DateTime($rec['data_ora']))->format('d/m/Y H:i'); 
-                }
-                $rec['data_ora_formattata'] = (new DateTime($rec['data_ora']))->format('d/m/Y H:i');
-            } else {
-                $rec['data_ora_formattata'] = 'Data/Ora N/D';
-            }
+        if (!empty($rec['data_ora'])) {
+            // Formattazione per la visualizzazione nella miniatura e lightbox
+            $rec['data_ora_formattata'] = (new DateTime($rec['data_ora']))->format('d/m/Y H:i');
+        } else {
+            $rec['data_ora_formattata'] = 'Data/Ora N/D';
         }
+    }
 }
+
 
 /**
  * Funzione PHP per determinare la classe di colore in base alla temperatura.
- * Implementa i parametri desiderati:
- * > 35°C  → temp-red
- * 25-35°C → temp-orange
- * 15-24.9°C → temp-green
- * 5-14.9°C → temp-lightblue
- * -3-4.9°C → temp-blue
- * < -3°C  → temp-violet
  * @param float|null $temp Temperatura.
  * @return string Classe CSS.
  */
@@ -86,51 +74,117 @@ function getTempColorClass($temp) {
     <link rel="stylesheet" href="galleria-lightbox.css">
     <style>
     
+        /* ====================================================================
+           STILI GENERALI
+           ==================================================================== */
+        
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* ====================================================================
+           HEADER - Titolo, coordinate e icone navigazione
+           ==================================================================== */
+        
+        .main-header {
+            width: 100%;
+            max-width: 1000px;
+            text-align: center;
+            padding: 10px;
+            box-sizing: border-box;
+            
+            /* Layout Flexbox per posizionare icone ai lati */
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            position: relative; 
+        }
+        
+        /* Contenitore centrale con titolo e coordinate */
+        .header-content {
+            flex-grow: 1; 
+            text-align: center; 
+            min-width: 0; 
+        }
+        
+        /* Stile comune per le icone di navigazione */
+        .header-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #333; 
+            min-width: 20px; 
+            font-size: 0.7em;
+            padding: 0 5px;
+            cursor: pointer;
+        }
+
+ .header-icon:hover {
+  
+  color: red;
+}
+        
+        /* SVG delle icone - dimensione desktop (default) */
+        .header-icon svg {
+            width: 36px;
+            height: 36px;
+            stroke-width: 2.5; 
+        }
+        
+        /* Ridimensionamento icone su mobile */
+        @media (max-width: 599px) {
+            .header-icon svg {
+                width: 20px;
+                height: 20px;
+                padding-left: 20px;
+                padding-right: 20px;
+                stroke-width: 2.5;
+            }
+        }
+        
+        /* Etichetta sotto le icone */
+        .header-icon .icon-label {
+            display: block; 
+            margin-top: 2px;
+        }
+        
+        /* ====================================================================
+           TITOLI - MeteoSimignano e coordinate
+           ==================================================================== */
+        
+        /* Titolo principale - responsive con vw su mobile */
         .main-title {
             font-size: 6vw;
             white-space: nowrap;
             margin: 0;
         }
         
+        /* Titolo principale - dimensione fissa su desktop */
         @media (min-width: 600px) {
             .main-title {
-                font-size: 55px; 
+                font-size: 55px;
             }
         }
-
+        
+        /* Sottotitolo con coordinate - responsive con vw su mobile */
         .sub-title {
             font-size: 3vw;
             font-weight: normal;
             white-space: nowrap;
-            margin: 30px; 
+            margin: 10px;
         }
         
+        /* Sottotitolo - dimensione fissa su desktop */
         @media (min-width: 600px) {
             .sub-title {
-                font-size: 25px;
+                font-size: 30px;
             }
-        }
-    
-    
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center; 
-            
-        }
-
-        /* Stili per le miniature (necessari per posizionare l'overlay) */
-        .thumb { 
-            position: relative; 
-            display: inline-block; 
-            overflow: hidden; 
-        }
-        .thumb img { 
-            display: block; 
-            width: 100%; 
-            height: auto; 
-            cursor: pointer; 
         }
 
 /* ==========================================================================
@@ -276,30 +330,71 @@ function getTempColorClass($temp) {
 }
 
 
+/* ====================================================================
+   GALLERY TITLE - Titolo "Diario del cielo" ingrandito e centrato
+   ==================================================================== */
+.gallery-title {
+    /* Centratura garantita */
+    text-align: center; 
+    margin: 0;
+    
+    /* Riduzione della dimensione del carattere */
+    font-size: 5vw; /* Rimpicciolisce su schermi piccoli */
+    
+    /* Imposta un limite massimo in pixel per desktop */
+    max-width: 100%; /* Assicura che non forzi la larghezza del contenitore */
+    
+    /* Manteniamo le proprietà che avevi */
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    min-width: 0;
+    font-weight: bold;
+    color: black;
+}
 
-        
+@media (min-width: 600px) {
+    .gallery-title {
+        font-size: 30px; /* Dimensione fissa per schermi grandi */
+    }
+}
     </style>
         
 </head>
 <body>
 
-<header style="width: 100%; text-align: center; padding: 10px; box-sizing: border-box;">
-    <h1 class="main-title">MeteoSimignano</h1>
-    <h1 class="sub-title">43°17′32.5″N 11°10′01.49″E @ 418m slm</h1>
+<header class="main-header">
+    <!-- Icona Home (sinistra) -->
+        <a href="index.php" class="header-icon left-icon" title="Home">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span class="icon-label">Home</span>
+        </a>
+        <!-- Titolo centrale e coordinate -->
+        <div class="header-content">
+            <h1 class="main-title">MeteoSimignano</h1>
+            <h1 class="sub-title">43°17′32.5″N 11°10′01.49″E @ 418m slm</h1>
+        </div>    
+        <div style="width: 46px; height: 46px; min-width: 46px;"></div>
+
+        <!-- Icona Menu/Indice (destra) -->
+         <a href="x.php" class="header-icon right-icon" title="Filtri">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+        </svg>
+        <span class="icon-label">Filtri</span>
+    </a>
 </header>
+
 
 <main>
     
-    <button class="button" onclick="goToPage()">Home</button>
-
-    <script>
-        function goToPage() {
-            window.location.href = 'index.php'; 
-            window.close();
-        }
-    </script>
+   <div class="gallery-header-container"> 
+        <h2 class="gallery-title">Diario del cielo</h2> 
+  </div>
     
-    <h2 class="gallery-title">Diario delle nuvole</h2>
 
     <div class="gallery">
         <?php 
@@ -309,12 +404,11 @@ function getTempColorClass($temp) {
             $tempClass = getTempColorClass($temp); 
 
             $dataOraCompleta = isset($item['data_ora_formattata']) ? $item['data_ora_formattata'] : 'Data N/D';
+            // Estrazione di data e ora dal formato completo (d/m/Y H:i)
             $oraSolo = substr($dataOraCompleta, -5); 
             $dataSolo = substr($dataOraCompleta, 0, 10); 
         ?>
             <div class="thumb">
-                <!-- CORREZIONE APPLICATA: Rimosso $directory per evitare il doppio percorso, 
-                     poiché $item['src'] è già completo. -->
                 <img src="<?php echo htmlspecialchars($item['src'] . '?t=' . time()); ?>" 
                      alt="Immagine webcam" 
                      onclick="openLightbox(<?php echo $index; ?>)"
@@ -368,6 +462,10 @@ function getTempColorClass($temp) {
 
 </main>
 <script>
+    // Rimosso tutto il codice JS relativo ai filtri e al dropdown
+</script>
+<script>
+    // Passa i dati al JS della lightbox
     window.images = <?php echo json_encode($records); ?>;
 </script>    
 <script src="galleria-lightbox.js"></script>
