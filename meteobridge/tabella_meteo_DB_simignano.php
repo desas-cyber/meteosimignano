@@ -21,6 +21,13 @@ FILE: tabella_meteo_DB_simignano.php — guida rapida per sviluppatori
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+//connessione sicura via GET a meteobridge
+$TOKEN = require __DIR__ . '/../../token.php';
+
+if (!isset($_GET['token']) || $_GET['token'] !== $TOKEN) {
+    http_response_code(403);
+    exit("ACCESSO NEGATO");
+}
 
 // Connessione al database (assicurati che il file envelop.php esista e configuri $pdo correttamente)
 require_once __DIR__ . '/../datetime_helper.php';

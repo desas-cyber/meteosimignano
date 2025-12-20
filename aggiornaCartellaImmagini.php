@@ -176,22 +176,32 @@ function getImageDataFromFolder(PDO $pdo, string $directory, string $tableName, 
         $file = basename($path);
         $row  = $byFile[$file] ?? null;
 
-        // Leggi campi dal DB (se non presenti -> null)
+        // --- 1. LETTURA DEI CAMPI DAL DB (INCLUSA sun_phase) ---
         $data_ora = $row['DATA_ORA'] ?? null;
         $temp     = isset($row['Temp'])     ? (float)$row['Temp']     : null;
         $hr       = isset($row['HR'])       ? (float)$row['HR']       : null;
         $p_hpa    = isset($row['P_hPa'])    ? (float)$row['P_hPa']    : null;
-
-        // Vento: il tuo DB (nel codice originale) aveva "vento_kmh"
-        // - Esponiamo sia km/h che m/s (per comodità del frontend)
         $windKmh  = isset($row['vento_kmh']) ? (float)$row['vento_kmh'] : null;
-        $windMs   = ($windKmh !== null) ? ($windKmh / 3.6) : null;
-
-        // Direzione: nel DB c’è "Dir_text" (es. "NE") — la passiamo sia in dir_text,
-        // e in 'dir' lasciamo lo stesso valore (stringa) se non hai un campo in gradi.
         $dirText  = $row['Dir_text'] ?? null;
-        $dir      = $dirText; // se in futuro avrai gradi (es. Dir_deg), usa quelli: (float)$row['Dir_deg']
+        
+        // NUOVA RIGA: Legge il valore numerico grezzo (1, 2, o null)
+        $sunPhaseRaw = isset($row['sun_phase']) ? (int)$row['sun_phase'] : null;
 
+
+        // --- 2. CONVERSIONE E LOGICA ---
+        $windMs   = ($windKmh !== null) ? ($windKmh / 3.6) : null;
+        $dir      = $dirText; 
+        
+        // NUOVA LOGICA: Conversione da numero a testo
+        $sunPhaseText = 'N/D';
+        if ($sunPhaseRaw === 1) {
+            $sunPhaseText = 'Alba 🌅';
+        } elseif ($sunPhaseRaw === 2) {
+            $sunPhaseText = 'Tramonto 🌇';
+        }
+
+
+        // --- 3. CREAZIONE DEL RECORD (INCLUSO sun_phase) ---
         $records[] = [
             'src'       => $path,      // path completo sul filesystem/virtual host
             'file'      => $file,      // nome file (basename)
@@ -200,14 +210,17 @@ function getImageDataFromFolder(PDO $pdo, string $directory, string $tableName, 
             'hr'        => $hr,        // %
             'p_hpa'     => $p_hpa,     // hPa
 
-            // Vento (entrambi i formati per compatibilità col FE)
-            'vento'     => $windMs,    // m/s  (campo breve usato dal FE JS nelle versioni precedenti)
-            'wind_ms'   => $windMs,    // m/s  (alias esplicito)
-            'wind_kmh'  => $windKmh,   // km/h (direttamente dal DB)
+            // Vento
+            'vento'     => $windMs,
+            'wind_ms'   => $windMs,
+            'wind_kmh'  => $windKmh,
 
-            // Direzione (testo)
-            'dir'       => $dir,       // stringa (es. "NE"); se vuoi gradi, cambia qui.
-            'dir_text'  => $dirText
+            // Direzione
+            'dir'       => $dir,
+            'dir_text'  => $dirText,
+            
+            // NUOVO CAMPO: Fase del Sole (testo)
+            'sun_phase' => $sunPhaseText 
         ];
     }
 

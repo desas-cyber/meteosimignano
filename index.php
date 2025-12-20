@@ -463,7 +463,7 @@ if (!isset($data['error'])) {
 
 
 /* ================================================================
-   BOTTONE — stile originale: sfondo nero, testo rosso
+   BOTTONE — stile originale: contorno nero, testo nero, sfondo trasparente
    ================================================================ */
 .gallery-cta {
   display: flex;
@@ -482,7 +482,7 @@ if (!isset($data['error'])) {
   padding: 4px 8px;
   box-sizing: border-box;
   
-  max-height: 30px;
+  min-height: 30px;
   white-space: normal;
   text-align: center;
 

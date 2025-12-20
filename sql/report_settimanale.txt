@@ -1,0 +1,1376 @@
+====NON RISPONDERE A QUESTA MAIL, SCRIVI A info==
+=================================================
+         REPORT SETTIMANALE DATA QUALITY
+data_base: dati_meteo_simignano
+=================================================
+Data Esecuzione: 2025-12-15 21:37:39
+
+
+### 1. ANOMALIE DI FLUSSO (Gap > 100 sec) - Totale: 470 per un totale di minuti: 1064 ###
+
+### 2. PERCENTUALI GAP TEMPORALI ###
+% gap totali / periodo analizzato: 10.556%
+
+% gap temporali per giorno:
+  Giorno 1: 12.222%
+  Giorno 2: 11.528%
+  Giorno 3: 13.611%
+  Giorno 4: 13.958%
+  Giorno 5: 19.931%
+  Giorno 6: 2.639%
+  Giorno 7: 0%
+
+% gap temporali per fascia oraria (settimanale):
+  22 → 06: 9.792%
+  06 → 14: 9.256%
+  14 → 22: 12.619%
+
+--- SOMMARIO GAP ---
+1 gap 1 h
+1 gap 41 min
+3 gap 4 min
+15 gap 3 min
+450 gap 2 min
+
+--- DETTAGLIO GAP ---
+
+*** Gap 1 h (1) ***
+- Data/Ora INIZIO: 2025-09-04 20:43:00 | Durata: 1 ore
+
+*** Gap 41 min (1) ***
+- Data/Ora INIZIO: 2025-09-04 18:19:00 | Durata: 41 minuti
+
+*** Gap 4 min (3) ***
+- Data/Ora INIZIO: 2025-09-04 20:37:00 | Durata: 4 minuti
+- Data/Ora INIZIO: 2025-09-04 20:03:00 | Durata: 4 minuti
+- Data/Ora INIZIO: 2025-09-03 22:34:00 | Durata: 4 minuti
+
+*** Gap 3 min (15) ***
+- Data/Ora INIZIO: 2025-09-08 22:09:00 | Durata: 3 minuti
+- Data/Ora INIZIO: 2025-09-08 03:32:00 | Durata: 3 minuti
+- Data/Ora INIZIO: 2025-09-07 07:24:00 | Durata: 3 minuti
+- Data/Ora INIZIO: 2025-09-07 04:52:00 | Durata: 3 minuti
+- Data/Ora INIZIO: 2025-09-06 15:31:00 | Durata: 3 minuti
+- Data/Ora INIZIO: 2025-09-06 15:00:00 | Durata: 3 minuti
+- Data/Ora INIZIO: 2025-09-06 12:17:00 | Durata: 3 minuti
+- Data/Ora INIZIO: 2025-09-06 05:35:00 | Durata: 3 minuti
+- Data/Ora INIZIO: 2025-09-05 07:37:00 | Durata: 3 minuti
+- Data/Ora INIZIO: 2025-09-05 03:13:00 | Durata: 3 minuti
+- Data/Ora INIZIO: 2025-09-05 01:08:00 | Durata: 3 minuti
+- Data/Ora INIZIO: 2025-09-04 19:53:00 | Durata: 3 minuti
+- Data/Ora INIZIO: 2025-09-04 17:32:00 | Durata: 3 minuti
+- Data/Ora INIZIO: 2025-09-04 17:08:00 | Durata: 3 minuti
+- Data/Ora INIZIO: 2025-09-04 03:11:00 | Durata: 3 minuti
+
+*** Gap 2 min (450) ***
+- Data/Ora INIZIO: 2025-09-09 00:19:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 23:58:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 23:56:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 23:36:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 23:15:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 22:54:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 22:50:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 22:32:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 21:49:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 21:28:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 21:05:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 20:44:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 20:23:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 20:02:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 19:40:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 19:19:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 18:57:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 18:35:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 18:14:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 17:53:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 17:31:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 17:10:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 16:49:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 16:43:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 16:26:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 16:10:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 16:04:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 15:42:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 15:19:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 14:58:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 14:35:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 14:14:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 13:49:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 13:27:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 13:25:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 13:04:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 12:58:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 12:55:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 12:42:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 12:19:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 11:56:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 11:35:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 11:14:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 10:53:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 10:32:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 10:09:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 10:00:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 09:55:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 09:47:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 09:25:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 09:08:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 09:02:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 08:39:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 08:16:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 07:53:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 07:38:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 07:36:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 07:31:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 07:08:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 06:45:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 06:23:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 05:58:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 05:44:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 05:35:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 05:25:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 05:16:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 05:12:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 05:02:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 04:50:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 04:48:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 04:27:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 04:11:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 04:04:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 03:42:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 03:19:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 03:10:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 02:56:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 02:54:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 02:32:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 02:11:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 01:50:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 01:45:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 01:27:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 01:05:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 00:43:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-08 00:19:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 23:57:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 23:36:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 23:34:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 23:13:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 23:10:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 22:51:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 22:29:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 22:06:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 21:51:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 21:45:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 21:23:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 21:20:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 21:01:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 20:39:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 20:17:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 19:55:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 19:42:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 19:33:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 19:12:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 18:51:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 18:28:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 18:07:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 17:45:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 17:23:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 17:01:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 16:39:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 16:18:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 16:15:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 16:10:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 16:05:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 15:55:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 15:34:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 15:12:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 14:51:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 14:29:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 14:08:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 13:47:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 13:26:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 13:05:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 12:44:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 12:23:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 12:02:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 11:41:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 11:26:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 11:20:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 10:59:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 10:38:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 10:16:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 09:55:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 09:34:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 09:13:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 08:51:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 08:30:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 08:08:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 07:53:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 07:47:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 07:03:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 06:55:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 06:40:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 06:25:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 06:18:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 05:59:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 05:57:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 05:36:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 05:14:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 04:46:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 04:29:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 04:08:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 03:46:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 03:25:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 03:02:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 02:56:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 02:40:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 02:19:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 01:57:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 01:36:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 01:15:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 00:52:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 00:30:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-07 00:08:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 23:46:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 23:25:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 23:20:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 23:01:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 22:51:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 22:38:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 22:35:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 22:16:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 21:54:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 21:32:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 21:16:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 21:10:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 20:46:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 20:30:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 20:25:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 20:03:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 19:46:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 19:44:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 19:39:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 19:21:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 19:18:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 19:16:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 18:54:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 18:36:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 18:33:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 18:29:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 18:22:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 18:10:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 18:06:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 18:03:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 17:42:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 17:37:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 17:20:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 16:58:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 16:46:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 16:36:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 16:34:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 16:13:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 16:08:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 15:49:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 15:25:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 15:13:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 15:10:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 14:38:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 14:15:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 13:52:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 13:33:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 13:30:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 13:07:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 12:43:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 12:41:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 11:54:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 11:43:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 11:31:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 11:20:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 11:08:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 11:00:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 10:47:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 10:40:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 10:26:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 10:23:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 10:18:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 10:00:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 09:42:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 09:38:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 09:22:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 09:15:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 08:54:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 08:31:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 08:09:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 07:47:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 07:25:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 07:04:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 06:41:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 06:28:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 06:20:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 05:58:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 05:14:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 04:53:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 04:32:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 04:11:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 03:50:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 03:29:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 03:08:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 02:47:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 02:25:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 02:03:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 01:42:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 01:21:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 01:00:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 00:39:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-06 00:18:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 23:57:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 23:36:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 23:15:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 22:54:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 22:33:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 22:12:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 21:50:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 21:39:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 21:28:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 21:07:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 20:46:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 20:25:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 20:04:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 19:43:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 19:22:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 19:14:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 19:00:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 18:38:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 18:16:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 17:54:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 17:33:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 17:12:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 17:06:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 16:51:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 16:39:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 16:28:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 16:06:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 15:45:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 15:24:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 15:02:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 14:41:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 14:20:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 13:57:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 13:41:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 13:34:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 13:27:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 13:11:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 12:50:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 12:34:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 12:27:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 12:08:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 12:06:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 12:04:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 11:42:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 11:36:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 11:20:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 11:17:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 10:59:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 10:36:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 10:15:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 10:09:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 09:59:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 09:53:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 09:30:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 09:13:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 09:07:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 08:47:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 08:45:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 08:21:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 07:58:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 07:55:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 07:51:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 07:35:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 07:33:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 07:31:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 07:12:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 06:50:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 06:27:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 06:22:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 06:04:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 06:01:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 05:41:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 05:22:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 05:20:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 05:06:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 04:56:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 04:40:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 04:34:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 04:13:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 03:51:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 03:30:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 03:27:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 03:08:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 02:45:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 02:43:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 02:41:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 02:29:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 02:20:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 01:58:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 01:36:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 01:26:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 01:17:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 01:13:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 00:49:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 00:25:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-05 00:03:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 23:55:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 23:39:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 23:17:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 22:54:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 22:42:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 22:39:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 22:37:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 22:29:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 22:24:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 22:20:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 22:08:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 22:06:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 22:03:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 22:01:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 21:52:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 21:50:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 20:24:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 20:22:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 20:00:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 19:50:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 19:38:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 19:20:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 19:14:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 18:16:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 17:55:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 17:51:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 17:47:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 17:44:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 17:20:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 16:47:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 16:24:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 16:03:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 15:40:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 15:26:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 15:19:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 14:57:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 14:36:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 14:18:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 14:13:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 13:52:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 13:29:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 13:14:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 13:06:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 12:45:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 12:24:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 12:02:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 11:41:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 11:20:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 10:59:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 10:38:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 10:16:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 09:55:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 09:34:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 09:13:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 08:52:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 08:31:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 08:10:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 07:49:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 07:28:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 07:07:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 06:45:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 06:23:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 06:02:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 05:41:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 05:20:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 04:59:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 04:38:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 04:15:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 03:54:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 03:33:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 02:50:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 02:27:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 02:22:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 02:04:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 01:43:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 01:22:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 00:59:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 00:43:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 00:37:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 00:17:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 00:15:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-04 00:13:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-03 23:52:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-03 23:31:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-03 23:27:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-03 23:10:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-03 22:48:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-03 22:26:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-03 22:04:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-03 21:42:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-03 21:38:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-03 21:28:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-03 21:21:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-03 21:17:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-03 20:52:00 | Durata: 2 minuti
+- Data/Ora INIZIO: 2025-09-03 20:29:00 | Durata: 2 minuti
+
+### 2. ANOMALIE DI VALORE (Campi NULL) - Totale: 858 ###
+- Data/Ora: 2025-09-02 00:31:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 00:33:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 00:45:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 00:53:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 01:01:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 01:12:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 01:16:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 01:36:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 01:37:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 01:38:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 01:47:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 02:02:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 02:23:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 02:45:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 03:07:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 03:29:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 03:51:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 04:01:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 04:12:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 04:13:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 04:30:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 04:36:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 04:59:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 05:21:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 05:43:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 05:56:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 06:06:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 06:18:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 06:23:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 06:28:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 06:30:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 06:33:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 06:34:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 06:39:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 06:50:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 07:12:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 07:16:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 07:27:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 07:36:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 07:50:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 07:58:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 08:18:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 08:20:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 08:40:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 08:43:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 09:06:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 09:29:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 09:53:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 10:15:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 10:21:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 10:24:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 10:25:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 10:38:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 10:53:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 11:00:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 11:06:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 11:23:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 11:33:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 11:35:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 11:47:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 11:49:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 11:56:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 12:09:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 12:25:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 12:31:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 12:35:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 12:43:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 12:44:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 12:54:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 13:17:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 13:38:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 13:59:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 14:22:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 14:44:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 15:05:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 15:27:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 15:40:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 15:49:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 15:54:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 16:10:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 16:31:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 16:39:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 16:53:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 17:15:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 17:31:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 17:37:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 17:58:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 18:08:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 18:12:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 18:20:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 18:43:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 19:04:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 19:25:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 19:47:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 19:52:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 19:54:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 20:02:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 20:10:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 20:31:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 20:52:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 21:08:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 21:12:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 21:14:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 21:35:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 21:56:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 22:17:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 22:38:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 22:59:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 23:20:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 23:26:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-02 23:41:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 00:02:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 00:23:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 00:44:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 01:05:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 01:06:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 01:28:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 01:49:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 02:10:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 02:33:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 02:54:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 03:18:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 03:40:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 04:02:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 04:26:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 04:47:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 05:08:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 05:16:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 05:20:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 05:31:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 05:54:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 05:56:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 06:09:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 06:17:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 06:39:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 06:41:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 07:01:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 07:05:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 07:28:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 07:36:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 07:37:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 07:46:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 07:51:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 07:54:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 07:57:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 08:13:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 08:16:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 08:21:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 08:35:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 08:36:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 08:59:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 09:01:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 09:21:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 09:31:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 09:44:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 09:59:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 10:02:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 10:07:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 10:29:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 10:31:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 10:53:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 10:55:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 10:56:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 11:19:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 11:21:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 11:44:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 11:47:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 12:07:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 12:16:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 12:17:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 12:31:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 12:43:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 12:57:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 13:10:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 13:20:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 13:33:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 13:42:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 14:04:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 14:26:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 14:48:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 15:11:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 15:24:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 15:25:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 15:35:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 15:57:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 16:20:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 16:24:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 16:43:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 16:45:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 17:07:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 17:28:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 17:43:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 17:44:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 17:48:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 17:53:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 18:16:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 18:23:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 18:38:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 18:58:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 19:00:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 19:15:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 19:22:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 19:24:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 19:26:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 19:31:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 19:44:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 20:08:00.000000 | Campi NULL: Pressione Vento
+- Data/Ora: 2025-09-03 20:44:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 20:45:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 20:46:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 20:47:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 20:48:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 20:49:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 20:50:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 20:51:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 20:52:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 20:54:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 20:55:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 20:56:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 20:57:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 20:58:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 20:59:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:00:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:01:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:02:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:21:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:23:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:24:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:25:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:26:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:27:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:28:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:30:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:31:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:32:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:33:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:34:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:35:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:36:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:37:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:38:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:40:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:41:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:42:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:58:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 21:59:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:00:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:01:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:02:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:03:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:04:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:06:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:07:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:08:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:09:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:10:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:11:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:12:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:13:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:14:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:15:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:16:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:17:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:18:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:19:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:20:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:21:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:22:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:23:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:24:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:25:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:26:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:28:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:29:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:30:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:31:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:32:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:33:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:34:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:51:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:52:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:53:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:54:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:55:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:56:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:57:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:58:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 22:59:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 23:00:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 23:01:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 23:02:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 23:03:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 23:04:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 23:05:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 23:06:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-03 23:07:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 12:59:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 13:00:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 13:27:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 13:28:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 13:29:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 13:31:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 13:32:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 13:33:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 13:48:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 13:49:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 13:50:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 13:51:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 13:52:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 13:54:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 13:55:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 13:56:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 13:57:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 13:58:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 13:59:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:00:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:01:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:02:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:03:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:04:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:05:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:06:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:07:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:08:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:09:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:10:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:11:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:12:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:13:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:15:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:16:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:17:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:18:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:20:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:38:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:39:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:40:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:41:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:42:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:43:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:44:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:45:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:46:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:47:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:48:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:49:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:50:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:51:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:52:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:53:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:54:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:55:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:56:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:57:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 14:59:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:00:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:01:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:02:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:03:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:04:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:05:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:06:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:07:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:08:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:09:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:10:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:11:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:12:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:13:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:14:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:15:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:16:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:17:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:18:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:19:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:21:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:22:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:23:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:24:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:25:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:26:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:28:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:29:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:30:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:31:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:32:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:33:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:34:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:35:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:36:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:37:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:38:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:39:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:40:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:42:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:43:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:44:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:45:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:46:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:47:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:48:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:49:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:50:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:51:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:52:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:53:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:54:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:55:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 15:56:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 16:22:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 16:23:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 16:24:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 16:26:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 16:27:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 16:28:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 16:29:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 16:30:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 16:31:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 16:32:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 16:33:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 16:34:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 16:35:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 16:36:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 16:37:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 16:38:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 16:55:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 16:56:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 16:57:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 16:58:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 16:59:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 17:00:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 17:01:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 17:02:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 17:03:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 17:04:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 17:05:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 17:06:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 17:07:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 17:08:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 17:11:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 17:12:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 17:13:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 17:14:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 17:28:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 17:29:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 17:30:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 17:31:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 17:32:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 17:35:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 17:36:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 17:37:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 17:38:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:00:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:01:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:02:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:03:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:04:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:05:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:06:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:07:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:08:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:09:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:10:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:11:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:12:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:13:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:14:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:16:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:17:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:18:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:19:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:20:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:22:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:23:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:24:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:25:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:26:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:27:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:28:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:29:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:30:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:31:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:32:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:33:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:34:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:35:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:36:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:37:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:38:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:40:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:41:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:42:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:43:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:44:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:45:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:46:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:47:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:48:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:49:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:50:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:52:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:53:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:56:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:57:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:58:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 19:59:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:00:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:02:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:03:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:07:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:08:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:09:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:10:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:11:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:12:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:13:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:14:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:15:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:16:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:17:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:18:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:19:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:20:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:21:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:22:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:24:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:26:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:27:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:28:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:29:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:30:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:31:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:32:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:33:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:34:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:35:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:36:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:37:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:41:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:42:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 20:43:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 21:49:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 21:50:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 21:52:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 21:54:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 21:55:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 21:56:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 21:57:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 21:58:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 21:59:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:00:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:01:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:03:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:05:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:06:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:08:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:10:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:11:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:12:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:13:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:14:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:15:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:16:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:17:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:18:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:19:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:20:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:22:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:23:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:24:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:26:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:27:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:28:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:29:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:31:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:32:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:33:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:34:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:35:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:36:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:37:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:39:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:41:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:42:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:44:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:45:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:46:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:47:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:48:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:49:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:50:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:51:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:52:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:53:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:54:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:56:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:57:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:58:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 22:59:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 23:00:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 23:01:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 23:02:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 23:03:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 23:04:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 23:05:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 23:06:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 23:07:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 23:08:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 23:09:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 23:10:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 23:11:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 23:12:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 23:13:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 23:14:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-04 23:15:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 11:36:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 11:38:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 11:39:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 11:40:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 11:56:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 11:57:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 11:58:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 13:06:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 13:07:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 13:08:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 13:09:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 13:10:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 13:11:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 13:13:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 13:14:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 13:15:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 13:16:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 13:17:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 13:18:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 13:19:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 13:20:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 13:21:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 13:22:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 13:23:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 13:24:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 13:25:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 13:26:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 13:27:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 14:01:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 14:02:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 14:03:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 15:33:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 15:34:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 15:35:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 15:36:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 15:37:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 15:38:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 16:00:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 16:01:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 16:02:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 16:03:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 16:19:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 16:20:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 16:21:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 16:22:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 16:23:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 16:24:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 16:25:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 16:26:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 16:27:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 16:28:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 16:30:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 16:31:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 16:32:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 16:33:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 16:34:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 16:35:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 16:36:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 17:27:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 17:28:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 19:41:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 19:42:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 19:43:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 19:45:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 19:46:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 19:47:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 19:48:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 19:49:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 19:50:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 19:51:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 19:52:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 19:53:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 20:27:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 20:28:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 20:29:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 20:30:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 20:31:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 20:32:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 20:33:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 20:34:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 20:35:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 20:36:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 20:37:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 20:38:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 20:39:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 20:40:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 20:41:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 20:42:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 20:43:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 20:44:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 20:45:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:15:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:16:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:17:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:18:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:19:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:20:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:21:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:22:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:23:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:24:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:25:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:26:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:27:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:28:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:30:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:31:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:32:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:47:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:48:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:49:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:50:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:52:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:53:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:54:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:55:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:56:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:57:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:58:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 21:59:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:00:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:01:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:02:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:03:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:04:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:05:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:06:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:07:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:08:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:09:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:10:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:11:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:12:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:14:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:15:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:16:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:17:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:18:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:19:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:20:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:21:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:22:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:23:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:24:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:25:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:26:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:27:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:28:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:29:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:30:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:46:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:47:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:48:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:49:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:50:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:51:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:52:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:53:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:54:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:56:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:57:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:58:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 22:59:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:00:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:01:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:02:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:03:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:04:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:05:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:06:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:07:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:08:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:09:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:10:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:11:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:12:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:13:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:14:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:15:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:17:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:18:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:19:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:20:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:21:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:22:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:23:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:24:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:25:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:26:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:27:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:28:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:29:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:30:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:31:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:32:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:33:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:34:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:35:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:36:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:38:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:39:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:40:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:41:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:42:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:43:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:44:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:45:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:46:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:47:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:48:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:49:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:50:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:51:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:52:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:53:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:54:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:55:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:56:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:57:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-05 23:59:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-06 00:00:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-06 00:01:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-06 00:02:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-06 00:03:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-06 00:04:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-06 00:05:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-06 00:06:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-06 00:07:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-06 00:08:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-06 00:09:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-06 00:10:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-06 00:11:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-06 00:12:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-06 00:13:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-06 00:14:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-06 00:15:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-06 00:16:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-06 00:17:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-06 00:18:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-06 00:20:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-06 00:21:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-06 00:22:00.000000 | Campi NULL: Temperatura
+- Data/Ora: 2025-09-06 00:23:00.000000 | Campi NULL: Temperatura
+

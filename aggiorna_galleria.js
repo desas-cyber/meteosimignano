@@ -430,7 +430,7 @@ function trovaMinMaxTempOggi(arrayImmagini) {
     return null;
   }
   
-  console.log('📊 Totale immagini ricevute:', arrayImmagini.length);
+  //console.log('📊 Totale immagini ricevute:', arrayImmagini.length);
   
   // 2) Prendi la data più recente (dalla prima immagine)
   // 2) Prendi la data più recente VALIDA
@@ -454,8 +454,8 @@ if (!dataPiuRecente) {
     return null;
 }
 
-console.log('🗓️ Data più recente VALIDA nel DB:', dataPiuRecente);
-console.log('🗓️ Data/ora prima immagine completa VALIDA:', dataOraPiuRecente);
+//console.log('🗓️ Data più recente VALIDA nel DB:', dataPiuRecente);
+//console.log('🗓️ Data/ora prima immagine completa VALIDA:', dataOraPiuRecente);
   // 3) Filtra immagini della data più recente
   var immaginiDataRecente = [];
   var immaginiConTemp = [];
@@ -466,7 +466,7 @@ console.log('🗓️ Data/ora prima immagine completa VALIDA:', dataOraPiuRecent
     var dataItem = dataItemCompleta.substring(0, 10);
     var temp = numOrNull(get(item, 'temp'));
     
-    console.log('Img ' + i + ': data=' + dataItem + ', temp=' + temp);
+    //console.log('Img ' + i + ': data=' + dataItem + ', temp=' + temp);
     
     if (dataItem === dataPiuRecente) {
       immaginiDataRecente.push(item);
@@ -477,15 +477,15 @@ console.log('🗓️ Data/ora prima immagine completa VALIDA:', dataOraPiuRecent
           temp: temp,
           data_ora: dataItemCompleta
         });
-        console.log('  ✅ Temperatura valida aggiunta:', temp);
+        //console.log('  ✅ Temperatura valida aggiunta:', temp);
       } else {
-        console.log('  ⚠️ Temperatura N/D');
+        //console.log('  ⚠️ Temperatura N/D');
       }
     }
   }
   
-  console.log('📸 Immagini totali della data più recente:', immaginiDataRecente.length);
-  console.log('📸 Immagini con temperatura valida:', immaginiConTemp.length);
+  //console.log('📸 Immagini totali della data più recente:', immaginiDataRecente.length);
+  //console.log('📸 Immagini con temperatura valida:', immaginiConTemp.length);
   
   // Mostra tutte le temperature valide
   if (immaginiConTemp.length > 0) {
@@ -493,18 +493,18 @@ console.log('🗓️ Data/ora prima immagine completa VALIDA:', dataOraPiuRecent
     for (var k = 0; k < immaginiConTemp.length; k++) {
       temps.push(immaginiConTemp[k].temp.toFixed(1));
     }
-    console.log('🌡️ Temperature valide:', temps.join(', '));
+    //console.log('🌡️ Temperature valide:', temps.join(', '));
   }
   
   // 4) CONDIZIONE 1: Se NON ci sono temperature valide
   if (immaginiConTemp.length === 0) {
-    console.log('❌ TUTTE le temperature sono N/D → nessun lampeggio');
+    //console.log('❌ TUTTE le temperature sono N/D → nessun lampeggio');
     return null;
   }
   
   // 5) CONDIZIONE 2: Se c'è UNA SOLA temperatura valida
   if (immaginiConTemp.length === 1) {
-    console.log('❌ Una sola temperatura valida → nessun lampeggio');
+    //console.log('❌ Una sola temperatura valida → nessun lampeggio');
     return null;
   }
   
@@ -518,13 +518,13 @@ console.log('🗓️ Data/ora prima immagine completa VALIDA:', dataOraPiuRecent
     if (t > tempMax) tempMax = t;
   }
   
-  console.log('🌡️ Min raw:', tempMin, '| Max raw:', tempMax);
+  //console.log('🌡️ Min raw:', tempMin, '| Max raw:', tempMax);
   
   // 7) Arrotonda a 1 decimale
   tempMin = Math.round(tempMin * 10) / 10;
   tempMax = Math.round(tempMax * 10) / 10;
   
-  console.log('🌡️ Min arrotondato:', tempMin, '| Max arrotondato:', tempMax);
+  //console.log('🌡️ Min arrotondato:', tempMin, '| Max arrotondato:', tempMax);
   
   // 8) CONDIZIONE 3: Se min === max
   if (tempMin === tempMax) {
@@ -532,8 +532,8 @@ console.log('🗓️ Data/ora prima immagine completa VALIDA:', dataOraPiuRecent
     return null;
   }
   
-  console.log('✅ MIN=' + tempMin.toFixed(1) + '°C, MAX=' + tempMax.toFixed(1) + '°C');
-  console.log('🔍 === FINE DEBUG ===');
+  //console.log('✅ MIN=' + tempMin.toFixed(1) + '°C, MAX=' + tempMax.toFixed(1) + '°C');
+  //console.log('🔍 === FINE DEBUG ===');
   
   return {
     min: tempMin,

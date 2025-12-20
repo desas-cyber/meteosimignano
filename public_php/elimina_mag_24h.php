@@ -2,19 +2,69 @@
 
 /*
 Script: sincronizza directory snapshot Foscam con tabella DB_immagini_36h(_test).
-- Ambiente: deciso da env_tables_helper.php (USE_TEST_MODE); table_name() risolve la tabella.
-- Dipendenze: envelop.php (PDO R/W), envelop_lettura.php (PDO R/O), datetime_helper.php.
-- Fuso orario: Europe/Rome; usa get_time()/get_now() per tempi consistenti.
-- Directory sorgente: ../FoscamCamera_E8ABFAA799FE/snap (pattern: Schedule_YYYYMMDD-HHMMSS.jpg).
-- Log: ./aggiorna_log.txt con separatori di esecuzione e messaggi operativi.
+
+- Ambiente:
+  Gestito tramite env_tables_helper.php (USE_TEST_MODE).  
+  La funzione table_name() risolve automaticamente la tabella corretta (test o produzione).  
+  Usa datetime_helper.php per tempi consistenti tra ambenti differenti.
+
+- Dipendenze:
+  * envelop.php → PDO R/W
+  * envelop_lettura.php → PDO R/O
+  * datetime_helper.php → get_now(), get_time(), get_strtotime()
+  * env_tables_helper.php → gestione ambiente e table_name()
+
+- Fuso orario:
+  Europe/Rome.  
+  Lo script NON usa direttamente time()/date(), ma SOLO get_now() e get_time() per mantenere coerenza, anche in test.
+
+- Directory sorgente:
+  ../FoscamCamera_E8ABFAA799FE/snap  
+  File attesi con pattern: Schedule_YYYYMMDD-HHMMSS.jpg
+
+- Log:
+  ./aggiorna_log.txt  
+  Contiene separatori di esecuzione, eliminazioni file vecchi, inserimenti/eliminazioni DB, mismatch meteo, fasi solar detection.
+
 - Funzioni chiave:
-  * filtraFileVivi(): mantiene file ≤ threshold_sec, elimina gli altri dal FS.
-  * leggiImmaginiDaDatabase(): mappa FILE presenti in tabella.
-  * sincronizzaDatabase(): INSERT nuovi file, DELETE assenti (prepared statements).
-  * aggiornaDatiMeteo(): compila Temp/HR/P_hPa/vento/Dir_text da dati_meteo_simignano (±900s).
-- Sicurezza: nomi tabella via helper; per colonne/identificatori usare backtick se necessario.
-- Esecuzione: via CLI/cron o web; flag $debug abilita output a schermo.
+  * filtraFileVivi()  
+      - legge i file della directory,  
+      - scarta nomi non conformi,  
+      - conserva solo quelli entro threshold_sec (128400 s),  
+      - elimina fisicamente i file troppo vecchi.
+
+  * leggiImmaginiDaDatabase()  
+      - estrae dal DB la lista FILE → hash map per confronto rapido.
+
+  * sincronizzaDatabase()  
+      - inserisce file presenti nel FS e assenti nel DB,  
+      - elimina dal DB file non più presenti nel FS,  
+      - se il DB è vuoto, lo popola completamente.
+
+  * aggiornaDatiMeteo()  
+      - per ogni record senza Temp/HR/P_hPa/vento/Dir_text,  
+      - cerca il dato più vicino (±900s) in dati_meteo_simignano,  
+      - aggiorna il record o logga assenza dati.
+
+  * aggiornaSunPhase()  
+      - determina se la foto è in finestra di alba (fase=1) o tramonto (fase=2)  
+      - usa solar_data_siena (alba/tramonto UTC) + conversione in locale  
+      - margini dinamici: alba +1h, tramonto −20' → +40'
+
+  * estraiDataOraDaFilename()  
+      - valida il filename e restituisce datetime Y-m-d H:i:s.
+
+- Sicurezza:
+  - Nessun nome tabella hardcoded: sempre tramite table_name().
+  - Prepared statements per INSERT/DELETE/UPDATE.
+  - Ignora file non conformi; log dettagliati per errori di parsing.
+
+- Esecuzione:
+  Utilizzabile da CLI, cron o via web (debug visivo).  
+  Output controllato via flag $debug.  
+  Log completo della durata e di tutte le operazioni rilevanti.
 */
+
 
 /*if (php_sapi_name() !== "cli") {
     http_response_code(403);
@@ -248,6 +298,99 @@ function leggiImmaginiDaDatabase(PDO $pdo, string $table_name): array  {
         scriviLog("✅ Dati meteo aggiornati per $conteggio record. $senza_dati senza dati.");
     }
     
+function aggiornaSunPhase(PDO $pdo, PDO $pdo_lettura, string $table_name) {
+    $sql = "SELECT ID, DATA_ORA FROM " . $table_name . " WHERE alba_tramonto IS NULL";
+    $records = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+    if (empty($records)) {
+        scriviLog("⚠️ Nessun record da verificare per sun_phase.");
+        return;
+    }
+
+    debugEcho("🌅 Verifico sun_phase per " . count($records) . " record...");
+
+    $stmt_solar = $pdo_lettura->prepare("
+        SELECT alba_utc, tramonto_utc
+        FROM solar_data_siena
+        WHERE giorno_anno = :giorno_anno
+        LIMIT 1
+    ");
+
+    $stmt_update = $pdo->prepare("UPDATE $table_name SET alba_tramonto = :phase WHERE ID = :id");
+
+    $albe = 0;
+    $tramonti = 0;
+    $senza_dati = 0;
+
+    foreach ($records as $row) {
+        $data_ora = $row['DATA_ORA'];
+        $id = $row['ID'];
+
+        try {
+            $dt = new DateTime($data_ora, new DateTimeZone('Europe/Rome'));
+            $giorno_anno = (int)$dt->format('z') + 1;
+            
+            $stmt_solar->execute([':giorno_anno' => $giorno_anno]);
+            $solar = $stmt_solar->fetch(PDO::FETCH_ASSOC);
+
+            if (!$solar || !$solar['alba_utc'] || !$solar['tramonto_utc']) {
+                scriviLog("❌ Dati solari non trovati per ID=$id, giorno_anno=$giorno_anno");
+                $senza_dati++;
+                continue;
+            }
+
+            $date_str = $dt->format('Y-m-d');
+            $alba_utc = new DateTime($date_str . ' ' . $solar['alba_utc'], new DateTimeZone('UTC'));
+            $tramonto_utc = new DateTime($date_str . ' ' . $solar['tramonto_utc'], new DateTimeZone('UTC'));
+            
+            $alba_local = clone $alba_utc;
+            $alba_local->setTimezone(new DateTimeZone('Europe/Rome'));
+            
+            $tramonto_local = clone $tramonto_utc;
+            $tramonto_local->setTimezone(new DateTimeZone('Europe/Rome'));
+
+            
+            $alba_start = $alba_local->getTimestamp() - 2400;// - 40' di margine
+            $alba_end = $alba_local->getTimestamp() + 2400;// 40' di margine
+            
+            $tramonto_start = $tramonto_local->getTimestamp() - 2400;// - 40' di margine
+            $tramonto_end = $tramonto_local->getTimestamp() + 2400;// 40' di margine
+            
+            $photo_timestamp = $dt->getTimestamp();
+
+            $phase = null;
+            
+            if ($photo_timestamp >= $alba_start && $photo_timestamp <= $alba_end) {
+                $phase = 1;
+                $albe++;
+            } elseif ($photo_timestamp >= $tramonto_start && $photo_timestamp <= $tramonto_end) {
+                $phase = 2;
+                $tramonti++;
+            }
+
+            if ($phase !== null) {
+                $stmt_update->execute([':phase' => $phase, ':id' => $id]);
+                $fase_str = ($phase == 1) ? '🌅 Alba' : '🌇 Tramonto';
+                debugEcho("$fase_str rilevato: ID=$id, DATA_ORA=$data_ora");
+            }
+
+        } catch (Exception $e) {
+            scriviLog("❌ Errore ID=$id: " . $e->getMessage());
+            continue;
+        }
+    }
+
+    debugEcho("🌅 Trovate $albe albe e $tramonti tramonti.");
+    if ($senza_dati > 0) {
+        debugEcho("⚠️ $senza_dati record senza dati solari.");
+    }
+    echo $alba_local->format('Y-m-d H:i:s') . "\n";//debug
+    echo $tramonto_local->format('Y-m-d H:i:s') . "\n";//debug
+    scriviLog("✅ sun_phase: $albe albe, $tramonti tramonti. $senza_dati senza dati.");
+}
+
+
+
     function estraiDataOraDaFilename($filename) {
         if (!preg_match('/Schedule_\d{8}-\d{6}\.jpg$/', $filename)) {
             scriviLog("⚠️ Nome file non conforme al formato atteso: $filename");
@@ -272,6 +415,7 @@ function leggiImmaginiDaDatabase(PDO $pdo, string $table_name): array  {
     $files_nel_db = leggiImmaginiDaDatabase($pdo,$table_name);
     sincronizzaDatabase($pdo, $files_vivi, $files_nel_db, $table_name);
     aggiornaDatiMeteo($pdo, $pdo_lettura, $table_name);
+    aggiornaSunPhase($pdo, $pdo_lettura, $table_name);
     $durata = round(microtime(true) - $start, 2);
     debugEcho("⏱️ Tempo di esecuzione: {$durata} secondi.");
     scriviLog("⏱️ Tempo di esecuzione script: {$durata} secondi.");

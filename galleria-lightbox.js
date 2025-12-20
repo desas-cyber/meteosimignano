@@ -1,14 +1,18 @@
 /* =================================================================
- *  LIGHTBOX GALLERIA — Script ES5 compatibile
+ *  LIGHTBOX GALLERIA — Script ES5 compatibile (FIXED)
  * =================================================================
+ *
+ *  FIX: Applicazione classi min/max sincronizzata con caricamento immagini
+ *  - Le classi vengono applicate DOPO il caricamento completo dell'immagine
+ *  - Risolve il problema dei pallini che appaiono/scompaiono
  *
  *  Cosa fa:
  *  - Apre la lightbox alla miniatura cliccata
- *  - Mostra l’immagine (con crop verticale) e una riga info (data/ora, T, UR, p, vento)
+ *  - Mostra l'immagine (con crop verticale) e una riga info (data/ora, T, UR, p, vento)
  *  - Navigazione: tastiera (← →, ESC), bottoni prev/next, swipe touch
- *  - “Rewind” e “Forward” automatici (play inverso/avanti) con toggle pausa
+ *  - "Rewind" e "Forward" automatici (play inverso/avanti) con toggle pausa
  *  - Aggiorna lo stato dei bottoni in modo consistente
- * -* evidenzia sulla libreria e sulla imm lightbox la max e min con un pallino
+ *  - Evidenzia sulla libreria e sulla imm lightbox la max e min con un pallino
  *
  *  Dipendenze:
  *  - window.images: array di record [{src, data_ora, temp, hr, p_hpa, vento/wind_ms/wind_kmh, dir/dir_text}, …]
@@ -16,11 +20,6 @@
  *      #lightbox, #lightbox-img, #lightbox-info
  *      .nav-btn.prev, .nav-btn.next
  *      (opzionali): #close-btn, #rewind-btn(#rewind-icon), #forward-btn(#forward-icon)
- *
- *  Note:
- *  - Nessun uso di ?. o ?? o arrow => compatibile con motori JS datati.
- *  - La funzione dirTesto gestisce sia gradi che sigle testuali già pronte.
- *  - Il testo “info” usa km/h se disponibili, altrimenti prova da m/s→km/h.
  * ================================================================= */
 
 /* ========================== STATO =============================== */
@@ -69,7 +68,7 @@ function pickFirstDefined(obj, keys) {
 
 /** Direzione in testo:
  *  - se input è numerico (gradi), converte in N/NE/...
- *  - se è stringa già “NE”, la restituisce così com’è
+ *  - se è stringa già "NE", la restituisce così com'è
  */
 function dirTesto(v) {
   if (v === null) return '--';
@@ -83,7 +82,7 @@ function dirTesto(v) {
   return String(v);
 }
 
-/** Crop verticale dell’immagine (taglia 80px in basso). Ritorna dataURL. */
+/** Crop verticale dell'immagine (taglia 80px in basso). Ritorna dataURL. */
 function cropImageBottom(src, cropBottomPx, cb) {
   var tempImg = new Image();
   tempImg.onload = function () {
@@ -105,32 +104,44 @@ function cropImageBottom(src, cropBottomPx, cb) {
   tempImg.src = src;
 }
 
-/** Costruisce la stringa info dell’immagine corrente. */
+/** Costruisce la stringa info dell'immagine corrente. */
 function buildInfoText(record) {
-  // data/ora formattata (già “dd/mm/yyyy HH:MM” lato backend)
-  var d = getStr(record, 'data_ora') || 'N/A';
+  // Data/ora
+  var d = record.data_ora || 'N/A';
 
-  // temperatura / umidità / pressione
-  var t = numOrNull(get(record,'temp'));
-  var tTxt = (t === null ? 'N/A' : Math.round(t) + '°C');
+  // Temperatura
+  var t = parseFloat(record.temp);
+  var tTxt = isFinite(t) ? Math.round(t) + '°C' : 'N/A';
 
-  var hr = numOrNull(get(record,'hr'));
-  var hTxt = (hr === null ? 'N/A' : Math.round(hr) + '%');
+  // Umidità
+  var hr = parseFloat(record.hr);
+  var hTxt = isFinite(hr) ? Math.round(hr) + '%' : 'N/A';
 
-  var p  = numOrNull(pickFirstDefined(record, ['p_hpa','press_hpa','pressione_hpa','pressure_hpa','pressure','mbar','press_mb']));
-  var pTxt = (p === null ? 'N/A' : Math.round(p) + ' hPa');
+  // Pressione
+  var p = parseFloat(record.p_hpa);
+  var pTxt = isFinite(p) ? Math.round(p) + ' hPa' : 'N/A';
 
-  // vento: preferisci km/h se disponibile, altrimenti m/s→km/h
-  var windKmh = numOrNull(get(record,'wind_kmh'));
-  var windMs  = numOrNull(pickFirstDefined(record, ['vento','wind_ms'])); // alias legacy
-  if (windKmh === null && windMs !== null) windKmh = Math.round(windMs * 3.6);
+  // Vento
+  var windKmh = parseFloat(record.wind_kmh);
+  var wTxt = isFinite(windKmh) ? windKmh + ' km/h' : 'N/A';
 
-  var wTxt = (windKmh === null ? 'N/A' : windKmh + ' km/h');
+  // Direzione (converti gradi → testo)
+  var dirGradi = parseFloat(record.dir_text);
+  var dTxt = isFinite(dirGradi) ? dirTesto(dirGradi) : 'N/A';
 
-  // direzione
-  var dTxt = dirTesto(pickFirstDefined(record, ['dir','dir_text','Dir_text'])) || 'N/A';
+  // Alba/Tramonto (solo se flag presente)
+  var sunPhase = '';
+  if (record.alba_tramonto) {
+    var flag = parseInt(record.alba_tramonto);
+    if (flag === 1) {
+  sunPhase = ' | Alba';
+} else if (flag === 2) {
+  sunPhase = ' | Tramonto';
+}
+  }
 
-  return d + ' | T ' + tTxt + ' | UR ' + hTxt + ' | ' + pTxt + ' | Vento ' + wTxt + (dTxt ? (', ' + dTxt) : '');
+  
+  return d + ' | T ' + tTxt + ' | UR ' + hTxt + ' | ' + pTxt + ' | Vento ' + wTxt + ', ' + dTxt + sunPhase;
 }
 
 function applicaClassiMinMaxLightbox(index) {
@@ -155,54 +166,56 @@ function applicaClassiMinMaxLightbox(index) {
     }
     
     var item = items[index];
-    console.log('📸 Item:', item);
+    //console.log('📸 Item:', item);
     
     var t = numOrNull(get(item, 'temp'));
-    console.log('🌡️ Temperatura:', t);
+    //console.log('🌡️ Temperatura:', t);
     
     var minMaxData = trovaMinMaxTempOggi(window.images);
-    console.log('📊 MinMax data:', minMaxData);
+    //console.log('📊 MinMax data:', minMaxData);
     
     if (minMaxData && t !== null) {
         var dataPiuRecente = estraiDataDaItem(items[0]);
         var dataItem = estraiDataDaItem(item);
         
-        console.log('📅 Data più recente:', dataPiuRecente);
-        console.log('📅 Data item corrente:', dataItem);
+        //console.log('📅 Data più recente:', dataPiuRecente);
+        //console.log('📅 Data item corrente:', dataItem);
         
         if (dataItem === dataPiuRecente) {
             var tempArrotondata = Math.round(t * 10) / 10;
-            console.log('🌡️ Temp arrotondata:', tempArrotondata);
-            console.log('🌡️ Min:', minMaxData.min, '| Max:', minMaxData.max);
+           //console.log('🌡️ Temp arrotondata:', tempArrotondata);
+            //console.log('🌡️ Min:', minMaxData.min, '| Max:', minMaxData.max);
             
             if (tempArrotondata === minMaxData.min) {
                 lightboxContent.classList.add('is-min');
-                console.log('❄️ APPLICATA classe is-min');
+                //console.log('❄️ APPLICATA classe is-min');
             } else if (tempArrotondata === minMaxData.max) {
                 lightboxContent.classList.add('is-max');
-                console.log('🔥 APPLICATA classe is-max');
+                //console.log('🔥 APPLICATA classe is-max');
             } else {
-                console.log('⚪ Nessuna classe (temp intermedia)');
+                //console.log('⚪ Nessuna classe (temp intermedia)');
             }
         } else {
-            console.log('⚠️ Data diversa, nessuna classe applicata');
+            //console.log('⚠️ Data diversa, nessuna classe applicata');
         }
     } else {
-        console.log('⚠️ Nessun minMaxData o temperatura null');
+        //console.log('⚠️ Nessun minMaxData o temperatura null');
     }
     
-    console.log('🏁 Classi finali:', lightboxContent.className);
-    console.log('🔍 === FINE DEBUG ===');
+    //console.log('🏁 Classi finali:', lightboxContent.className);
+    //console.log('🔍 === FINE DEBUG ===');
 }
 
 /* ======================= RENDERING CORE =========================== */
 
 /**
- * Aggiorna l’immagine e la riga info in base a currentIndex.
+ * Aggiorna l'immagine e la riga info in base a currentIndex.
  * - Esegue crop in basso (80px)
  * - Imposta #lightbox-img.src e #lightbox-info.textContent
+ * - Applica classi min/max DOPO il caricamento dell'immagine
  */
 function aggiornaLightbox() {
+  
   var items = window.images || [];
   var record = items[currentIndex];
   if (!record) return;
@@ -213,7 +226,24 @@ function aggiornaLightbox() {
   // Crop e set immagine
   cropImageBottom(src, 80, function (croppedSrc) {
     var imgEl = document.getElementById('lightbox-img');
-    if (imgEl) imgEl.src = croppedSrc;
+    if (imgEl) {
+      imgEl.src = croppedSrc;
+      
+      // FIX: Applica le classi min/max SOLO dopo che l'immagine è caricata
+      imgEl.onload = function() {
+        // Piccolo delay per assicurarsi che il DOM sia completamente aggiornato
+        setTimeout(function() {
+          applicaClassiMinMaxLightbox(currentIndex);
+        }, 10);
+      };
+      
+      // Fallback: se l'immagine è già in cache e onload non scatta
+      if (imgEl.complete) {
+        setTimeout(function() {
+          applicaClassiMinMaxLightbox(currentIndex);
+        }, 10);
+      }
+    }
   });
 
   // Info text
@@ -228,8 +258,7 @@ function openLightbox(index) {
   if (!items.length) return;
 
   currentIndex = Math.max(0, Math.min(index, items.length - 1));
-  aggiornaLightbox();
-
+  
   var lb = document.getElementById('lightbox');
   if (lb) lb.classList.add('active');
 
@@ -244,9 +273,9 @@ function openLightbox(index) {
     if (btn) { btn.style.display = map[i].display; btn.disabled = false; }
   }
 
-  // APPLICA classi min/max
-  applicaClassiMinMaxLightbox(currentIndex);
-
+  // Aggiorna lightbox (che ora gestisce anche le classi min/max)
+  aggiornaLightbox();
+  
   updateNavButtons();
 }
 
@@ -286,8 +315,6 @@ function prevImage(event) {
   if (currentIndex > 0) {
     currentIndex--;
     aggiornaLightbox();
-    // APPLICA classi min/max
-  applicaClassiMinMaxLightbox(currentIndex);
     updateNavButtons();
   }
 }
@@ -298,8 +325,6 @@ function nextImage(event) {
   if (currentIndex < items.length - 1) {
     currentIndex++;
     aggiornaLightbox();
-    // APPLICA classi min/max
-  applicaClassiMinMaxLightbox(currentIndex);
     updateNavButtons();
   }
 }

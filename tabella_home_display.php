@@ -5,77 +5,88 @@ error_reporting(E_ALL);
 
 /*
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ FILE: tabella_home_display.php                                              │
-│ SCOPO: Genera tabella HTML con dati meteo + calcoli radianza solare        │
-├─────────────────────────────────────────────────────────────────────────────┤
 │ GUIDA RAPIDA PER SVILUPPATORI                                               │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ 1. INPUT: Legge CSV da 'meteobridge/dati_temperatura.txt'                  │
-│ 2. OUTPUT: Tabella HTML responsive con indicatori SVG colorati             │
+│ SCOPO: Tabella meteo responsive + calcoli radianza solare + lightbox foto  │
+│        alba/tramonto (ultime 20h)                                           │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ DIPENDENZE FILE:                                                            │
+│  • meteobridge/tabella_home.php (array $parametri)                         │
+│  • datetime_helper.php (get_now(), get_datetime(), get_day_of_year())     │
+│  • env_tables_helper.php (table_name() per test/produzione)               │
+│  • ../envelop_lettura.php ($pdo_lettura)                                  │
+│  • meteobridge/dati_temperatura.txt (CSV: data,ora,param1,...,paramN)     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ DATABASE (PDO):                                                             │
+│  • solar_data_siena: dati teorici radianza (giorno_anno, irradianza_max,  │
+│                      ora_massima_utc, energia_totale_wh_m2)               │
+│  • dati_meteo_simignano: dati effettivi (data_ora, radianza_int_whm2)     │
+│  • DB_immagini_36h: foto alba/tramonto (FILE, DATA_ORA, Temp, alba_tramonto)│
+├─────────────────────────────────────────────────────────────────────────────┤
+│ COSTANTI GLOBALI:                                                           │
+│  OGGI_GIORNO_ANNO: int (1-366)                                             │
+│  OGGI_DATA_SQL: string 'YYYY-MM-DD%' per LIKE queries                      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ FUNZIONI CHIAVE:                                                            │
 │                                                                              │
-│ 3. DIPENDENZE RICHIESTE:                                                    │
-│    • meteobridge/tabella_home.php (array $parametri con mappature)         │
-│    • datetime_helper.php (funzioni get_now(), get_datetime(), ecc.)        │
-│    • env_tables_helper.php (gestione ambiente test/produzione)             │
-│    • ../envelop_lettura.php (connessione DB → variabile $pdo_lettura)      │
+│ • getSolareMassimoGiornaliero($pdo): Ritorna "Teor Max e ora: 850 @ 13:45" │
+│   → Query solar_data_siena, converte UTC→Europe/Rome                       │
 │                                                                              │
-│ 4. DATABASE: Richiede accesso a:                                            │
-│    • solar_data_siena (dati teorici radianza per giorno_anno)              │
-│    • dati_meteo_simignano (dati effettivi radianza con timestamp)          │
+│ • getSolareteoricoMezzaGiornata($pdo): Array con %12h e %24h               │
+│   → 12h: calcolo base (radianza/teorico), poi cerca picco storico se dopo  │
+│          ora_massima_utc. Garantisce sempre risultato.                     │
+│   → 24h: semplice radianza_attuale/teorico_24h                             │
+│   → Ritorna ['cumulato_percent_12h' => float|'N/A',                        │
+│               'cumulato_percent_24h' => float|'N/A']                        │
 │                                                                              │
-│ 5. COSTANTI GLOBALI:                                                        │
-│    • OGGI_GIORNO_ANNO: numero giorno dell'anno (1-366)                     │
-│    • OGGI_DATA_SQL: data odierna formato 'YYYY-MM-DD%' per LIKE            │
+│ • pulisciValoreNumerico($val): Valida numeri, ritorna 'NA' se invalido     │
 │                                                                              │
-│ 6. FUNZIONI PRINCIPALI:                                                     │
-│    • getSolareMassimoGiornaliero(): massimo teorico + ora (UTC→locale)     │
-│    • getSolareteoricoMezzaGiornata(): calcola % cumulato 12h/24h           │
-│    • createDeltaIndicator(): pallini SVG per variazioni temperatura        │
-│    • createComfortIndicator(): pallini SVG per comfort (dewpoint)          │
+│ • createIndicator($value): SVG pallini colorati per:                      │
+│   - Delta temperatura (5 soglie: >2, 0.6-2, -0.5/+0.5, -0.6/-2, <-2)      │
+│   - Comfort dewpoint (6 soglie BOM: <8, 8-9, 10-15, 16-19, 20-23, ≥24)    │
+│   - Pressione (soglie hPa: >3, 1-3, -1/+1, -1/-3, <-3)                    │
+│   - Windchill/Heat (3 soglie: <-2, -2/+2, >2)                             │
 │                                                                              │
-│ 7. LOGICA CALCOLO RADIANZA 12H:                                            │
-│    • SEMPRE calcola valore base (radianza_attuale / teorico_12h)           │
-│    • Se disponibile ora_massima_utc E siamo dopo → cerca picco storico     │
-│    • Altrimenti usa valore base (garantisce sempre un risultato)           │
+│ • cropImageBottom(src, px, callback): Taglia px dal basso via Canvas       │
 │                                                                              │
-│ 8. LOGICA CALCOLO RADIANZA 24H:                                            │
-│    • Semplice: radianza_attuale / teorico_24h                              │
-│    • Fattore correzione strumento: 0.83 (applicato a entrambi) _ora ad 1           │
-│                                                                              │
-│ 9. GESTIONE ERRORI:                                                         │
-│    • Valori mancanti → 'N/A' (mai null o 0 ambigui)                        │
-│    • Log errori → log_funz.txt                                             │
-│    • Log debug calcoli → cumulato_radianza.txt                             │
-│                                                                              │
-│ 10. FILE GENERATI:                                                          │
-│     • cumulato_radianza.txt (log calcoli 12h/24h con timestamp)            │
-│     • log_funz.txt (errori SQL/parsing date)                               │
-│     • log_delta.txt (errori connessione PDO)                               │
-│                                                                              │
-│ 11. FORMATO CSV INPUT (dati_temperatura.txt):                              │
-│     data,ora,param1,param2,...,paramN                                       │
-│     Ordine colonne definito in array $parametri da tabella_home.php        │
-│                                                                              │
-│ 12. VALIDAZIONE VALORI:                                                     │
-│     • pulisciValoreNumerico(): accetta solo numeri/punto/meno              │
-│     • Ritorna 'NA' per valori non numerici                                 │
-│     • Trim automatico e limitazione a 7 caratteri                          │
-│                                                                              │
-│ 13. RESPONSIVE DESIGN:                                                      │
-│     • Mobile: font 11px, tabella 95% larghezza                             │
-│     • Desktop (≥768px): font 16px, tabella 75% larghezza                   │
-│     • Righe separatore: bordo 3-4px con ombra                              │
-│                                                                              │
-│ 14. SICUREZZA:                                                              │
-│     • Tutti i valori user-facing passano per htmlspecialchars()            │
-│     • Query DB usano prepared statements (no SQL injection)                │
-│                                                                              │
-│ 15. DEBUG:                                                                  │
-│     • Abilita echo temporanei per diagnostica                              │
-│     • Verifica permessi scrittura su cartella per file .txt                │
-│     • Controlla esistenza $pdo_lettura prima delle query                   │
+│ • apriLightboxFiltrato(flag): Filtra foto per alba(1)/tramonto(2) + 23h58'    │
+│   → Filtro temporale: new Date(Date.now() - (2060601000))              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ LIGHTBOX NAVIGAZIONE:                                                       │
+│  Tastiera: ← (più recente), → (più vecchia), Esc (chiudi)                 │
+│  Touch: swipe left/right (soglia 50px)                                     │
+│  Pulsanti: prev/next disabilitati agli estremi                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ RESPONSIVE:                                                                 │
+│  Mobile (<768px): font 11px, tabella 95%, icone 12×12px                    │
+│  Desktop (≥768px): font 16px, tabella 75%, icone 12×12px                   │
+│  Mobile (<480px): icone alba/tramonto 14×14px, label 8px                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ GESTIONE ERRORI:                                                            │
+│  • Valori mancanti → 'N/A' (mai null/0 ambigui)                           │
+│  • log_delta.txt: errori PDO                                               │
+│  • log_funz.txt: errori SQL/parsing date                                   │
+│  • cumulato_radianza.txt: debug calcoli con timestamp                      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ SICUREZZA:                                                                  │
+│  • htmlspecialchars() su tutti gli output                                  │
+│  • Prepared statements per query DB                                        │
+│  • Validazione input con regex [^0-9.-]                                  │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ ESTENSIBILITÀ:                                                              │
+│  • Nuovo parametro: modifica meteobridge/tabella_home.php + CSV            │
+│  • Cambia soglie: edit funzioni create*Indicator()                         │
+│  • Modifica filtro 20h: cambia moltiplicatore (((23 * 60 * 60)+(58*60)) * 1000))       │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ TROUBLESHOOTING:                                                            │
+│  Tabella vuota → verifica CSV esiste e ha permessi lettura                │
+│  Radianza N/A → controlla $pdo_lettura e log_funz.txt                     │
+│  Lightbox vuoto → verifica record DB con alba_tramonto=1/2 nelle ultime 23h58'
+per non generare sovrapposizioni tra due tramonti│
+│  Icone invisibili → controlla CSS caricato, usa !important se necessario   │
 └─────────────────────────────────────────────────────────────────────────────┘
 */
+
 
 // =====================================
 // CONFIGURAZIONE E DIPENDENZE
@@ -573,12 +584,47 @@ $noteCentrali = [
     
     "sol0rad-act" => getSolareMassimoGiornaliero($pdo_lettura),
 
-    "th0temp-age" => "minuti dall'ultima connessione"
+    "mbsystem-sunrise" => (function() {
+
+    $svg_alba = '
+    <span class="icon-sun-inline">
+        <a href="#" onclick="apriLightboxFiltrato(1); return false;" data-filter="1" title="Mostra foto alba">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                 stroke="#FFA500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 18a5 5 0 0 0-10 0"/>
+              <line x1="12" y1="2" x2="12" y2="9"/>
+              <polyline points="5 12 12 5 19 12"/>
+              <line x1="4" y1="22" x2="20" y2="22"/>
+            </svg>
+        </a>
+        <span class="icon-label" style="color:#FFA500;">Alba</span>
+    </span>';
+
+    $svg_tramonto = '
+    <span class="icon-sun-inline">
+        <a href="#" onclick="apriLightboxFiltrato(2); return false;" data-filter="2" title="Mostra foto tramonto">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                 stroke="#FF4500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 18a5 5 0 0 0-10 0"/>
+              <line x1="12" y1="9" x2="12" y2="2"/>
+              <polyline points="19 12 12 19 5 12"/>
+              <line x1="4" y1="22" x2="20" y2="22"/>
+            </svg>
+        </a>
+        <span class="icon-label" style="color:#FF4500;">Tramonto</span>
+    </span>';
+
+    return '<span class="icon-sun-wrapper">' . $svg_alba . $svg_tramonto . '</span>';
+})(),
+
+
+"th0temp-age" => "minuti dall'ultima connessione"
 ];
 
 // =====================================
 // COSTRUZIONE ARRAY DATI FINALI
 // =====================================
+
 $datiFinali = [];
 
 // Riga iniziale: data e ora
@@ -655,7 +701,13 @@ foreach ($keys as $key) {
     border-bottom: 3px solid #666 !important;
     padding-bottom: 4px;
   }
-  
+  #close-btn {
+  position: fixed;       /* ⬅️ non absolute */
+  top: 12px;
+  right: 12px;
+  z-index: 10001;        /* ⬅️ sopra tutto */
+}
+
   @media (min-width: 768px) {
     table {
       font-size: 16px;
@@ -669,6 +721,7 @@ foreach ($keys as $key) {
     tr {
       height: auto;
     }
+    
     .riga-separatore {
       border-bottom: 4px solid #666 !important;
       box-shadow: 0 3px 6px rgba(0,0,0,0.25);
@@ -677,7 +730,162 @@ foreach ($keys as $key) {
       border-bottom: 4px solid #666 !important;
       padding-bottom: 6px;
     }
+    
+    /*====ICONE ALBA TRAMONTO =====*/
+
+   /* Wrapper orizzontale icone alba/tramonto */
+.icon-sun-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px; /* distanza tra le due icone */
+}
+
+/* Blocco icona + label sulla stessa riga */
+.icon-sun-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Label piccola e colorata */
+.icon-label {
+    font-size: 10px;
+    font-weight: bold;
+    opacity: 0.8;
+}
+
+/* Hover migliorato */
+.icon-sun-inline a svg {
+    cursor: pointer;
+    transition: transform 0.20s ease, stroke 0.2s ease;
+}
+
+.icon-sun-inline a:hover svg {
+    transform: scale(1.15);
+}
+
+/* Icona attiva (filtro premuto) */
+.icon-sun-inline a.active svg {
+    stroke: red !important;
+}
+
+
+    
+}
+/* ========== LIGHTBOX CSS ========== */
+.lightbox {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.95);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+
+.lightbox.active {
+    display: flex;
+}
+
+.lightbox-content {
+    max-width: 90%;
+    max-height: 90%;
+    position: relative;
+}
+
+.lightbox-content img {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+}
+
+.lightbox-info {
+    color: white;
+    text-align: center;
+    margin-top: 15px;
+    font-size: 16px;
+}
+@media (max-width: 480px) {
+  .lightbox-info {
+    font-size: 10px;    /* mobile = metà circa */
+    margin-top: 6px;
   }
+}
+.lightbox-control-btn {
+    position: absolute;
+    background: rgba(255,255,255,0.2);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#close-btn {
+    top: 20px;
+    right: 20px;
+}
+
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.2);
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+}
+
+.nav-btn.prev {
+    left: 20px;
+}
+
+.nav-btn.next {
+    right: 20px;
+}
+
+.nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* =====================================================
+   MOBILE – RIDUZIONE DIMENSIONI (OVERRIDE MINIMO)
+   ===================================================== */
+@media (max-width: 480px) {
+
+  /* Alba / Tramonto: riduci SOLO dimensioni */
+  .icon-sun-inline svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .icon-label {
+    font-size: 8px !important;
+  }
+
+  /* Lightbox: pulsanti dimezzati */
+  .lightbox-control-btn,
+  .nav-btn {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  .lightbox-control-btn svg,
+  .nav-btn svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
 </style>
 
 <table border='1' cellpadding='10' cellspacing='0'>
@@ -708,6 +916,7 @@ foreach ($datiFinali as $dato) {
     echo "<tr $classe_css>";
     echo "<td>" . htmlspecialchars($dato['descrizione']) . "</td>";
     
+
     // FIXATO: gestione corretta della riga radianza cumulata
     if ($dato['descrizione'] == 'Radianza cumulata giornaliera') {
         // Formatta valori 12h e 24h (usa il valore, non la chiave!)
@@ -759,3 +968,411 @@ foreach ($datiFinali as $dato) {
 <div><?= createWindchillHeatIndicator(3.2) ?> Sensazione di caldo (&gt;+2°C)</div>
 </div>
 </div>
+
+
+<?php
+// =====================================
+// =========ALBA_TRAMONTO==============
+// =====================================
+
+// ========== CONNESSIONE DB ==========
+ // già definita in envelop_lettura.php
+ $table_name_bis = table_name('DB_immagini_36h');
+//impostazioni data odierna
+$oggi_sql = get_now('Y-m-d');   // ← questo rispetta USE_TEST_MODE
+$ieri_sql = date('Y-m-d', strtotime($oggi_sql . ' -1 day'));
+
+
+// ========== QUERY UNICA ==========
+$sql = "SELECT FILE, DATA_ORA, Temp, HR, P_hPa, vento_kmh, Dir_text, alba_tramonto 
+        FROM $table_name_bis
+        ORDER BY DATA_ORA DESC";
+
+$stmt = $pdo_lettura->prepare($sql);
+$stmt->execute();
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$images = [];
+foreach ($rows as $row) {
+
+    // DEBUG AGGIUNTO
+    //echo "<pre style='color:red;font-size:12px'>DEBUG ROW: " . print_r($row, true) . "</pre>";
+
+    $images[] = [
+        'src' => 'FoscamCamera_E8ABFAA799FE/snap/' . $row['FILE'],
+        'data_ora' => date('d/m/Y H:i', strtotime($row['DATA_ORA'])),
+        'data_ora_sql' => $row['DATA_ORA'], // Mantieni timestamp completo
+        'temp' => $row['Temp'],
+        'hr' => $row['HR'],
+        'p_hpa' => $row['P_hPa'],
+        'wind_kmh' => $row['vento_kmh'],
+        'dir_text' => $row['Dir_text'],
+        'alba_tramonto' => $row['alba_tramonto']
+    ];
+}
+?>
+
+<!-- ========== LIGHTBOX HTML ========== -->
+<div class="lightbox" id="lightbox">
+    <button id="close-btn" class="lightbox-control-btn lightbox-close" aria-label="Chiudi"  onclick="closeLightbox()">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="red">
+            <path d="M18 6L6 18M6 6l12 12" stroke="red" stroke-width="5" stroke-linecap="round" />
+        </svg>
+    </button>
+
+    <div class="lightbox-content">
+        <img id="lightbox-img" src="" alt="Immagine ingrandita">
+        <div id="lightbox-info" class="lightbox-info"></div>
+    </div>
+    
+    <button class="nav-btn prev" onclick="prevImage(event)" aria-label="Immagine precedente">
+        <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="red" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6" />
+        </svg>
+    </button>
+    
+    <button class="nav-btn next" onclick="nextImage(event)" aria-label="Immagine successiva">
+        <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="red" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6" />
+        </svg>
+    </button>
+</div>
+
+<!-- ========== JAVASCRIPT ========== -->
+
+
+<script>
+    // Passa le date odierna e ieri a JavaScript
+    window.todaySQL = "<?php echo $oggi_sql; ?>";
+    window.yesterdaySQL = "<?php echo $ieri_sql; ?>";
+    window.allImages = <?php echo json_encode($images); ?>;
+    window.images = window.allImages;
+</script>
+
+<script>
+  window.phpNowTs = <?php echo get_time() * 1000; ?>;  // coerente con TEST/PROD
+</script>
+
+
+<script>
+    // Passa i dati a JavaScript
+
+    
+    window.allImages = <?php echo json_encode($images); ?>;
+  window.images = window.allImages;
+
+  function apriLightboxFiltrato(flag) {
+    var tutte = window.allImages || [];
+    var oggi = window.todaySQL;
+    var ieri = window.yesterdaySQL;
+
+    window.images = [];
+
+    // tempo deciso dal PHP (test o prod)
+    var nowTs = window.phpNowTs;
+    if (!nowTs) nowTs = Date.now(); // fallback se dimentichi phpNowTs
+
+    var limiteTs = nowTs - (((23 * 60 * 60) + (58 * 60)) * 1000);
+
+    for (var k = 0; k < tutte.length; k++) {
+      var img = tutte[k];
+
+      // timestamp immagine (MEGLIO: usare img.data_ts dal PHP)
+      var imgTs = img.data_ts ? +img.data_ts : Date.parse(img.data_ora_sql);
+
+      var matchData = !isNaN(imgTs) && imgTs >= limiteTs;
+      var matchFlag = (parseInt(img.alba_tramonto, 10) === parseInt(flag, 10));
+
+      if (matchFlag && matchData) {
+        window.images.push(img);
+      }
+    }
+
+    // aggiorna icone attive
+    var links = document.querySelectorAll('a[data-filter]');
+    for (var j = 0; j < links.length; j++) {
+      links[j].classList.remove('active');
+      if (links[j].getAttribute('data-filter') == flag) {
+        links[j].classList.add('active');
+      }
+    }
+
+    if (window.images.length > 0) {
+      openLightbox(0);
+    } else {
+      alert("Nessuna immagine trovata (filtro=" + flag + ") nella finestra 23h58m. Oggi (" + oggi + ") / ieri (" + ieri + ")");
+    }
+  }
+
+  window.apriLightboxFiltrato = apriLightboxFiltrato;
+</script>
+
+<!-- ========== LIGHTBOX JAVASCRIPT AUTONOMO SOLO PER ALBA/TRAMONTO========== -->
+
+<script>
+(function() {
+    'use strict';
+    
+    let currentIndex = 0;
+
+    // ========== UTILITY FUNCTIONS ==========
+    
+    /** Numero finito? (ES5-safe) */
+    function isFiniteNumber(n) { 
+        return typeof n === 'number' && isFinite(n); 
+    }
+
+    /** Numero o null */
+    function numOrNull(v) {
+        return (v === null || v === '' || !isFinite(+v)) ? null : (+v);
+    }
+
+    /** Getter sicuro */
+    function get(obj, key) {
+        return (obj && obj[key] !== null) ? obj[key] : null;
+    }
+
+    /** Stringa sicura */
+    function getStr(obj, key) {
+        var v = get(obj, key);
+        return (v === null) ? '' : String(v);
+    }
+
+    /** Primo tra più campi definiti */
+    function pickFirstDefined(obj, keys) {
+        if (!obj) return null;
+        for (var i = 0; i < keys.length; i++) {
+            if (obj[keys[i]] !== null) return obj[keys[i]];
+        }
+        return null;
+    }
+
+    /** Direzione in testo: converte gradi → N/NE/E/... o restituisce stringa */
+    function dirTesto(v) {
+        if (v === null) return '--';
+        var deg = +v;
+        if (isFinite(deg)) {
+            var dirs = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
+            var i = Math.round((deg % 360) / 22.5) % 16;
+            return dirs[i < 0 ? i + 16 : i];
+        }
+        return String(v);
+    }
+
+    /** Crop verticale dell'immagine (taglia px in basso). Ritorna dataURL. */
+    function cropImageBottom(src, cropBottomPx, cb) {
+        var tempImg = new Image();
+        tempImg.onload = function () {
+            try {
+                var w = tempImg.width;
+                var h = Math.max(1, tempImg.height - cropBottomPx);
+                var canvas = document.createElement('canvas');
+                canvas.width = w;
+                canvas.height = h;
+                var ctx = canvas.getContext('2d');
+                ctx.drawImage(tempImg, 0, 0, w, h, 0, 0, w, h);
+                cb(canvas.toDataURL());
+            } catch (e) {
+                cb(src); // fallback se canvas fallisce
+            }
+        };
+        tempImg.onerror = function () { cb(src); };
+        tempImg.src = src;
+    }
+
+    /** Costruisce la stringa info dell'immagine corrente. */
+    function buildInfoText(record) {
+        // Data/ora
+        var d = record.data_ora || 'N/A';
+
+        // Temperatura
+        var t = parseFloat(record.temp);
+        var tTxt = isFinite(t) ? Math.round(t) + '°C' : 'N/A';
+
+        // Umidità
+        var hr = parseFloat(record.hr);
+        var hTxt = isFinite(hr) ? Math.round(hr) + '%' : 'N/A';
+
+        // Pressione
+        var p = parseFloat(record.p_hpa);
+        var pTxt = isFinite(p) ? Math.round(p) + ' hPa' : 'N/A';
+
+        // Vento
+        var windKmh = parseFloat(record.wind_kmh);
+        var wTxt = isFinite(windKmh) ? windKmh + ' km/h' : 'N/A';
+
+        // Direzione (converti gradi → testo)
+        var dirGradi = parseFloat(record.dir_text);
+        var dTxt = isFinite(dirGradi) ? dirTesto(dirGradi) : record.dir_text || 'N/A';
+
+        // Alba/Tramonto (solo se flag presente)
+        var sunPhase = '';
+        if (record.alba_tramonto) {
+            var flag = parseInt(record.alba_tramonto);
+            if (flag === 1) {
+                sunPhase = ' | Alba';
+            } else if (flag === 2) {
+                sunPhase = ' | Tramonto';
+            }
+        }
+
+        return d + ' | T ' + tTxt + ' | UR ' + hTxt + ' | ' + pTxt + ' | Vento ' + wTxt + ', ' + dTxt + sunPhase;
+    }
+
+    // ========== LIGHTBOX FUNCTIONS ==========
+
+   function openLightbox(index) {
+    if (!window.images || window.images.length === 0) return;
+
+    // 🔒 CLAMP DELL’INDICE (FONDAMENTALE)
+    if (index < 0) index = 0;
+    if (index > window.images.length - 1) {
+        index = window.images.length - 1;
+    }
+
+    currentIndex = index;
+
+    const lightbox = document.getElementById('lightbox');
+    const img = document.getElementById('lightbox-img');
+    const info = document.getElementById('lightbox-info');
+
+    const current = window.images[currentIndex];
+    if (!current) return;
+
+    info.innerHTML = buildInfoText(current);
+
+    cropImageBottom(current.src, 80, function (croppedSrc) {
+        img.src = croppedSrc;
+    });
+
+    lightbox.classList.add('active');
+    updateNavButtons();
+}
+
+
+    function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('active');
+    }
+
+    function prevImage(event) {
+        event.stopPropagation();
+        if (currentIndex > 0) {
+            openLightbox(currentIndex - 1);
+        }
+    }
+
+    function nextImage(event) {
+        event.stopPropagation();
+        if (currentIndex < window.images.length - 1) {
+            openLightbox(currentIndex + 1);
+        }
+    }
+
+    function updateNavButtons() {
+        const prevBtn = document.querySelector('.nav-btn.prev');
+        const nextBtn = document.querySelector('.nav-btn.next');
+        
+        if (prevBtn) prevBtn.disabled = (currentIndex === 0);
+        if (nextBtn) nextBtn.disabled = (currentIndex === window.images.length - 1);
+    }
+    
+    function aggiornaLightbox() {
+  
+          var items = window.images || [];
+          var record = items[currentIndex];
+          if (!record) return;
+        
+          var src = getStr(record, 'src').trim();
+          if (!src) return;
+        
+          // Crop e set immagine
+          cropImageBottom(src, 80, function (croppedSrc) {
+            var imgEl = document.getElementById('lightbox-img');
+            if (imgEl) {
+              imgEl.src = croppedSrc;
+              
+            }
+          });
+
+  // Info text
+  var infoEl = document.getElementById('lightbox-info');
+  if (infoEl) infoEl.textContent = buildInfoText(record);
+}
+
+    // ========== EVENT LISTENERS ==========
+    
+    // Keydown con auto-repeat su frecce
+    document.addEventListener('keydown', function (event) {
+      var lb = document.getElementById('lightbox');
+      if (!lb || !lb.classList.contains('active')) return;
+    
+      var key = event.key || event.code;
+    
+      if (key === ' ' || key === 'Spacebar') {
+        event.preventDefault();
+        if (isRewinding) rewindToCurrent();
+        else if (isForwarding) forwardToNewest();
+        return;
+      }
+    
+      if (key === 'Escape' || key === 'Esc') {
+        closeLightbox();
+        return;
+      }
+    
+      if (key === 'ArrowLeft') {
+        var items = window.images || [];
+        if (currentIndex < items.length - 1) {
+          currentIndex++; aggiornaLightbox(); updateNavButtons();
+        }
+      }
+    
+      if (key === 'ArrowRight') {
+        if (currentIndex > 0) {
+          currentIndex--; aggiornaLightbox(); updateNavButtons();
+        }
+        
+        }
+    });
+    
+    
+    // Touch swipe su lightbox
+    document.addEventListener('DOMContentLoaded', function () {
+      var lightbox = document.getElementById('lightbox');
+      if (!lightbox) return;
+    
+      var touchStartX = 0;
+      var touchEndX   = 0;
+    
+      lightbox.addEventListener('touchstart', function (e) {
+        touchStartX = e.changedTouches[0].screenX;
+      });
+    
+      lightbox.addEventListener('touchend', function (e) {
+        touchEndX = e.changedTouches[0].screenX;
+        var threshold = 50;
+        if (touchEndX < touchStartX - threshold) {
+          // swipe left → avanti nel tempo (indice +1)
+          var items = window.images || [];
+          if (currentIndex < items.length - 1) {
+            currentIndex++; aggiornaLightbox(); updateNavButtons();
+          }
+        } else if (touchEndX > touchStartX + threshold) {
+          // swipe right → indietro nel tempo (indice -1)
+          if (currentIndex > 0) {
+            currentIndex--; aggiornaLightbox(); updateNavButtons();
+          }
+        }
+      });
+    });
+
+    // ========== GLOBAL EXPORTS ==========
+    
+    window.openLightbox = openLightbox;
+    window.closeLightbox = closeLightbox;
+    window.prevImage = prevImage;
+    window.nextImage = nextImage;
+})();
+</script>
+
+
