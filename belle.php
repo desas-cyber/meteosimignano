@@ -9,6 +9,9 @@ require_once __DIR__ . '/../envelop.php';
 require_once __DIR__ . '/aggiornaCartellaImmagini.php';
 require_once __DIR__ . '/env_tables_helper.php';
 
+define('ALLOW_INTERNAL_CALL', true);
+require_once __DIR__ . '/public_php/agg_DB_belle.php';
+
 $directory = 'belle/';
 $table_name = table_name('DB_immagini_belle');
 
@@ -86,7 +89,9 @@ function getImageDataFromFolderFiltered(PDO $pdo, string $directory, string $tab
         return ['error' => "La cartella '$directory' non esiste.", 'mainImage' => '', 'count' => 0, 'records' => []];
     }
 
-    $patternParts = array_map(fn($ext) => '*.' . ltrim(strtolower($ext), '.'), $extensions);
+    $patternParts = array_map(function($ext) {
+    return '*.' . ltrim(strtolower($ext), '.');
+    }, $extensions);
     $pattern = '{' . implode(',', $patternParts) . '}';
     $files = glob($directory . $pattern, GLOB_BRACE);
 

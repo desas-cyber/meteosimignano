@@ -1,0 +1,18 @@
+{
+    "date": "2025-09-09",
+    "generated_at": "2025-09-09 00:25:00",
+    "data": {
+        "sunrise": "06:47",
+        "sunset": "19:38",
+        "sunrise_timestamp": 1757393228,
+        "sunset_timestamp": 1757439481,
+        "daylight_hours": 12.8,
+        "civil_twilight_begin": "06:19",
+        "civil_twilight_end": "20:05",
+        "lunar_phase": "Piena - 98.2%",
+        "lunar_phase_name": "Piena",
+        "lunar_illumination": 98.2,
+        "lunar_age_days": 16,
+        "moon_emoji": "\ud83c\udf15"
+    }
+}

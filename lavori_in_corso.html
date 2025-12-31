@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MeteoSimignano – Lavori in corso</title>
+
+<style>
+:root{
+  --bg1:#0b1220;
+  --bg2:#121b2f;
+  --card:#0f172a;
+  --text:#e5e7eb;
+  --muted:#9ca3af;
+  --accent:#fbbf24;
+  --accent2:#f97316;
+  --stripe:#111827;
+  --shadow:0 20px 60px rgba(0,0,0,.45);
+  --radius:22px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:
+    radial-gradient(1200px 600px at 20% 10%, rgba(251,191,36,.25), transparent 55%),
+    radial-gradient(900px 500px at 80% 20%, rgba(249,115,22,.20), transparent 60%),
+    linear-gradient(160deg, var(--bg1), var(--bg2));
+  color:var(--text);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  padding:24px;
+}
+.wrap{
+  width:min(1000px,100%);
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:22px;
+}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}}
+.card{
+  background:rgba(15,23,42,.8);
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:var(--shadow);
+  border-radius:var(--radius);
+  overflow:hidden;
+}
+.banner{
+  height:18px;
+  background:repeating-linear-gradient(
+    -45deg,
+    var(--accent) 0 14px,
+    var(--stripe) 14px 28px
+  );
+}
+.content{padding:26px}
+.brand{
+  font-size:clamp(34px,4vw,52px);
+  margin:0;
+  letter-spacing:.4px;
+}
+.subtitle{
+  margin:6px 0 14px;
+  color:#fde68a;
+  font-weight:600;
+}
+h2{
+  margin:18px 0 10px;
+  font-size:clamp(22px,2.4vw,30px);
+}
+p{
+  color:var(--muted);
+  line-height:1.55;
+  font-size:15.5px;
+}
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 14px;
+  border-radius:999px;
+  background:rgba(251,191,36,.15);
+  border:1px solid rgba(251,191,36,.3);
+  color:#fde68a;
+  font-weight:700;
+  margin-top:10px;
+}
+.dot{
+  width:10px;height:10px;border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 0 6px rgba(251,191,36,.25);
+  animation:pulse 1.6s infinite;
+}
+@keyframes pulse{50%{transform:scale(.85);opacity:.7}}
+.actions{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:18px;
+}
+.btn{
+  border:none;
+  border-radius:14px;
+  padding:11px 16px;
+  font-weight:800;
+  font-size:14px;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+}
+.btn.primary{
+  background:var(--accent);
+  color:#111827;
+}
+.btn.secondary{
+  background:rgba(255,255,255,.1);
+  color:var(--text);
+  border:1px solid rgba(255,255,255,.15);
+}
+.footer{
+  margin-top:18px;
+  font-size:12px;
+  color:#9ca3af;
+}
+
+.illus{
+  padding:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+svg{max-width:520px;width:100%;height:auto}
+
+/* Zzz */
+.zzz{animation:float 2.2s infinite;opacity:.8}
+.zzz:nth-child(2){animation-delay:.4s}
+.zzz:nth-child(3){animation-delay:.8s}
+@keyframes float{50%{transform:translateY(-10px);opacity:1}}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+<!-- TESTO -->
+<section class="card">
+  <div class="banner"></div>
+  <div class="content">
+    <h1 class="brand">MeteoSimignano</h1>
+    <div class="subtitle">Torniamo presto ☁️🌦️</div>
+
+  <div class="pill">
+      <span class="dot"></span>
+      🚧 Aggiornamento in corso (a ritmo umano)
+    </div>
+    <p>
+      Stiamo facendo manutenzione al sito.
+      I dati meteo sono al sicuro, il codice pure.
+      L’unico elemento instabile è l’operaio.
+    </p>
+
+    
+
+    <div class="actions">
+      <a class="btn primary" href="/">🏠 Torna alla home</a>
+      <a class="btn secondary" href="javascript:location.reload()">🔄 Ricarica</a>
+    </div>
+
+    <div class="footer">
+      © MeteoSimignano · webcam & dati meteo in manutenzione controllata
+    </div>
+  </div>
+</section>
+
+<!-- ILLUSTRAZIONE -->
+<section class="card">
+  <div class="banner"></div>
+  <div class="illus">
+    <!-- SVG: operaio comico addormentato -->
+    <svg viewBox="0 0 760 520" xmlns="http://www.w3.org/2000/svg">
+      <!-- terreno -->
+      <ellipse cx="380" cy="440" rx="300" ry="55" fill="#0b1220" opacity=".55"/>
+
+      
+
+      <!-- piccone -->
+      <g transform="translate(520 300) rotate(-15)">
+        <rect x="0" y="0" width="14" height="160" rx="7" fill="#8b5e34"/>
+        <path d="M-40 30 C-10 0,30 0,60 30" fill="none" stroke="#cbd5e1" stroke-width="16"/>
+      </g>
+
+      <!-- pala -->
+      <g transform="translate(585 305) rotate(20)">
+        <rect x="0" y="0" width="14" height="165" rx="7" fill="#8b5e34"/>
+        <path d="M-18 160 Q7 190 32 160 Z" fill="#94a3b8"/>
+      </g>
+
+      <!-- operaio -->
+      <g transform="translate(200 190)">
+        <ellipse cx="120" cy="220" rx="90" ry="55" fill="#1f2937"/>
+        <path d="M70 120 C90 105,130 105,150 120" fill="none" stroke="#e5e7eb" stroke-width="14"/>
+        <ellipse cx="140" cy="90" rx="48" ry="42" fill="#f2c9a0"/>
+        <path d="M110 95 Q130 90 150 95" fill="none" stroke="#111827" stroke-width="5"/>
+        <path d="M120 115 Q135 122 150 118" fill="none" stroke="#111827" stroke-width="5"/>
+        <!-- bottiglia -->
+        <rect x="40" y="250" width="36" height="80" rx="10" fill="#14532d"/>
+        <!-- zzz -->
+        <text class="zzz" x="220" y="40" font-size="42" fill="#e5e7eb">Z</text>
+        <text class="zzz" x="250" y="15" font-size="32" fill="#cbd5e1">z</text>
+        <text class="zzz" x="275" y="-10" font-size="24" fill="#94a3b8">z</text>
+      </g>
+    </svg>
+  </div>
+</section>
+
+</div>
+</body>
+</html>

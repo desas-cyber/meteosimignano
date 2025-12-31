@@ -17,14 +17,14 @@
 - Calcolo tempo esecuzione: Misura e logga la durata dello script.
 - Funzioni modulari: Ogni operazione è incapsulata in una funzione dedicata.
 - Supporto ambiente test: Usa helper per gestire test locale/global
+------>>>>>cli è disattivato solo per  test da browser<<<<<<<*/ 
 
-
------->>>>>cli è disattivato solo per ambiente test locale<<<<<<<
-if (php_sapi_name() !== "cli") {
+if (php_sapi_name() !== 'cli' && !defined('ALLOW_INTERNAL_CALL')) {
     http_response_code(403);
-    exit("Accesso negato.");
-   }
-    */
+    exit('Accesso negato.');
+}
+   
+   
     ini_set('display_errors', 1);
     error_reporting(E_ALL);
     date_default_timezone_set("Europe/Rome");
@@ -40,13 +40,13 @@ if (php_sapi_name() !== "cli") {
     $table_name_dati_meteo = table_name('dati_meteo_simignano');
     $table_name_belle = table_name('DB_immagini_belle');
 
-    // Messaggio visivo di sicurezza
+    /*/ Messaggio visivo di sicurezza
     if (is_test_mode()) {
         echo "⚠️ Sei in AMBIENTE TEST — uso tabella *_test<br>\n";
     } else {
         echo "✅ Sei in PRODUZIONE <br>\n";
     }
-
+*/
 
     
     // === CONFIGURAZIONE ===
@@ -103,7 +103,7 @@ if (php_sapi_name() !== "cli") {
         }
     }
     // Log visibile nel browser (o nel terminale se da CLI)
-    echo "📦 File nel DB: " . count($files_nel_db) . "<br>";
+    //echo "📦 File nel DB: " . count($files_nel_db) . "<br>";
     return $files_nel_db;
 }    
 
@@ -125,7 +125,8 @@ function estraiDataOraDaFilename($filename) {
 }
     
  function sincronizzaDatabase(PDO $pdo, array $file_map_dir, array $file_map_db, string $table_name_belle) {
-    $stmt_insert = $pdo->prepare("INSERT INTO " . $table_name_belle . " (FILE, DATA_ORA) VALUES (:file, :data_ora)");
+    $stmt_insert = $pdo->prepare("INSERT INTO " . $table_name_belle . " (FILE, DATA_ORA) VALUES (:file, :data_ora)
+    ON DUPLICATE KEY UPDATE DATA_ORA = DATA_ORA");
     $stmt_delete = $pdo->prepare("DELETE FROM " . $table_name_belle . " WHERE FILE = :file");
 
     $inseriti = 0;
@@ -134,7 +135,7 @@ function estraiDataOraDaFilename($filename) {
     
     // 🧠 Se il DB è vuoto, popolalo con tutti i file della directory
     foreach ($file_map_dir as $filename => $val) {
-            debugEcho("→ $filename");
+            //debugEcho("→ $filename");
         
         }
     if (empty($file_map_db)) {
@@ -179,8 +180,8 @@ function estraiDataOraDaFilename($filename) {
         }
     }
 
-    debugEcho("✅ Inseriti nel DB: $inseriti nuovi file.");
-    debugEcho("🗑️ Eliminati dal DB: $eliminati file non più presenti.");
+    //debugEcho("✅ Inseriti nel DB: $inseriti nuovi file.");
+    //debugEcho("🗑️ Eliminati dal DB: $eliminati file non più presenti.");
 }   
     
     function aggiornaDatiMeteo(PDO $pdo, PDO $pdo_lettura, string $table_name_belle, string $table_name_dati_meteo) {
@@ -233,13 +234,13 @@ function estraiDataOraDaFilename($filename) {
             }
         }
     
-        debugEcho("🌡️ Dati meteo aggiornati: $conteggio record.");
+        /*debugEcho("🌡️ Dati meteo aggiornati: $conteggio record.");
         if ($senza_dati > 0) {
             debugEcho("⚠️ $senza_dati record senza dati meteo disponibili.");
         }
     
         scriviLog("✅ Dati meteo aggiornati per $conteggio record. $senza_dati senza dati.");
-    }
+*/    }
     
     
     
@@ -252,8 +253,8 @@ function estraiDataOraDaFilename($filename) {
     sincronizzaDatabase($pdo, $files_vivi, $files_nel_db, $table_name_belle);
     aggiornaDatiMeteo($pdo, $pdo_lettura, $table_name_belle, $table_name_dati_meteo);
     $durata = round(microtime(true) - $start, 2);
-    debugEcho("⏱️ Tempo di esecuzione: {$durata} secondi.");
-    scriviLog("⏱️ Tempo di esecuzione script: {$durata} secondi.");
+    //debugEcho("⏱️ Tempo di esecuzione: {$durata} secondi.");
+    //scriviLog("⏱️ Tempo di esecuzione script: {$durata} secondi.");
 
 ?>
 

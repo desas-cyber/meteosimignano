@@ -6,16 +6,34 @@
  *
  *  Scopo
  *  -----
- *  Legge i file immagine da una cartella e li arricchisce con i metadati
- *  provenienti dal database (tabella con colonna FILE + campi meteo).
+ *  Costruisce, su richiesta, una fotografia istantanea dello stato
+ *  filesystem + database per una cartella di immagini.
  *
- *  Caratteristiche
+ *  La funzione:
+ *  - legge i file immagine presenti nella directory indicata
+ *  - recupera i metadati associati dal database
+ *  - combina filesystem e DB in un array coerente per il frontend
+ *
+ *  Ciclo di vita
+ *  -------------
+ *  - La funzione NON mantiene stato
+ *  - L'array restituito vive solo per la durata della request PHP
+ *  - Alla request successiva, filesystem e DB vengono riletti da zero
+ *  - Non esiste cache interna o persistenza tra richieste
+ *
+ *  Utilizzo tipico
  *  ---------------
- *  - Controlli robusti su path/parametri
- *  - Query SQL in un unico batch (no N+1)
- *  - Ordinamento decrescente per nome file (come da tuo codice originale)
- *  - Possibilità di limitare il numero di record
- *  - Campi di output coerenti con il frontend (inclusi alias utili)
+ *  - Preparazione dati per rendering iniziale galleria
+ *  - Fornitura dataset JSON/JS per lightbox o frontend dinamico
+ *
+ *  Nota
+ *  ----
+ *  Questa funzione NON:
+ *  - aggiorna il database
+ *  - gestisce eventi runtime (scroll, click, navigazione)
+ *  - mantiene uno stato applicativo
+ *
+
  *
  *  Output (array associativo)
  *  --------------------------
@@ -28,8 +46,8 @@
  *        'src'           => string,     // path completo al file immagine
  *        'file'          => string,     // solo nome file (basename)
  *        'data_ora'      => string|null,// es. "dd/mm/yyyy HH:MM"
- *        'temp'          => float|null, // °C (come da DB)
- *        'hr'            => float|null, // % umidità
+ *        'temp'          => float|null, // Â°C (come da DB)
+ *        'hr'            => float|null, // % umiditÃ 
  *        'p_hpa'         => float|null, // pressione hPa
  *        'vento'         => float|null, // m/s   (calcolato da km/h se serve)
  *        'wind_ms'       => float|null, // m/s   (alias esplicito)
@@ -54,11 +72,11 @@
  *  - Il nome tabella viene whitelistanato: sono consentiti solo [A-Za-z0-9_]
  *    per prevenire injection via identificatore.
  *
- *  @param PDO    $pdo         Connessione PDO già aperta
+ *  @param PDO    $pdo         Connessione PDO giÃ  aperta
  *  @param string $directory   Percorso cartella immagini (con o senza / finale)
  *  @param string $tableName   Nome tabella con i metadati (colonna FILE obbligatoria)
  *  @param array  $opts        Opzioni:
- *                             - 'limit' (int)         q.tà max immagini da restituire (default 200)
+ *                             - 'limit' (int)         q.tÃ  max immagini da restituire (default 200)
  *                             - 'extensions' (array)  estensioni ammesse (default jpg,jpeg,png,gif)
  *                             - 'order' ('desc'|'asc') ordinamento per nome file (default 'desc')
  *
@@ -104,10 +122,10 @@ function getImageDataFromFolder(PDO $pdo, string $directory, string $tableName, 
     // 3) Raccolta file immagine
     // ---------------------------
     // Costruisce un pattern GLOB con estensioni ammesse
-    $patternParts = array_map(
-        fn($ext) => '*.' . ltrim(strtolower($ext), '.'),
-        $extensions
-    );
+    $patternParts = [];
+    foreach ($extensions as $ext) {
+        $patternParts[] = '*.' . ltrim(strtolower($ext), '.');
+    }
     $pattern = '{' . implode(',', $patternParts) . '}';
 
     $files = glob($directory . $pattern, GLOB_BRACE);
@@ -195,9 +213,9 @@ function getImageDataFromFolder(PDO $pdo, string $directory, string $tableName, 
         // NUOVA LOGICA: Conversione da numero a testo
         $sunPhaseText = 'N/D';
         if ($sunPhaseRaw === 1) {
-            $sunPhaseText = 'Alba 🌅';
+            $sunPhaseText = 'Alba ðŸŒ…';
         } elseif ($sunPhaseRaw === 2) {
-            $sunPhaseText = 'Tramonto 🌇';
+            $sunPhaseText = 'Tramonto ðŸŒ‡';
         }
 
 
@@ -206,7 +224,7 @@ function getImageDataFromFolder(PDO $pdo, string $directory, string $tableName, 
             'src'       => $path,      // path completo sul filesystem/virtual host
             'file'      => $file,      // nome file (basename)
             'data_ora'  => $data_ora,  // "dd/mm/yyyy HH:MM" come da tua console
-            'temp'      => $temp,      // °C
+            'temp'      => $temp,      // Â°C
             'hr'        => $hr,        // %
             'p_hpa'     => $p_hpa,     // hPa
 
