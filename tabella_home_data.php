@@ -639,9 +639,9 @@ function createWindchillIcon($windChillValue) {
     
     // Pallino blu se freddo significativo (< -1°C), grigio altrimenti
     if ($differenza < -1) {
-        return '<span style="color: #4A90E2; font-size: 0.5em; vertical-align: middle;">¬¤</span>'; // Blu
+        return '<span style="color: #4A90E2; font-size: 0.4em; vertical-align: middle;">🔵</span>'; // Blu
     } else {
-        return '<span style="color: #CCCCCC; font-size: 0.5em; vertical-align: middle;">¬¤</span>'; // Grigio
+        return '<span style="color: #CCCCCC; font-size: 0.5em; vertical-align: middle;">〇</span>'; // Grigio
     }
 }
 /**
