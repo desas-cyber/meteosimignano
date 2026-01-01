@@ -201,11 +201,11 @@ FROM (
     
     // Delta max/min vs ieri
     $temp_max_delta = isset($raw['temp_max_today'], $raw['temp_max_yesterday'])
-        ? round($raw['temp_max_today'] - $raw['temp_max_yesterday'], 1)
+        ?  $raw['temp_max_yesterday'] - round($raw['temp_max_today'], 1)
         : null;
     
     $temp_min_delta = isset($raw['temp_min_today'], $raw['temp_min_yesterday'])
-        ? round($raw['temp_min_today'] - $raw['temp_min_yesterday'], 1)
+        ? $raw['temp_min_yesterday'] - round($raw['temp_min_today'] , 1)
         : null;
 
     $windChillValue = calcolaTemperaturaPercepita($raw['temp_act'], $raw['wind_act']);
@@ -226,12 +226,12 @@ FROM (
     // ========================================================================
     $alerts = [];
     
-    if ($temp_delta_24h !== null && $temp_delta_24h < -5) {
+    if ($temp_delta_1h !== null && $temp_delta_1h < -5 || $temp_delta_1h > 5) {
         $alerts[] = [
             'type' => 'warning',
             'severity' => 'high',
             'metric' => 'temperatura',
-            'message' => "Calo drastico temperatura: {$temp_delta_24h}°C in 24h"
+            'message' => "Rapida variazione temperatura: {$temp_delta_24h}°C in 1h"
         ];
     }
     
@@ -502,12 +502,12 @@ FROM (
         ],
         
         [
-            'type' => 'data',
-            'label' => 'Radianza cumulata giornaliera',
-            'value' => 'giorno intero: ' . formatPercent($radianza['cumulato_percent_24h']),
-            'note' => 'prima metà : ' . formatPercent($radianza['cumulato_percent_12h']),
-            'separator' => true
-        ],
+    'type' => 'data',
+    'label' => 'Radianza cumulata giornaliera',
+    'value' => 'giorno intero: ' . (is_numeric($radianza['cumulato_percent_24h']) ? round($radianza['cumulato_percent_24h']) . '%' : 'N/A'),
+    'note' => 'prima metà : ' . (is_numeric($radianza['cumulato_percent_12h']) ? round($radianza['cumulato_percent_12h']) . '%' : 'N/A'),
+    'separator' => true
+],
         
     ];
     
