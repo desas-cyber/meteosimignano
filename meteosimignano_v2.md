@@ -30,6 +30,8 @@ public_html
 |           |--- aggiorna_DB_belle.php (aggiorna il db cdi belle incrociando i dati con DB_dati_meteo_simignano  e immagini salvate in belle)
 |           |--- copia_in_belle_alba-tramonto.php (copi ogni giorno l foto di alba e tramonto)
 |           |--- elimina_magg_24h.php (aggiorna la cartella con le immagini mantenendo sempre le ultime 36h e aggiornando il DB dedicato)
+|           |--- aggiorna_DB_pluvio.php (aggiorna il db pluvio necessario ai dati di tabella_home, uindi db precipitazioni cfr
+|.                giornaliero pluvio, record mensili))
 |
 |
 |--- belle (cartella immagini belle)

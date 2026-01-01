@@ -650,10 +650,12 @@ function createWindchillIcon($windChillValue) {
 /**
  * Renderizza icone alba/tramonto cliccabili
  */
+ 
 function renderSunIcons() {
-    $svg_alba = '
-    <span class="icon-sun-inline">
-        <a href="#" onclick="apriLightboxFiltrato(1); return false;" data-filter="1" title="Mostra foto alba">
+    return '
+    <span class="icon-sun-wrapper">
+        <!-- ICONA ALBA (SINISTRA) -->
+        <a href="#" onclick="apriLightboxFiltrato(1); return false;" data-filter="1" title="Mostra foto alba" class="icon-sun-link">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
                  stroke="#FFA500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M17 18a5 5 0 0 0-10 0"/>
@@ -662,12 +664,15 @@ function renderSunIcons() {
               <line x1="4" y1="22" x2="20" y2="22"/>
             </svg>
         </a>
-        <span class="icon-label" style="color:#FFA500;">Alba</span>
-    </span>';
-
-    $svg_tramonto = '
-    <span class="icon-sun-inline">
-        <a href="#" onclick="apriLightboxFiltrato(2); return false;" data-filter="2" title="Mostra foto tramonto">
+        
+        <!-- TESTO CENTRALE (VERTICALE) -->
+        <span class="icon-sun-labels">
+            <span class="icon-label" style="color:#FFA500;">Alba</span>
+            <span class="icon-label" style="color:#FF4500;">Tramonto</span>
+        </span>
+        
+        <!-- ICONA TRAMONTO (DESTRA) -->
+        <a href="#" onclick="apriLightboxFiltrato(2); return false;" data-filter="2" title="Mostra foto tramonto" class="icon-sun-link">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
                  stroke="#FF4500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M17 18a5 5 0 0 0-10 0"/>
@@ -676,11 +681,9 @@ function renderSunIcons() {
               <line x1="4" y1="22" x2="20" y2="22"/>
             </svg>
         </a>
-        <span class="icon-label" style="color:#FF4500;">Tramonto</span>
     </span>';
-
-    return '<span class="icon-sun-wrapper">' . $svg_alba . $svg_tramonto . '</span>';
 }
+
 
 // ============================================================================
 // FUNZIONI INDICATORI (esistenti - da mantenere)
@@ -923,13 +926,20 @@ function getPrecipitazioniCFR(?PDO $pdo, string $intervallo = '6h'): string {
         $ora = 'N/A';
         if (!empty($row['ultimi_dati'])) {
             try {
+                // Prova parsing standard MySQL
                 $dt = new DateTime($row['ultimi_dati']);
                 $ora = $dt->format('H:i');
             } catch (Exception $e) {
-                // Mantieni N/A se parsing fallisce
+                // Fallback: prova formato CFR non standard "31/12 16.45"
+                $ultimi_dati_str = trim($row['ultimi_dati']);
+                
+                // Regex: dd/mm HH.MM o dd/mm HH:MM
+                if (preg_match('/(\d{2})\/(\d{2})\s+(\d{2})[\.:](\d{2})/', $ultimi_dati_str, $matches)) {
+                    $ora = $matches[3] . ':' . $matches[4];
+                }
+                // Se ancora non funziona, mantieni N/A
             }
         }
-
         return "{$prec} mm {$ora}";
 
     } catch (\Throwable $e) {
