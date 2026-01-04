@@ -2,11 +2,6 @@
 /**
  * Import dati pluviometrici CFR Simignano
  * Scarica JSON da GitHub e salva in precipitazioni_cfr + pluvio_giornaliero + pluvio_record_mensili
- * 
- * LOGICA PLUVIO_GIORNALIERO:
- * - Salva un solo dato per giorno (data = quella di ultimi_dati)
- * - Mantiene solo il dato più vicino alla mezzanotte (00:00:00)
- * - ultimi_dati = timestamp della registrazione effettiva del pluviometro CFR
  */
 
 ini_set('display_errors', '1');
@@ -53,13 +48,13 @@ curl_close($ch);
 
 // Gestione errori download
 if ($curl_error) {
-    logmsg("❌ ERRORE cURL: $curl_error - Uscita");
+    logmsg("ERRORE cURL: $curl_error - Uscita");
     exit(1);
 } elseif ($http_code != 200) {
-    logmsg("❌ ERRORE HTTP: Codice $http_code - Uscita");
+    logmsg("ERRORE HTTP: Codice $http_code - Uscita");
     exit(1);
 } else {
-    logmsg("✅ JSON scaricato da GitHub");
+    logmsg("JSON scaricato da GitHub");
 }
 
 // ==========================================
@@ -69,16 +64,19 @@ if ($curl_error) {
 $json_data = json_decode($json_raw, true);
 
 if (!$json_data || !isset($json_data['dati'][0])) {
-    logmsg("❌ JSON non valido o vuoto");
+    logmsg("JSON non valido o vuoto");
     exit(1);
 }
 
 $stazione = $json_data['dati'][0];
 $timestamp = $json_data['timestamp'];
 
+logmsg("=== DATI RICEVUTI DAL JSON ===");
 logmsg("Stazione: " . $stazione['nome_stazione']);
-logmsg("Timestamp JSON: " . $timestamp);
-logmsg("Ultimo aggiornamento CFR: " . $json_data['data_aggiornamento']);
+logmsg("Timestamp JSON (completo): " . $timestamp);
+logmsg("Ultimi dati campo (solo gg/mm): " . $stazione['ultimi_dati']);
+logmsg("Data aggiornamento CFR: " . $json_data['data_aggiornamento']);
+logmsg("Ora server PHP: " . date('Y-m-d H:i:s'));
 
 // ==========================================
 // 3. SALVA IN precipitazioni_cfr
@@ -119,82 +117,85 @@ try {
     $rowCount = $stmt->rowCount();
     
     if ($rowCount > 0) {
-        logmsg("✅ Dati salvati in precipitazioni_cfr (nuovo record)");
+        logmsg("Dati salvati in precipitazioni_cfr (nuovo record)");
     } else {
-        logmsg("ℹ️  Dati già presenti in precipitazioni_cfr, nessun inserimento (ultimi_dati duplicato)");
+        logmsg("Dati gia presenti in precipitazioni_cfr, nessun inserimento (ultimi_dati duplicato)");
     }
     
 } catch (PDOException $e) {
-    logmsg("❌ ERRORE DATABASE precipitazioni_cfr: " . $e->getMessage());
+    logmsg("ERRORE DATABASE precipitazioni_cfr: " . $e->getMessage());
     exit(1);
 }
-// ==========================================
-// 3.5 PULIZIA DATI VECCHI (> 96h)
-// ==========================================
 
-try {
-    // Elimina record più vecchi di 96 ore (4 giorni)
-    $sql_cleanup = "
-        DELETE FROM $TABLE_CFR 
-        WHERE data_import < DATE_SUB(NOW(), INTERVAL 96 HOUR)
-    ";
-    
-    $stmt_cleanup = $pdo->prepare($sql_cleanup);
-    $stmt_cleanup->execute();
-    $deleted_count = $stmt_cleanup->rowCount();
-    
-    if ($deleted_count > 0) {
-        logmsg("🗑️  Eliminati $deleted_count record più vecchi di 96h da precipitazioni_cfr");
-    } else {
-        logmsg("ℹ️  Nessun record da eliminare (tutti < 96h)");
-    }
-    
-} catch (PDOException $e) {
-    logmsg("⚠️  ERRORE durante pulizia dati vecchi: " . $e->getMessage());
-    // Non bloccare lo script per errori di pulizia
-}
 // ==========================================
 // 4. ESTRAI VALORI E DATETIME
 // ==========================================
 
 try {
-    // PARSING TIMESTAMP DELLA REGISTRAZIONE EFFETTIVA (pluviometro CFR)
-    // Formato CFR: "28/12 00.15" → deve essere convertito in "2025-12-28 00:15:00"
+    // USA IL TIMESTAMP JSON CHE CONTIENE L'ANNO COMPLETO
+    // IMPORTANTE: il timestamp e in UTC, va convertito a Europe/Rome
+    logmsg("=== PARSING TIMESTAMP ===");
+    logmsg("Input timestamp UTC: '$timestamp'");
     
-    $ultimi_dati_raw = $stazione['ultimi_dati'];
+    $datetime = new DateTime($timestamp, new DateTimeZone('UTC'));
+    $datetime->setTimezone(new DateTimeZone('Europe/Rome'));
     
-    // Pattern: "DD/MM HH.MM" (es. "28/12 00.15")
-    if (preg_match('/^(\d{1,2})\/(\d{1,2})\s+(\d{1,2})\.(\d{2})$/', $ultimi_dati_raw, $matches)) {
-        $giorno = str_pad($matches[1], 2, '0', STR_PAD_LEFT);
-        $mese_num = str_pad($matches[2], 2, '0', STR_PAD_LEFT);
-        $ora = str_pad($matches[3], 2, '0', STR_PAD_LEFT);
-        $minuti = $matches[4];
+    $anno = (int)$datetime->format('Y');
+    $mese = (int)$datetime->format('m');
+    $giorno = (int)$datetime->format('d');
+    $data_oggi = $datetime->format('Y-m-d');
+    
+    // CONVERTI IL TIMESTAMP IN FORMATO MYSQL
+    $timestamp_mysql = $datetime->format('Y-m-d H:i:s');
+    
+    logmsg("DateTime UTC: " . (new DateTime($timestamp, new DateTimeZone('UTC')))->format('Y-m-d H:i:s'));
+    logmsg("DateTime Italia (Europe/Rome): " . $datetime->format('Y-m-d H:i:s'));
+    logmsg("Anno estratto: $anno");
+    logmsg("Mese estratto: $mese");
+    logmsg("Giorno estratto: $giorno");
+    logmsg("Data per DB (data_oggi): $data_oggi");
+    
+    // PARSING ultimi_dati per ottenere il timestamp REALE della registrazione
+    // formato: "01/01 00.45" -> gg/mm hh.mm
+    $ultimi_dati_str = $stazione['ultimi_dati'];
+    if (preg_match('/(\d{2})\/(\d{2})\s+(\d{2})\.(\d{2})/', $ultimi_dati_str, $matches)) {
+        $giorno_registro = (int)$matches[1];
+        $mese_registro = (int)$matches[2];
+        $ora_registro = (int)$matches[3];
+        $minuti_registro = (int)$matches[4];
         
-        // Anno corrente (assumiamo anno corrente)
-        $anno_corrente = date('Y');
+        // LOGICA ANNO INTELLIGENTE per gestire il cambio anno
+        // Il timestamp JSON potrebbe essere di un anno diverso rispetto ai dati effettivi
+        $anno_registro = $anno;
         
-        // Costruisci stringa MySQL completa
-        $ultimi_dati_mysql = "$anno_corrente-$mese_num-$giorno $ora:$minuti:00";
+        if ($mese == 1 && $mese_registro == 12) {
+            // Siamo a gennaio ma i dati sono di dicembre -> anno precedente
+            $anno_registro = $anno - 1;
+            logmsg("ATTENZIONE: Dati di dicembre in gennaio, uso anno precedente: $anno_registro");
+        } elseif ($mese == 12 && $mese_registro == 1) {
+            // Siamo a dicembre ma i dati sono di gennaio -> anno successivo
+            $anno_registro = $anno + 1;
+            logmsg("ATTENZIONE: Dati di gennaio in dicembre, uso anno successivo: $anno_registro");
+        }
         
-        // Crea oggetto DateTime
-        $datetime_lettura = new DateTime($ultimi_dati_mysql);
+        // Usa l'anno calcolato con la logica intelligente
+        $timestamp_registrazione = sprintf('%04d-%02d-%02d %02d:%02d:00', 
+            $anno_registro, $mese_registro, $giorno_registro, $ora_registro, $minuti_registro);
         
-        logmsg("📅 Parsing ultimi_dati: '$ultimi_dati_raw' → '$ultimi_dati_mysql'");
+        // Data del giorno per la tabella giornaliera (basata su ultimi_dati)
+        $data_registrazione = sprintf('%04d-%02d-%02d', $anno_registro, $mese_registro, $giorno_registro);
         
+        logmsg("Ultimi_dati parsed: '$ultimi_dati_str' -> $timestamp_registrazione");
+        logmsg("Data registrazione (per tabella giornaliera): $data_registrazione");
     } else {
-        // Fallback: prova parsing diretto (potrebbe essere formato ISO)
-        $datetime_lettura = new DateTime($ultimi_dati_raw);
-        $ultimi_dati_mysql = $datetime_lettura->format('Y-m-d H:i:s');
-        logmsg("📅 Parsing ultimi_dati (ISO): '$ultimi_dati_raw' → '$ultimi_dati_mysql'");
+        // Fallback: usa il timestamp JSON convertito
+        $timestamp_registrazione = $timestamp_mysql;
+        $data_registrazione = $data_oggi;
+        logmsg("ATTENZIONE: ultimi_dati non parsabile, uso timestamp JSON");
     }
     
-    $anno = (int)$datetime_lettura->format('Y');
-    $mese = (int)$datetime_lettura->format('m');
-    $data_giorno = $datetime_lettura->format('Y-m-d');
-    
-    // Timestamp JSON (per record mensili - formato ISO standard)
-    $datetime_json = new DateTime($timestamp);
-    $timestamp_mysql = $datetime_json->format('Y-m-d H:i:s');
+    logmsg("Timestamp MySQL (generazione JSON): $timestamp_mysql");
+    logmsg("Timestamp registrazione dati (da ultimi_dati): $timestamp_registrazione");
     
     // Valori precipitazioni
     $prec_1h = floatval($stazione['precipitazioni_1h']);
@@ -202,102 +203,58 @@ try {
     $prec_12h = floatval($stazione['precipitazioni_12h']);
     $prec_24h = floatval($stazione['precipitazioni_24h']);
     
-    logmsg("Data giorno (da ultimi_dati): $data_giorno | Anno: $anno | Mese: $mese");
-    logmsg("Ultimi_dati (registrazione CFR): $ultimi_dati_mysql");
-    logmsg("Timestamp JSON: $timestamp_mysql");
-    logmsg("Precipitazioni 1h: $prec_1h mm");
-    logmsg("Precipitazioni 6h: $prec_6h mm");
-    logmsg("Precipitazioni 12h: $prec_12h mm");
-    logmsg("Precipitazioni 24h: $prec_24h mm");
+    logmsg("=== VALORI PRECIPITAZIONI ===");
+    logmsg("1h:  $prec_1h mm");
+    logmsg("6h:  $prec_6h mm");
+    logmsg("12h: $prec_12h mm");
+    logmsg("24h: $prec_24h mm");
     
 } catch (Exception $e) {
-    logmsg("❌ ERRORE parsing timestamp: " . $e->getMessage());
-    logmsg("   Valore raw: " . ($stazione['ultimi_dati'] ?? 'NULL'));
+    logmsg("ERRORE parsing timestamp: " . $e->getMessage());
     exit(1);
 }
 
 // ==========================================
 // 5. SALVA IN pluvio_giornaliero
-//    LOGICA: mantieni solo il dato più vicino alla FINE del giorno (23:59:59)
 // ==========================================
 
+logmsg("=== SALVATAGGIO DATI GIORNALIERI ===");
+logmsg("Tabella: $TABLE_GIORNALIERO");
+logmsg("Data da salvare: $data_registrazione");
+logmsg("Cumulato 24h: $prec_24h mm");
+
 try {
-    // 1. Verifica se esiste già un record per questa data
-    $sql_check = "SELECT ultimi_dati FROM $TABLE_GIORNALIERO WHERE data = :data";
-    $stmt = $pdo->prepare($sql_check);
-    $stmt->execute([':data' => $data_giorno]);
-    $record_esistente = $stmt->fetch(PDO::FETCH_ASSOC);
+    $sql_giornaliero = "
+        INSERT INTO $TABLE_GIORNALIERO (data, cumulato_24h, ultimi_dati) 
+        VALUES (:data, :cumulato_24h, :ultimi_dati)
+        ON DUPLICATE KEY UPDATE 
+            cumulato_24h = VALUES(cumulato_24h),
+            ultimi_dati = VALUES(ultimi_dati)
+    ";
     
-    // MEZZANOTTE = FINE GIORNO (23:59:59) non inizio!
-    // Il giorno pluviometrico va da 00:00:00 a 23:59:59
-    $fine_giorno = new DateTime($data_giorno . ' 23:59:59');
-    $nuovo_timestamp = $datetime_lettura;
+    $stmt = $pdo->prepare($sql_giornaliero);
+    $stmt->execute([
+        ':data' => $data_registrazione,
+        ':cumulato_24h' => $prec_24h,
+        ':ultimi_dati' => $timestamp_registrazione
+    ]);
     
-    // Calcola distanza dalla fine del giorno (in secondi assoluti)
-    $distanza_nuovo = abs($fine_giorno->getTimestamp() - $nuovo_timestamp->getTimestamp());
-    
-    if (!$record_esistente) {
-        // CASO 1: Nessun record esistente → INSERT
-        $sql_insert = "
-            INSERT INTO $TABLE_GIORNALIERO 
-            (data, cumulato_24h, ultimi_dati) 
-            VALUES (:data, :cumulato_24h, :ultimi_dati)
-        ";
-        
-        $stmt = $pdo->prepare($sql_insert);
-        $stmt->execute([
-            ':data' => $data_giorno,
-            ':cumulato_24h' => $prec_24h,
-            ':ultimi_dati' => $ultimi_dati_mysql
-        ]);
-        
-        logmsg("✅ Nuovo dato giornaliero inserito per $data_giorno");
-        logmsg("   Cumulato 24h: $prec_24h mm");
-        logmsg("   Ultimi_dati (registrazione): $ultimi_dati_mysql");
-        logmsg("   Distanza da fine giorno (23:59): " . gmdate('H:i:s', $distanza_nuovo));
-        
-    } else {
-        // CASO 2: Record esistente → verifica se il nuovo è più vicino alla fine giorno
-        $vecchio_timestamp = new DateTime($record_esistente['ultimi_dati']);
-        $distanza_vecchio = abs($fine_giorno->getTimestamp() - $vecchio_timestamp->getTimestamp());
-        
-        if ($distanza_nuovo < $distanza_vecchio) {
-            // Il nuovo dato è più vicino alla fine giorno → UPDATE
-            $sql_update = "
-                UPDATE $TABLE_GIORNALIERO 
-                SET cumulato_24h = :cumulato_24h,
-                    ultimi_dati = :ultimi_dati
-                WHERE data = :data
-            ";
-            
-            $stmt = $pdo->prepare($sql_update);
-            $stmt->execute([
-                ':data' => $data_giorno,
-                ':cumulato_24h' => $prec_24h,
-                ':ultimi_dati' => $ultimi_dati_mysql
-            ]);
-            
-            logmsg("🔄 Dato giornaliero AGGIORNATO per $data_giorno (più vicino a fine giorno)");
-            logmsg("   Vecchio ultimi_dati: " . $record_esistente['ultimi_dati'] . " (distanza da 23:59: " . gmdate('H:i:s', $distanza_vecchio) . ")");
-            logmsg("   Nuovo ultimi_dati:   $ultimi_dati_mysql (distanza da 23:59: " . gmdate('H:i:s', $distanza_nuovo) . ")");
-            logmsg("   Nuovo cumulato 24h: $prec_24h mm");
-            
-        } else {
-            // Il vecchio dato è più vicino → mantieni quello
-            logmsg("ℹ️  Dato giornaliero NON aggiornato per $data_giorno (vecchio più vicino a fine giorno)");
-            logmsg("   Vecchio ultimi_dati: " . $record_esistente['ultimi_dati'] . " (distanza da 23:59: " . gmdate('H:i:s', $distanza_vecchio) . ") ✓");
-            logmsg("   Nuovo ultimi_dati:   $ultimi_dati_mysql (distanza da 23:59: " . gmdate('H:i:s', $distanza_nuovo) . ") ✗");
-        }
-    }
+    $affected = $stmt->rowCount();
+    logmsg("Query eseguita (righe affette: $affected)");
+    logmsg("Dati giornalieri aggiornati per $data_registrazione: $prec_24h mm");
     
 } catch (PDOException $e) {
-    logmsg("❌ ERRORE inserimento/aggiornamento giornaliero: " . $e->getMessage());
+    logmsg("ERRORE inserimento giornaliero: " . $e->getMessage());
     exit(1);
 }
 
 // ==========================================
 // 6. AGGIORNA RECORD MENSILI
 // ==========================================
+
+logmsg("=== AGGIORNAMENTO RECORD MENSILI ===");
+logmsg("Tabella: $TABLE_RECORD");
+logmsg("Anno/Mese da aggiornare: $anno/$mese");
 
 try {
     // Verifica se esiste il record per questo mese
@@ -307,6 +264,10 @@ try {
     $record_esistente = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if (!$record_esistente) {
+        logmsg("Record mensile NON esistente - creo nuovo record");
+        logmsg("   Anno: $anno, Mese: $mese");
+        logmsg("   Data record: $timestamp_registrazione");
+        
         // Crea nuovo record mensile
         $sql_insert = "
             INSERT INTO $TABLE_RECORD 
@@ -323,19 +284,23 @@ try {
             ':r12' => $prec_12h,
             ':r6' => $prec_6h,
             ':r1' => $prec_1h,
-            ':d24' => $timestamp_mysql,
-            ':d12' => $timestamp_mysql,
-            ':d6' => $timestamp_mysql,
-            ':d1' => $timestamp_mysql
+            ':d24' => $timestamp_registrazione,
+            ':d12' => $timestamp_registrazione,
+            ':d6' => $timestamp_registrazione,
+            ':d1' => $timestamp_registrazione
         ]);
         
-        logmsg("✅ Nuovo record mensile creato per $mese/$anno");
+        logmsg("Nuovo record mensile creato per $mese/$anno");
         logmsg("   24h: $prec_24h mm");
         logmsg("   12h: $prec_12h mm");
         logmsg("   6h: $prec_6h mm");
         logmsg("   1h: $prec_1h mm");
         
     } else {
+        logmsg("Record mensile ESISTENTE per $mese/$anno");
+        logmsg("   Record attuali - 24h: {$record_esistente['record_24h']}, 12h: {$record_esistente['record_12h']}, 6h: {$record_esistente['record_6h']}, 1h: {$record_esistente['record_1h']}");
+        logmsg("   Valori correnti - 24h: $prec_24h, 12h: $prec_12h, 6h: $prec_6h, 1h: $prec_1h");
+        
         // Aggiorna solo i record superati
         $updates = [];
         $params = [':anno' => $anno, ':mese' => $mese];
@@ -343,29 +308,29 @@ try {
         if ($prec_24h > $record_esistente['record_24h']) {
             $updates[] = "record_24h = :r24, data_record_24h = :d24";
             $params[':r24'] = $prec_24h;
-            $params[':d24'] = $timestamp_mysql;
-            logmsg("🏆 Nuovo record 24h: $prec_24h mm (precedente: {$record_esistente['record_24h']})");
+            $params[':d24'] = $timestamp_registrazione;
+            logmsg("Nuovo record 24h: $prec_24h mm (precedente: {$record_esistente['record_24h']})");
         }
         
         if ($prec_12h > $record_esistente['record_12h']) {
             $updates[] = "record_12h = :r12, data_record_12h = :d12";
             $params[':r12'] = $prec_12h;
-            $params[':d12'] = $timestamp_mysql;
-            logmsg("🏆 Nuovo record 12h: $prec_12h mm (precedente: {$record_esistente['record_12h']})");
+            $params[':d12'] = $timestamp_registrazione;
+            logmsg("Nuovo record 12h: $prec_12h mm (precedente: {$record_esistente['record_12h']})");
         }
         
         if ($prec_6h > $record_esistente['record_6h']) {
             $updates[] = "record_6h = :r6, data_record_6h = :d6";
             $params[':r6'] = $prec_6h;
-            $params[':d6'] = $timestamp_mysql;
-            logmsg("🏆 Nuovo record 6h: $prec_6h mm (precedente: {$record_esistente['record_6h']})");
+            $params[':d6'] = $timestamp_registrazione;
+            logmsg("Nuovo record 6h: $prec_6h mm (precedente: {$record_esistente['record_6h']})");
         }
         
         if ($prec_1h > $record_esistente['record_1h']) {
             $updates[] = "record_1h = :r1, data_record_1h = :d1";
             $params[':r1'] = $prec_1h;
-            $params[':d1'] = $timestamp_mysql;
-            logmsg("🏆 Nuovo record 1h: $prec_1h mm (precedente: {$record_esistente['record_1h']})");
+            $params[':d1'] = $timestamp_registrazione;
+            logmsg("Nuovo record 1h: $prec_1h mm (precedente: {$record_esistente['record_1h']})");
         }
         
         if (!empty($updates)) {
@@ -373,14 +338,14 @@ try {
                          " WHERE anno = :anno AND mese = :mese";
             $stmt = $pdo->prepare($sql_update);
             $stmt->execute($params);
-            logmsg("✅ Record mensili aggiornati");
+            logmsg("Record mensili aggiornati");
         } else {
-            logmsg("ℹ️  Nessun record superato per $mese/$anno");
+            logmsg("Nessun record superato per $mese/$anno");
         }
     }
     
 } catch (PDOException $e) {
-    logmsg("❌ ERRORE aggiornamento record: " . $e->getMessage());
+    logmsg("ERRORE aggiornamento record: " . $e->getMessage());
     exit(1);
 }
 
@@ -388,14 +353,17 @@ try {
 // 7. RIEPILOGO FINALE
 // ==========================================
 
-logmsg("=== FINE IMPORT CFR ===");
-logmsg("Precipitazioni:");
+logmsg("=== RIEPILOGO IMPORT ===");
+logmsg("Timestamp JSON (generazione): $timestamp_mysql");
+logmsg("Timestamp dati stazione (registrazione): $timestamp_registrazione");
+logmsg("Anno/Mese/Giorno: $anno/$mese (da timestamp UTC convertito)");
+logmsg("Data salvata DB giornaliero: $data_registrazione");
+logmsg("Precipitazioni salvate:");
 logmsg("  1h:  $prec_1h mm");
 logmsg("  6h:  $prec_6h mm");
 logmsg("  12h: $prec_12h mm");
 logmsg("  24h: $prec_24h mm");
-logmsg("Data salvata: $data_giorno");
-logmsg("Ultimi_dati (registrazione CFR): $ultimi_dati_mysql");
+logmsg("=== FINE IMPORT CFR ===");
 
 exit(0);
 ?>

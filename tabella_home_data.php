@@ -90,6 +90,10 @@ SELECT
   (SELECT MAX(temperatura_C) FROM $table WHERE temperatura_C IS NOT NULL AND DATE(data_ora) = :yesterday) AS temp_max_yesterday,
   (SELECT MIN(temperatura_C) FROM $table WHERE temperatura_C IS NOT NULL AND DATE(data_ora) = :yesterday) AS temp_min_yesterday,
 
+  -- ORA MAX/MIN IERI (HH:MM)
+  (SELECT DATE_FORMAT(data_ora, '%H:%i') FROM $table WHERE temperatura_C IS NOT NULL AND DATE(data_ora) = :yesterday ORDER BY temperatura_C DESC, data_ora ASC  LIMIT 1) AS temp_max_time_ieri,
+  (SELECT DATE_FORMAT(data_ora, '%H:%i') FROM $table WHERE temperatura_C IS NOT NULL AND DATE(data_ora) = :yesterday ORDER BY temperatura_C ASC,  data_ora ASC  LIMIT 1) AS temp_min_time_ieri,
+
   -- ORA MAX/MIN OGGI (HH:MM)
   (SELECT DATE_FORMAT(data_ora, '%H:%i') FROM $table WHERE temperatura_C IS NOT NULL AND DATE(data_ora) = :today ORDER BY temperatura_C DESC, data_ora ASC  LIMIT 1) AS temp_max_time,
   (SELECT DATE_FORMAT(data_ora, '%H:%i') FROM $table WHERE temperatura_C IS NOT NULL AND DATE(data_ora) = :today ORDER BY temperatura_C ASC,  data_ora ASC  LIMIT 1) AS temp_min_time,
@@ -315,7 +319,7 @@ FROM (
             'type' => 'data',
             'label' => 'Temperatura max e ora',
             'value' => formatValue($raw['temp_max_today'], '°C', 1) . ' ' . formatTime($raw['temp_max_time']),
-            'note' => createDeltaIndicator($temp_max_delta ?? 0) . " ieri: " . formatValue($raw['temp_max_yesterday'], '°C', 1),
+            'note' => createDeltaIndicator($temp_max_delta ?? 0) . " ieri: " . formatValue($raw['temp_max_yesterday'], '°C', 1). ' ' . formatTime($raw['temp_max_time_ieri']),
             'separator' => false,
             'interactive' => [
                 'badge' => [
@@ -329,7 +333,7 @@ FROM (
             'type' => 'data',
             'label' => 'Temperatura min e ora',
             'value' => formatValue($raw['temp_min_today'], '°C', 1) . ' ' . formatTime($raw['temp_min_time']),
-            'note' => createDeltaIndicator($temp_min_delta ?? 0) . " ieri: " . formatValue($raw['temp_min_yesterday'], '°C', 1),
+            'note' => createDeltaIndicator($temp_min_delta ?? 0) . " ieri: " . formatValue($raw['temp_min_yesterday'], '°C', 1). ' ' . formatTime($raw['temp_min_time_ieri']),
             'separator' => true
         ],
         
@@ -464,7 +468,7 @@ FROM (
             'type' => 'data',
             'label' => 'Vento: media 15min',
             'value' => formatValue($raw['wind_avg_15m'], ' km/h', 1),
-            'note' => 'MAX/24h:' . formatValue($raw['wind_avg_max_24h'], 'km/h', 1). ' ' . '(' . $raw['wind_avg_max_time'] . ')',
+            'note' => 'Max/24h:' . formatValue($raw['wind_avg_max_24h'], 'km/h', 1). ' ' . '(' . $raw['wind_avg_max_time'] . ')',
             'separator' => true
         ],
         

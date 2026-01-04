@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API Plotly JSON</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+        h1 { color: #2c3e50; }
+        .status { padding: 15px; margin: 20px 0; border-radius: 8px; font-weight: bold; }
+        .status.ok { background: #d4edda; color: #155724; }
+        .status.error { background: #f8d7da; color: #721c24; }
+        .json-block { background: #2c3e50; color: #ecf0f1; padding: 20px; border-radius: 8px; overflow-x: auto; }
+        pre { margin: 0; white-space: pre-wrap; word-wrap: break-word; font-size: 13px; }
+        .info { background: #d1ecf1; padding: 10px; margin: 10px 0; border-radius: 4px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; background: white; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #34495e; color: white; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test API Plotly - Output JSON</h1>
+    
+    <div class="info">
+        <strong>Test:</strong> Verifica che l'API restituisca JSON valido con traces Plotly
+    </div>
+    
+    <div id="status" class="status">⏳ Caricamento...</div>
+    
+    <h2>📊 Struttura Dati</h2>
+    <table id="structure-table">
+        <thead>
+            <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Valore/Info</th>
+            </tr>
+        </thead>
+        <tbody id="structure-body"></tbody>
+    </table>
+    
+    <h2>📄 JSON Completo</h2>
+    <div class="json-block">
+        <pre id="json-output">Caricamento...</pre>
+    </div>
+    
+    <script>
+        async function testAPI() {
+            const statusDiv = document.getElementById('status');
+            const jsonOutput = document.getElementById('json-output');
+            const structureBody = document.getElementById('structure-body');
+            
+            try {
+                const response = await fetch('api_grafico_termo_plotly.php?range=24h');
+                const data = await response.json();
+                
+                if (!data.success) {
+                    statusDiv.className = 'status error';
+                    statusDiv.innerHTML = '❌ Errore API: ' + (data.error || 'Sconosciuto');
+                    jsonOutput.textContent = JSON.stringify(data, null, 2);
+                    return;
+                }
+                
+                // Status OK
+                statusDiv.className = 'status ok';
+                statusDiv.innerHTML = '✅ API funzionante! Dati ricevuti correttamente.';
+                
+                // Mostra JSON
+                jsonOutput.textContent = JSON.stringify(data, null, 2);
+                
+                // Analizza struttura
+                const rows = [];
+                
+                rows.push(['success', typeof data.success, data.success ? 'true' : 'false']);
+                rows.push(['traces', 'Array[' + data.traces.length + ']', data.traces.length + ' traces (Temperature, Umidità, Dewpoint, Medie)']);
+                rows.push(['metadata', 'Object', 'Range: ' + data.metadata.range + ', Punti: ' + data.metadata.data_points]);
+                rows.push(['metadata.y_temp_range', 'Object', 'Min: ' + data.metadata.y_temp_range.min + '°C, Max: ' + data.metadata.y_temp_range.max + '°C']);
+                rows.push(['stats', 'Array[' + data.stats.length + ']', data.stats.length + ' statistiche']);
+                rows.push(['legend', 'Array[' + data.legend.length + ']', data.legend.length + ' legend items']);
+                rows.push(['dewpoint_segments', 'Array[' + data.dewpoint_segments.length + ']', data.dewpoint_segments.length + ' segmenti colorati']);
+                
+                // Dettagli traces
+                data.traces.forEach((trace, idx) => {
+                    rows.push([
+                        `traces[${idx}].name`,
+                        'String',
+                        trace.name + ' (' + trace.y.length + ' punti dati)'
+                    ]);
+                });
+                
+                // Popola tabella
+                rows.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${row[0]}</strong></td>
+                        <td><code>${row[1]}</code></td>
+                        <td>${row[2]}</td>
+                    `;
+                    structureBody.appendChild(tr);
+                });
+                
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '❌ Errore: ' + error.message;
+                jsonOutput.textContent = 'Errore caricamento: ' + error.message;
+                console.error('Errore:', error);
+            }
+        }
+        
+        // Avvia test
+        testAPI();
+    </script>
+</body>
+</html>

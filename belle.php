@@ -36,13 +36,24 @@ $stmt_altro = $pdo->prepare("SELECT DISTINCT altro FROM $table_name WHERE altro 
 $stmt_altro->execute();
 $valori_altro = $stmt_altro->fetchAll(PDO::FETCH_COLUMN);
 
+// =====================
+// PAGINAZIONE per la visualizzazione
+// =====================
+$limit = 200; // immagini per pagina
+$page  = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1; 
+if (!$filtri_attivi && !isset($_GET['page'])) {
+    $page = 1;
+}
+
 // Ottiene i dati delle immagini con filtri applicati
 $data = getImageDataFromFolderFiltered($pdo, $directory, $table_name, [
     'data_inizio' => $filtro_data_inizio,
     'data_fine' => $filtro_data_fine,
     'sun_phase' => $filtro_sun_phase,
     'altro' => $filtro_altro,
-    'sequenza' => $filtro_sequenza
+    'sequenza' => $filtro_sequenza,
+    'page'        => $page,
+    'limit'       => $limit
 ]);
   
 $records = []; 
@@ -71,174 +82,136 @@ if (isset($data['error'])) {
 }
 
 
+
 /**
  * Funzione modificata per supportare filtri
  */
 function getImageDataFromFolderFiltered(PDO $pdo, string $directory, string $tableName, array $filtri = []): array
 {
-    $limit = 200;
-    $extensions = ['jpg','jpeg','png','gif'];
+    $directory = rtrim($directory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+    if (!is_dir($directory)) {
+        return ['error' => "La cartella '$directory' non esiste.", 'mainImage' => '', 'count' => 0, 'records' => []];
+    }
 
     if (!preg_match('/^[A-Za-z0-9_]+$/', $tableName)) {
         return ['error' => "Nome tabella non valido.", 'mainImage' => '', 'count' => 0, 'records' => []];
     }
 
-    $directory = rtrim($directory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+    $limit = isset($filtri['limit']) ? max(1, (int)$filtri['limit']) : 200;
+    $page  = isset($filtri['page'])  ? max(1, (int)$filtri['page'])  : 1;
+    $offset = ($page - 1) * $limit;
 
-    if (!is_dir($directory)) {
-        return ['error' => "La cartella '$directory' non esiste.", 'mainImage' => '', 'count' => 0, 'records' => []];
-    }
-
-    $patternParts = array_map(function($ext) {
-    return '*.' . ltrim(strtolower($ext), '.');
-    }, $extensions);
-    $pattern = '{' . implode(',', $patternParts) . '}';
-    $files = glob($directory . $pattern, GLOB_BRACE);
-
-    if (!$files || count($files) === 0) {
-        return ['error' => "Nessuna immagine trovata.", 'mainImage' => '', 'count' => 0, 'records' => []];
-    }
-
-    rsort($files, SORT_STRING);
-    $basenames = array_map('basename', $files);
-
-    $sql = "SELECT * FROM {$tableName} WHERE FILE IN (" . implode(',', array_fill(0, count($basenames), '?')) . ")";
-    $params = $basenames;
+    // -----------------------
+    // WHERE dinamica + params
+    // -----------------------
+    $where = [];
+    $params = [];
 
     if (!empty($filtri['data_inizio'])) {
-        $sql .= " AND DATA_ORA >= ?";
-        $params[] = $filtri['data_inizio'] . ' 00:00:00';
+        $where[] = "DATA_ORA >= ?";
+        $params[] = $filtri['data_inizio'] . " 00:00:00";
     }
 
     if (!empty($filtri['data_fine'])) {
-        $sql .= " AND DATA_ORA <= ?";
-        $params[] = $filtri['data_fine'] . ' 23:59:59';
+        $where[] = "DATA_ORA <= ?";
+        $params[] = $filtri['data_fine'] . " 23:59:59";
     }
 
     if (isset($filtri['sun_phase']) && $filtri['sun_phase'] !== 'all') {
+        switch ($filtri['sun_phase']) {
+            case '1':
+            case '2':
+                $where[] = "sun_phase = ?";
+                $params[] = (int)$filtri['sun_phase'];
+                break;
 
-    switch ($filtri['sun_phase']) {
-
-        case '1': // Alba
-        case '2': // Tramonto
-            $sql .= " AND sun_phase = ?";
-            $params[] = (int)$filtri['sun_phase'];
-            break;
-
-        case 'day': // ☀️ Pieno giorno
-            $sql .= " AND sun_phase IS NULL";
-            break;
-
-        case 'null': // esplicito "nessun dato"
-            $sql .= " AND sun_phase IS NULL";
-            break;
-            }
+            case 'day':
+            case 'null':
+                $where[] = "sun_phase IS NULL";
+                break;
         }
-
-
-    if (isset($filtri['altro']) && $filtri['altro'] !== 'all') {
-        $sql .= " AND altro = ?";
-        $params[] = (int)$filtri['altro'];
     }
 
-    $sql .= " ORDER BY DATA_ORA DESC";
+    if (isset($filtri['altro']) && $filtri['altro'] !== 'all') {
+        $where[] = "altro = ?";
+        // qui può essere stringa o numero: non castare a int
+        $params[] = $filtri['altro'];
+    }
+
+    $whereSql = $where ? ("WHERE " . implode(" AND ", $where)) : "";
 
     try {
+        // -----------------------
+        // 1) COUNT totale (per pagine)
+        // -----------------------
+        $sqlCount = "SELECT COUNT(*) AS tot FROM {$tableName} {$whereSql}";
+        $stmtC = $pdo->prepare($sqlCount);
+        $stmtC->execute($params);
+        $total = (int)$stmtC->fetchColumn();
+        $totalPages = (int)max(1, ceil($total / $limit));
+
+        // Se page oltre limite, clamp
+        if ($page > $totalPages) {
+            $page = $totalPages;
+            $offset = ($page - 1) * $limit;
+        }
+
+        // -----------------------
+        // 2) Righe pagina
+        // -----------------------
+        $sql = "
+            SELECT *
+            FROM {$tableName}
+            {$whereSql}
+            ORDER BY DATA_ORA DESC
+            LIMIT {$limit} OFFSET {$offset}
+        ";
+
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     } catch (Throwable $e) {
         return ['error' => "Errore SQL: " . $e->getMessage(), 'mainImage' => '', 'count' => 0, 'records' => []];
     }
 
-    $byFile = [];
-    foreach ($rows as $r) {
-        if (!isset($r['FILE'])) continue;
-        $byFile[$r['FILE']] = $r;
-    }
-
-    if (!empty($filtri['sequenza']) && $filtri['sequenza'] >= 2) {
-        $rows = filtraSequenzeConsecutive($rows, $filtri['sequenza']);
-        $byFile = [];
-        foreach ($rows as $r) {
-            if (!isset($r['FILE'])) continue;
-            $byFile[$r['FILE']] = $r;
-        }
-    }
-
+    // -----------------------
+    // Costruisci records (e scarta file non presenti)
+    // -----------------------
     $records = [];
-    foreach ($files as $path) {
-        $file = basename($path);
-        $row = $byFile[$file] ?? null;
-        if (!$row) continue;
+    foreach ($rows as $row) {
+        $file = $row['FILE'] ?? '';
+        if ($file === '') continue;
+
+        $path = $directory . $file;
+
+        // se vuoi essere "strict": mostra solo se esiste fisicamente
+        if (!is_file($path)) continue;
 
         $records[] = [
-            'src' => $path,
-            'file' => $file,
-            'data_ora' => $row['DATA_ORA'] ?? null,
-            'temp' => isset($row['Temp']) ? (float)$row['Temp'] : null,
-            'hr' => isset($row['HR']) ? (float)$row['HR'] : null,
-            'p_hpa' => isset($row['P_hPa']) ? (float)$row['P_hPa'] : null,
-            'wind_kmh' => isset($row['vento_kmh']) ? (float)$row['vento_kmh'] : null,
-            'dir_text' => $row['Dir_text'] ?? null,
-            'sun_phase' => isset($row['sun_phase']) ? (int)$row['sun_phase'] : null
+            'src'       => $path,
+            'file'      => $file,
+            'data_ora'  => $row['DATA_ORA'] ?? null,
+            'temp'      => isset($row['Temp']) ? (float)$row['Temp'] : null,
+            'hr'        => isset($row['HR']) ? (float)$row['HR'] : null,
+            'p_hpa'     => isset($row['P_hPa']) ? (float)$row['P_hPa'] : null,
+            'wind_kmh'  => isset($row['vento_kmh']) ? (float)$row['vento_kmh'] : null,
+            'dir_text'  => $row['Dir_text'] ?? null,
+            'sun_phase' => isset($row['sun_phase']) ? (int)$row['sun_phase'] : null,
+            'altro'     => $row['altro'] ?? null
         ];
     }
 
-    if (count($records) > $limit) {
-        $records = array_slice($records, 0, $limit);
-    }
-
-    return ['error' => null, 'mainImage' => $records[0]['src'] ?? '', 'count' => count($records), 'records' => $records];
-}
-
-/**
- * Filtra per sequenze consecutive
- */
-function filtraSequenzeConsecutive(array $rows, int $minSequenza): array {
-    if ($minSequenza < 2) return $rows;
-
-    usort($rows, function($a, $b) {
-        return strcmp($a['DATA_ORA'] ?? '', $b['DATA_ORA'] ?? '');
-    });
-
-    $sequenze = [];
-    $sequenza_corrente = [];
-
-    foreach ($rows as $row) {
-        if (empty($sequenza_corrente)) {
-            $sequenza_corrente[] = $row;
-            continue;
-        }
-
-        $prev = end($sequenza_corrente);
-        $prev_time = strtotime($prev['DATA_ORA'] ?? '');
-        $curr_time = strtotime($row['DATA_ORA'] ?? '');
-
-        if ($curr_time - $prev_time <= 1300) {
-            $sequenza_corrente[] = $row;
-        } else {
-            if (count($sequenza_corrente) >= $minSequenza) {
-                $sequenze[] = $sequenza_corrente;
-            }
-            $sequenza_corrente = [$row];
-        }
-    }
-
-    if (count($sequenza_corrente) >= $minSequenza) {
-        $sequenze[] = $sequenza_corrente;
-    }
-
-    $result = [];
-    foreach ($sequenze as $seq) {
-        $result = array_merge($result, $seq);
-    }
-
-    usort($result, function($a, $b) {
-        return strcmp($b['DATA_ORA'] ?? '', $a['DATA_ORA'] ?? '');
-    });
-
-    return $result;
+    return [
+        'error'       => null,
+        'mainImage'   => $records[0]['src'] ?? '',
+        'count'       => count($records),
+        'records'     => $records,
+        'total'       => $total,
+        'page'        => $page,
+        'limit'       => $limit,
+        'total_pages' => $totalPages
+    ];
 }
 
 
@@ -355,6 +328,8 @@ body {
     white-space: nowrap;
     margin: 0;
 }
+main{ width:100%; }
+
 
 @media (min-width: 600px) {
     .main-title {
@@ -922,6 +897,112 @@ body {
     cursor: pointer;
     z-index: 1001;
 }
+
+/* =========================
+   PAGINAZIONE sotto il titolo
+   ========================= */
+/* Wrapper largo quanto la galleria (100% + max-width 1000px) */
+.pager-wrap{
+    width: 100%;
+    max-width: 1000px;
+    margin: 6px auto 10px;
+    padding: 8px 10px;
+    box-sizing: border-box;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fafafa;
+}
+
+/* Tutti gli elementi hanno LO STESSO carattere */
+.pager-item{
+    font-size: 14px;     /* uguale per tutti */
+    font-weight: 600;    /* uguale per tutti */
+    color: #666;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+/* Link un filo più “cliccabile” senza cambiare font */
+.pager-item:hover{
+    color: red;
+}
+
+/* Disabilitati */
+.pager-item.is-disabled{
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+/* Centro: stesso font, solo centrato */
+.pager-item.is-center{
+    text-align: center;
+}
+/* contenitore titolo + paginazione: stessa larghezza galleria */
+.gallery-header-container{
+    width: 100%;
+    max-width: 1000px;
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 0 5px; /* uguale alla gallery che ha padding 5px */
+}
+
+
+/* Mobile: rimpicciolisce tutto uguale */
+@media (max-width: 480px){
+    .pager-wrap{
+        padding: 5px 6px;
+        border-radius: 8px;
+        margin: 4px auto 8px;
+    }
+    .pager-item{
+        font-size: 11px;   /* uguale per tutti */
+        font-weight: 600;  /* uguale per tutti */
+    }
+}
+
+/*FORMATO SELETTORE DI PAGINA*/
+.pager-form{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pager-label{
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+}
+
+.pager-select{
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+
+    border: none;           
+    background: transparent;
+    outline: none;
+    box-shadow: none;
+
+    padding: 0;             
+    cursor: pointer;
+}
+
+@media (max-width: 480px){
+    .pager-label{ font-size: 11px; }
+    .pager-select{
+        font-size: 11px;
+        padding: 3px 6px;
+        border-radius: 7px;
+    }
+}
+
+
+
     </style>
         
 </head>
@@ -1002,8 +1083,58 @@ body {
 <main>
    <div class="gallery-header-container"> 
         <h2 class="gallery-title">Diario del cielo</h2> 
-   </div>
+
+        <?php
+$totalPages = $data['total_pages'] ?? 1;
+$pageNow    = $data['page'] ?? ($page ?? 1);
+$query = $_GET;
+?>
+<div class="pager-wrap">
+    <?php if ($pageNow > 1): 
+        $query['page'] = $pageNow - 1;
+    ?>
+        <a class="pager-item" href="?<?php echo htmlspecialchars(http_build_query($query)); ?>">⟵ Pagina precedente</a>
+    <?php else: ?>
+        <span class="pager-item is-disabled">⟵ Pagina precedente</span>
+    <?php endif; ?>
+
+    <form class="pager-form" method="get" action="">
+    <?php
+    // Mantieni TUTTI i parametri GET (filtri ecc.) tranne page
+    foreach ($_GET as $k => $v) {
+        if ($k === 'page') continue;
+
+        // supporta anche array (non dovrebbe servirti, ma è robusto)
+        if (is_array($v)) {
+            foreach ($v as $vv) {
+                echo '<input type="hidden" name="'.htmlspecialchars($k).'[]" value="'.htmlspecialchars((string)$vv).'">';
+            }
+        } else {
+            echo '<input type="hidden" name="'.htmlspecialchars($k).'" value="'.htmlspecialchars((string)$v).'">';
+        }
+    }
+    ?>
+    <label class="pager-label" for="pageSelect">Pagina</label>
+    <select id="pageSelect" name="page" class="pager-select" onchange="this.form.submit()">
+        <?php for ($i = 1; $i <= (int)$totalPages; $i++): ?>
+            <option value="<?php echo $i; ?>" <?php echo ($i === (int)$pageNow) ? 'selected' : ''; ?>>
+                <?php echo $i . ' / ' . (int)$totalPages; ?>
+            </option>
+        <?php endfor; ?>
+    </select>
+</form>
+
+    <?php if ($pageNow < $totalPages): 
+        $query['page'] = $pageNow + 1;
+    ?>
+        <a class="pager-item" href="?<?php echo htmlspecialchars(http_build_query($query)); ?>">Pagina successiva ⟶</a>
+    <?php else: ?>
+        <span class="pager-item is-disabled">Pagina successiva ⟶</span>
+    <?php endif; ?>
+</div>
+
 </main>
+
 
 <!-- Gestione messaggi di stato -->
 <?php if ($errore_messaggio !== null): ?>
@@ -1067,6 +1198,15 @@ body {
         </div>
     </div>
 <?php endif; ?>
+<?php
+$totalPages = $data['total_pages'] ?? 1;
+$page = $data['page'] ?? 1;
+
+// ricostruisci la querystring mantenendo i filtri
+$query = $_GET;
+?>
+
+
 
 <!-- ========== LIGHTBOX (UNA SOLA VERSIONE) ========== -->
 <div class="lightbox" id="lightbox">

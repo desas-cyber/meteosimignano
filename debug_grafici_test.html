@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Doppio Asse Y</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+        .container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1600px; margin: 0 auto; }
+        .box { background: white; padding: 20px; border-radius: 8px; }
+        .box.ok { border: 3px solid green; }
+        .box.test { border: 3px solid orange; }
+        h2 { margin-top: 0; color: #2c3e50; }
+        canvas { background: white; }
+        .info { background: yellow; padding: 10px; margin: 10px 0; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test: Singolo vs Doppio Asse Y</h1>
+    
+    <div class="info">
+        ❓ IPOTESI: Il doppio asse Y causa il problema delle griglie mancanti
+    </div>
+    
+    <div class="container">
+        <!-- SINGOLO ASSE Y -->
+        <div class="box ok">
+            <h2>✅ SINGOLO Asse Y (solo temperatura)</h2>
+            <p><strong>Grid temperature:</strong> display=true, color=#000, lineWidth=2</p>
+            <canvas id="single-axis" width="600" height="400"></canvas>
+        </div>
+        
+        <!-- DOPPIO ASSE Y -->
+        <div class="box test">
+            <h2>🔬 DOPPIO Asse Y (temperatura + umidità)</h2>
+            <p><strong>Grid y-temp:</strong> display=true, color=#000, lineWidth=2, drawOnChartArea=true</p>
+            <p><strong>Grid y-umidita:</strong> display=false</p>
+            <canvas id="double-axis" width="600" height="400"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Dati comuni
+        const labels = [];
+        const tempData = [];
+        const humData = [];
+        
+        const now = new Date();
+        for (let i = 0; i < 24; i++) {
+            const time = new Date(now.getTime() - (23 - i) * 3600000);
+            labels.push(time.toISOString());
+            tempData.push(10 + Math.random() * 10);
+            humData.push(50 + Math.random() * 30);
+        }
+        
+        // ================================================================
+        // TEST 1: SINGOLO ASSE Y
+        // ================================================================
+        new Chart(document.getElementById('single-axis'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Temperatura',
+                    data: tempData,
+                    borderColor: '#ff6b6b',
+                    borderWidth: 2,
+                    yAxisID: 'y'
+                }]
+            },
+            options: {
+                responsive: false,
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: { unit: 'hour' },
+                        grid: {
+                            display: true,
+                            color: '#000000',
+                            lineWidth: 2
+                        }
+                    },
+                    y: {
+                        type: 'linear',
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Temperatura (C)',
+                            color: '#ff6b6b'
+                        },
+                        grid: {
+                            display: true,
+                            color: '#000000',
+                            lineWidth: 2
+                        },
+                        border: {
+                            display: true,
+                            color: '#ff6b6b',
+                            width: 3
+                        }
+                    }
+                }
+            }
+        });
+        
+        // ================================================================
+        // TEST 2: DOPPIO ASSE Y (come API)
+        // ================================================================
+        new Chart(document.getElementById('double-axis'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Temperatura',
+                        data: tempData,
+                        borderColor: '#ff6b6b',
+                        borderWidth: 2,
+                        yAxisID: 'y-temp'
+                    },
+                    {
+                        label: 'Umidita',
+                        data: humData,
+                        borderColor: '#48dbfb',
+                        borderWidth: 2,
+                        yAxisID: 'y-umidita'
+                    }
+                ]
+            },
+            options: {
+                responsive: false,
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: { unit: 'hour' },
+                        grid: {
+                            display: true,
+                            color: '#000000',
+                            lineWidth: 2
+                        }
+                    },
+                    'y-temp': {
+                        type: 'linear',
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Temperatura (C)',
+                            color: '#ff6b6b'
+                        },
+                        grid: {
+                            display: true,
+                            color: '#000000',
+                            lineWidth: 2,
+                            drawOnChartArea: true,
+                            z: 1
+                        },
+                        border: {
+                            display: true,
+                            color: '#ff6b6b',
+                            width: 3
+                        }
+                    },
+                    'y-umidita': {
+                        type: 'linear',
+                        position: 'right',
+                        min: 0,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'Umidita (%)',
+                            color: '#48dbfb'
+                        },
+                        grid: {
+                            display: false
+                        },
+                        border: {
+                            display: true,
+                            color: '#48dbfb',
+                            width: 3
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

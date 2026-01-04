@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Grafico Completo</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        #chart { width: 100%; height: 500px; border: 1px solid #ddd; }
+        #debug { margin-top: 20px; padding: 20px; background: #f0f0f0; }
+        pre { background: white; padding: 10px; overflow-x: auto; }
+        .error { color: red; font-weight: bold; }
+        .success { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Test Grafico Completo con API</h1>
+    
+    <div id="status">⏳ Caricamento dati...</div>
+    <div id="chart"></div>
+    
+    <div id="debug">
+        <h3>🔍 Debug Info:</h3>
+        <pre id="info"></pre>
+    </div>
+    
+    <script>
+        async function testChart() {
+            const statusDiv = document.getElementById('status');
+            const infoDiv = document.getElementById('info');
+            
+            try {
+                statusDiv.innerHTML = '⏳ Chiamata API...';
+                
+                const response = await fetch('api/api_grafico_termo_plotly.php?range=24h');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'Errore sconosciuto');
+                }
+                
+                const metadata = data.metadata;
+                
+                // 🔍 DEBUG METADATA
+                let debugInfo = `
+✅ API RISPOSTA OK
+
+📊 METADATA RICEVUTO:
+  start_time:      ${metadata.start_time}
+  end_time:        ${metadata.end_time}
+  first_data_ever: ${metadata.first_data_ever}
+  last_data_ever:  ${metadata.last_data_ever}
+  
+  range:           ${metadata.range}
+  data_points:     ${metadata.data_points}
+
+📈 TRACES:
+  Totali:          ${data.traces.length}
+`;
+                
+                // Lista traces
+                data.traces.forEach((trace, idx) => {
+                    debugInfo += `  [${idx}] ${trace.name || 'unnamed'} - ${trace.x?.length || 0} punti\n`;
+                });
+                
+                debugInfo += `\n🎚️ CONFIGURAZIONE RANGESLIDER:\n`;
+                debugInfo += `  xaxis.range:           [${metadata.start_time}, ${metadata.end_time}]\n`;
+                debugInfo += `  rangeslider.range:     [${metadata.first_data_ever}, ${metadata.last_data_ever}]\n`;
+                
+                // Verifica coerenza
+                const startTime = new Date(metadata.start_time).getTime();
+                const endTime = new Date(metadata.end_time).getTime();
+                const firstEver = new Date(metadata.first_data_ever).getTime();
+                const lastEver = new Date(metadata.last_data_ever).getTime();
+                
+                debugInfo += `\n✔️ VALIDAZIONE:\n`;
+                
+                if (startTime >= firstEver && startTime <= lastEver) {
+                    debugInfo += `  ✅ start_time dentro bounds\n`;
+                } else {
+                    debugInfo += `  ❌ start_time FUORI bounds!\n`;
+                }
+                
+                if (endTime >= firstEver && endTime <= lastEver) {
+                    debugInfo += `  ✅ end_time dentro bounds\n`;
+                } else {
+                    debugInfo += `  ❌ end_time FUORI bounds!\n`;
+                }
+                
+                if (startTime < endTime) {
+                    debugInfo += `  ✅ start < end (corretto)\n`;
+                } else {
+                    debugInfo += `  ❌ start >= end (ERRORE!)\n`;
+                }
+                
+                if (firstEver < lastEver) {
+                    debugInfo += `  ✅ first < last (corretto)\n`;
+                } else {
+                    debugInfo += `  ❌ first >= last (ERRORE!)\n`;
+                }
+                
+                infoDiv.textContent = debugInfo;
+                
+                // 📊 CREA GRAFICO
+                statusDiv.innerHTML = '📊 Creazione grafico...';
+                
+                const layout = {
+                    title: 'Test Grafico con Metadata Reale',
+                    xaxis: {
+                        type: 'date',
+                        range: [metadata.start_time, metadata.end_time],
+                        rangeslider: {
+                            visible: true,
+                            range: [metadata.first_data_ever, metadata.last_data_ever]
+                        }
+                    },
+                    yaxis: {
+                        title: 'Temperatura (°C)'
+                    }
+                };
+                
+                Plotly.newPlot('chart', data.traces, layout);
+                
+                statusDiv.innerHTML = '<span class="success">✅ Grafico creato con successo!</span>';
+                
+                // Verifica layout applicato
+                setTimeout(() => {
+                    const chartDiv = document.getElementById('chart');
+                    const actualLayout = chartDiv.layout;
+                    
+                    debugInfo += `\n\n🎯 LAYOUT APPLICATO (dopo newPlot):\n`;
+                    debugInfo += `  xaxis.range: ${JSON.stringify(actualLayout.xaxis.range)}\n`;
+                    debugInfo += `  rangeslider.range: ${JSON.stringify(actualLayout.xaxis.rangeslider.range)}\n`;
+                    
+                    infoDiv.textContent = debugInfo;
+                }, 1000);
+                
+            } catch (error) {
+                statusDiv.innerHTML = `<span class="error">❌ Errore: ${error.message}</span>`;
+                infoDiv.textContent = `ERRORE:\n${error.stack}`;
+                console.error('Errore completo:', error);
+            }
+        }
+        
+        // Avvia test
+        if (typeof Plotly === 'undefined') {
+            setTimeout(testChart, 500);
+        } else {
+            testChart();
+        }
+    </script>
+</body>
+</html>
