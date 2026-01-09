@@ -300,20 +300,16 @@ FROM (
         [
             'type' => 'data',
             'label' => 'Temperatura attuale',
-            'value' => formatValue($raw['temp_act'], '°C'). ' ' . formatTime($raw['temp_act_time']),
-            'note' => createDeltaIndicator($temp_delta_24h ?? 0) . " \u{0394}24h(attuale - 24h) = {$temp_delta_24h}°C",
+            'value' => formatValue($raw['temp_act'], '°C') . ' ' . formatTime($raw['temp_act_time']),
+            'note'  => createDeltaIndicator($temp_delta_24h ?? 0) . " \u{0394}24h(attuale - 24h) = {$temp_delta_24h}°C",
+            'link'  => 'grafici_termo_plotly.php?range=24h&visible=' . rawurlencode('Temperatura,Dew Point,Media Periodo, Media Max 7gg, Media Min 7gg'),
             'separator' => false,
             'interactive' => [
-                'tooltip' => 'Clicca per grafico 24h',
-                'clickable' => true,
-                'action' => [
-                    'type' => 'modal',
-                    'endpoint' => 'api_grafico.php',
-                    'params' => ['metric' => 'temperatura', 'range' => '24h'],
-                    'title' => 'Andamento Temperatura 24h'
-                ]
+                'tooltip' => 'Andamento Temperatura e punto di rugiada 24h',
+                'clickable' => true
             ]
-        ],
+            ],
+
         
         [
             'type' => 'data',
@@ -343,16 +339,12 @@ FROM (
             'label' => 'Umidità  relativa',
             'value' => formatValue($raw['hr_act'], '%', 0),
             'note' => '',
-            'separator' => false,
-            'interactive' => [
-                'tooltip' => 'Clicca per grafico 24h',
-                'clickable' => true,
-                'action' => [
-                    'type' => 'modal',
-                    'endpoint' => 'api_grafico.php',
-                    'params' => ['metric' => 'umidita', 'range' => '24h']
-                ]
-            ]
+            'link'  => 'grafici_termo_plotly.php?range=24h&visible=' . rawurlencode('Umidità,Temperatura'),
+  'separator' => false,
+  'interactive' => [
+    'tooltip' => 'Andamento Temperatura e Umidità 24h',
+    'clickable' => true
+  ]
         ],
         
         [
@@ -377,16 +369,12 @@ FROM (
             'label' => 'Punto rugiada',
             'value' => formatValue($raw['dew_act'], '°C', 1),
             'note' => 'Comfort: ' . createComfortIndicator($raw['dew_act'] ?? 0),
-            'separator' => false,
-            'interactive' => [
-                'tooltip' => 'Clicca per grafico 24h',
-                'clickable' => true,
-                'action' => [
-                    'type' => 'modal',
-                    'endpoint' => 'api_grafico.php',
-                    'params' => ['metric' => 'umidita', 'range' => '24h']
-                ]
-            ]
+            'link'  => 'grafici_termo_plotly.php?range=24h&visible=' . rawurlencode('Temperatura,Dew Point'),
+                'separator' => false,
+                'interactive' => [
+                    'tooltip' => 'Andamento Temperatura e Umidità 24h',
+                    'clickable' => true
+  ]
         ],
 
         [
@@ -411,16 +399,12 @@ FROM (
             'label' => 'Pressione @lm',
             'value' => formatValue($raw['press_act'], ' hPa', 1),
             'note' => createPressureTrendIndicator($press_delta_24h ?? 0) . " \u{0394}24h = {$press_delta_24h} hPa",
-            'separator' => false,
-            'interactive' => [
-                'tooltip' => 'Clicca per grafico barometro',
-                'clickable' => true,
-                'action' => [
-                    'type' => 'modal',
-                    'endpoint' => 'api_grafico.php',
-                    'params' => ['metric' => 'pressione', 'range' => '48h']
-                ]
-            ]
+            'link'  => 'grafici_termo_plotly.php?range=24h&visible=' . rawurlencode('Pressione,Temperatura'),
+                    'separator' => false,
+                    'interactive' => [
+                        'tooltip' => 'Andamento Temperatura e Pressione',
+                        'clickable' => true
+                    ]
         ],
 
         [
@@ -445,7 +429,12 @@ FROM (
             'label' => 'Vento: velocità ',
             'value' => formatValue($raw['wind_act'], ' km/h', 1). ' ' . formatTime($raw['wind_act_time']),
             'note' => createWindchillIcon($windChillValue) . ' Wind Chill: ' . calcolaTemperaturaPercepita($raw['temp_act'],$raw['wind_act']),
-            'separator' => false
+            'link'  => 'grafici_termo_plotly.php?range=24h&visible=' . rawurlencode('Temperatura,Dir. Vento'),
+                    'separator' => false,
+                    'interactive' => [
+                        'tooltip' => 'Andamento Temperatura e Vento',
+                        'clickable' => true
+                    ]
         ],
 
         [
@@ -496,7 +485,7 @@ FROM (
             'separator' => false,
             'interactive' => [
                 'tooltip' => 'Clicca per grafico giornaliero',
-                'clickable' => true,
+                'clickable' => false,
                 'action' => [
                     'type' => 'modal',
                     'endpoint' => 'api_grafico.php',

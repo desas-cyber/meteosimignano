@@ -423,8 +423,7 @@ window.addEventListener('DOMContentLoaded', function() {
     </div>
 </div>
 
-<!-- ========== JAVASCRIPT INTERAZIONI ========== -->
-<script src="js/tabella_interactions.js"></script>
+
     
 </head>
 <body>
@@ -454,36 +453,37 @@ window.addEventListener('DOMContentLoaded', function() {
         <?php if (isset($row['link'])): ?>
             onclick="window.top.location.href='<?= htmlspecialchars($row['link']) ?>';"
             style="cursor: pointer;"
+            class="clickable-row"
             title="<?= htmlspecialchars($row['interactive']['tooltip'] ?? 'Clicca per aprire') ?>"
         <?php endif; ?>>
         
-        <!-- Colonna 1: Label -->
         <td><?= htmlspecialchars($row['label']) ?></td>
-        
-        <!-- Colonna 2: Note -->
         <td><?= $row['note'] ?></td>
         
-        <!-- Colonna 3: Valore (potenzialmente cliccabile) -->
         <td>
-            <?php if (isset($row['interactive']['clickable']) && $row['interactive']['clickable']): ?>
-                <span class="clickable-value" 
-                      data-action='<?= htmlspecialchars(json_encode($row['interactive']['action'] ?? []), ENT_QUOTES) ?>'
-                      title="<?= htmlspecialchars($row['interactive']['tooltip'] ?? '') ?>">
-                    <?= $row['value'] ?>
-                </span>
-            <?php else: ?>
-                <?= $row['value'] ?>
-            <?php endif; ?>
-        </td>
+    <?php if (isset($row['interactive']['clickable']) && $row['interactive']['clickable']): ?>
+        <span class="riquadro-dati" 
+              onclick="window.top.location.href='<?= htmlspecialchars($row['link']) ?>';">
+            <?= $row['value'] ?>
+        </span>
+    <?php else: ?>
+        <?= $row['value'] ?>
+    <?php endif; ?>
+</td>
     </tr>
 <?php endforeach; ?>
 </tbody>
 
 <!-- JavaScript per gestire i link delle righe -->
 <script>
-document.querySelectorAll('tr[data-link]').forEach(function(row) {
-    row.addEventListener('click', function() {
-        window.location.href = this.getAttribute('data-link');
+document.querySelectorAll('.clickable-row').forEach(function(row) {
+    row.addEventListener('click', function(e) {
+        const url = this.getAttribute('data-url');
+        if (url) {
+            // "window.top" serve se sei dentro un iframe per uscire e caricare a pagina piena
+            // Se non sei in un iframe, window.location.href è sufficiente.
+            window.top.location.href = url;
+        }
     });
 });
 </script>
@@ -593,7 +593,24 @@ document.querySelectorAll('tr[data-link]').forEach(function(row) {
 .clickable-value:hover {
     background: linear-gradient(135deg, #e0e0e0 0%, #9e9e9e 100%);
     transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(158, 158, 158, 0.4);}
+
+    .riquadro-dati {
+    display: inline-block;       /* Permette di dare bordi e padding al testo */
+    padding: 2px 10px;           /* Spazio tra testo e bordo del riquadro */
+    border: 1px solid #777;      /* Il bordo sottile che cercavi */
+    border-radius: 12px;         /* Arrotondamento */
+    cursor: pointer;             /* Fa capire che è cliccabile */
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s;
+}
+
+.riquadro-dati:hover {
+    background: linear-gradient(135deg, #e0e0e0 0%, #9e9e9e 100%);
+    transform: translateY(-1px);
     box-shadow: 0 2px 6px rgba(158, 158, 158, 0.4);
+
 }
 /* ========== MODAL LEGENDA ========== */
 .modal-legenda {
@@ -655,6 +672,7 @@ document.querySelectorAll('tr[data-link]').forEach(function(row) {
     color: #f44336;
     background: #ffebee;
 }
+
 </style>
 
 <script>
@@ -697,6 +715,70 @@ window.addEventListener('DOMContentLoaded', function() {
         console.log('✅ Legenda listener registrato');
     }
 });
+</script>
+<script>
+document.addEventListener('click', (e) => {
+  const el = e.target.closest('.clickable-value');
+  if (!el) return;
+  console.log('[DBG] click su clickable-value', el, el.dataset.action);
+}, true);
+console.log('[DBG] binder clickable-value attivo');
+</script>
+<script>
+document.addEventListener('click', (e) => {
+  const el = e.target.closest('.clickable-value');
+  if (!el) return;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  // 1) Caso semplice: data-href (es. pluvio)
+  const href = (el.dataset.href || '').trim();
+  if (href) {
+    console.log('[interactive] go href (same tab):', href);
+    window.location.assign(href); // ✅ stessa scheda
+    return;
+  }
+
+  // 2) Caso avanzato: data-action JSON
+  const raw = el.dataset.action;
+  if (!raw) {
+    console.warn('[interactive] nessun href e nessuna action');
+    return;
+  }
+
+  let action;
+  try {
+    action = JSON.parse(raw);
+  } catch (err) {
+    console.error('[interactive] JSON parse error:', err, raw);
+    return;
+  }
+
+  if ((action.type || '').trim() !== 'link') {
+    console.warn('[interactive] type non gestito:', action.type, action);
+    return;
+  }
+
+  const endpoint = (action.endpoint || '').trim();
+  const params = action.params || {};
+  if (!endpoint) {
+    console.warn('[interactive] endpoint mancante', action);
+    return;
+  }
+
+  const qs = new URLSearchParams();
+  Object.keys(params).forEach(k => qs.set(k, params[k]));
+
+  const url = endpoint + (endpoint.includes('?') ? '&' : '?') + qs.toString();
+
+  console.log('[interactive] go url (same tab):', url);
+  window.location.assign(url); // ✅ stessa scheda
+}, true);
+
+console.log('[interactive] binder attivo (same tab)');
+
+
 </script>
 
 
