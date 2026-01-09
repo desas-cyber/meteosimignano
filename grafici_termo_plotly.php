@@ -806,18 +806,28 @@ function y2LayoutFor(mode) {
   }
 
   if (mode === 'dirvento') {
-    return {
-      titleText: (isMobile ? 'Dir(°)' : 'Direzione (°)'),
-      color: '#ff8c00',
-      range: [0, 360],
-      fixedrange: true,
-      autorange: false,
-      tickmode: 'linear',
-      tick0: 0,
-      dtick: 45,
-      tickformat: '.0f'
-    };
+  const dirs = ['N','NE','E','SE','S','SW','W','NW'];
+  const tickvals = [];
+  const ticktext = [];
+
+  for (let i = 0; i < 8; i++) {
+    tickvals.push(i * 45);
+    ticktext.push(dirs[i]);
   }
+
+  return {
+    titleText: (isMobile ? 'Dir' : 'Direzione'),
+    color: '#ff8c00',
+    range: [0, 360],
+    fixedrange: true,
+    autorange: false,
+    tickmode: 'array',
+    tickvals,
+    ticktext,
+    tickformat: null
+  };
+}
+
 
   return {
     titleText: (isMobile ? 'Umid(%)' : 'Umidità (%)'),
@@ -1067,18 +1077,26 @@ async function toggleY2Metric(mode) {
   suppressXReloadOnce(2); // ✅ fondamentale su mobile: evita reload X “fantasma”
 
   await Plotly.relayout(chartDiv, {
-    'yaxis2.title.text': y2.titleText,
-    'yaxis2.title.font.color': y2.color,
-    'yaxis2.tickfont.color': y2.color,
-    'yaxis2.range': y2.range,
-    'yaxis2.autorange': false,
-    'yaxis2.fixedrange': y2.fixedrange,
-    'yaxis2.constrain': 'range',
-    'yaxis2.tickmode': y2.tickmode,
-    'yaxis2.tick0': y2.tick0,
-    'yaxis2.dtick': y2.dtick,
-    'yaxis2.tickformat': y2.tickformat
-  });
+  'yaxis2.title.text': y2.titleText,
+  'yaxis2.title.font.color': y2.color,
+  'yaxis2.tickfont.color': y2.color,
+  'yaxis2.range': y2.range,
+  'yaxis2.autorange': false,
+  'yaxis2.fixedrange': y2.fixedrange,
+  'yaxis2.constrain': 'range',
+
+  'yaxis2.tickmode': y2.tickmode,
+
+  // ✅ IMPORTANTISSIMO: per tick testuali
+  'yaxis2.tickvals': y2.tickvals || null,
+  'yaxis2.ticktext': y2.ticktext || null,
+
+  // ✅ se usi tickmode='array' questi vanno “spenti”
+  'yaxis2.tick0': (y2.tickmode === 'array') ? null : y2.tick0,
+  'yaxis2.dtick': (y2.tickmode === 'array') ? null : y2.dtick,
+  'yaxis2.tickformat': y2.tickformat || null
+});
+
 
   if (mode === 'dirvento') showWindColorScale();
   else hideWindColorScale();
@@ -1343,18 +1361,27 @@ if (keys === 'xaxis.range') {
       const y2 = y2LayoutFor('dirvento');
 
       await relayoutProgrammatic(chartDiv, {
-        'yaxis2.title.text': y2.titleText,
-        'yaxis2.title.font.color': y2.color,
-        'yaxis2.tickfont.color': y2.color,
-        'yaxis2.range': y2.range,              // per dirvento deve essere [0,360]
-        'yaxis2.autorange': false,
-        'yaxis2.fixedrange': true,             // per dirvento
-        'yaxis2.constrain': 'range',
-        'yaxis2.tickmode': y2.tickmode,
-        'yaxis2.tick0': y2.tick0,
-        'yaxis2.dtick': y2.dtick,
-        'yaxis2.tickformat': y2.tickformat
-      }, 'dirvento fix');
+  'yaxis2.title.text': y2.titleText,
+  'yaxis2.title.font.color': y2.color,
+  'yaxis2.tickfont.color': y2.color,
+  'yaxis2.range': y2.range,
+  'yaxis2.autorange': false,
+  'yaxis2.fixedrange': true,
+  'yaxis2.constrain': 'range',
+
+  // ✅ QUESTE RIGHE VANNO AGGIUNTE
+  'yaxis2.tickmode': y2.tickmode,
+  'yaxis2.tickvals': y2.tickvals,
+  'yaxis2.ticktext': y2.ticktext,
+
+  // ❌ spegni i tick numerici
+  'yaxis2.tick0': null,
+  'yaxis2.dtick': null,
+  'yaxis2.tickformat': null
+
+}, 'dirvento fix');
+
+      
     }, 0);
   }
 }
@@ -1527,19 +1554,26 @@ if (STATE.autoTempRangeNext) {
     },
 
     yaxis2: {
-      title: { text: y2.titleText, font: { color: y2.color, size: axisTitleSize } },
-      tickfont: { color: y2.color, size: axisTickSize },
-      range: y2.range,
-      autorange: false,
-      fixedrange: !!y2.fixedrange,
-      constrain: 'range',
-      tickmode: y2.tickmode || 'linear',
-      tick0: (y2.tick0 !== undefined ? y2.tick0 : null),
-      dtick: (y2.dtick !== undefined ? y2.dtick : null),
-      tickformat: (y2.tickformat || null),
-      overlaying: 'y',
-      side: 'right'
-    },
+  title: { text: y2.titleText, font: { color: y2.color, size: axisTitleSize } },
+  tickfont: { color: y2.color, size: axisTickSize },
+  range: y2.range,
+  autorange: false,
+  fixedrange: !!y2.fixedrange,
+  constrain: 'range',
+  overlaying: 'y',
+  side: 'right',
+
+  // ✅ tick settings coerenti (numerico vs testuale)
+  tickmode: y2.tickmode || 'linear',
+  tickvals: (y2.tickmode === 'array' ? (y2.tickvals || []) : null),
+  ticktext: (y2.tickmode === 'array' ? (y2.ticktext || []) : null),
+
+  // ✅ spegni tick0/dtick quando usi array, altrimenti Plotly può tornare numerico
+  tick0: (y2.tickmode === 'array') ? null : (y2.tick0 ?? null),
+  dtick: (y2.tickmode === 'array') ? null : (y2.dtick ?? null),
+  tickformat: y2.tickformat ?? null
+},
+
 
     hovermode: 'closest',
     plot_bgcolor: 'white',

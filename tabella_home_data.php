@@ -302,7 +302,7 @@ FROM (
             'label' => 'Temperatura attuale',
             'value' => formatValue($raw['temp_act'], '°C') . ' ' . formatTime($raw['temp_act_time']),
             'note'  => createDeltaIndicator($temp_delta_24h ?? 0) . " \u{0394}24h(attuale - 24h) = {$temp_delta_24h}°C",
-            'link'  => 'grafici_termo_plotly.php?range=24h&visible=' . rawurlencode('Temperatura,Dew Point,Media Periodo, Media Max 7gg, Media Min 7gg'),
+            'link'  => 'grafici_termo_plotly.php?range=24h&visible=' . rawurlencode('Temperatura,Media Periodo, Media Max 7gg, Media Min 7gg'),
             'separator' => false,
             'interactive' => [
                 'tooltip' => 'Andamento Temperatura e punto di rugiada 24h',
