@@ -36,6 +36,18 @@ $stmt_altro = $pdo->prepare("SELECT DISTINCT altro FROM $table_name WHERE altro 
 $stmt_altro->execute();
 $valori_altro = $stmt_altro->fetchAll(PDO::FETCH_COLUMN);
 
+// Mappatura valori altro -> etichette descrittive
+$altro_labels = [
+    '0' => 'Nuvole',
+    '1' => 'Luna',
+    '2' => 'Arcobaleno',
+    '3' => 'Aur. boreale',
+    '4' => 'Neve',
+    '5' => 'Altro',
+    
+    // Aggiungi altre mappature secondo necessita
+];
+
 // =====================
 // PAGINAZIONE per la visualizzazione
 // =====================
@@ -1062,8 +1074,12 @@ main{ width:100%; }
             <select id="altro" name="altro">
                 <option value="all" <?php echo $filtro_altro === 'all' ? 'selected' : ''; ?>>Tutti</option>
                 <?php foreach ($valori_altro as $valore): ?>
+                    <?php 
+                        // Usa l'etichetta descrittiva se disponibile, altrimenti il valore stesso
+                        $label = isset($altro_labels[$valore]) ? $altro_labels[$valore] : $valore;
+                    ?>
                     <option value="<?php echo htmlspecialchars($valore); ?>" <?php echo $filtro_altro == $valore ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($valore); ?>
+                        <?php echo htmlspecialchars($label); ?>
                     </option>
                 <?php endforeach; ?>
             </select>
