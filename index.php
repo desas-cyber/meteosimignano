@@ -182,10 +182,11 @@ if (!isset($data['error'])) {
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.08, maximum-scale=5.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=0.98, maximum-scale=5.0, user-scalable=yes">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <title>MeteoSimignano - Galleria Webcam</title>
     <link rel="stylesheet" href="galleria-lightbox.css">
+    <link rel="stylesheet" href="header_shared.css">
     
     <style>
         /* ====================================================================
@@ -201,91 +202,6 @@ if (!isset($data['error'])) {
             padding: 0;
         }
         
-        /* ====================================================================
-           HEADER - Titolo e coordinate
-           ==================================================================== */
-            .main-header {
-        width: 100%;
-        max-width: 1000px;
-        text-align: center;
-        padding: 10px;
-        box-sizing: border-box;
-        
-        /* Layout Flexbox */
-        display: flex; 
-        justify-content: space-between; 
-        align-items: center; 
-        position: relative; 
-    }
-
-    .header-content {
-        flex-grow: 1; 
-        text-align: center; 
-        min-width: 0; 
-    }
-
-    .header-icon {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-decoration: none;
-        color: #333; 
-        min-width: 20px; 
-        font-size: 0.7em;
-        padding: 0 5px;
-    }
-
-    /* Effetto hover coerente con tuo stile */
-.header-icon:hover {
-  
-  color: red;
-}
-
-    .header-icon svg {
-        /* DEFAULT (Desktop-First): Si applica a tutti gli schermi, inclusi quelli grandi */
-        width: 36px;
-        height: 36px;
-        stroke-width: 2.5; 
-    }
-
-    /* MEDIA QUERY: Sovrascrive il default solo quando la larghezza è <= 599px (Mobile/Small) */
-    @media (max-width: 599px) {
-    .header-icon svg {
-        width: 20px; /* Riduzione su schermi piccoli */
-        height: 20px;
-        padding-left: 20px; /* Esempio: Aumenta il rientro a 20px */
-        padding-right: 20px;
-        stroke-width: 2.5;
-    }
-}
-.header-icon .icon-label {
-    display: block; 
-    margin-top: 2px;
-}
-        .main-title {
-            font-size: 6vw;
-            white-space: nowrap;
-            margin: 0;
-        }
-        
-        @media (min-width: 600px) {
-            .main-title {
-                font-size: 55px;
-            }
-        }
-        
-        .sub-title {
-            font-size: 3vw;
-            font-weight: normal;
-            white-space: nowrap;
-            margin: 10px;
-        }
-        
-        @media (min-width: 600px) {
-            .sub-title {
-                font-size: 30px;
-            }
-        }
         
         /* ====================================================================
            IMMAGINE PRINCIPALE
@@ -423,8 +339,8 @@ if (!isset($data['error'])) {
   align-items: center;
   gap: 10px;
 
-  width: 95%;  /* CAMBIA a 90% per centrare di più */
-  max-width: 1000px;
+  width: 90% !important;  /* CAMBIA a 90% per centrare di più */
+  max-width: 1000px !important;
   margin: 20px auto;
   padding: 0;  /* RIMUOVI il padding se usi width ridotta */
   box-sizing: border-box;
@@ -506,7 +422,212 @@ if (!isset($data['error'])) {
   .gallery-header { gap: 8px; padding: 0 6px; }
 }
 
+/* ===== Spinner globale accanto alle coordinate ===== */
+.sub-title-row{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-subrow{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* Spinner riusabile */
+.spinner{
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(0,0,0,0.25);
+  border-top-color: #333;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.spinner.hidden{ display:none; }
+
+@keyframes spin{ to{ transform: rotate(360deg); } }
+
+/* Facoltativo: effetto “sto caricando pagina” */
+.page-loading { cursor: progress; }
+.page-loading main { opacity: 0.65; }
+
+/* ====================================================================
+   VOCI DEL SOTTO MENU - IN ALTO A DX NELLA PAGINA
+   ==================================================================== */
+
+/* Container del menu */
+.header-menu-container {
+    position: relative;
+}
+
+/* Pulsante menu */
+.menu-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+/* Sottomenu */
+.submenu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 10px;
+    background: white;
+    border: 2px solid #333;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: max-content;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    z-index: 1000;
+}
+
+/* Sottomenu visibile */
+.submenu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Voci del sottomenu */
+.submenu-item {
+    display: block;
+    padding: 12px 16px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    text-align: left;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #ddd;
+}
+
+.submenu-item:last-child {
+    border-bottom: none;
+}
+
+.submenu-item:hover {
+    background-color: #f0f0f0;
+}
+
+.submenu-item:first-child {
+    border-radius: 6px 6px 0 0;
+}
+
+.submenu-item:last-child {
+    border-radius: 0 0 6px 6px;
+}
+
+
+   .submenu-item {
+    display: block;
+    padding: 12px 20px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.submenu-item:last-child {
+    border-bottom: none;
+}
+
+.submenu-item:hover {
+    background-color: #f8f8f8;
+}
+
+.submenu-item:first-child {
+    border-radius: 8px 8px 0 0;
+}
+
+.submenu-item:last-child {
+    border-radius: 0 0 8px 8px;
+}
+
+/* =========================================================
+   LANDSCAPE PHONE: overlay sopra immagine + scala 90%
+   (HTML attuale: h2#main-image-date.date-text è sotto all'immagine)
+   ========================================================= */
+@media (orientation: landscape) and (max-height: 480px) {
+
+  /* il contenitore deve essere riferimento per l'overlay */
+  .main-container{
+    position: relative !important;
+    overflow: hidden !important;
+  }
+
+  /* immagine al 90% e centrata */
+  .main-image{
+    width: 90% !important;
+    max-width: 90% !important;
+    display: block !important;
+    margin: 0 auto !important;
+    height: auto !important;
+  }
+
+  #main-image-date { font-size: 0.9em !important; }
+
+  /* overlay: usa lo stesso elemento (id=main-image-date) ma lo metti assoluto */
+  #main-image-date{
+    position: absolute !important;
+    left: 50% !important;
+    bottom: 0.3rem !important;
+    transform: translateX(-50%) scale(0.9) !important;
+    transform-origin: bottom center !important;
+    z-index: 5 !important;
+
+    /* IMPORTANTI per non “allargare” e per restare leggibile */
+    width: auto !important;
+    max-width: calc(90% - 12px) !important; /* dentro la foto (90%) */
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+
+    /* se vuoi: evita che si selezioni mentre scrolli */
+    pointer-events: none;
+  }
+
+  /* disattiva il comportamento “banner” che avevi pensato per testo sotto */
+  .main-container > .date-text::after{
+    content: none !important;
+  }
+
+/* =========================================================
+   LANDSCAPE PHONE – FIX: titolo galleria troppo piccolo
+   (reset + px, evita scaling cumulativo)
+   ========================================================= */
+@media (orientation: landscape) and (max-height: 480px){
+
+   /* Titolo: "Galleria ultime 36 h" */
+  .gallery-header h2,
+  .gallery-title{
+    font-size: 20px !important;
+    line-height: 1.15 !important;
+  }
+
+  /* Bottone: "Diario del cielo" */
+  .gallery-cta,
+  .diario-link,
+  .gallery-button{
+    font-size: 16px !important;
+    padding: 6px 10px !important;
+    border-width: 1px !important;
+    border-radius: 6px !important;
+    line-height: 1.1 !important;
+  }
+}
+
+
     </style>
+    <link rel="stylesheet" href="header_shared.css">
+
 </head>
 
 <body>
@@ -516,25 +637,39 @@ if (!isset($data['error'])) {
     
     <header class="main-header">
     
-    <a href="pluvio.html" class="header-icon left-icon" title="Dati Pluviometro CFR Toscana">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2s7 8 7 12a7 7 0 1 1-14 0c0-4 7-12 7-12z"></path>
-            <path d="M16 16l-4 4-4-4"></path>
-        </svg>
-        <span class="icon-label">Pluvio</span>
-    </a>
+    <a href="lavori_in_corso.html" class="header-icon left-icon" title="">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+    </svg>
+    <span class="icon-label">Info</span>
+</a>
     
     <div class="header-content">
         <h1 class="main-title">MeteoSimignano</h1>
-        <h1 class="sub-title">43°17′32.5″N 11°10′01.49″E @ 418m slm</h1>
-    </div>
+        <h1 class="sub-title sub-title-row">
+          <span>43°17′32.5″N 11°10′01.49″E @ 418m slm</span>
+          <span id="page-spinner" class="spinner" aria-label="Caricamento in corso"></span>
+        </h1>
+    </div>  
+   
+
     
-    <a href="indice.php" class="header-icon right-icon" title="Indice e Mappa del Sito">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 6h16M4 12h16M4 18h16"></path>
-        </svg>
-        <span class="icon-label">Menu</span>
-    </a>
+     <!-- Icona Menu/Indice (destra) -->
+        <div class="header-menu-container">
+            <button class="header-icon right-icon menu-toggle" title="Menu">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+                <span class="icon-label">Menu</span>
+            </button>
+            
+            <div class="submenu">
+                <a href="belle.php" class="submenu-item">Diario del cielo</a>
+                <a href='grafici_termo_plotly.php?range=24h&visible=' class="submenu-item">Grafici</a>
+            </div>
+        </div>
 </header>
 
     <main>
@@ -686,5 +821,136 @@ if (!isset($data['error'])) {
     
     <!-- Script per aggiornamento automatico galleria (ogni 5 minuti) -->
     <script src="aggiorna_galleria.js"></script>
+    
+    
+    <!-- GESTIONE SPINNER DI CARICAMENTO DATI -->
+    <script>
+(function(){
+  'use strict';
+
+  var sp = document.getElementById('page-spinner');
+  if (!sp) return;
+
+  // --- Task list: 3 cose da aspettare ---
+  var state = {
+    main: false,
+    gallery: false,
+    tabella: false
+  };
+
+  function show(){ sp.classList.remove('hidden'); }
+  function hide(){ sp.classList.add('hidden'); }
+
+  function markDone(key){
+    if (state[key] === true) return;
+    state[key] = true;
+    // console.log('[LOADING] done:', key, state);
+
+    if (state.main && state.gallery && state.tabella) {
+      hide();
+    }
+  }
+
+  function init(){
+    show();
+
+    // ========== A) MAIN IMAGE ==========
+    (function(){
+      var img = document.getElementById('main-image');
+      if (!img) { markDone('main'); return; }
+
+      function done(){ markDone('main'); }
+      if (img.complete) return done();
+      img.addEventListener('load', done, { once:true });
+      img.addEventListener('error', done, { once:true });
+
+      // safety
+      setTimeout(done, 8000);
+    })();
+
+    // ========== B) GALLERIA MINIATURE ==========
+    (function(){
+      var gallery = document.querySelector('.gallery');
+      if (!gallery) { markDone('gallery'); return; }
+
+      var imgs = gallery.querySelectorAll('img');
+      if (!imgs || imgs.length === 0) { markDone('gallery'); return; }
+
+      var remaining = imgs.length;
+      function oneDone(){
+        remaining--;
+        if (remaining <= 0) markDone('gallery');
+      }
+
+      for (var i=0; i<imgs.length; i++){
+        var im = imgs[i];
+        if (im.complete) {
+          oneDone();
+        } else {
+          im.addEventListener('load', oneDone, { once:true });
+          im.addEventListener('error', oneDone, { once:true });
+        }
+      }
+
+      // safety
+      setTimeout(function(){ markDone('gallery'); }, 12000);
+    })();
+
+    // ========== C) IFRAME TABELLA: via postMessage ==========
+    // se l'iframe non esiste, non bloccare
+    (function(){
+      var fr = document.getElementById('tabella-meteo-iframe');
+      if (!fr) { markDone('tabella'); return; }
+
+      // fallback: se per qualche motivo non arriva il messaggio, sblocca dopo 10s
+      setTimeout(function(){ markDone('tabella'); }, 10000);
+    })();
+  }
+
+  // ascolta i messaggi dall'iframe tabella_home_display.php
+  window.addEventListener('message', function(ev){
+    if (ev.origin !== window.location.origin) return;
+
+    var msg = ev.data || {};
+    if (msg.src !== 'tabella_home_display') return;
+
+    if (msg.type === 'TAB_HOME_LOADED') {
+      markDone('tabella');
+    }
+  });
+
+  // BFCache: se torni indietro, non restare in loading
+  window.addEventListener('pageshow', function(){
+    // se la pagina viene ripescata “già pronta”, chiudi
+    if (state.main && state.gallery && state.tabella) hide();
+  });
+
+  init();
+})();
+</script>
+<script>
+// Toggle menu in alto a dx
+document.addEventListener('DOMContentLoaded', function() {
+    const menuToggle = document.querySelector('.menu-toggle');
+    const submenu = document.querySelector('.submenu');
+    
+    menuToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        submenu.classList.toggle('active');
+    });
+    
+    // Chiudi menu cliccando fuori
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.header-menu-container')) {
+            submenu.classList.remove('active');
+        }
+    });
+}); 
+</script>
+
+    
+    
+    
 </body>
 </html>

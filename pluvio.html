@@ -6,6 +6,7 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <title>MeteoSimignano - Pluvio</title>
     <link rel="stylesheet" href="galleria-lightbox.css">
+    <link rel="stylesheet" href="header_shared.css">
     
     <style>
         /* ====================================================================
@@ -20,102 +21,19 @@
             margin: 0;
             padding: 0;
         }
-        
-        /* ====================================================================
-           HEADER - Titolo, coordinate e icone navigazione
-           ==================================================================== */
-        
+        /** ==============================
+        *HEADER - FORZATURA PER MOBILE LANDSCAPE
+        *  ==============================*/
+        @media (orientation: landscape) and (max-height: 480px){
         .main-header {
-            width: 100%;
-            max-width: 1000px;
-            text-align: center;
-            padding: 10px;
-            box-sizing: border-box;
             
-            /* Layout Flexbox per posizionare icone ai lati */
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            position: relative; 
+            max-width: 500px !important;
+            
+        }
         }
         
-        /* Contenitore centrale con titolo e coordinate */
-        .header-content {
-            flex-grow: 1; 
-            text-align: center; 
-            min-width: 0; 
-        }
         
-        /* Stile comune per le icone di navigazione */
-        .header-icon {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: #333; 
-            min-width: 20px; 
-            font-size: 0.7em;
-            padding: 0 5px;
-        }
-
-        .header-icon:hover { color: red;}
         
-        /* SVG delle icone - dimensione desktop (default) */
-        .header-icon svg {
-            width: 36px;
-            height: 36px;
-            stroke-width: 2.5; 
-        }
-        
-        /* Ridimensionamento icone su mobile */
-        @media (max-width: 599px) {
-            .header-icon svg {
-                width: 20px;
-                height: 20px;
-                padding-left: 20px;
-                padding-right: 20px;
-                stroke-width: 2.5;
-            }
-        }
-        
-        /* Etichetta sotto le icone */
-        .header-icon .icon-label {
-            display: block; 
-            margin-top: 2px;
-        }
-        
-        /* ====================================================================
-           TITOLI - MeteoSimignano e coordinate
-           ==================================================================== */
-        
-        /* Titolo principale - responsive con vw su mobile */
-        .main-title {
-            font-size: 6vw;
-            white-space: nowrap;
-            margin: 0;
-        }
-        
-        /* Titolo principale - dimensione fissa su desktop */
-        @media (min-width: 600px) {
-            .main-title {
-                font-size: 55px;
-            }
-        }
-        
-        /* Sottotitolo con coordinate - responsive con vw su mobile */
-        .sub-title {
-            font-size: 3vw;
-            font-weight: normal;
-            white-space: nowrap;
-            margin: 10px;
-        }
-        
-        /* Sottotitolo - dimensione fissa su desktop */
-        @media (min-width: 600px) {
-            .sub-title {
-                font-size: 30px;
-            }
-        }
         
         /* ====================================================================
            IFRAME PLUVIOMETRO - Contenitore principale
@@ -136,7 +54,7 @@
             display: block;
         }
 
-        /* ====================================================================
+/* ====================================================================
    RESPONSIVE MOBILE - Ridimensionamento per schermi piccoli
    ==================================================================== */
 
@@ -150,6 +68,142 @@
         width: 95%;
     }
 }
+
+/* Container del menu */
+.header-menu-container {
+    position: relative;
+}
+
+/* Pulsante menu */
+.menu-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+/* Sottomenu */
+.submenu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 10px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    min-width: 180px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    z-index: 1000;
+}
+
+/* Sottomenu visibile */
+.submenu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* ====================================================================
+   VOCI DEL SOTTO MENU - IN ALTO A DX NELLA PAGINA
+   ==================================================================== */
+
+/* Container del menu */
+.header-menu-container {
+    position: relative;
+}
+
+/* Pulsante menu */
+.menu-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+/* Sottomenu */
+.submenu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 10px;
+    background: white;
+    border: 2px solid #333;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: max-content;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    z-index: 1000;
+}
+
+/* Sottomenu visibile */
+.submenu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Voci del sottomenu */
+.submenu-item {
+    display: block;
+    padding: 12px 16px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    text-align: left;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #ddd;
+}
+
+.submenu-item:last-child {
+    border-bottom: none;
+}
+
+.submenu-item:hover {
+    background-color: #f0f0f0;
+}
+
+.submenu-item:first-child {
+    border-radius: 6px 6px 0 0;
+}
+
+.submenu-item:last-child {
+    border-radius: 0 0 6px 6px;
+}
+
+
+   .submenu-item {
+    display: block;
+    padding: 12px 20px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.submenu-item:last-child {
+    border-bottom: none;
+}
+
+.submenu-item:hover {
+    background-color: #f8f8f8;
+}
+
+.submenu-item:first-child {
+    border-radius: 8px 8px 0 0;
+}
+
+.submenu-item:last-child {
+    border-radius: 0 0 8px 8px;
+}
+
     </style>
 </head>
 
@@ -159,13 +213,14 @@
          ==================================================================== -->
     
     <header class="main-header">
-        <!-- Icona Home (sinistra) -->
-        <a href="index.php" class="header-icon left-icon" title="Home">
+        <!-- Icona Grafici (sinistra) -->
+        <a href='grafici_termo_plotly.php?range=24h&visible=' class="header-icon left-icon" title="Grafici">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
             </svg>
-            <span class="icon-label">Home</span>
+            <span class="icon-label">Grafici</span>
         </a>
         
         <!-- Titolo centrale e coordinate -->
@@ -174,13 +229,22 @@
             <h1 class="sub-title">43°17′32.5″N 11°10′01.49″E @ 418m slm</h1>
         </div>
         
+        
         <!-- Icona Menu/Indice (destra) -->
-        <a href="indice.php" class="header-icon right-icon" title="Indice e Mappa del Sito">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
-            <span class="icon-label">Menu</span>
-        </a>
+        <div class="header-menu-container">
+            <button class="header-icon right-icon menu-toggle" title="Menu">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+                <span class="icon-label">Menu</span>
+            </button>
+            
+            <div class="submenu">
+                <a href="index.php" class="submenu-item">Home</a>
+                <a href="pluvio_tab.php" class="submenu-item">Tabella Pluvio</a>
+                <a href="grafici_termo_plotly.php" class="submenu-item">Grafici</a>
+            </div>
+        </div>
     </header>
 
     <!-- ====================================================================
@@ -199,5 +263,29 @@
             </iframe>
         </div>
     </main> 
+
+<script>
+// Toggle menu in alto a dx
+document.addEventListener('DOMContentLoaded', function() {
+    const menuToggle = document.querySelector('.menu-toggle');
+    const submenu = document.querySelector('.submenu');
+    
+    menuToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        submenu.classList.toggle('active');
+    });
+    
+    // Chiudi menu cliccando fuori
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.header-menu-container')) {
+            submenu.classList.remove('active');
+        }
+    });
+}); 
+</script>
+</body>
+
+</body>   
 </body>
 </html>

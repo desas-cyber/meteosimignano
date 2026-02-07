@@ -81,16 +81,30 @@ if (isset($data['error'])) {
     $records = [];
 } else {
     $records = $data['records'];
-
+    // Versione "pagina": cambia se cambia la selezione (page/filtri) o se arrivano nuovi scatti
+    $pageVersion = 0;
     // Ciclo per formattare la data per l'uso nella galleria/lightbox
-    foreach ($records as &$rec) { 
-        if (!empty($rec['data_ora'])) {
-            // Formattazione per la visualizzazione nella miniatura e lightbox
-            $rec['data_ora'] = (new DateTime($rec['data_ora']))->format('d/m/Y H:i');
-        } else {
-            $rec['data_ora'] = 'Data/Ora N/D';
-        }
+    foreach ($records as &$rec) {
+    // tieni il valore DB originale
+    $rec['_data_ora_raw'] = $rec['data_ora'] ?? null;
+
+    if (!empty($rec['data_ora'])) {
+        $rec['data_ora'] = (new DateTime($rec['data_ora']))->format('d/m/Y H:i');
+    } else {
+        $rec['data_ora'] = 'Data/Ora N/D';
     }
+}
+
+$pageVersion = 0;
+foreach ($records as $r) {
+    if (!empty($r['_data_ora_raw'])) {
+        $ts = strtotime($r['_data_ora_raw']);
+        if ($ts !== false && $ts > $pageVersion) $pageVersion = $ts;
+    }
+}
+
+unset($rec);
+
 }
 
 
@@ -261,15 +275,23 @@ function getTempColorClass($temp) {
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.08">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Meteosimignano_diario_del_cielo</title>
-    
+    <link rel="stylesheet" href="header_shared.css">
     
     <style>
     
 /* ==========================================================================
    CSS COMPLETO E CORRETTO PER BELLE.PHP
    ========================================================================== */
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
 
 body {
     font-family: Arial, sans-serif;
@@ -280,104 +302,59 @@ body {
     padding: 0;
 }
 
-.main-header {
+main {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Fix right-icon per landscape */
+@media (orientation: landscape) and (max-height: 480px) {
+    header.main-header .right-icon {
+        width: 44px;
+        min-width: 44px;
+        justify-self: end;
+    }
+}
+.gallery-header-container {
     width: 100%;
     max-width: 1000px;
-    text-align: center;
-    padding: 10px;
+    margin: 0 auto;                /* centra il blocco */
+    padding: 0 5px;                /* stesso padding laterale della gallery */
     box-sizing: border-box;
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    position: relative; 
 }
 
-.header-content {
-    flex-grow: 1; 
-    text-align: center; 
-    min-width: 0; 
-}
 
-.header-icon {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-decoration: none;
-    color: #333; 
-    min-width: 20px; 
-    font-size: 0.7em;
-    padding: 0 5px;
-    cursor: pointer;
-}
-
-.header-icon:hover {
-    color: red;
-}
-
-.header-icon svg {
-    width: 36px;
-    height: 36px;
-    stroke-width: 2.5; 
-}
-
-@media (max-width: 599px) {
-    .header-icon svg {
-        width: 20px;
-        height: 20px;
-        padding-left: 20px;
-        padding-right: 20px;
-        stroke-width: 2.5;
-    }
-}
-
-.header-icon .icon-label {
-    display: block; 
-    margin-top: 2px;
-}
-
-.main-title {
-    font-size: 6vw;
-    white-space: nowrap;
-    margin: 0;
-}
-main{ width:100%; }
-
-
-@media (min-width: 600px) {
-    .main-title {
-        font-size: 55px;
-    }
-}
-
-.sub-title {
-    font-size: 3vw;
-    font-weight: normal;
-    white-space: nowrap;
-    margin: 10px;
-}
-
-@media (min-width: 600px) {
-    .sub-title {
-        font-size: 30px;
-    }
+/* Regola principale per il titolo */
+.title-container {
+    width: 100%;
+    max-width: 1000px;           /* deve essere uguale al max-width della galleria */
+    margin: 0 auto;              /* ← centra tutto il blocco */
+    padding: 0 10px;
+    box-sizing: border-box;
 }
 
 .gallery-title {
-    text-align: center; 
-    margin: 20px 0;
-    font-size: 5vw;
-    max-width: 100%;
-    white-space: normal;
-    overflow: visible;
-    text-overflow: clip;
-    min-width: 0;
+    margin: 24px 0 12px 0;
     font-weight: bold;
     color: black;
+    font-size: clamp(16px, 7vw, 38px);
+    line-height: 1.15;
+    text-align: center;          /* ora centra DENTRO il contenitore limitato */
+    /* rimuovi padding-left se c'era */
 }
 
-@media (min-width: 600px) {
+/* Riduci circa della metà sui telefoni piccoli / medi */
+@media (max-width: 480px) {
     .gallery-title {
-        font-size: 30px;
+        font-size: clamp(14px, 5.5vw, 22px);
+    }
+}
+
+@media (orientation: landscape) and (max-width: 896px) {
+    .gallery-title {
+        font-size: clamp(18px, 6.2vw, 28px);   /* un po' più leggibile in landscape */
+        margin: 16px 0 10px 0;                 /* meno margine verticale */
     }
 }
 
@@ -911,112 +888,120 @@ main{ width:100%; }
 }
 
 /* =========================
-   PAGINAZIONE sotto il titolo
+   PAGINAZIONE (sempre 1 riga, font ≤14px)
    ========================= */
-/* Wrapper largo quanto la galleria (100% + max-width 1000px) */
-.pager-wrap{
+.pager-wrap {
     width: 100%;
     max-width: 1000px;
-    margin: 6px auto 10px;
-    padding: 8px 10px;
-    box-sizing: border-box;
-
+    margin: 8px auto 16px;          /* centrato come la galleria */
+    padding: 10px 0;                /* solo sopra/sotto → bordi liberi lateralmente */
     display: flex;
     justify-content: space-between;
     align-items: center;
-
+    gap: 12px;
     border: 1px solid #ddd;
     border-radius: 10px;
     background: #fafafa;
+    box-sizing: border-box;
 }
 
-/* Tutti gli elementi hanno LO STESSO carattere */
-.pager-item{
-    font-size: 14px;     /* uguale per tutti */
-    font-weight: 600;    /* uguale per tutti */
+.pager-item {
+    font-size: clamp(11px, 2.8vw, 14px);
+    font-weight: 600;
     color: #666;
-    text-decoration: none;
     white-space: nowrap;
+    padding: 6px 14px;              /* respiro interno */
+    border-radius: 6px;
+    transition: color 0.15s;
 }
 
-/* Link un filo più “cliccabile” senza cambiare font */
-.pager-item:hover{
-    color: red;
+.pager-item:hover {
+    color: #e00;
 }
 
-/* Disabilitati */
-.pager-item.is-disabled{
-    opacity: 0.45;
-    pointer-events: none;
+/* Spingi le frecce fuori fino al bordo reale del wrapper */
+.pager-item:first-child {
+    margin-left: 0px;             /* regola questo valore: -10 / -12 / -16 / -20 */
 }
 
-/* Centro: stesso font, solo centrato */
-.pager-item.is-center{
+.pager-item:last-child {
+    margin-right: 0px;
+}
+
+/* Se usi "Pagina X / Y" al centro, dagli un po' di protezione */
+.pager-form {
+    padding: 0 5px;                /* evita che tocchi le frecce quando sono vicine */
     text-align: center;
 }
-/* contenitore titolo + paginazione: stessa larghezza galleria */
-.gallery-header-container{
-    width: 100%;
-    max-width: 1000px;
-    box-sizing: border-box;
-    margin: 0 auto;
-    padding: 0 5px; /* uguale alla gallery che ha padding 5px */
-}
 
-
-/* Mobile: rimpicciolisce tutto uguale */
-@media (max-width: 480px){
-    .pager-wrap{
-        padding: 5px 6px;
-        border-radius: 8px;
+/* Mobile stretto: ancora più compatto ma resta su una riga */
+@media (max-width: 480px) {
+    .pager-wrap {
+        padding: 6px 8px;
         margin: 4px auto 8px;
+        gap: 6px;
     }
-    .pager-item{
-        font-size: 11px;   /* uguale per tutti */
-        font-weight: 600;  /* uguale per tutti */
+    .pager-item,
+    .pager-label,
+    .pager-select {
+        font-size: clamp(10px, 3.5vw, 13px);
     }
 }
+/* =========================
+ ===== Spinner loading accanto al titolo ===== 
+ ========================= */
+.gallery-title-row{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
 
-/*FORMATO SELETTORE DI PAGINA*/
+.spinner{
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(0,0,0,0.25);
+  border-top-color: #333;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.spinner.hidden{
+  display: none;
+}
+
+@keyframes spin{
+  to{ transform: rotate(360deg); }
+}
+
+/* FIX overflow orizzontale: i figli flex devono poter restringersi */
+.pager-wrap{
+  flex-wrap: wrap;      /* se serve va a capo */
+  gap: 8px;
+}
+
+.pager-item,
 .pager-form{
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+  min-width: 0;         /* IMPORTANTISSIMO nei flex item */
 }
 
-.pager-label{
-    font-size: 14px;
-    font-weight: 600;
-    color: #666;
+/* Se vuoi anche l'ellissi invece dello “sforamento” */
+.pager-item{
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.pager-select{
-    font-size: 14px;
-    font-weight: 600;
-    color: #666;
-
-    border: none;           
-    background: transparent;
-    outline: none;
-    box-shadow: none;
-
-    padding: 0;             
-    cursor: pointer;
-}
-
-@media (max-width: 480px){
-    .pager-label{ font-size: 11px; }
-    .pager-select{
-        font-size: 11px;
-        padding: 3px 6px;
-        border-radius: 7px;
-    }
+.pager-item.is-disabled {
+    color: #bbb;                    /* grigio chiaro – puoi usare #ccc, #aaa, #999 a seconda di quanto lo vuoi tenue */
+    opacity: 0.65;                  /* ulteriore attenuazione (opzionale ma molto efficace) */
+    cursor: default;                /* toglie la manina del link */
+    pointer-events: none;           /* blocca completamente i click (anche se è un <span>) */
+    user-select: none;              /* impedisce la selezione del testo */
 }
 
 
 
     </style>
-        
+<link rel="stylesheet" href="header_shared.css">       
 </head>
 <body>
 
@@ -1097,22 +1082,29 @@ main{ width:100%; }
 </div>
 
 <main>
-   <div class="gallery-header-container"> 
-        <h2 class="gallery-title">Diario del cielo</h2> 
+   <div class="title-container">
+    <h2 class="gallery-title">Diario del cielo</h2>
+    <span id="loading-spinner" class="spinner hidden" aria-label="Caricamento in corso"></span>
+</div>
+
+
 
         <?php
-$totalPages = $data['total_pages'] ?? 1;
-$pageNow    = $data['page'] ?? ($page ?? 1);
-$query = $_GET;
-?>
-<div class="pager-wrap">
-    <?php if ($pageNow > 1): 
-        $query['page'] = $pageNow - 1;
-    ?>
-        <a class="pager-item" href="?<?php echo htmlspecialchars(http_build_query($query)); ?>">⟵ Pagina precedente</a>
-    <?php else: ?>
-        <span class="pager-item is-disabled">⟵ Pagina precedente</span>
-    <?php endif; ?>
+        $totalPages = $data['total_pages'] ?? 1;
+        $pageNow    = $data['page'] ?? ($page ?? 1);
+        $query = $_GET;
+        ?>
+        <div class="pager-wrap">
+    <!-- PRECEDENTE -->
+        <?php if ($pageNow > 1): ?>
+            <?php 
+                $query_prev = $query;
+                $query_prev['page'] = $pageNow - 1;
+            ?>
+            <a class="pager-item" href="?<?php echo htmlspecialchars(http_build_query($query_prev)); ?>">⟵ Precedente</a>
+        <?php else: ?>
+            <span class="pager-item is-disabled">⟵ Precedente</span>
+        <?php endif; ?>
 
     <form class="pager-form" method="get" action="">
     <?php
@@ -1131,7 +1123,7 @@ $query = $_GET;
     }
     ?>
     <label class="pager-label" for="pageSelect">Pagina</label>
-    <select id="pageSelect" name="page" class="pager-select" onchange="this.form.submit()">
+    <select id="pageSelect" name="page" class="pager-select">
         <?php for ($i = 1; $i <= (int)$totalPages; $i++): ?>
             <option value="<?php echo $i; ?>" <?php echo ($i === (int)$pageNow) ? 'selected' : ''; ?>>
                 <?php echo $i . ' / ' . (int)$totalPages; ?>
@@ -1140,16 +1132,19 @@ $query = $_GET;
     </select>
 </form>
 
-    <?php if ($pageNow < $totalPages): 
-        $query['page'] = $pageNow + 1;
+    <!-- SUCCESSIVA -->
+<?php if ($pageNow < $totalPages): ?>
+    <?php 
+        $query_next = $query;
+        $query_next['page'] = $pageNow + 1;
     ?>
-        <a class="pager-item" href="?<?php echo htmlspecialchars(http_build_query($query)); ?>">Pagina successiva ⟶</a>
-    <?php else: ?>
-        <span class="pager-item is-disabled">Pagina successiva ⟶</span>
-    <?php endif; ?>
+    <a class="pager-item" href="?<?php echo htmlspecialchars(http_build_query($query_next)); ?>">Successiva ⟶</a>
+<?php else: ?>
+    <span class="pager-item is-disabled">Successiva ⟶</span>
+<?php endif; ?>
+</div>
 </div>
 
-</main>
 
 
 <!-- Gestione messaggi di stato -->
@@ -1190,10 +1185,12 @@ $query = $_GET;
                 $dataSolo = substr($dataOraCompleta, 0, 10); 
             ?>
                 <div class="thumb">
-                    <img src="<?php echo htmlspecialchars($item['src'] . '?t=' . time()); ?>" 
-                         alt="Immagine webcam" 
-                         onclick="openLightbox(<?php echo $index; ?>)"
-                    >
+                    <img
+                  src="<?php echo htmlspecialchars($item['src'] . '?v=' . (int)$pageVersion); ?>"
+                  alt="Immagine webcam"
+                  onclick="openLightbox(<?php echo (int)$index; ?>)"
+                >
+
                     
                     <span class="overlay-mini <?php echo $tempClass; ?>">
                         <span class="temp-line">
@@ -1249,7 +1246,7 @@ $query = $_GET;
         </svg>
     </button>
 </div>
-
+</main>
 <!-- ========== JAVASCRIPT ========== -->
 <script>
 // Passa i dati al JS
@@ -1263,8 +1260,15 @@ function toggleFilterBar() {
 
 // Chiudi barra filtri e ricarica pagina senza parametri
 function closeFilterBar() {
+    // accendi spinner SUBITO
+    var sp = document.getElementById('loading-spinner');
+    if (sp) sp.classList.remove('hidden');
+    document.documentElement.classList.add('page-loading');
+
+    // ricarica senza parametri
     window.location.href = window.location.pathname;
 }
+
 </script>
 
 <script>
@@ -1419,6 +1423,39 @@ function closeFilterBar() {
         const nextBtn = document.querySelector('.nav-btn.next');
         if (prevBtn) prevBtn.addEventListener('click', prevImage);
         if (nextBtn) nextBtn.addEventListener('click', nextImage);
+        
+                // ===== Spinner: attivo finché le miniature non hanno caricato =====
+        (function() {
+            var spinner = document.getElementById('loading-spinner');
+            if (!spinner) return;
+
+            // Se non c'è galleria, nascondi subito
+            var gallery = document.querySelector('.gallery');
+            if (!gallery) { spinner.classList.add('hidden'); return; }
+
+            var imgs = gallery.querySelectorAll('img');
+            if (!imgs || imgs.length === 0) { spinner.classList.add('hidden'); return; }
+
+            var done = 0;
+            function oneDone() {
+                done++;
+                if (done >= imgs.length) {
+                    spinner.classList.add('hidden');
+                }
+            }
+
+            // Se alcune sono già in cache
+            for (var i = 0; i < imgs.length; i++) {
+                var im = imgs[i];
+                if (im.complete) {
+                    oneDone();
+                } else {
+                    im.addEventListener('load', oneDone, { once: true });
+                    im.addEventListener('error', oneDone, { once: true });
+                }
+            }
+        })();
+
     });
 
     // Keyboard navigation
@@ -1484,6 +1521,105 @@ function closeFilterBar() {
     window.nextImage = nextImage;
 })();
 </script>
+<script>
+(function () {
+  'use strict';
+
+  function spinnerOn() {
+    var sp = document.getElementById('loading-spinner');
+    if (sp) sp.classList.remove('hidden');
+    document.documentElement.classList.add('page-loading');
+  }
+
+  function spinnerOff() {
+    var sp = document.getElementById('loading-spinner');
+    if (sp) sp.classList.add('hidden');
+    document.documentElement.classList.remove('page-loading');
+  }
+
+  function go(url) {
+    spinnerOn();
+    // 2 frame => repaint garantito prima della navigazione
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        window.location.href = url;
+      });
+    });
+  }
+
+  function submitNative(form) {
+    spinnerOn();
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        // submit() non rilancia l’evento submit => niente loop
+        form.submit();
+      });
+    });
+  }
+
+  // 1) CLICK: intercetta PAGINA PRECEDENTE / SUCCESSIVA
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a.pager-item[href]') : null;
+    if (a) {
+      e.preventDefault();
+      go(a.href);
+      return;
+    }
+
+    // 2) CLICK: bottone "Applica filtri" (submit button)
+    var btn = e.target && e.target.closest ? e.target.closest('button[type="submit"]') : null;
+    if (btn) {
+      var form = btn.form;
+      if (form && form.closest && form.closest('.filter-bar')) {
+        // accendi subito lo spinner (anche se poi il submit passa da event submit)
+        spinnerOn();
+      }
+    }
+
+    // 3) CLICK: X chiudi filtri
+    var x = e.target && e.target.closest ? e.target.closest('.filter-close') : null;
+    if (x) {
+      e.preventDefault();
+      go(window.location.pathname);
+      return;
+    }
+  }, true);
+
+  // 4) SUBMIT: filtri + pager
+  document.addEventListener('submit', function (e) {
+    var form = e.target;
+    if (!form) return;
+
+    var isFilterForm = form.closest && form.closest('.filter-bar');
+    var isPagerForm  = form.classList && form.classList.contains('pager-form');
+
+    if (isFilterForm || isPagerForm) {
+      e.preventDefault();
+      submitNative(form);
+    }
+  }, true);
+
+  // 5) CHANGE: select pagina => submit form
+  document.addEventListener('change', function (e) {
+    var el = e.target;
+    if (el && el.id === 'pageSelect' && el.form) {
+      e.preventDefault();
+      submitNative(el.form);
+    }
+  }, true);
+
+  // 6) BFCache: se torni indietro/avanti, pulisci stato
+  window.addEventListener('pageshow', function (ev) {
+    // se la pagina viene ripristinata dalla cache, togli spinner
+    spinnerOff();
+  });
+
+})();
+</script>
+
+
+
+
 
 </body>
 </html>

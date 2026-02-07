@@ -49,7 +49,7 @@ Script: sincronizza directory snapshot Foscam con tabella DB_immagini_36h(_test)
   * aggiornaSunPhase()  
       - determina se la foto è in finestra di alba (fase=1) o tramonto (fase=2)  
       - usa solar_data_siena (alba/tramonto UTC) + conversione in locale  
-      - margini dinamici: alba +1h, tramonto −20' → +40'
+      - margini dinamici: alba , tramonto −40' → +40'
 
   * estraiDataOraDaFilename()  
       - valida il filename e restituisce datetime Y-m-d H:i:s.

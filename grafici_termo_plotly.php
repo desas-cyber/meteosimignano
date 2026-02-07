@@ -21,6 +21,7 @@ if (!in_array($range, $ranges_validi)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MeteoSimignano - Grafico Termo-Igrometrico</title>
+    <link rel="stylesheet" href="header_shared.css">
     
     <!-- Plotly CDN con fallback -->
     <script>
@@ -63,75 +64,19 @@ if (!in_array($range, $ranges_validi)) {
         
         /* Header */
         .main-header {
-            background: white;
-            color: #333;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: relative;
-            max-width: 1200px;
-            margin: 0 auto;
+            
+            max-width: fit-content + 30px !important;
+            
         }
-        
-        .header-content {
-            flex: 1;
-            text-align: center;
+
+        @media (orientation: landscape) and (max-height: 480px){
+        .main-header {
+            
+            max-width: 500px !important;
+            
         }
-        
-        .main-title {
-            font-size: 28px;
-            font-weight: bold;
-            margin: 0;
-            color: #2c3e50;
         }
-        
-        .sub-title {
-            font-size: 14px;
-            opacity: 0.7;
-            margin: 5px 0 0 0;
-            font-weight: normal;
-            color: #555;
-        }
-        
-        /* Header Icons */
-        .header-icon {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            color: #333;
-            text-decoration: none;
-            padding: 8px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            min-width: 60px;
-        }
-        
-        .header-icon:hover {
-            color: red;
-            background: rgba(255,0,0,0.05);
-        }
-        
-        .header-icon svg {
-            width: 24px;
-            height: 24px;
-        }
-        
-        .icon-label {
-            font-size: 11px;
-            font-weight: 500;
-        }
-        
-        .left-icon {
-            margin-right: auto;
-        }
-        
-        .right-icon {
-            margin-left: auto;
-        }
-        
+
         /* Container */
         .container {
             max-width: 100%;
@@ -394,13 +339,34 @@ if (!in_array($range, $ranges_validi)) {
         
         /* Responsive */
         @media (max-width: 768px) and (orientation: portrait) {
+            html, body {
+                    height: 100vh;
+                    height: 100dvh; /* dynamic viewport height - gestisce barra browser */
+                    overflow: hidden;
+                }
+                
+                body {
+                    display: flex;
+                    flex-direction: column;
+                }
             .main-title { font-size: 14px; }
             .sub-title { font-size: 9px; }
+            .main-header {
+                        padding: 8px 15px;
+                        flex-shrink: 0;
+                    }
             .header-icon { min-width: 50px; padding: 6px; }
             .header-icon svg { width: 20px; height: 20px; }
             .icon-label { font-size: 10px; }
-            .container { padding: 10px; }
-            
+            .container {
+                            padding: 8px;
+                            flex: 1;
+                            display: flex;
+                            flex-direction: column;
+                            min-height: 0;
+                            overflow: hidden;
+                        }
+                                    
             .unified-toolbar {
                 flex-direction: column;
                 align-items: center;
@@ -408,6 +374,7 @@ if (!in_array($range, $ranges_validi)) {
                 gap: 6px;
                 width: fit-content;
                 margin: 0 auto 15px auto;
+                flex-shrink: 0
             }
             
             .toolbar-row-1,
@@ -422,15 +389,37 @@ if (!in_array($range, $ranges_validi)) {
                 height: 1px;
                 background: #d1d5da;
             }
+            .chart-wrapper {
+                    flex: 1;
+                    min-height: 0;
+                    padding: 5px;
+                    display: flex;
+                    flex-direction: column;
+                }
             
             .toolbar-group { padding: 4px 8px; gap: 4px; }
             .toolbar-label { font-size: 7px; }
             .toolbar-btn { min-width: 24px; height: 24px; font-size: 10px; padding: 0 6px; }
             .toolbar-btn-tool { font-size: 12px; min-width: 24px; }
             
-            #termo-chart { height: 600px !important; }
+            #termo-chart {
+                    flex: 1;
+                    min-height: 0;
+                    height: auto !important;
+                }
             .chart-subtitle { font-size: 11px; margin: 2px 0 4px 0; }
             .legend-item { font-size: 10px; gap: 6px; }
+            .legend-info-box {
+                padding: 6px 10px;
+                margin-top: 5px;
+                flex-shrink: 0;
+            }
+            
+            .legend-items {
+                margin-bottom: 6px;
+                padding-bottom: 6px;
+                gap: 10px;
+            }
             .legend-line { width: 25px; }
             .chart-note { font-size: 9px; }
         }
@@ -472,6 +461,129 @@ if (!in_array($range, $ranges_validi)) {
             .legend-line { width: 20px; height: 2px; }
             .chart-note { font-size: 8px; line-height: 1.3; }
         }
+
+        /* ====================================================================
+   RESPONSIVE MOBILE - Ridimensionamento per schermi piccoli
+   ==================================================================== */
+
+        @media (max-width: 599px) {
+    .main-header {
+        width: 95%;
+        margin: 0 auto;
+    }
+    
+    .main-container iframe {
+        width: 95%;
+    }
+}
+
+/* Container del menu */
+.header-menu-container {
+    position: relative;
+}
+
+
+
+/* Sottomenu visibile */
+.submenu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* ====================================================================
+   VOCI DEL SOTTO MENU - IN ALTO A DX NELLA PAGINA
+   ==================================================================== */
+
+
+
+/* Pulsante menu */
+.menu-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+/* Sottomenu */
+.submenu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 10px;
+    background: white;
+    border: 2px solid #333;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: max-content;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    z-index: 1000;
+}
+
+/* Sottomenu visibile */
+.submenu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Voci del sottomenu */
+.submenu-item {
+    display: block;
+    padding: 12px 16px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    text-align: left;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #ddd;
+}
+
+.submenu-item:last-child {
+    border-bottom: none;
+}
+
+.submenu-item:hover {
+    background-color: #f0f0f0;
+}
+
+.submenu-item:first-child {
+    border-radius: 6px 6px 0 0;
+}
+
+.submenu-item:last-child {
+    border-radius: 0 0 6px 6px;
+}
+
+
+   .submenu-item {
+    display: block;
+    padding: 12px 20px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.submenu-item:last-child {
+    border-bottom: none;
+}
+
+.submenu-item:hover {
+    background-color: #f8f8f8;
+}
+
+.submenu-item:first-child {
+    border-radius: 8px 8px 0 0;
+}
+
+.submenu-item:last-child {
+    border-radius: 0 0 8px 8px;
+}
     </style>
 </head>
 <body>
@@ -489,14 +601,22 @@ if (!in_array($range, $ranges_validi)) {
             <h1 class="main-title">MeteoSimignano</h1>
             <h2 class="sub-title">43°17'32.5"N 11°10'01.49"E @ 418m slm</h2>
         </div>
-        
-        <a href="index.php" class="header-icon right-icon" title="Home">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                <polyline points="9 22 9 12 15 12 15 22"></polyline>
-            </svg>
-            <span class="icon-label">Home</span>
-        </a>
+        <!-- Pulsante menu a dx -->
+        <div class="header-menu-container">
+            <button class="header-icon right-icon menu-toggle" title="Menu">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+                <span class="icon-label">Menu</span>
+            </button>
+            
+            <div class="submenu">
+                <a href="index.php" class="submenu-item">Home</a>
+                <a href="pluvio_tab.php" class="submenu-item">Tabella Pluvio</a>
+                <a href="pluvio.html" class="submenu-item">Pluvio trend 36h</a>
+                <a href="belle.php" class="submenu-item">Diario del cielo</a>
+            </div>
+        </div>
     </header>
     
     <!-- Container -->
@@ -774,23 +894,23 @@ function y2LayoutFor(mode) {
   if (mode === 'pressione') {
     const rawMin = Number(CONFIG.metadata?.y_press_range?.min);
     const rawMax = Number(CONFIG.metadata?.y_press_range?.max);
-    const safeMin = Number.isFinite(rawMin) ? rawMin : 990;
+    const safeMin = Number.isFinite(rawMin) ? rawMin : 980;
     const safeMax = Number.isFinite(rawMax) ? rawMax : 1050;
 
-    let min = clamp(Math.min(safeMin, safeMax), 990, 1050);
-    let max = clamp(Math.max(safeMin, safeMax), 990, 1050);
+    let min = clamp(Math.min(safeMin, safeMax), 980, 1050);
+    let max = clamp(Math.max(safeMin, safeMax), 980, 1050);
 
     const MIN_SPAN = 10;
     if (max - min < MIN_SPAN) {
       const mid = (min + max) / 2;
-      min = clamp(mid - MIN_SPAN / 2, 990, 1050);
-      max = clamp(mid + MIN_SPAN / 2, 990, 1050);
+      min = clamp(mid - MIN_SPAN / 2, 980, 1050);
+      max = clamp(mid + MIN_SPAN / 2, 980, 1050);
     }
 
     const snap5 = v => Math.round(v / 5) * 5;
-    min = clamp(snap5(min), 990, 1050);
-    max = clamp(snap5(max), 990, 1050);
-    if (max <= min) { min = 990; max = 1050; }
+    min = clamp(snap5(min), 980, 1050);
+    max = clamp(snap5(max), 980, 1050);
+    if (max <= min) { min = 980; max = 1050; }
 
     return {
       titleText: (isMobile ? 'Press(hPa)' : 'Pressione (hPa)'),
@@ -858,17 +978,31 @@ function showWindColorScale() {
   scaleDiv.style.cssText =
     'margin-top:10px; padding:8px; background:#f8f9fa; border-radius:4px; font-size:11px; text-align:center;';
 
-  const isMobile = window.innerWidth <= 768;
-  let html = '<div style="font-weight:600; margin-bottom:5px;">Velocità Vento km/h:</div>' +
-             '<div style="display:flex; justify-content:center; flex-wrap:wrap; gap:8px;">';
+  const isMobile = window.innerWidth <= 768 || (window.innerWidth <= 900 && window.innerHeight < window.innerWidth);
+ let html = `
+  <div style="font-weight:600; margin-bottom:5px; font-size:${isMobile ? '8px' : '12px'};">
+    Velocità Vento km/h:
+  </div>
+  <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:8px;">
+`;
 
   CONFIG.metadata.wind_color_scale.forEach(item => {
     const label = isMobile ? item.range.split(' ')[0] : item.range;
     html += `
-      <span style="display:inline-flex; align-items:center; gap:4px;">
-        <span style="display:inline-block; width:10px; height:10px; background:${item.color}; border-radius:50%; border:1px solid #333;"></span>
-        <span style="font-size:${isMobile ? '9px' : '10px'};">${label}</span>
-      </span>
+     <span style="display:inline-flex; align-items:center; gap:4px;">
+  <span style="
+    display:inline-block;
+    width:${isMobile ? '6px' : '10px'};
+    height:${isMobile ? '6px' : '10px'};
+    background:${item.color};
+    border-radius:50%;
+    border:1px solid #333;
+  "></span>
+
+  <span style="font-size:${isMobile ? '7px' : '10px'};">
+    ${label}
+  </span>
+</span>
     `;
   });
 
@@ -896,7 +1030,7 @@ function showChartInfo(chartInfo) {
   };
 
   infoDiv.innerHTML = `
-    <strong>Nota:</strong> Le medie mobili 7 giorni sono calcolate sul periodo
+    <strong>*Nota:</strong> Le medie mobili 7 giorni sono calcolate sul periodo
     <strong>${formatDate(chartInfo.media7d_start)} - ${formatDate(chartInfo.media7d_end)}</strong>
     (ultimi 7 giorni completi).
   `;
@@ -943,8 +1077,8 @@ function showLegend() {
     { label: isMobile ? 'Vento' : 'Dir. Vento',    name: 'Dir. Vento',    color: '#ff8c00', dashed: false, markers: true },
     { label: isMobile ? 'DP'    : 'Dew Point',     name: 'Dew Point',     color: 'gradient', dashed: false },
     { label: isMobile ? 'Media' : 'Media Periodo', name: 'Media Periodo', color: '#ff6b35', dashed: 'dot' },
-    { label: isMobile ? 'Max'   : 'Media Max 7gg', name: 'Media Max 7gg', color: '#e74c3c', dashed: true },
-    { label: isMobile ? 'Min'   : 'Media Min 7gg', name: 'Media Min 7gg', color: '#3498db', dashed: true }
+    { label: isMobile ? '*Max7gg'   : '*Media Max 7gg', name: 'Media Max 7gg', color: '#e74c3c', dashed: true },
+    { label: isMobile ? '*Min7gg'   : '*Media Min 7gg', name: 'Media Min 7gg', color: '#3498db', dashed: true }
   ];
 
   legendDiv.innerHTML = items.map(item => {
@@ -958,7 +1092,7 @@ function showLegend() {
     } else if (item.dashed === 'dot') {
       lineStyle = `background: repeating-linear-gradient(to right, ${item.color} 0px, ${item.color} 3px, transparent 3px, transparent 6px);`;
     } else if (item.dashed) {
-      lineStyle = `background-color: ${item.color}; color: ${item.color};`;
+      lineStyle = `color: ${item.color};`;
       lineClass = 'legend-line dashed';
     } else {
       lineStyle = `background-color: ${item.color};`;
@@ -1611,9 +1745,14 @@ if (STATE.autoTempRangeNext) {
   if (!chartInitialized) {
     await Plotly.newPlot('termo-chart', traces, layout, config);
     chartInitialized = true;
-  } else {
+    
+    // Forza resize dopo stabilizzazione layout
+    setTimeout(() => {
+        Plotly.Plots.resize('termo-chart');
+    }, 50);
+} else {
     await Plotly.react('termo-chart', traces, layout, config);
-  }
+}
 
   // UI extra
   if (STATE.y2_mode === 'dirvento') showWindColorScale();
@@ -1843,6 +1982,27 @@ document.addEventListener('DOMContentLoaded', () => {
     loadChart();
   }
 });
+
+
+// Toggle menu in alto a dx
+document.addEventListener('DOMContentLoaded', function() {
+    const menuToggle = document.querySelector('.menu-toggle');
+    const submenu = document.querySelector('.submenu');
+    
+    menuToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        submenu.classList.toggle('active');
+    });
+    
+    // Chiudi menu cliccando fuori
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.header-menu-container')) {
+            submenu.classList.remove('active');
+        }
+    });
+}); 
+
 
     </script>
 </body>

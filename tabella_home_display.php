@@ -16,11 +16,11 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_once __DIR__ . '/../envelop_lettura.php';
-require_once __DIR__ . '/tabella_home_data.php';
+require_once __DIR__ . '/api/api_tabella_home_data.php';
 
 // ✅ DEBUG: Verifica funzioni caricate
 echo "<!-- DEBUG FUNZIONI CARICATE -->\n";
-echo "<!-- File tabella_home_data.php incluso: " . (file_exists(__DIR__ . '/tabella_home_data.php') ? 'SÌ' : 'NO') . " -->\n";
+echo "<!-- File tabella_home_data.php incluso: " . (file_exists(__DIR__ . '/api/api_tabella_home_data.php') ? 'SÌ' : 'NO') . " -->\n";
 echo "<!-- createDeltaIndicator: " . (function_exists('createDeltaIndicator') ? 'OK' : 'MANCA') . " -->\n";
 echo "<!-- createComfortIndicator: " . (function_exists('createComfortIndicator') ? 'OK' : 'MANCA') . " -->\n";
 echo "<!-- createWindchillHeatIndicator: " . (function_exists('createWindchillHeatIndicator') ? 'OK' : 'MANCA') . " -->\n";

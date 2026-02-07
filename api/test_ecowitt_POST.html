@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Ecowi<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Ecowitt POST - MeteoSimignano</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+        h1 {
+            color: #4ec9b0;
+            border-bottom: 2px solid #4ec9b0;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #569cd6;
+            margin-top: 30px;
+        }
+        .section {
+            background: #252526;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border-left: 4px solid #569cd6;
+        }
+        .success {
+            border-left-color: #4ec9b0;
+        }
+        .error {
+            border-left-color: #f48771;
+        }
+        .warning {
+            border-left-color: #dcdcaa;
+        }
+        pre {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 3px;
+            overflow-x: auto;
+            border: 1px solid #3e3e42;
+        }
+        .label {
+            color: #9cdcfe;
+            font-weight: bold;
+        }
+        .value {
+            color: #ce9178;
+        }
+        button {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #1177bb;
+        }
+        button.danger {
+            background: #a1260d;
+        }
+        button.danger:hover {
+            background: #c72e0d;
+        }
+        .controls {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Ecowitt POST - MeteoSimignano</h1>
+    
+    <div class="controls">
+        <button onclick="testValidData()">✅ Test Dati Validi</button>
+        <button onclick="testNullValues()">⚠️ Test Valori NULL</button>
+        <button onclick="testOutOfRange()">📊 Test Fuori Range</button>
+        <button onclick="testAllNull()">🔴 Test Tutti NULL</button>
+        <button onclick="testNoTimestamp()" class="danger">❌ Test Senza Timestamp</button>
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+    const API_URL = 'ecowitt_receiver.php'; // Stesso percorso
+
+    function showResult(title, data, success = true) {
+        const resultsDiv = document.getElementById('results');
+        const sectionClass = success ? 'success' : (data.error ? 'error' : 'warning');
+        
+        resultsDiv.innerHTML = `
+            <div class="section ${sectionClass}">
+                <h2>${title}</h2>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+            </div>
+        ` + resultsDiv.innerHTML;
+    }
+
+    async function sendPost(testName, postData) {
+        try {
+            const formData = new URLSearchParams();
+            for (const [key, value] of Object.entries(postData)) {
+                formData.append(key, value);
+            }
+
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData
+            });
+
+            const data = await response.json();
+            showResult(
+                `${testName} (HTTP ${response.status})`,
+                data,
+                response.ok
+            );
+        } catch (error) {
+            showResult(
+                `${testName} - ERRORE`,
+                { error: error.message },
+                false
+            );
+        }
+    }
+
+    function testValidData() {
+        sendPost('TEST 1: Dati Validi Completi', {
+            PASSKEY: '5C5FFC9C7FF121BB58C0F535F96F82B5',
+            stationtype: 'GW3000A_V1.1.4',
+            dateutc: '2026-01-15 21:30:00',
+            tempf: '48.20',
+            humidity: '99',
+            baromrelin: '30.200',
+            windspeedmph: '3.36',
+            winddir: '86',
+            solarradiation: '0.00',
+            uv: '0',
+            model: 'GW3000A'
+        });
+    }
+
+    function testNullValues() {
+        sendPost('TEST 2: Alcuni Valori NULL', {
+            PASSKEY: '5C5FFC9C7FF121BB58C0F535F96F82B5',
+            stationtype: 'GW3000A_V1.1.4',
+            dateutc: '2026-01-15 21:30:00',
+            tempf: 'NULL',           // ❌ NULL
+            humidity: '99',          // ✅ Valido
+            baromrelin: '30.200',    // ✅ Valido
+            windspeedmph: 'NA',      // ❌ NA
+            winddir: '--',           // ❌ --
+            solarradiation: '125.5', // ✅ Valido
+            model: 'GW3000A'
+        });
+    }
+
+    function testOutOfRange() {
+        sendPost('TEST 3: Valori Fuori Range', {
+            PASSKEY: '5C5FFC9C7FF121BB58C0F535F96F82B5',
+            stationtype: 'GW3000A_V1.1.4',
+            dateutc: '2026-01-15 21:30:00',
+            tempf: '999.0',          // ❌ Fuori range (537°C!)
+            humidity: '150',         // ❌ Fuori range (>100%)
+            baromrelin: '30.200',    // ✅ Valido
+            windspeedmph: '3.36',    // ✅ Valido
+            winddir: '86',           // ✅ Valido
+            solarradiation: '5000',  // ❌ Fuori range (>2000)
+            model: 'GW3000A'
+        });
+    }
+
+    function testAllNull() {
+        sendPost('TEST 4: Tutti Valori NULL (ma Timestamp OK)', {
+            PASSKEY: '5C5FFC9C7FF121BB58C0F535F96F82B5',
+            stationtype: 'GW3000A_V1.1.4',
+            dateutc: '2026-01-15 21:30:00', // ✅ Timestamp valido
+            tempf: 'NULL',           // ❌ NULL
+            humidity: 'NA',          // ❌ NA
+            baromrelin: '--',        // ❌ --
+            windspeedmph: '',        // ❌ Vuoto
+            winddir: 'NULL',         // ❌ NULL
+            solarradiation: 'NA',    // ❌ NA
+            model: 'GW3000A'
+        });
+    }
+
+    function testNoTimestamp() {
+        sendPost('TEST 5: Senza Timestamp (DEVE FALLIRE)', {
+            PASSKEY: '5C5FFC9C7FF121BB58C0F535F96F82B5',
+            stationtype: 'GW3000A_V1.1.4',
+            // dateutc: MANCANTE!      // ❌ Timestamp mancante
+            tempf: '48.20',
+            humidity: '99',
+            baromrelin: '30.200',
+            windspeedmph: '3.36',
+            winddir: '86',
+            solarradiation: '125.5',
+            model: 'GW3000A'
+        });
+    }
+
+    // Esegui test di base all'avvio
+    window.addEventListener('load', function() {
+        showResult(
+            '📋 Test Suite Pronta',
+            {
+                message: 'Clicca sui pulsanti sopra per eseguire i test',
+                api_url: API_URL,
+                tests_available: 5
+            },
+            true
+        );
+    });
+    </script>
+</body>
+</html>tt POST - MeteoSimignano</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+        h1 {
+            color: #4ec9b0;
+            border-bottom: 2px solid #4ec9b0;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #569cd6;
+            margin-top: 30px;
+        }
+        .section {
+            background: #252526;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border-left: 4px solid #569cd6;
+        }
+        .success {
+            border-left-color: #4ec9b0;
+        }
+        .error {
+            border-left-color: #f48771;
+        }
+        .warning {
+            border-left-color: #dcdcaa;
+        }
+        pre {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 3px;
+            overflow-x: auto;
+            border: 1px solid #3e3e42;
+        }
+        .label {
+            color: #9cdcfe;
+            font-weight: bold;
+        }
+        .value {
+            color: #ce9178;
+        }
+        button {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #1177bb;
+        }
+        button.danger {
+            background: #a1260d;
+        }
+        button.danger:hover {
+            background: #c72e0d;
+        }
+        .controls {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Ecowitt POST - MeteoSimignano</h1>
+    
+    <div class="controls">
+        <button onclick="testValidData()">✅ Test Dati Validi</button>
+        <button onclick="testNullValues()">⚠️ Test Valori NULL</button>
+        <button onclick="testOutOfRange()">📊 Test Fuori Range</button>
+        <button onclick="testAllNull()">🔴 Test Tutti NULL</button>
+        <button onclick="testNoTimestamp()" class="danger">❌ Test Senza Timestamp</button>
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+    
+
+    function showResult(title, data, success = true) {
+        const resultsDiv = document.getElementById('results');
+        const sectionClass = success ? 'success' : (data.error ? 'error' : 'warning');
+        
+        resultsDiv.innerHTML = `
+            <div class="section ${sectionClass}">
+                <h2>${title}</h2>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+            </div>
+        ` + resultsDiv.innerHTML;
+    }
+
+    async function sendPost(testName, postData) {
+        try {
+            const formData = new URLSearchParams();
+            for (const [key, value] of Object.entries(postData)) {
+                formData.append(key, value);
+            }
+
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData
+            });
+
+            const data = await response.json();
+            showResult(
+                `${testName} (HTTP ${response.status})`,
+                data,
+                response.ok
+            );
+        } catch (error) {
+            showResult(
+                `${testName} - ERRORE`,
+                { error: error.message },
+                false
+            );
+        }
+    }
+
+    function testValidData() {
+        sendPost('TEST 1: Dati Validi Completi', {
+            PASSKEY: '5C5FFC9C7FF121BB58C0F535F96F82B5',
+            stationtype: 'GW3000A_V1.1.4',
+            dateutc: '2026-01-15 21:30:00',
+            tempf: '48.20',
+            humidity: '99',
+            baromrelin: '30.200',
+            windspeedmph: '3.36',
+            winddir: '86',
+            solarradiation: '0.00',
+            uv: '0',
+            model: 'GW3000A'
+        });
+    }
+
+    function testNullValues() {
+        sendPost('TEST 2: Alcuni Valori NULL', {
+            PASSKEY: '5C5FFC9C7FF121BB58C0F535F96F82B5',
+            stationtype: 'GW3000A_V1.1.4',
+            dateutc: '2026-01-15 21:30:00',
+            tempf: 'NULL',           // ❌ NULL
+            humidity: '99',          // ✅ Valido
+            baromrelin: '30.200',    // ✅ Valido
+            windspeedmph: 'NA',      // ❌ NA
+            winddir: '--',           // ❌ --
+            solarradiation: '125.5', // ✅ Valido
+            model: 'GW3000A'
+        });
+    }
+
+    function testOutOfRange() {
+        sendPost('TEST 3: Valori Fuori Range', {
+            PASSKEY: '5C5FFC9C7FF121BB58C0F535F96F82B5',
+            stationtype: 'GW3000A_V1.1.4',
+            dateutc: '2026-01-15 21:30:00',
+            tempf: '999.0',          // ❌ Fuori range (537°C!)
+            humidity: '150',         // ❌ Fuori range (>100%)
+            baromrelin: '30.200',    // ✅ Valido
+            windspeedmph: '3.36',    // ✅ Valido
+            winddir: '86',           // ✅ Valido
+            solarradiation: '5000',  // ❌ Fuori range (>2000)
+            model: 'GW3000A'
+        });
+    }
+
+    function testAllNull() {
+        sendPost('TEST 4: Tutti Valori NULL (ma Timestamp OK)', {
+            PASSKEY: '5C5FFC9C7FF121BB58C0F535F96F82B5',
+            stationtype: 'GW3000A_V1.1.4',
+            dateutc: '2026-01-15 21:30:00', // ✅ Timestamp valido
+            tempf: 'NULL',           // ❌ NULL
+            humidity: 'NA',          // ❌ NA
+            baromrelin: '--',        // ❌ --
+            windspeedmph: '',        // ❌ Vuoto
+            winddir: 'NULL',         // ❌ NULL
+            solarradiation: 'NA',    // ❌ NA
+            model: 'GW3000A'
+        });
+    }
+
+    function testNoTimestamp() {
+        sendPost('TEST 5: Senza Timestamp (DEVE FALLIRE)', {
+            PASSKEY: '5C5FFC9C7FF121BB58C0F535F96F82B5',
+            stationtype: 'GW3000A_V1.1.4',
+            // dateutc: MANCANTE!      // ❌ Timestamp mancante
+            tempf: '48.20',
+            humidity: '99',
+            baromrelin: '30.200',
+            windspeedmph: '3.36',
+            winddir: '86',
+            solarradiation: '125.5',
+            model: 'GW3000A'
+        });
+    }
+
+    // Esegui test di base all'avvio
+    window.addEventListener('load', function() {
+        showResult(
+            '📋 Test Suite Pronta',
+            {
+                message: 'Clicca sui pulsanti sopra per eseguire i test',
+                api_url: API_URL,
+                tests_available: 5
+            },
+            true
+        );
+    });
+    </script>
+</body>
+</html>

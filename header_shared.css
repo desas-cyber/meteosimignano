@@ -1,0 +1,185 @@
+/* ==========================================================================
+   header_shared.css — RESET PULITO (per header MeteoSimignano)
+   ========================================================================== */
+
+:root {
+  --title-desktop: 46px;           /* era 55 → ridotto di ~16% */
+  --subtitle-desktop: 22px;        /* era 30 → ridotto di ~27% */
+  --icon-desktop: 36px;            /* leggermente più piccolo per coerenza */
+
+  --title-mobile: 28px;            /* era 18 → aumentato del ~55% */
+  --subtitle-mobile: 16px;         /* era 11 → aumentato del ~45% */
+  --icon-mobile: 24px;             /* più proporzionato */
+  --header-max-width: 1000px;
+}
+
+/* ---------- BASE (desktop + default) ---------- */
+
+header.main-header{
+  width: 100%;
+  max-width: var(--header-max-width);
+  margin: 0 auto;
+  padding: 8px 10px;
+  box-sizing: border-box;
+  position: relative; 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+header.main-header .header-content{
+  flex: 1 1 auto;
+  min-width: 0;              /* fondamentale */
+  text-align: center;
+}
+
+header.main-header .header-icon{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+
+  padding: 0 4px;
+  min-width: 38px;
+  font-size: 10px;
+}
+
+header.main-header .header-icon svg{
+  width: var(--icon-desktop);
+  height: var(--icon-desktop);
+  padding: 0;                /* MAI padding sugli svg */
+}
+
+.header-icon:hover {
+    color: red;
+}
+
+header.main-header .main-title{
+  margin: 0;
+  font-size: var(--title-desktop);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+header.main-header .sub-title,
+header.main-header .sub-title-row{
+  margin: 4px 0 0 0;
+  font-size: var(--subtitle-desktop);
+  font-weight: normal;
+  white-space: nowrap;
+   overflow: hidden;          /* ✅ evita sovrapposizione */
+  text-overflow: ellipsis;   /* ✅ aggiunge ... se necessario */
+}
+
+header.main-header .header-menu-container{
+  position: relative;
+}
+
+/* submenu base (non esce dalla viewport) */
+header.main-header .submenu{
+  right: 0;
+  left: auto;
+  max-width: calc(100vw - 16px);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- MOBILE (generale) ---------- */
+@media (max-width: 900px){
+  header.main-header .main-title{ font-size: var(--title-mobile); }
+  header.main-header .sub-title,
+  header.main-header .sub-title-row{ font-size: var(--subtitle-mobile);font-size: 12px; overflow: hidden;
+    text-overflow: ellipsis; }
+
+  header.main-header .header-icon svg{
+    width: var(--icon-mobile);
+    height: var(--icon-mobile);
+  }
+}
+
+
+/* ==========================================================================
+   PHONE LANDSCAPE (UNICO BLOCCO)
+   - 3 colonne fisse: sx e dx sempre visibili
+   - centro va in ellissi
+   ========================================================================== */
+@media (orientation: landscape) and (max-height: 480px){
+
+  header.main-header{
+    display: grid;
+    grid-template-columns: 44px 1fr 44px; /* sx - centro - dx */
+    align-items: center;
+    gap: 6px;
+
+    width: 100%;
+    max-width: 100vw;
+    padding: 6px 8px;
+    box-sizing: border-box;
+  }
+
+  /* sx e dx confinati */
+  header.main-header .left-icon,
+  header.main-header .right-icon,
+  header.main-header .header-menu-container{
+    width: 44px;
+    min-width: 44px;
+  }
+
+  header.main-header .left-icon{ justify-self: start; }
+  header.main-header .right-icon,
+  header.main-header .header-menu-container{ justify-self: end; }
+
+  /* icone compatte: nascondi label */
+  header.main-header .icon-label{ display: none; }
+
+  header.main-header .header-icon{
+    width: 44px;
+    min-width: 44px;
+    padding: 0;
+    margin: 0;
+    font-size: 0; /* elimina testo residuo */
+    line-height: 1;
+  }
+
+  header.main-header .header-icon svg{
+    width: 20px;
+    height: 20px;
+    display: block;
+    margin: 0 auto;
+  }
+
+  /* centro: ellissi, non spinge fuori i lati */
+  header.main-header .header-content{
+    min-width: 0;
+    overflow: hidden;
+    text-align: center;
+    min-width: clamp(240px, 45vw, 380px);   /* impedisce al centro di restringersi troppo */
+  }
+
+  header.main-header .main-title{
+    font-size: 18px;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  header.main-header .sub-title,
+  header.main-header .sub-title-row{
+    font-size: 11px;
+    margin: 2px 0 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.1;
+  }
+
+  /* submenu sempre dentro */
+  header.main-header .submenu{
+    right: 0;
+    left: auto;
+    max-width: calc(100vw - 16px);
+  }
+}
+
