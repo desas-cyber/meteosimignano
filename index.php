@@ -598,7 +598,7 @@ if (!isset($data['error'])) {
   .main-container > .date-text::after{
     content: none !important;
   }
-
+}
 /* =========================================================
    LANDSCAPE PHONE – FIX: titolo galleria troppo piccolo
    (reset + px, evita scaling cumulativo)
@@ -791,7 +791,7 @@ if (!isset($data['error'])) {
         </div>
     </main>
 
-    <!-- ====================================================================
+    <!--====================================================================
          JAVASCRIPT
          ==================================================================== -->
     
@@ -813,17 +813,17 @@ if (!isset($data['error'])) {
         window.images = <?php echo json_encode($records); ?>;
     </script>
     
-    <!-- Script per aggiornamento automatico dati meteo -->
+    <!--Script per aggiornamento automatico dati meteo -->
     <script src="aggiorna_dati_meteo.js"></script>
     
-    <!-- Script per gestione lightbox (modale immagini) -->
+    <!--Script per gestione lightbox (modale immagini) -->
     <script src="galleria-lightbox.js"></script>
     
-    <!-- Script per aggiornamento automatico galleria (ogni 5 minuti) -->
+    <!--Script per aggiornamento automatico galleria (ogni 5 minuti) -->
     <script src="aggiorna_galleria.js"></script>
     
     
-    <!-- GESTIONE SPINNER DI CARICAMENTO DATI -->
+    <!--GESTIONE SPINNER DI CARICAMENTO DATI -->
     <script>
 (function(){
   'use strict';
@@ -854,7 +854,7 @@ if (!isset($data['error'])) {
   function init(){
     show();
 
-    // ========== A) MAIN IMAGE ==========
+    /*========== A) MAIN IMAGE ==========*/
     (function(){
       var img = document.getElementById('main-image');
       if (!img) { markDone('main'); return; }
@@ -868,7 +868,7 @@ if (!isset($data['error'])) {
       setTimeout(done, 8000);
     })();
 
-    // ========== B) GALLERIA MINIATURE ==========
+    /*========== B) GALLERIA MINIATURE =========*/
     (function(){
       var gallery = document.querySelector('.gallery');
       if (!gallery) { markDone('gallery'); return; }
