@@ -31,22 +31,29 @@ $filtri_attivi = !empty($filtro_data_inizio) || !empty($filtro_data_fine) ||
                  $filtro_sun_phase !== 'all' || $filtro_altro !== 'all' || 
                  $filtro_sequenza > 0;
 
-// Recupera valori unici di "altro" dal database
-$stmt_altro = $pdo->prepare("SELECT DISTINCT altro FROM $table_name WHERE altro IS NOT NULL ORDER BY altro");
-$stmt_altro->execute();
-$valori_altro = $stmt_altro->fetchAll(PDO::FETCH_COLUMN);
-
-// Mappatura valori altro -> etichette descrittive
+// Mappatura valori altro -> etichette descrittive con ordine personalizzato
 $altro_labels = [
     '0' => 'Nuvole',
+    '6' => 'Pioggia',
+    '4' => 'Neve',
     '1' => 'Luna',
     '2' => 'Arcobaleno',
-    '3' => 'Aur. boreale',
-    '4' => 'Neve',
-    '5' => 'Altro',
-    
-    // Aggiungi altre mappature secondo necessita
+    '3' => 'Aur. boreale',    
+    '5' => 'Altro'
 ];
+
+// Recupera valori unici di "altro" dal database
+$stmt_altro = $pdo->prepare("SELECT DISTINCT altro FROM $table_name WHERE altro IS NOT NULL");
+$stmt_altro->execute();
+$valori_altro_db = $stmt_altro->fetchAll(PDO::FETCH_COLUMN);
+
+// Ordina secondo l'array $altro_labels
+$valori_altro = [];
+foreach ($altro_labels as $key => $label) {
+    if (in_array($key, $valori_altro_db)) {
+        $valori_altro[] = $key;
+    }
+}
 
 // =====================
 // PAGINAZIONE per la visualizzazione
@@ -332,6 +339,15 @@ main {
     margin: 0 auto;              /* ← centra tutto il blocco */
     padding: 0 10px;
     box-sizing: border-box;
+    display: flex;               /* flex per centrare il contenuto */
+    justify-content: center;     /* centra orizzontalmente */
+}
+
+.gallery-title-row {
+    display: flex;               /* disposizione orizzontale */
+    align-items: center;         /* allinea verticalmente */
+    gap: 12px;                   /* spazio tra titolo e spinner */
+    justify-content: center;     /* centra il contenuto */
 }
 
 .gallery-title {
@@ -340,7 +356,6 @@ main {
     color: black;
     font-size: clamp(16px, 7vw, 38px);
     line-height: 1.15;
-    text-align: center;          /* ora centra DENTRO il contenitore limitato */
     /* rimuovi padding-left se c'era */
 }
 
@@ -913,6 +928,7 @@ main {
     padding: 6px 14px;              /* respiro interno */
     border-radius: 6px;
     transition: color 0.15s;
+    text-decoration: none;          /* rimuove sottolineatura link */
 }
 
 .pager-item:hover {
@@ -950,19 +966,15 @@ main {
 /* =========================
  ===== Spinner loading accanto al titolo ===== 
  ========================= */
-.gallery-title-row{
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
 
 .spinner{
-  width: 14px;
-  height: 14px;
-  border: 2px solid rgba(0,0,0,0.25);
+  width: 24px;                      /* aumentato da 14px → più visibile */
+  height: 24px;                     /* aumentato da 14px → più visibile */
+  border: 3px solid rgba(0,0,0,0.15);  /* border più spesso */
   border-top-color: #333;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
+  flex-shrink: 0;                   /* impedisce che venga schiacciato */
 }
 
 .spinner.hidden{
@@ -975,7 +987,7 @@ main {
 
 /* FIX overflow orizzontale: i figli flex devono poter restringersi */
 .pager-wrap{
-  flex-wrap: wrap;      /* se serve va a capo */
+  flex-wrap: nowrap;      
   gap: 8px;
 }
 
@@ -1083,8 +1095,10 @@ main {
 
 <main>
    <div class="title-container">
-    <h2 class="gallery-title">Diario del cielo</h2>
-    <span id="loading-spinner" class="spinner hidden" aria-label="Caricamento in corso"></span>
+    <div class="gallery-title-row">
+        <h2 class="gallery-title">Diario del cielo</h2>
+        <span id="loading-spinner" class="spinner hidden" aria-label="Caricamento in corso"></span>
+    </div>
 </div>
 
 
@@ -1101,9 +1115,9 @@ main {
                 $query_prev = $query;
                 $query_prev['page'] = $pageNow - 1;
             ?>
-            <a class="pager-item" href="?<?php echo htmlspecialchars(http_build_query($query_prev)); ?>">⟵ Precedente</a>
+            <a class="pager-item" href="?<?php echo htmlspecialchars(http_build_query($query_prev)); ?>">Precedente</a>
         <?php else: ?>
-            <span class="pager-item is-disabled">⟵ Precedente</span>
+            <span class="pager-item is-disabled">Precedente</span>
         <?php endif; ?>
 
     <form class="pager-form" method="get" action="">
@@ -1138,9 +1152,9 @@ main {
         $query_next = $query;
         $query_next['page'] = $pageNow + 1;
     ?>
-    <a class="pager-item" href="?<?php echo htmlspecialchars(http_build_query($query_next)); ?>">Successiva ⟶</a>
+    <a class="pager-item" href="?<?php echo htmlspecialchars(http_build_query($query_next)); ?>">Successiva</a>
 <?php else: ?>
-    <span class="pager-item is-disabled">Successiva ⟶</span>
+    <span class="pager-item is-disabled">Successiva</span>
 <?php endif; ?>
 </div>
 </div>
