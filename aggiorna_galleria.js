@@ -295,14 +295,14 @@ function aggiornaGalleria() {
       // Nuovo codice – leggiamo la struttura corretta
 window.fullImages    = dati.full    || [];     // array leggero per time-lapse
 window.galleryImages = dati.gallery || [];     // array completo per miniature
-console.log('=== DEBUG DATI ARRIVATI ===');
+/*console.log('=== DEBUG DATI ARRIVATI ===');
 console.log('dati è:', typeof dati, dati);
-console.log('dati.full esiste?', !!dati.full, dati.full?.length || 'non presente');
-console.log('dati.gallery esiste?', !!dati.gallery, dati.gallery?.length || 'non presente');
+console.log('dati.full esiste?', !!dati.full, dati.full ? dati.full.length : 'non presente');
+console.log('dati.gallery esiste?', !!dati.gallery, dati.gallery ? dati.gallery.length : 'non presente');
 // Log di debug per capire subito cosa arriva
 console.log('fullImages length:', window.fullImages.length);
 console.log('galleryImages length:', window.galleryImages.length);
-console.log('Primo elemento gallery:', window.galleryImages[0]);
+console.log('Primo elemento gallery:', window.galleryImages[0]);*/
 
       // 2) Main image + overlay data/temperatura
       var mainImage = document.getElementById('main-image');

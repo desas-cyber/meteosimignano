@@ -3,7 +3,7 @@
  * GALLERIA METEO SIMIGNANO
  * 
  * Questo script visualizza le immagini meteorologiche delle ultime 36 ore
- * con i relativi dati meteo (temperatura, umidità, pressione, vento).
+ * con i relativi dati meteo (temperatura, umiditÃ , pressione, vento).
  * 
  * STRUTTURA:
  * 1. Configurazione e caricamento dipendenze
@@ -85,7 +85,7 @@ if (!isset($data['error'])) {
     $records = $data['records'];
     
     // ------------------------------------------------------------------------
-    // 6.1: Conversione percorsi filesystem → web
+    // 6.1: Conversione percorsi filesystem â†’ web
     // ------------------------------------------------------------------------
     // I percorsi nel database sono assoluti (/Applications/MAMP/htdocs/...)
     // ma il browser ha bisogno di percorsi relativi (FoscamCamera_E8ABFAA799FE/snap/...)
@@ -98,7 +98,7 @@ if (!isset($data['error'])) {
         '/Applications/MAMP/htdocs/meteosimignano'          // TEST_LOCALE (Mac)
     ];
     
-    // Prova a sostituire ogni percorso finché uno non funziona
+    // Prova a sostituire ogni percorso finchÃ© uno non funziona
     foreach ($pathsToRemove as $path) {
         $newSrc = str_replace($path, '', $record['src']);
         if ($newSrc !== $record['src']) {
@@ -116,10 +116,10 @@ if (!isset($data['error'])) {
     $images = array_column($records, 'src');
     
     // ------------------------------------------------------------------------
-    // 6.3: Determinazione immagine più recente
+    // 6.3: Determinazione immagine piÃ¹ recente
     // ------------------------------------------------------------------------
-    // Scorri tutti i record per trovare quello con timestamp più alto
-    // (questo sarà l'immagine principale da mostrare in grande)
+    // Scorri tutti i record per trovare quello con timestamp piÃ¹ alto
+    // (questo sarÃ  l'immagine principale da mostrare in grande)
     
     $maxTimestamp = 0;
     
@@ -127,7 +127,7 @@ if (!isset($data['error'])) {
         if (!empty($rec['data_ora'])) {
             $timestamp = strtotime($rec['data_ora']);
             
-            // Se questo record è più recente del precedente massimo
+            // Se questo record Ã¨ piÃ¹ recente del precedente massimo
             if ($timestamp !== false && $timestamp > $maxTimestamp) {
                 $maxTimestamp = $timestamp;
                 $mainImage = $rec['src'];
@@ -135,7 +135,7 @@ if (!isset($data['error'])) {
                 // Formatta data per visualizzazione (da ISO a formato italiano)
                 $mainImageDate = (new DateTime($rec['data_ora']))->format('d/m/Y H:i');
                 
-                // Estrai temperatura dal record più recente
+                // Estrai temperatura dal record piÃ¹ recente
                 if (isset($rec['temp'])) {
                     $mainTemperature = round($rec['temp']);
                 }
@@ -158,20 +158,20 @@ if (!isset($data['error'])) {
      * @return string Nome classe CSS (temp-red, temp-orange, temp-green, ecc.)
      */
     function getTempColorClass($temp) {
-    // Converti esplicitamente a float, anche se è stringa
+    // Converti esplicitamente a float, anche se Ã¨ stringa
     if (!is_numeric($temp)) {
         return 'temp-default';
     }
     
     $temp = floatval($temp);
     
-    // Ordine corretto: dal più alto al più basso
-    if ($temp > 35)        return 'temp-red';        // > 35°C
-    if ($temp >= 25)       return 'temp-orange';     // 25-35°C
-    if ($temp >= 15)       return 'temp-green';      // 15-24°C
-    if ($temp >= 5)        return 'temp-lightblue';  // 5-14°C
-    if ($temp >= -3)       return 'temp-blue';       // -2-3°C
-    return 'temp-violet';                            // < -2°C
+    // Ordine corretto: dal piÃ¹ alto al piÃ¹ basso
+    if ($temp > 35)        return 'temp-red';        // > 35Â°C
+    if ($temp >= 25)       return 'temp-orange';     // 25-35Â°C
+    if ($temp >= 15)       return 'temp-green';      // 15-24Â°C
+    if ($temp >= 5)        return 'temp-lightblue';  // 5-14Â°C
+    if ($temp >= -3)       return 'temp-blue';       // -2-3Â°C
+    return 'temp-violet';                            // < -2Â°C
 }
     
     $tempColorClass = getTempColorClass($mainTemperature);
@@ -183,6 +183,12 @@ if (!isset($data['error'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.98, maximum-scale=5.0, user-scalable=yes">
+    
+    <!-- 🔧 ANTI-CACHE per Safari mobile -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <title>MeteoSimignano - Galleria Webcam</title>
     <link rel="stylesheet" href="galleria-lightbox.css">
@@ -277,7 +283,7 @@ if (!isset($data['error'])) {
     }
 }
 
-        /* Il contenitore dell’immagine principale DEVE essere relative */
+        /* Il contenitore dellâ€™immagine principale DEVE essere relative */
         #main-image-wrapper,
         .main-image-wrapper {
         position: relative;
@@ -286,7 +292,7 @@ if (!isset($data['error'])) {
         /* Overlay data/ora principale centrato */
         #main-image-date {
           position: absolute;
-          bottom: 0.3rem;        /* distanza dal bordo — puoi mettere 0 per attaccarlo */
+          bottom: 0.3rem;        /* distanza dal bordo â€” puoi mettere 0 per attaccarlo */
           left: 50%;
           transform: translateX(-50%);
           
@@ -339,7 +345,7 @@ if (!isset($data['error'])) {
   align-items: center;
   gap: 10px;
 
-  width: 90% !important;  /* CAMBIA a 90% per centrare di più */
+  width: 90% !important;  /* CAMBIA a 90% per centrare di piÃ¹ */
   max-width: 1000px !important;
   margin: 20px auto;
   padding: 0;  /* RIMUOVI il padding se usi width ridotta */
@@ -352,7 +358,7 @@ if (!isset($data['error'])) {
   }
 }
 /* ================================================================
-   TITOLO — adatta il font al 75% disponibile senza andare a capo
+   TITOLO â€” adatta il font al 75% disponibile senza andare a capo
    ================================================================ */
 .gallery-title {
   margin: 0;
@@ -379,17 +385,17 @@ if (!isset($data['error'])) {
 
 
 /* ================================================================
-   BOTTONE — stile originale: contorno nero, testo nero, sfondo trasparente
+   BOTTONE â€” stile originale: contorno nero, testo nero, sfondo trasparente
    ================================================================ */
 .gallery-cta {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;  /* 🆕 Spazio tra icona e testo */
+  gap: 8px;  /* ðŸ†• Spazio tra icona e testo */
 
-  background-color: transparent !important;  /* 🔧 Niente sfondo */
-  color: black;                   /* 🔧 Testo nero */
-  border: 2px solid black;        /* 🆕 Bordo nero */
+  background-color: transparent !important;  /* ðŸ”§ Niente sfondo */
+  color: black;                   /* ðŸ”§ Testo nero */
+  border: 2px solid black;        /* ðŸ†• Bordo nero */
 
   font-weight: bold;
   font-size: clamp(10px, 2.8cqw, 18px);
@@ -417,7 +423,7 @@ if (!isset($data['error'])) {
   }
 }
 
-/* Su mobile molto stretto: leggermente più compatto */
+/* Su mobile molto stretto: leggermente piÃ¹ compatto */
 @media (max-width: 420px) {
   .gallery-header { gap: 8px; padding: 0 6px; }
 }
@@ -450,7 +456,7 @@ if (!isset($data['error'])) {
 
 @keyframes spin{ to{ transform: rotate(360deg); } }
 
-/* Facoltativo: effetto “sto caricando pagina” */
+/* Facoltativo: effetto â€œsto caricando paginaâ€ */
 .page-loading { cursor: progress; }
 .page-loading main { opacity: 0.65; }
 
@@ -553,7 +559,7 @@ if (!isset($data['error'])) {
 
 /* =========================================================
    LANDSCAPE PHONE: overlay sopra immagine + scala 90%
-   (HTML attuale: h2#main-image-date.date-text è sotto all'immagine)
+   (HTML attuale: h2#main-image-date.date-text Ã¨ sotto all'immagine)
    ========================================================= */
 @media (orientation: landscape) and (max-height: 480px) {
 
@@ -583,7 +589,7 @@ if (!isset($data['error'])) {
     transform-origin: bottom center !important;
     z-index: 5 !important;
 
-    /* IMPORTANTI per non “allargare” e per restare leggibile */
+    /* IMPORTANTI per non â€œallargareâ€ e per restare leggibile */
     width: auto !important;
     max-width: calc(90% - 12px) !important; /* dentro la foto (90%) */
     white-space: nowrap !important;
@@ -594,13 +600,13 @@ if (!isset($data['error'])) {
     pointer-events: none;
   }
 
-  /* disattiva il comportamento “banner” che avevi pensato per testo sotto */
+  /* disattiva il comportamento â€œbannerâ€ che avevi pensato per testo sotto */
   .main-container > .date-text::after{
     content: none !important;
   }
 }
 /* =========================================================
-   LANDSCAPE PHONE – FIX: titolo galleria troppo piccolo
+   LANDSCAPE PHONE â€“ FIX: titolo galleria troppo piccolo
    (reset + px, evita scaling cumulativo)
    ========================================================= */
 @media (orientation: landscape) and (max-height: 480px){
@@ -681,7 +687,7 @@ if (!isset($data['error'])) {
             <!-- Immagine principale (src popolato da JavaScript) -->
             <img id="main-image" 
                  src="<?php echo htmlspecialchars($mainImage); ?>" 
-                 alt="Immagine webcam più recente" 
+                 alt="Immagine webcam piÃ¹ recente" 
                  class="main-image">
             
             <!-- Overlay con data e temperatura -->
@@ -694,7 +700,7 @@ if (!isset($data['error'])) {
                 <!-- Temperatura con colore dinamico -->
                 <span id="temp-label" 
                       class="temp-data <?php echo htmlspecialchars($tempColorClass); ?>">
-                    <?php echo is_numeric($mainTemperature) ? round($mainTemperature).'°C' : 'N/D'; ?>
+                    <?php echo is_numeric($mainTemperature) ? round($mainTemperature).'Â°C' : 'N/D'; ?>
                 </span>
             </h2>
         </div>
@@ -814,13 +820,51 @@ if (!isset($data['error'])) {
     </script>
     
     <!--Script per aggiornamento automatico dati meteo -->
-    <script src="aggiorna_dati_meteo.js"></script>
+    <script src="aggiorna_dati_meteo.js?v=<?php echo filemtime(__DIR__ . '/aggiorna_dati_meteo.js'); ?>"></script>
     
     <!--Script per gestione lightbox (modale immagini) -->
-    <script src="galleria-lightbox.js"></script>
+    <script src="galleria-lightbox.js?v=<?php echo filemtime(__DIR__ . '/galleria-lightbox.js'); ?>"></script>
     
     <!--Script per aggiornamento automatico galleria (ogni 5 minuti) -->
-    <script src="aggiorna_galleria.js"></script>
+    <script src="aggiorna_galleria.js?v=<?php echo filemtime(__DIR__ . '/aggiorna_galleria.js'); ?>"></script>
+    
+    <!-- 🔍 DIAGNOSTICA SAFARI: verifica caricamento script 
+    <script>
+    (function() {
+        // 🛡️ Error handler globale per Safari
+        window.addEventListener('error', function(e) {
+            if (e.filename && e.filename.includes('aggiorna_galleria.js')) {
+                console.error('❌ ERRORE CRITICO in aggiorna_galleria.js:', {
+                    message: e.message,
+                    lineno: e.lineno,
+                    colno: e.colno,
+                    filename: e.filename
+                });
+            }
+        });
+        
+        var diagnostics = {
+            userAgent: navigator.userAgent,
+            isSafari: /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent),
+            scriptsLoaded: {
+                galleryImages: typeof window.galleryImages !== 'undefined',
+                fullImages: typeof window.fullImages !== 'undefined',
+                aggiornaGalleria: typeof aggiornaGalleria !== 'undefined',
+                openLightbox: typeof openLightbox !== 'undefined'
+            },
+            timestamp: new Date().toISOString()
+        };
+        
+        console.log('📊 DIAGNOSTICA CARICAMENTO:', diagnostics);
+        
+        // Se siamo su Safari e gli script non sono caricati, alert diagnostico
+        if (diagnostics.isSafari && !diagnostics.scriptsLoaded.aggiornaGalleria) {
+            console.error('⚠️ ERRORE: aggiorna_galleria.js non caricato su Safari!');
+            // Decommenta per debug in produzione:
+            // alert('Debug Safari: script non caricato. Controlla console.');
+        }
+    })();
+    </script>-->
     
     
     <!--GESTIONE SPINNER DI CARICAMENTO DATI -->
@@ -921,7 +965,7 @@ if (!isset($data['error'])) {
 
   // BFCache: se torni indietro, non restare in loading
   window.addEventListener('pageshow', function(){
-    // se la pagina viene ripescata “già pronta”, chiudi
+    // se la pagina viene ripescata â€œgiÃ  prontaâ€, chiudi
     if (state.main && state.gallery && state.tabella) hide();
   });
 

@@ -50,6 +50,7 @@ Script: sincronizza directory snapshot Foscam con tabella DB_immagini_36h(_test)
       - determina se la foto è in finestra di alba (fase=1) o tramonto (fase=2)  
       - usa solar_data_siena (alba/tramonto UTC) + conversione in locale  
       - margini dinamici: alba , tramonto −40' → +40'
+      - NUOVO: identifica le foto "gallery" (minuti 00, 20, 40) per assegnare flag speciali
 
   * estraiDataOraDaFilename()  
       - valida il filename e restituisce datetime Y-m-d H:i:s.
@@ -175,7 +176,7 @@ function leggiImmaginiDaDatabase(PDO $pdo, string $table_name): array  {
     
     // 🧠 Se il DB è vuoto, popolalo con tutti i file della directory
     if (empty($file_map_db)) {
-        debugEcho("📥 DB vuoto, popolo con tutti i file della directory.");
+        debugEcho("🔥 DB vuoto, popolo con tutti i file della directory.");
         foreach ($file_map_dir as $filename => $val) {
             if (preg_match('/Schedule_\d{8}-\d{6}\.jpg$/', $filename)) {
             $data_str = substr($filename, 9, 15);
@@ -200,7 +201,7 @@ function leggiImmaginiDaDatabase(PDO $pdo, string $table_name): array  {
         return;
     }
     
-    // 🔁 INSERISCI nuovi file
+    // 🔍 INSERISCI nuovi file
     foreach ($file_map_dir as $filename => $val) {
         if (!isset($file_map_db[$filename])) {
             if (preg_match('/Schedule_\d{8}-\d{6}\.jpg$/', $filename)) {
@@ -299,7 +300,10 @@ function leggiImmaginiDaDatabase(PDO $pdo, string $table_name): array  {
     }
     
 function aggiornaSunPhase(PDO $pdo, PDO $pdo_lettura, string $table_name) {
-    $sql = "SELECT ID, DATA_ORA FROM " . $table_name . " WHERE alba_tramonto IS NULL";
+    // 🌅 Strategia: identifichiamo le foto "gallery" (entro ±4 min da 00/20/40)
+    // Se ci sono più foto nello stesso slot, segnamo solo quella più vicina al target
+    
+    $sql = "SELECT ID, DATA_ORA FROM " . $table_name . " WHERE alba_tramonto IS NULL ORDER BY DATA_ORA";
     $records = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
     if (empty($records)) {
@@ -307,7 +311,7 @@ function aggiornaSunPhase(PDO $pdo, PDO $pdo_lettura, string $table_name) {
         return;
     }
 
-    debugEcho("🌅 Verifico sun_phase per " . count($records) . " record...");
+    debugEcho("🌅 Verifico sun_phase per " . count($records) . " record (foto entro ±4min da 00/20/40)...");
 
     $stmt_solar = $pdo_lettura->prepare("
         SELECT alba_utc, tramonto_utc
@@ -318,8 +322,10 @@ function aggiornaSunPhase(PDO $pdo, PDO $pdo_lettura, string $table_name) {
 
     $stmt_update = $pdo->prepare("UPDATE $table_name SET alba_tramonto = :phase WHERE ID = :id");
 
-    $albe = 0;
-    $tramonti = 0;
+    // 🗂️ Prima fase: raggruppiamo le foto per data+slot+finestra
+    $candidati_alba = [];      // [data_slot_key] => [foto1, foto2, ...]
+    $candidati_tramonto = [];  // [data_slot_key] => [foto1, foto2, ...]
+    $non_gallery = 0;
     $senza_dati = 0;
 
     foreach ($records as $row) {
@@ -328,13 +334,34 @@ function aggiornaSunPhase(PDO $pdo, PDO $pdo_lettura, string $table_name) {
 
         try {
             $dt = new DateTime($data_ora, new DateTimeZone('Europe/Rome'));
+            
+            // 🎯 Verifichiamo se è una foto "gallery" (entro ±4 minuti da slot 00/20/40)
+            $minuto = (int)$dt->format('i');
+            
+            // Calcola lo slot target più vicino (0, 20, o 40)
+            $slot_target = round($minuto / 20) * 20;
+            if ($slot_target == 60) $slot_target = 0;
+            
+            // Calcola la distanza in minuti dal target
+            $distanza_minuti = abs($minuto - $slot_target);
+            if ($distanza_minuti > 30) {
+                $distanza_minuti = 60 - $distanza_minuti;
+            }
+            
+            $is_gallery = ($distanza_minuti <= 4); // ±4 minuti di tolleranza
+            
+            if (!$is_gallery) {
+                $non_gallery++;
+                continue;
+            }
+            
+            // ✅ È una foto gallery, verifichiamo alba/tramonto
             $giorno_anno = (int)$dt->format('z') + 1;
             
             $stmt_solar->execute([':giorno_anno' => $giorno_anno]);
             $solar = $stmt_solar->fetch(PDO::FETCH_ASSOC);
 
             if (!$solar || !$solar['alba_utc'] || !$solar['tramonto_utc']) {
-                scriviLog("❌ Dati solari non trovati per ID=$id, giorno_anno=$giorno_anno");
                 $senza_dati++;
                 continue;
             }
@@ -349,29 +376,52 @@ function aggiornaSunPhase(PDO $pdo, PDO $pdo_lettura, string $table_name) {
             $tramonto_local = clone $tramonto_utc;
             $tramonto_local->setTimezone(new DateTimeZone('Europe/Rome'));
 
+            $alba_start = $alba_local->getTimestamp() - 2400;
+            $alba_end = $alba_local->getTimestamp() + 2400;
             
-            $alba_start = $alba_local->getTimestamp() - 2400;// - 40' di margine
-            $alba_end = $alba_local->getTimestamp() + 2400;// 40' di margine
-            
-            $tramonto_start = $tramonto_local->getTimestamp() - 2400;// - 40' di margine
-            $tramonto_end = $tramonto_local->getTimestamp() + 2400;// 40' di margine
+            $tramonto_start = $tramonto_local->getTimestamp() - 2400;
+            $tramonto_end = $tramonto_local->getTimestamp() + 2400;
             
             $photo_timestamp = $dt->getTimestamp();
 
-            $phase = null;
+            // Chiave univoca: data + slot_completo (es. "2025-09-08_07:20", "2025-09-08_07:40")
+            // Calcoliamo l'ora dello slot target basandoci sulla foto
+            $ora = (int)$dt->format('H');
             
-            if ($photo_timestamp >= $alba_start && $photo_timestamp <= $alba_end) {
-                $phase = 1;
-                $albe++;
-            } elseif ($photo_timestamp >= $tramonto_start && $photo_timestamp <= $tramonto_end) {
-                $phase = 2;
-                $tramonti++;
+            // Se il minuto è vicino al prossimo slot (es. 58-59), potrebbe appartenere allo slot 00 dell'ora successiva
+            if ($minuto >= 50 && $slot_target == 0) {
+                $ora = ($ora + 1) % 24; // slot 00 dell'ora successiva
             }
-
-            if ($phase !== null) {
-                $stmt_update->execute([':phase' => $phase, ':id' => $id]);
-                $fase_str = ($phase == 1) ? '🌅 Alba' : '🌇 Tramonto';
-                debugEcho("$fase_str rilevato: ID=$id, DATA_ORA=$data_ora");
+            
+            $key = sprintf("%s_%02d:%02d", $date_str, $ora, $slot_target);
+            
+            // Verifica in quale finestra cade
+            if ($photo_timestamp >= $alba_start && $photo_timestamp <= $alba_end) {
+                if (!isset($candidati_alba[$key])) {
+                    $candidati_alba[$key] = [];
+                }
+                $candidati_alba[$key][] = [
+                    'id' => $id,
+                    'data_ora' => $data_ora,
+                    'minuto' => $minuto,
+                    'distanza' => $distanza_minuti,
+                    'slot_target' => $slot_target,
+                    'ora_slot' => $ora,  // 🔑 Memorizziamo l'ora corretta dello slot
+                    'data' => $date_str
+                ];
+            } elseif ($photo_timestamp >= $tramonto_start && $photo_timestamp <= $tramonto_end) {
+                if (!isset($candidati_tramonto[$key])) {
+                    $candidati_tramonto[$key] = [];
+                }
+                $candidati_tramonto[$key][] = [
+                    'id' => $id,
+                    'data_ora' => $data_ora,
+                    'minuto' => $minuto,
+                    'distanza' => $distanza_minuti,
+                    'slot_target' => $slot_target,
+                    'ora_slot' => $ora,  // 🔑 Memorizziamo l'ora corretta dello slot
+                    'data' => $date_str
+                ];
             }
 
         } catch (Exception $e) {
@@ -380,13 +430,151 @@ function aggiornaSunPhase(PDO $pdo, PDO $pdo_lettura, string $table_name) {
         }
     }
 
+    // 🎯 Seconda fase: per ogni slot, segnamo solo la foto più vicina
+    // MA SOLO SE non c'è già una foto marcata in quello slot!
+    $albe = 0;
+    $tramonti = 0;
+    $saltate = 0;
+    $slot_gia_occupati = 0;
+
+    // Prepariamo una query per verificare se uno slot è già occupato
+    // Per slot=0, dobbiamo cercare sia nell'ora corrente che nella precedente
+    $stmt_check_slot = $pdo->prepare("
+        SELECT COUNT(*) 
+        FROM $table_name 
+        WHERE DATE(DATA_ORA) = :data
+        AND (
+            (HOUR(DATA_ORA) = :ora AND MINUTE(DATA_ORA) BETWEEN :min_start AND :min_end)
+            OR
+            (:is_slot_zero = 1 AND HOUR(DATA_ORA) = :ora_prev AND MINUTE(DATA_ORA) >= :min_prev)
+        )
+        AND alba_tramonto = :phase
+    ");
+
+    // Processa ALBA
+    foreach ($candidati_alba as $key => $foto_list) {
+        // Ordina per distanza (la più vicina prima)
+        usort($foto_list, function($a, $b) {
+            return $a['distanza'] <=> $b['distanza'];
+        });
+        
+        $migliore = $foto_list[0];
+        
+        // Usa l'ora e data memorizzate (già corrette per slot a cavallo d'ora)
+        $data_check = $migliore['data'];
+        $ora_check = $migliore['ora_slot'];
+        $slot = $migliore['slot_target'];
+        
+        // Calcola range di minuti per lo slot (±4 minuti)
+        $min_start = max(0, $slot - 4);
+        $min_end = min(59, $slot + 4);
+        
+        // Per slot=0, dobbiamo cercare anche nell'ora precedente (minuti 56-59)
+        $is_slot_zero = ($slot == 0) ? 1 : 0;
+        $ora_prev = ($ora_check - 1 + 24) % 24;  // Ora precedente con wrap a 23
+        $min_prev = 60 - 4;  // Minuti >= 56 nell'ora precedente
+        
+        // Verifica se lo slot è già occupato
+        $stmt_check_slot->execute([
+            ':data' => $data_check,
+            ':ora' => $ora_check,
+            ':min_start' => $min_start,
+            ':min_end' => $min_end,
+            ':is_slot_zero' => $is_slot_zero,
+            ':ora_prev' => $ora_prev,
+            ':min_prev' => $min_prev,
+            ':phase' => 1
+        ]);
+        
+        $gia_presente = $stmt_check_slot->fetchColumn();
+        
+        if ($gia_presente > 0) {
+            // Slot già occupato, skippiamo tutto il gruppo
+            $slot_gia_occupati++;
+            $saltate += count($foto_list);
+            debugEcho("⏭️  Slot $key già occupato, saltate " . count($foto_list) . " foto");
+            continue;
+        }
+        
+        // Slot libero, segnamo la migliore
+        $stmt_update->execute([':phase' => 1, ':id' => $migliore['id']]);
+        $albe++;
+        
+        debugEcho("🌅 Alba: ID={$migliore['id']}, min={$migliore['minuto']}, slot=$ora_check:{$migliore['slot_target']}, dist={$migliore['distanza']}min, DATA_ORA={$migliore['data_ora']}");
+        
+        // Le altre le saltiamo
+        if (count($foto_list) > 1) {
+            $saltate += count($foto_list) - 1;
+            debugEcho("   ⏭️  Saltate " . (count($foto_list) - 1) . " foto duplicate nello stesso slot");
+        }
+    }
+
+    // Processa TRAMONTO
+    foreach ($candidati_tramonto as $key => $foto_list) {
+        usort($foto_list, function($a, $b) {
+            return $a['distanza'] <=> $b['distanza'];
+        });
+        
+        $migliore = $foto_list[0];
+        
+        // Usa l'ora e data memorizzate (già corrette per slot a cavallo d'ora)
+        $data_check = $migliore['data'];
+        $ora_check = $migliore['ora_slot'];
+        $slot = $migliore['slot_target'];
+        
+        $min_start = max(0, $slot - 4);
+        $min_end = min(59, $slot + 4);
+        
+        // Per slot=0, dobbiamo cercare anche nell'ora precedente (minuti 56-59)
+        $is_slot_zero = ($slot == 0) ? 1 : 0;
+        $ora_prev = ($ora_check - 1 + 24) % 24;
+        $min_prev = 60 - 4;
+        
+        // Verifica se lo slot è già occupato
+        $stmt_check_slot->execute([
+            ':data' => $data_check,
+            ':ora' => $ora_check,
+            ':min_start' => $min_start,
+            ':min_end' => $min_end,
+            ':is_slot_zero' => $is_slot_zero,
+            ':ora_prev' => $ora_prev,
+            ':min_prev' => $min_prev,
+            ':phase' => 2
+        ]);
+        
+        $gia_presente = $stmt_check_slot->fetchColumn();
+        
+        if ($gia_presente > 0) {
+            $slot_gia_occupati++;
+            $saltate += count($foto_list);
+            debugEcho("⏭️  Slot $key già occupato, saltate " . count($foto_list) . " foto");
+            continue;
+        }
+        
+        $stmt_update->execute([':phase' => 2, ':id' => $migliore['id']]);
+        $tramonti++;
+        
+        debugEcho("🌇 Tramonto: ID={$migliore['id']}, min={$migliore['minuto']}, slot=$ora_check:{$migliore['slot_target']}, dist={$migliore['distanza']}min, DATA_ORA={$migliore['data_ora']}");
+        
+        if (count($foto_list) > 1) {
+            $saltate += count($foto_list) - 1;
+            debugEcho("   ⏭️  Saltate " . (count($foto_list) - 1) . " foto duplicate nello stesso slot");
+        }
+    }
+
     debugEcho("🌅 Trovate $albe albe e $tramonti tramonti.");
+    if ($slot_gia_occupati > 0) {
+        debugEcho("🔒 $slot_gia_occupati slot già occupati (ignorate foto duplicate).");
+    }
+    if ($saltate > 0) {
+        debugEcho("⏭️  $saltate foto duplicate saltate (più foto nello stesso slot).");
+    }
+    debugEcho("ℹ️ $non_gallery foto NON-gallery (oltre ±4min da 00/20/40) ignorate.");
     if ($senza_dati > 0) {
         debugEcho("⚠️ $senza_dati record senza dati solari.");
     }
-    echo $alba_local->format('Y-m-d H:i:s') . "\n";//debug
-    echo $tramonto_local->format('Y-m-d H:i:s') . "\n";//debug
-    scriviLog("✅ sun_phase: $albe albe, $tramonti tramonti. $senza_dati senza dati.");
+    
+    scriviLog("✅ sun_phase: $albe albe, $tramonti tramonti. $slot_gia_occupati slot occupati. $saltate duplicate. $non_gallery non-gallery. $senza_dati senza dati.");
 }
 
 

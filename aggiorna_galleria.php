@@ -163,8 +163,8 @@ if (!empty($sorted_desc)) {
             $ts_foto = (int)floor($dt_foto->getTimestamp());
             $distanza = abs($ts_foto - $target_ts);
             
-            // Tolleranza: +/- 3 minuti = 180 secondi
-            if ($distanza <= 180) {
+            // Tolleranza: +/- 4 minuti = 240 secondi
+            if ($distanza <= 240) {
                 // Cerchiamo la foto piu vicina
                 if ($distanza < $migliore_dist) {
                     $migliore_dist = $distanza;
