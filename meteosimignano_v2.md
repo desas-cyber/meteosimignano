@@ -16,7 +16,7 @@ public_html
 |--- galleria-lightbox.js (gestisce il lightbox e la galleria in index.php)
 |--- galleria-lightbox.css
 |--- aggiorna_galleria.js (aggiorna la galleria in index.php)
-|--- aggorna_galleria.php (fornisce i dati al js)
+|--- aggorna_galleria.php (fornisce i dati al js-json con due array, uno per galleria, uno per slow motion)
 |--- aggiorna_cartella_immagini.php (aggiorna la cartella immagini con i dati proveniente dal db per la galleria in index.php)
 |---date_time_helper.php (gestisce le impostaioni del tempo tra test e prod)
 |--- env_tables_helper.php (alterna l'utilizzo dell tabelle test o no a secondia che siamo in test o prod)
