@@ -1,47 +1,31 @@
 <?php
-declare(strict_types=1);
 
 /**
- * FILE: aggiorna_galleria.php
- * SCOPO: Espone in JSON la lista delle immagini (ultime 36h) con i metadati letti dal DB.
+ * aggiorna_galleria.php
+ * 
+ * SCOPO PRINCIPALE:
+ *   - Leggere tutte le immagini dalla cartella
+ *   - Recuperare i metadati dal database
+ *   - Restituire UN SOLO JSON con DUE array:
+ *     1) "full"     -> array leggero (solo src + data_ora) per il TIME-LAPSE veloce
+ *     2) "gallery"  -> array completo (con meteo, alba_tramonto, ecc.) + fullIndex per le miniature
  *
- * COMPORTAMENTO IN BREVE
- *  1) Carica configurazioni e dipendenze (PDO da envelop.php, mapping tabelle da env_tables_helper.php).
- *  2) Legge i file immagine da una cartella sul filesystem.
- *  3) Per ogni file, prova a recuperare una riga di metadati dal DB (al più una, con LIMIT 1).
- *  4) Costruisce un array di record “puliti” per il frontend e lo stampa in JSON.
- *
- * NOTE DI PROGETTO
- *  - L’endpoint deve *sempre* rispondere con JSON valido e *solo* JSON (niente echo, HTML o notice).
- *  - Tutti i warning sono soppressi lato output (display_errors=0). In caso di problemi gravi → HTTP 500 + JSON {error}.
- *  - Il frontend si aspetta alias specifici per il vento: "vento"/"wind_ms" in m/s e "wind_kmh" in km/h.
- *  - La direzione vento è presente come testo (es. "NE") nel campo "Dir_text".
- *
- * SICUREZZA / MANUTENZIONE
- *  - Binding dei parametri con placeholder nominati (":file") per evitare SQL injection.
- *  - Nessuna assunzione sulla validità del contenuto DB: tutto è validato e/o castato “soft”.
- *  - Se non ci sono immagini, risponde con [] (array vuoto), che il JS deve gestire.
+ * REGOLE PER LA GALLERY (miniature visibili):
+ *   - Obiettivo: una foto rappresentativa ogni ~20 minuti
+ *   - Slot target: minuti 00, 20, 40 di ogni ora
+ *   - Priorita 1: se esiste foto ESATTAMENTE a xx:00 / xx:20 / xx:40 -> quella
+ *   - Priorita 2: altrimenti, tra tutte le foto entro ±3 minuti -> quella piu vicina (minima distanza temporale)
  */
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 0) Impostazioni runtime per non “sporcare” il JSON con warning/notice
-// ─────────────────────────────────────────────────────────────────────────────
-ini_set('display_errors', '0');
-ini_set('display_startup_errors', '0');
-error_reporting(E_ALL);
+declare(strict_types=1);
 
-// Consistenti intestazioni HTTP per una API JSON
 header('Content-Type: application/json; charset=utf-8');
-// Se preferisci evitare cache del browser, lascia questa riga; altrimenti rimuovi/adegua.
-// header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+error_reporting(E_ALL);
+ini_set('display_errors', 0); // Non mostrare errori in JSON
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 1) Dipendenze & connessione al DB
-//    - envelop.php deve definire $pdo (istanza PDO *valida*)
-//    - env_tables_helper.php deve esporre table_name('DB_immagini_36h')
-// ─────────────────────────────────────────────────────────────────────────────
 require_once __DIR__ . '/../envelop.php';
 require_once __DIR__ . '/env_tables_helper.php';
+require_once __DIR__ . '/datetime_helper.php';  
 
 if (!isset($pdo) || !($pdo instanceof PDO)) {
     http_response_code(500);
@@ -49,60 +33,45 @@ if (!isset($pdo) || !($pdo instanceof PDO)) {
     exit;
 }
 
-$table_name = table_name('DB_immagini_36h'); // es. "DB_immagini_36h" (eventualmente namespaced)
+$table_name = table_name('DB_immagini_36h');
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 2) Percorsi (filesystem vs URL pubblico)
-//    - $directory: path reale sul server dove risiedono i file
-//    - $webPath:  path pubblico usato dal frontend per <img src="...">
-// ─────────────────────────────────────────────────────────────────────────────
-$directory = __DIR__ . '/FoscamCamera_E8ABFAA799FE/snap/'; // FS path
-$webPath   = '/FoscamCamera_E8ABFAA799FE/snap/';           // URL base
+// Percorsi
+$directory = __DIR__ . '/FoscamCamera_E8ABFAA799FE/snap/';
+$webPath   = '/FoscamCamera_E8ABFAA799FE/snap/';
 
-// Verifica base: se la cartella non esiste o non è leggibile, restituisce array vuoto
+// Verifica cartella
 if (!is_dir($directory) || !is_readable($directory)) {
-    echo json_encode([]);
+    echo json_encode(['full' => [], 'gallery' => [], 'stats' => ['error' => 'Directory non trovata']]);
     exit;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 3) Raccolta immagini dalla cartella
-//    - Supporta estensioni comuni (jpg/jpeg/png/gif)
-//    - Ordinamento decrescente per nome file (assume naming time-based)
-// ─────────────────────────────────────────────────────────────────────────────
+// Raccolta file
 $images = glob($directory . '*.{jpg,jpeg,png,gif}', GLOB_BRACE);
-
 if (!$images || count($images) === 0) {
-    echo json_encode([]);
+    echo json_encode(['full' => [], 'gallery' => [], 'stats' => ['error' => 'Nessuna immagine trovata']]);
     exit;
 }
 
-// Se i nomi sono timestamp-like, l'ordinamento string decrescente funziona bene.
-// In alternativa, per sicurezza su nomi "misti", si può usare SORT_NATURAL|SORT_FLAG_CASE.
+// Ordine decrescente per nome file (piu recente prima)
 rsort($images, SORT_STRING);
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 4) Preparazione statement SQL riusabile
-//    - Cerchiamo al massimo una riga per FILE
-// ─────────────────────────────────────────────────────────────────────────────
+// Statement per metadati
 $sql = "SELECT * FROM {$table_name} WHERE FILE = :file LIMIT 1";
-try {
-    $stmt = $pdo->prepare($sql);
-} catch (Throwable $e) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Preparazione statement fallita']);
-    exit;
+$stmt = $pdo->prepare($sql);
+
+// Costruzione array completo con tutti i dati
+$records = [];
+
+foreach ($images as $imagePath) {
+    $filename = basename($imagePath);
+    
+    $stmt->execute([':file' => $filename]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+    
+    $records[] = buildRecord($webPath, $filename, $row);
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 5) Funzione helper: costruisce un record “pulito” per il frontend
-// ─────────────────────────────────────────────────────────────────────────────
-/**
- * @param string     $publicBasePath  Base URL per <img>
- * @param string     $filename        Nome file (basename)
- * @param array|null $row             Riga DB associata (o null/false se assente)
- * @return array<string, mixed>
- */
+// Funzione buildRecord           
 function buildRecord(string $publicBasePath, string $filename, $row): array
 {
     $data_ora = null;
@@ -114,76 +83,141 @@ function buildRecord(string $publicBasePath, string $filename, $row): array
     $dir      = null;
 
     if (is_array($row)) {
-        // Data/ora: se presente e parse-abile → "dd/mm/YYYY HH:ii"
         if (!empty($row['DATA_ORA'])) {
             try {
                 $data_ora = (new DateTime((string)$row['DATA_ORA']))->format('d/m/Y H:i');
-            } catch (Throwable $ignored) {
-                $data_ora = null;
-            }
+            } catch (Throwable $ignored) {}
         }
 
-        // Cast numerici “soft”: se non numerico → null
         $temp  = (isset($row['Temp'])  && is_numeric($row['Temp']))  ? (float)$row['Temp']  : null;
         $hr    = (isset($row['HR'])    && is_numeric($row['HR']))    ? (float)$row['HR']    : null;
         $p_hpa = (isset($row['P_hPa']) && is_numeric($row['P_hPa'])) ? (float)$row['P_hPa'] : null;
 
-        // Vento: nel DB è in km/h → offriamo anche i m/s
         if (isset($row['vento_kmh']) && is_numeric($row['vento_kmh'])) {
             $windKmh = (float)$row['vento_kmh'];
             $windMs  = $windKmh / 3.6;
         }
 
-        // Direzione: testuale (es. "NE")
         $dir = isset($row['Dir_text']) ? (string)$row['Dir_text'] : null;
     }
 
     return [
-        // Percorso pubblico per <img>
         'src'       => rtrim($publicBasePath, '/') . '/' . ltrim($filename, '/'),
-
-        // Metadati temporali e meteo
+        'file'      => $filename,
         'data_ora'  => $data_ora,
         'temp'      => $temp,
         'hr'        => $hr,
         'p_hpa'     => $p_hpa,
-
-        // Vento: alias coerenti con il JS del frontend
-        'vento'     => $windMs,   // m/s (alias storico)
-        'wind_ms'   => $windMs,   // m/s
-        'wind_kmh'  => $windKmh,  // km/h
-
-        // Direzione (testo, es. "NE")
+        'vento'     => $windMs,
+        'wind_ms'   => $windMs,
+        'wind_kmh'  => $windKmh,
         'dir'       => $dir,
         'dir_text'  => $dir,
     ];
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 6) Loop: per ogni immagine, lookup DB e costruzione record
-// ─────────────────────────────────────────────────────────────────────────────
-$records = [];
+// ============================================================================
+// SELEZIONE GALLERY
+// ============================================================================
+// $records e' gia' in ordine decrescente (piu recente prima)
+$sorted_desc = $records;
 
-foreach ($images as $imagePath) {
-    $filename = basename($imagePath);
+$gallery = [];
 
-    try {
-        // Binding con placeholder nominato (includere i due punti è più robusto)
-        $stmt->execute([':file' => $filename]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
-    } catch (Throwable $e) {
-        // In caso di errore query per *una* immagine, si salta quel record
-        // (meglio degradare con parziale che rompere tutta la risposta)
-        $row = null;
+if (!empty($sorted_desc)) {
+    $foto_piu_recente = $sorted_desc[0];
+    
+    // Parsing data piu recente
+    $ultima_dt = DateTime::createFromFormat('d/m/Y H:i', $foto_piu_recente['data_ora'] ?? '');
+    if ($ultima_dt === false) {
+        $ultima_dt = new DateTime(get_now('Y-m-d H:i:s'));
     }
-
-    $records[] = buildRecord($webPath, $filename, $row);
+    
+    // Slot iniziale
+    $minuto = (int)$ultima_dt->format('i');
+    $target_min = (int)(floor($minuto / 20) * 20);
+    
+    $current_target = clone $ultima_dt;
+    $current_target->setTime((int)$ultima_dt->format('H'), $target_min, 0, 0);
+    
+    // Limite (36 ore fa)
+    $limite_inferiore = clone $ultima_dt;
+    $limite_inferiore->modify('-36 hours');
+    $limite_ts = (int)floor($limite_inferiore->getTimestamp());
+    
+    $iter = 0;
+    $max_iter = 200; // sicurezza anti-loop infinito (36h * 3 foto/ora = 108 slot)
+    
+    while ($current_target->getTimestamp() >= $limite_ts && $iter < $max_iter) {
+        $iter++;
+        $target_ts = (int)floor($current_target->getTimestamp());
+        
+        $trovata_esatta = false;
+        $migliore_foto = null;
+        $migliore_dist = 999999;
+        
+        foreach ($sorted_desc as $idx => $foto) {
+            $dt_foto = DateTime::createFromFormat('d/m/Y H:i', $foto['data_ora'] ?? '');
+            if ($dt_foto === false) continue;
+            
+            $ts_foto = (int)floor($dt_foto->getTimestamp());
+            $distanza = abs($ts_foto - $target_ts);
+            
+            // Tolleranza: +/- 4 minuti = 240 secondi
+            if ($distanza <= 240) {
+                // Cerchiamo la foto piu vicina
+                if ($distanza < $migliore_dist) {
+                    $migliore_dist = $distanza;
+                    $migliore_foto = $foto;
+                }
+                
+                // Priorita: foto esatta al minuto 00/20/40
+                $min_foto = (int)$dt_foto->format('i');
+                if (in_array($min_foto, [0, 20, 40]) && $distanza <= 60) {
+                    $trovata_esatta = true;
+                    $full_idx = array_search($foto['src'], array_column($records, 'src'));
+                    if ($full_idx !== false) {
+                        $gallery[] = $foto + ['fullIndex' => $full_idx];
+                    }
+                    break; // esci dal foreach
+                }
+            }
+        }
+        
+        // Se non trovata esatta, usa la migliore entro tolleranza
+        if (!$trovata_esatta && $migliore_foto !== null) {
+            $full_idx = array_search($migliore_foto['src'], array_column($records, 'src'));
+            if ($full_idx !== false) {
+                $gallery[] = $migliore_foto + ['fullIndex' => $full_idx];
+            }
+        }
+        
+        $current_target->modify('-20 minutes');
+    }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 7) Output JSON pulito
-// ─────────────────────────────────────────────────────────────────────────────
-echo json_encode(
-    $records,
-    JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE
-);
+// Ordine decrescente finale (piu recente prima)
+usort($gallery, function($a, $b) {
+    return strcmp($b['data_ora'], $a['data_ora']);
+});
+
+// Array full leggero (solo src + data_ora per time-lapse)
+$full = array_map(function($r) {
+    return [
+        'src'     => $r['src'],
+        'data_ora' => $r['data_ora']
+    ];
+}, $records);
+
+// Output JSON finale
+echo json_encode([
+    'full'    => $full,
+    'gallery' => $gallery,
+    'stats'   => [
+        'total_full'     => count($full),
+        'gallery_count'  => count($gallery),
+        'generated_at'   => date('c'),
+        'note'           => 'Gallery: foto ogni ~20 min con +/-3 min tolleranza'
+    ]
+], JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+?>

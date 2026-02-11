@@ -221,7 +221,7 @@ function getImageDataFromFolder(PDO $pdo, string $directory, string $tableName, 
 
         // --- 3. CREAZIONE DEL RECORD (INCLUSO sun_phase) ---
         $records[] = [
-            'src'       => $path,      // path completo sul filesystem/virtual host
+            'src'       => '/FoscamCamera_E8ABFAA799FE/snap/' . basename($path),
             'file'      => $file,      // nome file (basename)
             'data_ora'  => $data_ora,  // "dd/mm/yyyy HH:MM" come da tua console
             'temp'      => $temp,      // Â°C

@@ -292,7 +292,17 @@ function aggiornaGalleria() {
       //console.log('✅ [' + logTime + '] Ricevuti ' + dati.length + ' record dal server');
 
       // 1) Aggiorna array globale (usato anche altrove)
-      window.images = dati;
+      // Nuovo codice – leggiamo la struttura corretta
+window.fullImages    = dati.full    || [];     // array leggero per time-lapse
+window.galleryImages = dati.gallery || [];     // array completo per miniature
+/*console.log('=== DEBUG DATI ARRIVATI ===');
+console.log('dati è:', typeof dati, dati);
+console.log('dati.full esiste?', !!dati.full, dati.full ? dati.full.length : 'non presente');
+console.log('dati.gallery esiste?', !!dati.gallery, dati.gallery ? dati.gallery.length : 'non presente');
+// Log di debug per capire subito cosa arriva
+console.log('fullImages length:', window.fullImages.length);
+console.log('galleryImages length:', window.galleryImages.length);
+console.log('Primo elemento gallery:', window.galleryImages[0]);*/
 
       // 2) Main image + overlay data/temperatura
       var mainImage = document.getElementById('main-image');
@@ -304,7 +314,7 @@ function aggiornaGalleria() {
         console.warn('⚠️ [' + logTime + '] .gallery non trovata nel DOM');
       } else {
         gallery.innerHTML = '';
-        var list = window.images || [];
+        var list = window.galleryImages || [];
         for (var i = 0; i < list.length; i++) {
           try {
             var node = createThumbnailNode(list[i], i);
@@ -319,8 +329,8 @@ function aggiornaGalleria() {
       // === PASSO 5: Applica classi di lampeggiamento e prepara la classe per la Main Image ===
 
 // === PASSO 5: Applica classi di lampeggiamento e prepara la classe per la Main Image ===
-var minMaxData = trovaMinMaxTempOggi(window.images); 
-var list = window.images || [];
+var minMaxData = trovaMinMaxTempOggi(window.galleryImages); 
+var list = window.galleryImages || [];
 var gallery = document.querySelector('.gallery');
 var thumbs = gallery ? gallery.querySelectorAll('.thumb') : [];
 var mainTempClass = ''; // Classe per la main image
@@ -377,7 +387,7 @@ if (minMaxData && list.length > 0) {
 
 // 📌 Ritorna al punto 2 per aggiornare la Main Image ORA con la nuova classe.
 if (mainImage && mainDate) {
-    var rec = window.images[0];
+    var rec = window.galleryImages[0];
     if (!rec) {
       console.warn('⚠️ [' + logTime + '] Nessun record disponibile per la main image');
     } else {
