@@ -1,182 +1,7 @@
 <?php
 /**
- * GALLERIA METEO SIMIGNANO
- * 
- * Questo script visualizza le immagini meteorologiche delle ultime 36 ore
- * con i relativi dati meteo (temperatura, umiditÃ , pressione, vento).
- * 
- * STRUTTURA:
- * 1. Configurazione e caricamento dipendenze
- * 2. Recupero dati dal database
- * 3. Elaborazione dati (conversione percorsi, formattazione date)
- * 4. Determinazione immagine principale e temperatura
- * 5. Rendering HTML
- * 
- * @author MeteoSimignano
- * @version 2.0
+ * GALLERIA METEO SIMIGNANO — v3.0 (solo HTML statico, dati via JS fetch)
  */
-
-// ============================================================================
-// SEZIONE 1: CONFIGURAZIONE E DEBUG
-// ============================================================================
-
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-// ============================================================================
-// SEZIONE 2: CARICAMENTO DIPENDENZE
-// ============================================================================
-
-// Connessione database
-// NOTA: Decommenta la riga sotto per produzione, usa la seconda per sviluppo locale
-//require_once '/home/erbielqv/envelop.php'; // PRODUZIONE
-require_once __DIR__ . '/../envelop.php';     // SVILUPPO LOCALE
-
-// Funzioni per gestione immagini e database
-require_once __DIR__ . '/aggiornaCartellaImmagini.php';
-
-// Helper per nomi tabelle (gestisce ambiente test/produzione)
-require_once __DIR__ . '/env_tables_helper.php';
-
-// ============================================================================
-// SEZIONE 3: CONFIGURAZIONE PERCORSI E TABELLE
-// ============================================================================
-
-// Directory contenente le immagini della webcam
-$directory = __DIR__ . '/FoscamCamera_E8ABFAA799FE/snap/';
-
-// Nome tabella dinamico (usa tabella test se USE_TEST_MODE=true)
-$table_name = table_name('DB_immagini_36h');
-
-// ============================================================================
-// SEZIONE 4: RECUPERO DATI DAL DATABASE
-// ============================================================================
-
-/**
- * Recupera i dati delle immagini dalla cartella e dal database
- * 
- * @return array Struttura:
- *   - 'records': Array di record con campi: src, data_ora, temp, hr, p_hpa, vento, dir
- *   - 'error': Messaggio di errore (se presente)
- */
-$data = getImageDataFromFolder($pdo, $directory, $table_name);
-
-// ============================================================================
-// SEZIONE 5: INIZIALIZZAZIONE VARIABILI PER IL TEMPLATE
-// ============================================================================
-
-// Variabili per l'immagine principale
-$mainImage = '';
-$mainImageDate = 'Data non disponibile';
-$mainTemperature = 'N/D';
-
-// Array di tutti i record (per la galleria e JavaScript)
-$records = [];
-
-// Classe CSS per colorare la temperatura
-$tempColorClass = 'temp-default';
-
-// ============================================================================
-// SEZIONE 6: ELABORAZIONE DATI
-// ============================================================================
-
-if (!isset($data['error'])) {
-    $records = $data['records'];
-    
-    // ------------------------------------------------------------------------
-    // 6.1: Conversione percorsi filesystem â†’ web
-    // ------------------------------------------------------------------------
-    // I percorsi nel database sono assoluti (/Applications/MAMP/htdocs/...)
-    // ma il browser ha bisogno di percorsi relativi (FoscamCamera_E8ABFAA799FE/snap/...)
-    
-    foreach ($records as &$record) {
-    // Array con tutti i percorsi filesystem da rimuovere
-    $pathsToRemove = [
-        '/home/erbielqv/public_html/test/public_html',      // TEST_SERVER
-        '/home/erbielqv/public_html/meteosimignano',        // PRODUZIONE
-        '/Applications/MAMP/htdocs/meteosimignano'          // TEST_LOCALE (Mac)
-    ];
-    
-    // Prova a sostituire ogni percorso finchÃ© uno non funziona
-    foreach ($pathsToRemove as $path) {
-        $newSrc = str_replace($path, '', $record['src']);
-        if ($newSrc !== $record['src']) {
-            // Sostituzione riuscita, esci dal loop
-            $record['src'] = $newSrc;
-            break;
-        }
-    }
-    }
-    unset($record); // Rimuove riferimento per evitare side effects
-    
-    // ------------------------------------------------------------------------
-    // 6.2: Estrazione percorsi immagini per galleria
-    // ------------------------------------------------------------------------
-    $images = array_column($records, 'src');
-    
-    // ------------------------------------------------------------------------
-    // 6.3: Determinazione immagine piÃ¹ recente
-    // ------------------------------------------------------------------------
-    // Scorri tutti i record per trovare quello con timestamp piÃ¹ alto
-    // (questo sarÃ  l'immagine principale da mostrare in grande)
-    
-    $maxTimestamp = 0;
-    
-    foreach ($records as &$rec) {
-        if (!empty($rec['data_ora'])) {
-            $timestamp = strtotime($rec['data_ora']);
-            
-            // Se questo record Ã¨ piÃ¹ recente del precedente massimo
-            if ($timestamp !== false && $timestamp > $maxTimestamp) {
-                $maxTimestamp = $timestamp;
-                $mainImage = $rec['src'];
-                
-                // Formatta data per visualizzazione (da ISO a formato italiano)
-                $mainImageDate = (new DateTime($rec['data_ora']))->format('d/m/Y H:i');
-                
-                // Estrai temperatura dal record piÃ¹ recente
-                if (isset($rec['temp'])) {
-                    $mainTemperature = round($rec['temp']);
-                }
-            }
-            
-            // Formatta la data anche per questo record (usata in JavaScript)
-            $rec['data_ora'] = (new DateTime($rec['data_ora']))->format('d/m/Y H:i');
-        }
-    }
-    unset($rec);
-    
-    // ------------------------------------------------------------------------
-    // 6.4: Calcolo classe CSS per colore temperatura
-    // ------------------------------------------------------------------------
-    
-    /**
-     * Determina la classe CSS in base al valore della temperatura
-     * 
-     * @param mixed $temp Temperatura in gradi Celsius
-     * @return string Nome classe CSS (temp-red, temp-orange, temp-green, ecc.)
-     */
-    function getTempColorClass($temp) {
-    // Converti esplicitamente a float, anche se Ã¨ stringa
-    if (!is_numeric($temp)) {
-        return 'temp-default';
-    }
-    
-    $temp = floatval($temp);
-    
-    // Ordine corretto: dal piÃ¹ alto al piÃ¹ basso
-    if ($temp > 35)        return 'temp-red';        // > 35Â°C
-    if ($temp >= 25)       return 'temp-orange';     // 25-35Â°C
-    if ($temp >= 15)       return 'temp-green';      // 15-24Â°C
-    if ($temp >= 5)        return 'temp-lightblue';  // 5-14Â°C
-    if ($temp >= -3)       return 'temp-blue';       // -2-3Â°C
-    return 'temp-violet';                            // < -2Â°C
-}
-    
-    $tempColorClass = getTempColorClass($mainTemperature);
-}
-
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -686,9 +511,9 @@ if (!isset($data['error'])) {
         <div class="main-container">
             <!-- Immagine principale (src popolato da JavaScript) -->
             <img id="main-image" 
-                 src="<?php echo htmlspecialchars($mainImage); ?>" 
-                 alt="Immagine webcam piÃ¹ recente" 
-                 class="main-image">
+                src="" 
+                alt="Caricamento immagine..." 
+                class="main-image">
             
             <!-- Overlay con data e temperatura -->
             <h2 class="date-text" id="main-image-date">
@@ -699,8 +524,8 @@ if (!isset($data['error'])) {
                 
                 <!-- Temperatura con colore dinamico -->
                 <span id="temp-label" 
-                      class="temp-data <?php echo htmlspecialchars($tempColorClass); ?>">
-                    <?php echo is_numeric($mainTemperature) ? round($mainTemperature).'Â°C' : 'N/D'; ?>
+                    class="temp-data temp-default">
+                    --°C
                 </span>
             </h2>
         </div>
@@ -709,14 +534,21 @@ if (!isset($data['error'])) {
              TABELLA DATI METEO (iframe)
              ================================================================ -->
         
-        <div class="tabella-meteo">
-            <iframe src="tabella_home_display.php" 
-                    id="tabella-meteo-iframe"
-                    width="100%" 
-                    height="200px" 
-                    frameborder="0"
-                    title="Dati meteorologici"></iframe>
+        <div class="tabella-meteo" style="position:relative;">
+        <div id="tabella-placeholder" style="
+            position:absolute; top:0; left:0; right:0; bottom:0;
+            display:flex; align-items:center; justify-content:center;
+            font-family:Arial,sans-serif; font-size:14px; color:#999;
+            background:#fff; z-index:1;">
+            Caricamento dati meteo...
         </div>
+        <iframe src="tabella_home_display.php" 
+                id="tabella-meteo-iframe"
+                width="100%" 
+                height="200px" 
+                frameborder="0"
+                title="Dati meteorologici"></iframe>
+    </div>
         
         <!-- ================================================================
      TITOLO GALLERIA E LINK (3/4 titolo + 1/4 bottone)
@@ -738,13 +570,9 @@ if (!isset($data['error'])) {
              ================================================================ -->
         
         <div class="gallery">
-            <?php foreach($images as $index => $image): ?>
-                <img src="<?php echo htmlspecialchars($image); ?>" 
-                     alt="Immagine webcam" 
-                     onclick="openLightbox(<?php echo $index; ?>)">
-            <?php endforeach; ?>
+            <!-- Popolata da aggiorna_galleria.js -->
         </div>
-        
+                
         <!-- ================================================================
              LIGHTBOX (modale per ingrandire immagini)
              ================================================================ -->
@@ -802,21 +630,10 @@ if (!isset($data['error'])) {
          ==================================================================== -->
     
     <script>
-        /**
-         * VARIABILE GLOBALE: Array di tutte le immagini con metadati
-         * 
-         * Struttura di ogni elemento:
-         * {
-         *   src: "percorso/immagine.jpg",
-         *   data_ora: "09/01/2025 14:30",
-         *   temp: 18.7,
-         *   hr: 91.0,
-         *   p_hpa: 1017.0,
-         *   vento: 1.8,
-         *   dir: 138
-         * }
-         */
-        window.images = <?php echo json_encode($records); ?>;
+    /* Array inizializzati vuoti — popolati da aggiorna_galleria.js */
+    window.images = [];
+    window.fullImages = [];
+    window.galleryImages = [];
     </script>
     
     <!--Script per aggiornamento automatico dati meteo -->
@@ -912,43 +729,67 @@ if (!isset($data['error'])) {
       setTimeout(done, 8000);
     })();
 
-    /*========== B) GALLERIA MINIATURE =========*/
-    (function(){
-      var gallery = document.querySelector('.gallery');
-      if (!gallery) { markDone('gallery'); return; }
+    // ========== B) GALLERIA MINIATURE ==========
+// Aspetta che aggiornaGalleria() popoli il DOM, poi monitora le immagini.
+// Lo spinner si nasconde quando tutte le immagini tranne una sono caricate.
+(function(){
+  // Osserva quando il JS aggiunge le thumb alla .gallery
+  var galleryEl = document.querySelector('.gallery');
+  if (!galleryEl) { markDone('gallery'); return; }
 
-      var imgs = gallery.querySelectorAll('img');
-      if (!imgs || imgs.length === 0) { markDone('gallery'); return; }
+  var observer = new MutationObserver(function() {
+    var imgs = galleryEl.querySelectorAll('img');
+    if (!imgs || imgs.length === 0) return; // ancora vuota
 
-      var remaining = imgs.length;
-      function oneDone(){
-        remaining--;
-        if (remaining <= 0) markDone('gallery');
+    // Thumb aggiunte: smetti di osservare e monitora il caricamento
+    observer.disconnect();
+
+    var totale = imgs.length;
+    var soglia = Math.max(1, totale - 1); // tutte tranne 1
+    var caricate = 0;
+    var fatto = false;
+
+    function unaCaricata() {
+      if (fatto) return;
+      caricate++;
+      if (caricate >= soglia) {
+        fatto = true;
+        markDone('gallery');
       }
+    }
 
-      for (var i=0; i<imgs.length; i++){
-        var im = imgs[i];
-        if (im.complete) {
-          oneDone();
-        } else {
-          im.addEventListener('load', oneDone, { once:true });
-          im.addEventListener('error', oneDone, { once:true });
-        }
+    for (var i = 0; i < imgs.length; i++) {
+      if (imgs[i].complete) {
+        unaCaricata();
+      } else {
+        imgs[i].addEventListener('load', unaCaricata, { once: true });
+        imgs[i].addEventListener('error', unaCaricata, { once: true });
       }
+    }
+  });
 
-      // safety
-      setTimeout(function(){ markDone('gallery'); }, 12000);
-    })();
+  observer.observe(galleryEl, { childList: true });
 
-    // ========== C) IFRAME TABELLA: via postMessage ==========
-    // se l'iframe non esiste, non bloccare
-    (function(){
-      var fr = document.getElementById('tabella-meteo-iframe');
-      if (!fr) { markDone('tabella'); return; }
+  // Safety timeout
+  setTimeout(function(){ markDone('gallery'); }, 15000);
+})();
 
-      // fallback: se per qualche motivo non arriva il messaggio, sblocca dopo 10s
-      setTimeout(function(){ markDone('tabella'); }, 10000);
-    })();
+    // ========== C) IFRAME TABELLA ==========
+(function(){
+  var fr = document.getElementById('tabella-meteo-iframe');
+  var ph = document.getElementById('tabella-placeholder');
+  if (!fr) { markDone('tabella'); if (ph) ph.style.display = 'none'; return; }
+
+  function iframePronto() {
+    markDone('tabella');
+    if (ph) ph.style.display = 'none';
+  }
+
+  fr.addEventListener('load', iframePronto, { once: true });
+
+  // Safety timeout
+  setTimeout(iframePronto, 10000);
+})();
   }
 
   // ascolta i messaggi dall'iframe tabella_home_display.php
