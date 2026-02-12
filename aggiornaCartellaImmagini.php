@@ -84,6 +84,13 @@
  */
 function getImageDataFromFolder(PDO $pdo, string $directory, string $tableName, array $opts = []): array
 {
+
+//chiamata file configurazione:
+
+// nella chiamata:
+$opts['src_prefix'] = $CAMERA_CONFIG['src_prefix'];
+
+
     // ---------------------------
     // 1) Normalizzazione/Opzioni
     // ---------------------------
@@ -221,7 +228,7 @@ function getImageDataFromFolder(PDO $pdo, string $directory, string $tableName, 
 
         // --- 3. CREAZIONE DEL RECORD (INCLUSO sun_phase) ---
         $records[] = [
-            'src'       => '/FoscamCamera_E8ABFAA799FE/snap/' . basename($path),
+           'src'        => ($opts['src_prefix'] ?? '/FoscamCamera_E8ABFAA799FE/snap/') . basename($path),
             'file'      => $file,      // nome file (basename)
             'data_ora'  => $data_ora,  // "dd/mm/yyyy HH:MM" come da tua console
             'temp'      => $temp,      // Â°C

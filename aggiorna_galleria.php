@@ -36,7 +36,8 @@ if (!isset($pdo) || !($pdo instanceof PDO)) {
 $table_name = table_name('DB_immagini_36h');
 
 // Percorsi
-$directory = __DIR__ . '/FoscamCamera_E8ABFAA799FE/snap/';
+require_once __DIR__ . '/camera_config.php';
+$directory = $CAMERA_CONFIG['directory'];
 $webPath   = '/FoscamCamera_E8ABFAA799FE/snap/';
 
 // Verifica cartella

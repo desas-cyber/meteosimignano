@@ -3,7 +3,7 @@
          REPORT SETTIMANALE DATA QUALITY
 data_base: dati_meteo_simignano
 =================================================
-Data Esecuzione: 2025-12-15 21:37:39
+Data Esecuzione: 2026-02-12 00:00:16
 
 
 ### 1. ANOMALIE DI FLUSSO (Gap > 100 sec) - Totale: 470 per un totale di minuti: 1064 ###
@@ -21,9 +21,9 @@ Data Esecuzione: 2025-12-15 21:37:39
   Giorno 7: 0%
 
 % gap temporali per fascia oraria (settimanale):
-  22 → 06: 9.792%
-  06 → 14: 9.256%
-  14 → 22: 12.619%
+  22 â†’ 06: 9.792%
+  06 â†’ 14: 9.256%
+  14 â†’ 22: 12.619%
 
 --- SOMMARIO GAP ---
 1 gap 1 h
@@ -514,7 +514,7 @@ Data Esecuzione: 2025-12-15 21:37:39
 - Data/Ora INIZIO: 2025-09-03 20:52:00 | Durata: 2 minuti
 - Data/Ora INIZIO: 2025-09-03 20:29:00 | Durata: 2 minuti
 
-### 2. ANOMALIE DI VALORE (Campi NULL) - Totale: 858 ###
+### 3. ANOMALIE DI VALORE (Campi NULL) - Totale: 858 ###
 - Data/Ora: 2025-09-02 00:31:00.000000 | Campi NULL: Pressione Vento
 - Data/Ora: 2025-09-02 00:33:00.000000 | Campi NULL: Pressione Vento
 - Data/Ora: 2025-09-02 00:45:00.000000 | Campi NULL: Pressione Vento
@@ -1373,4 +1373,10 @@ Data Esecuzione: 2025-12-15 21:37:39
 - Data/Ora: 2025-09-06 00:21:00.000000 | Campi NULL: Temperatura
 - Data/Ora: 2025-09-06 00:22:00.000000 | Campi NULL: Temperatura
 - Data/Ora: 2025-09-06 00:23:00.000000 | Campi NULL: Temperatura
+
+### 4. SPIKE DI TEMPERATURA (delta >= 1°C con rientro entro ±0.4°C) - Totale: 1 ###
+- Data/Ora: 2025-09-09 00:16:00.000000 | T prima: 18.8°C → Spike: 17.8°C (Δ 1°C) → Dopo: 18.4°C / 18.8°C
+  ✔ CORRETTO: 17.8°C → 18.6°C (media tra 18.8°C e 18.4°C)
+
+Spike corretti: 1/1
 

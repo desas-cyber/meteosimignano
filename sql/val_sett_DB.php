@@ -10,6 +10,7 @@ error_reporting(E_ALL);
 // 1. CONFIGURAZIONE DATABASE E FUNZIONI DI TEMPO
 // ====================================================================
 require_once __DIR__ . '/../../envelop_lettura.php';
+require_once __DIR__ . '/../../envelop.php';
 require_once __DIR__ . '/../env_tables_helper.php';
 $table_name = table_name('dati_meteo_simignano');
 require_once __DIR__ . '/../datetime_helper.php';
@@ -52,7 +53,7 @@ function formatta_intervallo($secondi) {
 /**
  * Calcola il valore arrotondato per l'ordinamento
  * @param int $secondi Numero di secondi
- * @return array [categoria, valore_numerico, unità]
+ * @return array [categoria, valore_numerico, unitÃ ]
  */
 function calcola_categoria_valore($secondi) {
     $minuti = $secondi / 60;
@@ -72,7 +73,7 @@ function calcola_categoria_valore($secondi) {
 
 /**
  * Ordinamento corretto dei gap all'interno di ogni gruppo:
- * data_inizio_gap più recente
+ * data_inizio_gap piÃ¹ recente
  */
 function ordina_gap_per_data($a, $b) {
     return strcmp($b['data_ora_inizio_gap'], $a['data_ora_inizio_gap']);
@@ -122,6 +123,51 @@ WHERE
 ORDER BY data_ora;
 ";
 
+// Query 3: Rilevamento Spike di Temperatura
+// Spike = variazione >= 1°C nel giro di ~1 minuto che rientra entro ±0.4°C 
+// del valore originale nei 2 minuti successivi
+$sql_spike = "
+WITH dati AS (
+    SELECT
+        data_ora,
+        temperatura_C,
+        LAG(temperatura_C, 1)  OVER (ORDER BY data_ora) AS temp_prec,
+        LAG(data_ora, 1)       OVER (ORDER BY data_ora) AS data_prec,
+        LEAD(temperatura_C, 1) OVER (ORDER BY data_ora) AS temp_next1,
+        LEAD(data_ora, 1)      OVER (ORDER BY data_ora) AS data_next1,
+        LEAD(temperatura_C, 2) OVER (ORDER BY data_ora) AS temp_next2,
+        LEAD(data_ora, 2)      OVER (ORDER BY data_ora) AS data_next2
+    FROM $table_name
+    WHERE data_ora >= DATE_SUB('$current_time', INTERVAL 7 DAY)
+      AND temperatura_C IS NOT NULL
+)
+SELECT
+    data_ora,
+    temperatura_C   AS temp_spike,
+    temp_prec       AS temp_prima,
+    temp_next1      AS temp_dopo1,
+    temp_next2      AS temp_dopo2,
+    ROUND(ABS(temperatura_C - temp_prec), 2) AS delta_spike
+FROM dati
+WHERE
+    /* il record precedente esiste ed è entro ~2 minuti */
+    temp_prec IS NOT NULL
+    AND TIMESTAMPDIFF(SECOND, data_prec, data_ora) <= 120
+    /* variazione >= 1°C */
+    AND ABS(temperatura_C - temp_prec) >= 1.0
+    /* rientro entro ±0.4°C del valore pre-spike in almeno uno dei 2 record successivi */
+    AND (
+        (temp_next1 IS NOT NULL
+         AND TIMESTAMPDIFF(SECOND, data_ora, data_next1) <= 120
+         AND ROUND(ABS(temp_next1 - temp_prec), 2) <= 0.4)
+        OR
+        (temp_next2 IS NOT NULL
+         AND TIMESTAMPDIFF(SECOND, data_ora, data_next2) <= 240
+         AND ROUND(ABS(temp_next2 - temp_prec), 2) <= 0.4)
+    )
+ORDER BY data_ora DESC;
+";
+
 // ====================================================================
 // 3. APERTURA FILE E SCRITTURA INCREMENTALE
 // ====================================================================
@@ -161,7 +207,7 @@ if ($file_handle) {
     ];
 
 
-    // Rimuovi il primo record (è sempre il boundary dei 7 giorni)
+    // Rimuovi il primo record (Ã¨ sempre il boundary dei 7 giorni)
     if (count($rows_gap) > 0) {
         array_shift($rows_gap);
     }
@@ -265,9 +311,9 @@ if ($file_handle) {
 
         $sec_fascia = 8 * 3600 * 7;
 
-        fwrite($file_handle, "  22 → 06: " . round(($fasce_gap['22_6'] / $sec_fascia) * 100, 3) . "%\n");
-        fwrite($file_handle, "  06 → 14: " . round(($fasce_gap['6_14'] / $sec_fascia) * 100, 3) . "%\n");
-        fwrite($file_handle, "  14 → 22: " . round(($fasce_gap['14_22'] / $sec_fascia) * 100, 3) . "%\n\n");
+        fwrite($file_handle, "  22 â†’ 06: " . round(($fasce_gap['22_6'] / $sec_fascia) * 100, 3) . "%\n");
+        fwrite($file_handle, "  06 â†’ 14: " . round(($fasce_gap['6_14'] / $sec_fascia) * 100, 3) . "%\n");
+        fwrite($file_handle, "  14 â†’ 22: " . round(($fasce_gap['14_22'] / $sec_fascia) * 100, 3) . "%\n\n");
 
 
         // Ordina i gruppi: prima per categoria (oltre_7gg > giorni > ore > minuti)
@@ -311,7 +357,7 @@ if ($file_handle) {
                 fwrite($file_handle, "\n*** Gap $valore $unita ($count) ***\n");
             }
             
-            // Ordina i gap all'interno del gruppo per data più recente
+            // Ordina i gap all'interno del gruppo per data piÃ¹ recente
             usort($gruppo['gap'], 'ordina_gap_per_data');
             
             foreach ($gruppo['gap'] as $gap) {
@@ -333,7 +379,7 @@ if ($file_handle) {
     $result_null = $pdo_lettura->query($sql_null);
     $total_null_anomalies = $result_null->rowCount();
 
-    fwrite($file_handle, "### 2. ANOMALIE DI VALORE (Campi NULL) - Totale: $total_null_anomalies ###\n");
+    fwrite($file_handle, "### 3. ANOMALIE DI VALORE (Campi NULL) - Totale: $total_null_anomalies ###\n");
     echo "Tot NULL: $total_null_anomalies\n";
     
     if ($total_null_anomalies > 0) {
@@ -343,6 +389,80 @@ if ($file_handle) {
         }
     } else {
         fwrite($file_handle, "  Nessuna riga con valori NULL rilevata nell'ultima settimana.\n");
+    }
+    fwrite($file_handle, "\n");
+    
+    // ------------------------------------
+    // ESECUZIONE QUERY 3: SPIKE DI TEMPERATURA
+    // ------------------------------------
+    $result_spike = $pdo_lettura->query($sql_spike);
+    $rows_spike = $result_spike->fetchAll(PDO::FETCH_ASSOC);
+    $total_spike_anomalies = count($rows_spike);
+
+    fwrite($file_handle, "### 4. SPIKE DI TEMPERATURA (delta >= 1°C con rientro entro ±0.4°C) - Totale: $total_spike_anomalies ###\n");
+    echo "Tot SPIKE: $total_spike_anomalies\n";
+    
+    if ($total_spike_anomalies > 0) {
+        // Prepared statement per la correzione dello spike sul DB
+        $sql_update_spike = "UPDATE $table_name SET temperatura_C = :temp WHERE data_ora = :data_ora";
+        $stmt_update = $pdo->prepare($sql_update_spike);
+        
+        $spike_corretti = 0;
+        
+        foreach ($rows_spike as $row) {
+            $data      = $row['data_ora'];
+            $t_spike   = $row['temp_spike'];
+            $t_prima   = $row['temp_prima'];
+            $t_dopo1   = $row['temp_dopo1'];
+            $t_dopo2   = $row['temp_dopo2'];
+            $delta     = $row['delta_spike'];
+            
+            // Determina il valore di rientro: il primo record successivo 
+            // che è rientrato entro ±0.2°C del valore pre-spike
+            if ($t_dopo1 !== null && round(abs($t_dopo1 - $t_prima), 2) <= 0.4) {
+                $t_rientro = $t_dopo1;
+            } elseif ($t_dopo2 !== null && round(abs($t_dopo2 - $t_prima), 2) <= 0.4) {
+                $t_rientro = $t_dopo2;
+            } else {
+                // Fallback: usa il valore pre-spike stesso
+                $t_rientro = $t_prima;
+            }
+            
+            // Calcola la media tra il valore prima dello spike e il valore di rientro
+            $temp_corretta = round(($t_prima + $t_rientro) / 2, 2);
+            
+            // Scrivi la riga di rilevamento
+            $t_dopo1_str = $t_dopo1 !== null ? $t_dopo1 : 'N/A';
+            $t_dopo2_str = $t_dopo2 !== null ? $t_dopo2 : 'N/A';
+            fwrite(
+                $file_handle,
+                "- Data/Ora: {$data} | T prima: {$t_prima}°C → Spike: {$t_spike}°C (Δ {$delta}°C) → Dopo: {$t_dopo1_str}°C / {$t_dopo2_str}°C\n"
+            );
+            
+            // Esegui l'UPDATE sul database
+            $result_update = $stmt_update->execute([
+                ':temp'    => $temp_corretta,
+                ':data_ora' => $data
+            ]);
+            
+            if ($result_update) {
+                $spike_corretti++;
+                fwrite(
+                    $file_handle,
+                    "  ✔ CORRETTO: {$t_spike}°C → {$temp_corretta}°C (media tra {$t_prima}°C e {$t_rientro}°C)\n"
+                );
+            } else {
+                fwrite(
+                    $file_handle,
+                    "  ✘ ERRORE nella correzione del record {$data}\n"
+                );
+            }
+        }
+        
+        fwrite($file_handle, "\nSpike corretti: {$spike_corretti}/{$total_spike_anomalies}\n");
+        
+    } else {
+        fwrite($file_handle, "  Nessuno spike di temperatura rilevato nell'ultima settimana.\n");
     }
     fwrite($file_handle, "\n");
     
@@ -360,10 +480,10 @@ if ($file_handle) {
 
 
     // Prepara l'oggetto dell'email in base ai risultati
-    if ($total_gap_anomalies == 0 && $total_null_anomalies == 0) {
+    if ($total_gap_anomalies == 0 && $total_null_anomalies == 0 && $total_spike_anomalies == 0) {
         $oggetto = "DATI_DB_sett{$numero_settimana}: TUTTO OK!";
     } else {
-        $oggetto = "DATI_DB_sett{$numero_settimana}: GAP TEMPORALI: $total_gap_anomalies - RIGHE NULL: $total_null_anomalies";
+        $oggetto = "DATI_DB_sett{$numero_settimana}: GAP: $total_gap_anomalies - NULL: $total_null_anomalies - SPIKE: $total_spike_anomalies";
     }
     
     // Leggi il contenuto del file per il corpo dell'email
@@ -387,5 +507,6 @@ if ($file_handle) {
 
 // Chiudi la connessione
 $pdo_lettura = null;
+$pdo = null;
 
 ?>

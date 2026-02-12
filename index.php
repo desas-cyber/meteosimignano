@@ -635,7 +635,13 @@
     window.fullImages = [];
     window.galleryImages = [];
     </script>
-    
+    <!-- Inietta config camera dal PHP al JavaScript -->
+    <script>
+    var CAM_CONFIG = {
+      cropBottomPx:  <?php echo $CAMERA_CONFIG['crop_bottom_px']; ?>,
+      cropBottomPct: '<?php echo $CAMERA_CONFIG['crop_bottom_pct']; ?>'
+    };
+    </script>
     <!--Script per aggiornamento automatico dati meteo -->
     <script src="aggiorna_dati_meteo.js?v=<?php echo filemtime(__DIR__ . '/aggiorna_dati_meteo.js'); ?>"></script>
     

@@ -13,6 +13,7 @@ public_html
 |--- belle.php (pagina dedicata a selezione di immagini)
 |--- aggiorna_dati_meteo.php (aggiorna iframe per il js)
 |--- aggiorna_dati_meteo.js (ricarica periodicamnte index.php)
+|--- camera_config.php (configurazione esterna per adattare il sito a dverse telcamere)
 |--- galleria-lightbox.js (gestisce il lightbox e la galleria in index.php)
 |--- galleria-lightbox.css
 |--- aggiorna_galleria.js (aggiorna la galleria in index.php)
