@@ -98,6 +98,7 @@ $opts['src_prefix'] = $CAMERA_CONFIG['src_prefix'];
     $extensions = isset($opts['extensions']) && is_array($opts['extensions'])
                     ? $opts['extensions']
                     : ['jpg','jpeg','png','gif'];
+    'src' => $opts['src_prefix'] . basename($path),
     $order      = (isset($opts['order']) && strtolower($opts['order']) === 'asc') ? 'asc' : 'desc';
 
     // Whitelist per nome tabella (evita injection su identificatori)
@@ -148,14 +149,18 @@ $opts['src_prefix'] = $CAMERA_CONFIG['src_prefix'];
 
     // Ordina per nome file (desc/asc) e applica limit
     // Nota: rsort() fa reverse sort; sort() fa ascendente
-    if ($order === 'desc') {
-        rsort($files, SORT_STRING);
-    } else {
-        sort($files, SORT_STRING);
-    }
-    if (count($files) > $limit) {
-        $files = array_slice($files, 0, $limit);
-    }
+    if (!empty($opts['filename_pattern']) && empty($opts['alpha_sort_is_chrono'])) {
+    usort($files, function($a, $b) use ($opts, $order) {
+        preg_match($opts['filename_pattern'], basename($a), $ma);
+        preg_match($opts['filename_pattern'], basename($b), $mb);
+        $tsA = isset($ma[1]) ? ($ma[1].$ma[2].$ma[3].$ma[4].$ma[5].$ma[6]) : '';
+        $tsB = isset($mb[1]) ? ($mb[1].$mb[2].$mb[3].$mb[4].$mb[5].$mb[6]) : '';
+        return ($order === 'desc') ? strcmp($tsB, $tsA) : strcmp($tsA, $tsB);
+    });
+} else {
+    if ($order === 'desc') { rsort($files, SORT_STRING); }
+    else { sort($files, SORT_STRING); }
+}
 
     // ---------------------------
     // 4) Preparazione batch query
@@ -228,7 +233,7 @@ $opts['src_prefix'] = $CAMERA_CONFIG['src_prefix'];
 
         // --- 3. CREAZIONE DEL RECORD (INCLUSO sun_phase) ---
         $records[] = [
-           'src'        => ($opts['src_prefix'] ?? '/FoscamCamera_E8ABFAA799FE/snap/') . basename($path),
+            'src' => $opts['src_prefix'] . basename($path),
             'file'      => $file,      // nome file (basename)
             'data_ora'  => $data_ora,  // "dd/mm/yyyy HH:MM" come da tua console
             'temp'      => $temp,      // Â°C

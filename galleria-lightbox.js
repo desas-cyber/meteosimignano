@@ -23,16 +23,6 @@
  *  COMPATIBILITA: ES5 puro (niente let/const, arrow, template string, ?.)
  * ================================================================= */
 
-/* ======================== CAMERA CONFIG ========================= */
-
-/**
- * Configurazione specifica della telecamera.
- * Per adattare il sito a un'altra camera, basta cambiare questi valori.
- */
-var CAM_CONFIG = {
-  cropBottomPx:  80,       // px da tagliare in basso (watermark) in gallery mode
-  cropBottomPct: '5.5%'   // equivalente % per clip-path in time-lapse mode
-};
 
 /* ========================== STATO =============================== */
 

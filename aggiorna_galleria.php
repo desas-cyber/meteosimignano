@@ -38,7 +38,7 @@ $table_name = table_name('DB_immagini_36h');
 // Percorsi
 require_once __DIR__ . '/camera_config.php';
 $directory = $CAMERA_CONFIG['directory'];
-$webPath   = '/FoscamCamera_E8ABFAA799FE/snap/';
+$webPath   = $CAMERA_CONFIG['src_prefix'];
 
 // Verifica cartella
 if (!is_dir($directory) || !is_readable($directory)) {
@@ -47,14 +47,27 @@ if (!is_dir($directory) || !is_readable($directory)) {
 }
 
 // Raccolta file
-$images = glob($directory . '*.{jpg,jpeg,png,gif}', GLOB_BRACE);
+$extPattern = implode(',', array_map(function($e){ return '*.' . $e; }, $CAMERA_CONFIG['extensions']));
+$images = glob($directory . '{' . $extPattern . '}', GLOB_BRACE);
 if (!$images || count($images) === 0) {
     echo json_encode(['full' => [], 'gallery' => [], 'stats' => ['error' => 'Nessuna immagine trovata']]);
     exit;
 }
 
 // Ordine decrescente per nome file (piu recente prima)
+// DA:
 rsort($images, SORT_STRING);
+
+// A:
+if ($CAMERA_CONFIG['alpha_sort_is_chrono']) {
+    rsort($images, SORT_STRING);
+} else {
+    $extractTs = $CAMERA_CONFIG['extract_timestamp'];
+    usort($images, function($a, $b) use ($extractTs) {
+        return strcmp($extractTs(basename($b)), $extractTs(basename($a)));
+    });
+}
+
 
 // Statement per metadati
 $sql = "SELECT * FROM {$table_name} WHERE FILE = :file LIMIT 1";

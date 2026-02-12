@@ -2,6 +2,7 @@
 /**
  * GALLERIA METEO SIMIGNANO — v3.0 (solo HTML statico, dati via JS fetch)
  */
+require_once __DIR__ . '/camera_config.php';
 ?>
 <!DOCTYPE html>
 <html lang="it">
