@@ -19,10 +19,10 @@
 - Supporto ambiente test: Usa helper per gestire test locale/global
 ------>>>>>cli è disattivato solo per  test da browser<<<<<<<*/ 
 
-if (php_sapi_name() !== 'cli' && !defined('ALLOW_INTERNAL_CALL')) {
+/*if (php_sapi_name() !== 'cli' && !defined('ALLOW_INTERNAL_CALL')) {
     http_response_code(403);
     exit('Accesso negato.');
-}
+}*/
    
    
     ini_set('display_errors', 1);

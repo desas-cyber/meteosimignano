@@ -1,8 +1,8 @@
 <?php
 
 /* 0) Impostazioni per non "sporcare" il JSON con warning/notice ------------- */
-ini_set('display_errors', '0');
-ini_set('display_startup_errors', '0');
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
 require_once __DIR__ . '/../envelop.php';
@@ -25,11 +25,13 @@ $filtro_data_fine = isset($_GET['data_fine']) ? $_GET['data_fine'] : null;
 $filtro_sun_phase = isset($_GET['sun_phase']) ? $_GET['sun_phase'] : 'all';
 $filtro_altro = isset($_GET['altro']) ? $_GET['altro'] : 'all';
 $filtro_sequenza = isset($_GET['sequenza']) ? (int)$_GET['sequenza'] : 0;
+// con_nota: 1 = mostra solo immagini con una nota compilata, 0 = tutte
+$filtro_con_nota = isset($_GET['con_nota']) ? (int)$_GET['con_nota'] : 0;
 
 // Determina se ci sono filtri attivi
 $filtri_attivi = !empty($filtro_data_inizio) || !empty($filtro_data_fine) || 
                  $filtro_sun_phase !== 'all' || $filtro_altro !== 'all' || 
-                 $filtro_sequenza > 0;
+                 $filtro_sequenza > 0 || $filtro_con_nota > 0;
 
 // Mappatura valori altro -> etichette descrittive con ordine personalizzato
 $altro_labels = [
@@ -71,6 +73,7 @@ $data = getImageDataFromFolderFiltered($pdo, $directory, $table_name, [
     'sun_phase' => $filtro_sun_phase,
     'altro' => $filtro_altro,
     'sequenza' => $filtro_sequenza,
+    'con_nota'    => $filtro_con_nota,
     'page'        => $page,
     'limit'       => $limit
 ]);
@@ -171,6 +174,11 @@ function getImageDataFromFolderFiltered(PDO $pdo, string $directory, string $tab
         $params[] = $filtri['altro'];
     }
 
+    // Filtro note: mostra solo immagini che hanno il campo 'note' compilato nel DB
+    if (!empty($filtri['con_nota'])) {
+        $where[] = "note IS NOT NULL AND note <> ''";
+    }
+
     $whereSql = $where ? ("WHERE " . implode(" AND ", $where)) : "";
 
     try {
@@ -231,7 +239,8 @@ function getImageDataFromFolderFiltered(PDO $pdo, string $directory, string $tab
             'wind_kmh'  => isset($row['vento_kmh']) ? (float)$row['vento_kmh'] : null,
             'dir_text'  => $row['Dir_text'] ?? null,
             'sun_phase' => isset($row['sun_phase']) ? (int)$row['sun_phase'] : null,
-            'altro'     => $row['altro'] ?? null
+            'altro'     => $row['altro'] ?? null,
+            'note'      => isset($row['note']) && $row['note'] !== '' ? $row['note'] : null
         ];
     }
 
@@ -336,7 +345,7 @@ main {
 .title-container {
     width: 100%;
     max-width: 1000px;           /* deve essere uguale al max-width della galleria */
-    margin: 0 auto;              /* ← centra tutto il blocco */
+    margin: 0 auto;              /* † centra tutto il blocco */
     padding: 0 10px;
     box-sizing: border-box;
     display: flex;               /* flex per centrare il contenuto */
@@ -359,7 +368,7 @@ main {
     /* rimuovi padding-left se c'era */
 }
 
-/* Riduci circa della metà sui telefoni piccoli / medi */
+/* Riduci circa della metÃ  sui telefoni piccoli / medi */
 @media (max-width: 480px) {
     .gallery-title {
         font-size: clamp(14px, 5.5vw, 22px);
@@ -368,7 +377,7 @@ main {
 
 @media (orientation: landscape) and (max-width: 896px) {
     .gallery-title {
-        font-size: clamp(18px, 6.2vw, 28px);   /* un po' più leggibile in landscape */
+        font-size: clamp(18px, 6.2vw, 28px);   /* un po' piÃ¹ leggibile in landscape */
         margin: 16px 0 10px 0;                 /* meno margine verticale */
     }
 }
@@ -560,8 +569,146 @@ main {
 .temp-default { color: #9c9c9c; }
 
 /* ==========================================================================
-   BARRA FILTRI - VERSIONE COMPATTA MOBILE
+   ICONA NOTE sulla miniatura
+   position:absolute funziona perché .thumb ha già position:relative —
+   il figlio assoluto si posiziona rispetto al suo contenitore più vicino.
    ========================================================================== */
+.note-icon {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 26px;
+    height: 26px;
+    background: rgba(0, 0, 0, 0.55);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    font-size: 14px;
+    line-height: 1;
+    transition: background 0.2s, transform 0.15s;
+    border: none;
+    padding: 0;
+    color: #fff;
+}
+
+.note-icon:hover {
+    background: rgba(255, 220, 50, 0.85);
+    transform: scale(1.15);
+}
+
+/* Checkbox "Solo con note" nel form filtri */
+.filter-group-checkbox {
+    justify-content: flex-end;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    padding: 6px 0;
+    white-space: nowrap;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: #4CAF50;
+    flex-shrink: 0;
+}
+
+/* ==========================================================================
+   MODAL NOTE
+   Pattern: display:none → display:flex via classe CSS 'active'.
+   JS gestisce solo il *quando*, CSS gestisce il *come appare*.
+   ========================================================================== */
+.note-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.note-modal.active {
+    display: flex;
+}
+
+.note-modal-box {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px 28px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+    position: relative;
+    box-sizing: border-box;
+}
+
+.note-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    font-size: 17px;
+    font-weight: bold;
+    color: #333;
+}
+
+.note-modal-text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #444;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* Immagini incollate nella nota: larghezza massima del box, con bordo arrotondato */
+.note-modal-text img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 6px;
+    margin: 8px 0;
+}
+
+.note-modal-meta {
+    margin-top: 14px;
+    font-size: 12px;
+    color: #999;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+.note-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    background: transparent;
+    border: none;
+    font-size: 22px;
+    color: #aaa;
+    cursor: pointer;
+    line-height: 1;
+    padding: 2px 6px;
+}
+
+.note-modal-close:hover {
+    color: #e00;
+}
+
+
 
 .filter-bar {
     width: 100%;
@@ -714,19 +861,19 @@ main {
         height: 32px;
     }
     
-    /* Label più compatte */
+    /* Label piÃ¹ compatte */
     .filter-group label {
         font-size: 11px;
         margin-bottom: 3px;
     }
     
-    /* Bottone più compatto */
+    /* Bottone piÃ¹ compatto */
     .filter-btn {
         padding: 6px 12px;
         font-size: 13px;
     }
     
-    /* X button leggermente più piccolo */
+    /* X button leggermente piÃ¹ piccolo */
     .filter-close {
         font-size: 20px;
         width: 26px;
@@ -736,7 +883,7 @@ main {
     }
 }
 
-/* Mobile molto stretto: tutto ancora più compatto */
+/* Mobile molto stretto: tutto ancora piÃ¹ compatto */
 @media (max-width: 480px) {
     .filter-bar {
         padding: 8px;
@@ -903,13 +1050,13 @@ main {
 }
 
 /* =========================
-   PAGINAZIONE (sempre 1 riga, font ≤14px)
+   PAGINAZIONE (sempre 1 riga, font ‰¤14px)
    ========================= */
 .pager-wrap {
     width: 100%;
     max-width: 1000px;
     margin: 8px auto 16px;          /* centrato come la galleria */
-    padding: 10px 0;                /* solo sopra/sotto → bordi liberi lateralmente */
+    padding: 10px 0;                /* solo sopra/sotto †’ bordi liberi lateralmente */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -950,7 +1097,7 @@ main {
     text-align: center;
 }
 
-/* Mobile stretto: ancora più compatto ma resta su una riga */
+/* Mobile stretto: ancora piÃ¹ compatto ma resta su una riga */
 @media (max-width: 480px) {
     .pager-wrap {
         padding: 6px 8px;
@@ -968,9 +1115,9 @@ main {
  ========================= */
 
 .spinner{
-  width: 24px;                      /* aumentato da 14px → più visibile */
-  height: 24px;                     /* aumentato da 14px → più visibile */
-  border: 3px solid rgba(0,0,0,0.15);  /* border più spesso */
+  width: 24px;                      /* aumentato da 14px †’ piÃ¹ visibile */
+  height: 24px;                     /* aumentato da 14px †’ piÃ¹ visibile */
+  border: 3px solid rgba(0,0,0,0.15);  /* border piÃ¹ spesso */
   border-top-color: #333;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
@@ -996,17 +1143,17 @@ main {
   min-width: 0;         /* IMPORTANTISSIMO nei flex item */
 }
 
-/* Se vuoi anche l'ellissi invece dello “sforamento” */
+/* Se vuoi anche l'ellissi invece dello €œsforamento€ */
 .pager-item{
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .pager-item.is-disabled {
-    color: #bbb;                    /* grigio chiaro – puoi usare #ccc, #aaa, #999 a seconda di quanto lo vuoi tenue */
+    color: #bbb;                    /* grigio chiaro €“ puoi usare #ccc, #aaa, #999 a seconda di quanto lo vuoi tenue */
     opacity: 0.65;                  /* ulteriore attenuazione (opzionale ma molto efficace) */
     cursor: default;                /* toglie la manina del link */
-    pointer-events: none;           /* blocca completamente i click (anche se è un <span>) */
+    pointer-events: none;           /* blocca completamente i click (anche se Ã¨ un <span>) */
     user-select: none;              /* impedisce la selezione del testo */
 }
 
@@ -1028,7 +1175,7 @@ main {
     
     <div class="header-content">
         <h1 class="main-title">MeteoSimignano</h1>
-        <h1 class="sub-title">43°17′32.5″N 11°10′01.49″E @ 418m slm</h1>
+        <h1 class="sub-title">43°17'32.5"N 11°10'01.49"E @ 418m slm</h1>
     </div>    
     
     <a href="#" class="header-icon right-icon" title="Filtri" onclick="toggleFilterBar(); return false;">
@@ -1041,7 +1188,7 @@ main {
 
 <!-- ========== BARRA FILTRI ========== -->
 <div class="filter-bar <?php echo $filtri_attivi ? 'active' : ''; ?>" id="filterBar">
-    <button class="filter-close" onclick="closeFilterBar()" title="Chiudi">✕</button>
+    <button class="filter-close" onclick="closeFilterBar()" title="Chiudi">œ•</button>
     <form method="GET" action="">
         <div class="filter-group">
             <label for="data_inizio">Data Inizio</label>
@@ -1057,10 +1204,10 @@ main {
             <label for="sun_phase">Alba/Tramonto</label>
             <select id="sun_phase" name="sun_phase">
                 <option value="all" <?php echo $filtro_sun_phase === 'all' ? 'selected' : ''; ?>>Tutti</option>
-                <option value="1" <?php echo $filtro_sun_phase === '1' ? 'selected' : ''; ?>>Alba 🌄</option>
-                <option value="2" <?php echo $filtro_sun_phase === '2' ? 'selected' : ''; ?>>Tramonto 🌇</option>
+                <option value="1" <?php echo $filtro_sun_phase === '1' ? 'selected' : ''; ?>>Alba</option>
+                <option value="2" <?php echo $filtro_sun_phase === '2' ? 'selected' : ''; ?>>Tramonto</option>
                 <option value="day" <?php echo $filtro_sun_phase === 'day' ? 'selected' : ''; ?>>
-                    Pieno giorno ☀️
+                    Pieno giorno
                 </option>
                 <option value="null" <?php echo $filtro_sun_phase === 'null' ? 'selected' : ''; ?>>Nessuno</option>
             </select>
@@ -1085,6 +1232,14 @@ main {
         <div class="filter-group">
             <label for="sequenza">Sequenza (≥N img img)</label>
             <input type="number" id="sequenza" name="sequenza" min="0" max="100" value="<?php echo htmlspecialchars($filtro_sequenza); ?>" placeholder="0 = off">
+        </div>
+
+        <div class="filter-group filter-group-checkbox">
+            <label class="checkbox-label">
+                <input type="checkbox" id="con_nota" name="con_nota" value="1"
+                    <?php echo $filtro_con_nota ? 'checked' : ''; ?>>
+                Solo con note 📝
+            </label>
         </div>
 
         <div class="filter-actions">
@@ -1126,7 +1281,7 @@ main {
     foreach ($_GET as $k => $v) {
         if ($k === 'page') continue;
 
-        // supporta anche array (non dovrebbe servirti, ma è robusto)
+        // supporta anche array (non dovrebbe servirti, ma Ã¨ robusto)
         if (is_array($v)) {
             foreach ($v as $vv) {
                 echo '<input type="hidden" name="'.htmlspecialchars($k).'[]" value="'.htmlspecialchars((string)$vv).'">';
@@ -1205,6 +1360,12 @@ main {
                   onclick="openLightbox(<?php echo (int)$index; ?>)"
                 >
 
+                    <?php if (!empty($item['note'])): ?>
+                    <button class="note-icon"
+                            onclick="event.stopPropagation(); apriNote(<?php echo (int)$index; ?>)"
+                            title="Nota presente"
+                            aria-label="Leggi nota">📝</button>
+                    <?php endif; ?>
                     
                     <span class="overlay-mini <?php echo $tempClass; ?>">
                         <span class="temp-line">
@@ -1261,6 +1422,76 @@ $query = $_GET;
     </button>
 </div>
 </main>
+
+<!-- ========== MODAL NOTE ========== -->
+<div class="note-modal" id="noteModal" role="dialog" aria-modal="true">
+    <div class="note-modal-box">
+        <button class="note-modal-close" onclick="chiudiNote()" aria-label="Chiudi">✕</button>
+        <div class="note-modal-header">
+            <span>📝</span>
+            <span>Note</span>
+        </div>
+        <div class="note-modal-text" id="noteModalText"></div>
+        <div class="note-modal-meta" id="noteModalMeta"></div>
+    </div>
+</div>
+
+<script>
+(function () {
+    'use strict';
+
+    // apriNote(index): legge record.note da window.images e lo mostra nel modal.
+    // Il dato è già in memoria (caricato da PHP via json_encode) → zero richieste di rete.
+    // textContent (non innerHTML) → prevenzione XSS: il testo viene trattato come testo puro.
+    function apriNote(index) {
+        var modal  = document.getElementById('noteModal');
+        var txtEl  = document.getElementById('noteModalText');
+        var metaEl = document.getElementById('noteModalMeta');
+        if (!modal || !txtEl || !window.images) return;
+
+        var record = window.images[index];
+        if (!record || !record.note) return;
+
+        // innerHTML perché la nota è HTML sanitizzato (strip_tags con whitelist in classifica_immagini.php).
+        // Le immagini incollate sono salvate come <img src="note_img/..."> — devono essere renderizzate.
+        // textContent le mostrerebbe come testo letterale "<img src=...>" invece dell'immagine vera.
+        txtEl.innerHTML = record.note;
+        metaEl.textContent = record.data_ora || '';
+
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // blocca scroll pagina
+    }
+
+    function chiudiNote() {
+        var modal = document.getElementById('noteModal');
+        if (modal) modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    // Click sull'overlay fuori dal box → chiudi
+    document.addEventListener('DOMContentLoaded', function () {
+        var modal = document.getElementById('noteModal');
+        if (modal) {
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) chiudiNote();
+            });
+        }
+    });
+
+    // ESC → chiudi modal note (stopPropagation: non chiudere anche il lightbox)
+    document.addEventListener('keydown', function (e) {
+        var key = e.key || e.code;
+        var modal = document.getElementById('noteModal');
+        if (modal && modal.classList.contains('active') && (key === 'Escape' || key === 'Esc')) {
+            chiudiNote();
+            e.stopPropagation();
+        }
+    });
+
+    window.apriNote  = apriNote;
+    window.chiudiNote = chiudiNote;
+})();
+</script>
 <!-- ========== JAVASCRIPT ========== -->
 <script>
 // Passa i dati al JS
@@ -1400,7 +1631,7 @@ function closeFilterBar() {
 
     function prevImage(event) {
         if (event) event.stopPropagation();
-        // prev = vai indietro nel tempo = indice piÃƒÂ¹ alto
+        // prev = vai indietro nel tempo = indice piÃƒÆ’Ã‚¹ alto
         if (currentIndex < window.images.length - 1) {
             openLightbox(currentIndex + 1);
         }
@@ -1408,7 +1639,7 @@ function closeFilterBar() {
 
     function nextImage(event) {
         if (event) event.stopPropagation();
-        // next = vai avanti nel tempo = indice piÃƒÂ¹ basso
+        // next = vai avanti nel tempo = indice piÃƒÆ’Ã‚¹ basso
         if (currentIndex > 0) {
             openLightbox(currentIndex - 1);
         }
@@ -1418,9 +1649,9 @@ function closeFilterBar() {
         const prevBtn = document.querySelector('.nav-btn.prev');
         const nextBtn = document.querySelector('.nav-btn.next');
         
-        // prev disabilitato quando sei all'ultima (piÃƒÂ¹ vecchia)
+        // prev disabilitato quando sei all'ultima (piÃƒÆ’Ã‚¹ vecchia)
         if (prevBtn) prevBtn.disabled = (currentIndex === window.images.length - 1);
-        // next disabilitato quando sei alla prima (piÃƒÂ¹ recente)
+        // next disabilitato quando sei alla prima (piÃƒÆ’Ã‚¹ recente)
         if (nextBtn) nextBtn.disabled = (currentIndex === 0);
     }
 
@@ -1438,12 +1669,12 @@ function closeFilterBar() {
         if (prevBtn) prevBtn.addEventListener('click', prevImage);
         if (nextBtn) nextBtn.addEventListener('click', nextImage);
         
-                // ===== Spinner: attivo finché le miniature non hanno caricato =====
+                // ===== Spinner: attivo finchÃ© le miniature non hanno caricato =====
         (function() {
             var spinner = document.getElementById('loading-spinner');
             if (!spinner) return;
 
-            // Se non c'è galleria, nascondi subito
+            // Se non c'Ã¨ galleria, nascondi subito
             var gallery = document.querySelector('.gallery');
             if (!gallery) { spinner.classList.add('hidden'); return; }
 
@@ -1458,7 +1689,7 @@ function closeFilterBar() {
                 }
             }
 
-            // Se alcune sono già in cache
+            // Se alcune sono giÃ  in cache
             for (var i = 0; i < imgs.length; i++) {
                 var im = imgs[i];
                 if (im.complete) {
@@ -1484,14 +1715,14 @@ function closeFilterBar() {
             return;
         }
 
-        // ArrowLeft = indietro nel tempo = indice piÃƒÂ¹ alto
+        // ArrowLeft = indietro nel tempo = indice piÃƒÆ’Ã‚¹ alto
         if (key === 'ArrowLeft') {
             if (currentIndex < window.images.length - 1) {
                 openLightbox(currentIndex + 1);
             }
         }
 
-        // ArrowRight = avanti nel tempo = indice piÃƒÂ¹ basso
+        // ArrowRight = avanti nel tempo = indice piÃƒÆ’Ã‚¹ basso
         if (key === 'ArrowRight') {
             if (currentIndex > 0) {
                 openLightbox(currentIndex - 1);
@@ -1565,7 +1796,7 @@ function closeFilterBar() {
     spinnerOn();
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
-        // submit() non rilancia l’evento submit => niente loop
+        // submit() non rilancia l€™evento submit => niente loop
         form.submit();
       });
     });

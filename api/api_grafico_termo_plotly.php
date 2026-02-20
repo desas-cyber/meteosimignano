@@ -56,24 +56,48 @@ if (!$envelop_found) {
 }
 
 // PARAMETRI
+// ─── CARICA CONFIGURAZIONE ───
+// Il path presuppone che chart_config_termo.php sia nella directory padre
+// Adatta il path se la struttura delle cartelle è diversa
+$CHART_CFG = require __DIR__ . '/../chart_config_termo.php';
+
+// Estrai preset validi dalla config (Single Source of Truth)
+$valid_ranges = array_column($CHART_CFG['presets'], 'key');
+
+// Trova il preset di default
+$default_range = $valid_ranges[0]; // fallback al primo
+foreach ($CHART_CFG['presets'] as $p) {
+    if (!empty($p['default'])) {
+        $default_range = $p['key'];
+        break;
+    }
+}
+
+// PARAMETRI
 if (isset($_GET['start']) && isset($_GET['end'])) {
     $start_time = $_GET['start'];
     $end_time = $_GET['end'];
     $range = 'custom';
 } else {
-    $range = $_GET['range'] ?? '24h';
-    if (!in_array($range, ['24h', '7d', '30d'])) {
+    $range = (!empty($_GET['range'])) ? $_GET['range'] : $default_range;
+
+    if (!in_array($range, $valid_ranges)) {
         echo json_encode(['success' => false, 'error' => 'Range non valido']);
         exit;
     }
-    $now = get_now();
-    switch ($range) {
-        case '24h': $start_time = date('Y-m-d H:i:s', strtotime($now . ' -24 hours')); $end_time = $now; break;
-        case '7d': $start_time = date('Y-m-d H:i:s', strtotime($now . ' -7 days')); $end_time = $now; break;
-        case '30d': $start_time = date('Y-m-d H:i:s', strtotime($now . ' -30 days')); $end_time = $now; break;
-    }
-}
 
+    // Trova sql_interval dalla config (sostituisce lo switch)
+    $now = get_now();
+    $preset = null;
+    foreach ($CHART_CFG['presets'] as $p) {
+        if ($p['key'] === $range) {
+            $preset = $p;
+            break;
+        }
+    }
+    $start_time = date('Y-m-d H:i:s', strtotime($now . ' ' . $preset['sql_interval']));
+    $end_time = $now;
+}
 $table = table_name('dati_meteo_simignano');
 
 // Query range totale DB

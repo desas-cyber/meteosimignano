@@ -97,8 +97,7 @@ $opts['src_prefix'] = $CAMERA_CONFIG['src_prefix'];
     $limit      = isset($opts['limit']) && is_int($opts['limit']) ? max(1, $opts['limit']) : 200;
     $extensions = isset($opts['extensions']) && is_array($opts['extensions'])
                     ? $opts['extensions']
-                    : ['jpg','jpeg','png','gif'];
-    'src' => $opts['src_prefix'] . basename($path),
+                    : ['jpg','jpeg','png','gif'];    
     $order      = (isset($opts['order']) && strtolower($opts['order']) === 'asc') ? 'asc' : 'desc';
 
     // Whitelist per nome tabella (evita injection su identificatori)
