@@ -479,12 +479,14 @@ require_once __DIR__ . '/camera_config.php';
 </a>
     
     <div class="header-content">
-        <h1 class="main-title">MeteoSimignano</h1>
-        <h1 class="sub-title sub-title-row">
-          <span>43°17′32.5″N 11°10′01.49″E @ 418m slm</span>
-          <span id="page-spinner" class="spinner" aria-label="Caricamento in corso"></span>
-        </h1>
-    </div>  
+    <h1 class="main-title">
+        <a href="index.php" style="text-decoration: none; color: inherit;">MeteoSimignano</a>
+    </h1>
+    <h1 class="sub-title sub-title-row">
+        <span>43°17′32.5″N 11°10′01.49″E @ 418m slm</span>
+        <span id="page-spinner" class="spinner" aria-label="Caricamento in corso"></span>
+    </h1>
+    </div>
    
 
     
@@ -498,8 +500,11 @@ require_once __DIR__ . '/camera_config.php';
             </button>
             
             <div class="submenu">
+                <a href="index.php" class="submenu-item">Home</a>
                 <a href="belle.php" class="submenu-item">Diario del cielo</a>
                 <a href='grafici_termo_plotly.php?range=24h&visible=' class="submenu-item">Grafici</a>
+                <a href="pluvio.html" class="submenu-item">Pioggia: 24h</a>
+                <a href="pluvio_tab.php" class="submenu-item">Pioggia: tabella</a>
             </div>
         </div>
 </header>

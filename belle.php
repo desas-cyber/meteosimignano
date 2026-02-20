@@ -1157,6 +1157,102 @@ main {
     user-select: none;              /* impedisce la selezione del testo */
 }
 
+/* ====================================================================
+   VOCI DEL SOTTO MENU - IN ALTO A DX NELLA PAGINA
+   ==================================================================== */
+
+/* Container del menu */
+.header-menu-container {
+    position: relative;
+}
+
+/* Pulsante menu */
+.menu-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+/* Sottomenu */
+.submenu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 10px;
+    background: white;
+    border: 2px solid #333;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: max-content;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    z-index: 1000;
+}
+
+/* Sottomenu visibile */
+.submenu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Voci del sottomenu */
+.submenu-item {
+    display: block;
+    padding: 12px 16px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    text-align: left;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #ddd;
+}
+
+.submenu-item:last-child {
+    border-bottom: none;
+}
+
+.submenu-item:hover {
+    background-color: #f0f0f0;
+}
+
+.submenu-item:first-child {
+    border-radius: 6px 6px 0 0;
+}
+
+.submenu-item:last-child {
+    border-radius: 0 0 6px 6px;
+}
+
+
+   .submenu-item {
+    display: block;
+    padding: 12px 20px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.submenu-item:last-child {
+    border-bottom: none;
+}
+
+.submenu-item:hover {
+    background-color: #f8f8f8;
+}
+
+.submenu-item:first-child {
+    border-radius: 8px 8px 0 0;
+}
+
+.submenu-item:last-child {
+    border-radius: 0 0 8px 8px;
+}
 
 
     </style>
@@ -1165,30 +1261,48 @@ main {
 <body>
 
 <header class="main-header">
-    <a href="index.php" class="header-icon left-icon" title="Home">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-        </svg>
-        <span class="icon-label">Home</span>
-    </a>
-    
-    <div class="header-content">
-        <h1 class="main-title">MeteoSimignano</h1>
-        <h1 class="sub-title">43°17'32.5"N 11°10'01.49"E @ 418m slm</h1>
-    </div>    
-    
-    <a href="#" class="header-icon right-icon" title="Filtri" onclick="toggleFilterBar(); return false;">
+    <a href="#" class="header-icon left-icon" title="Filtri" onclick="toggleFilterBar(); return false;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
         </svg>
         <span class="icon-label">Filtri</span>
     </a>
+    
+    <div class="header-content">
+    <h1 class="main-title">
+        <a href="index.php" style="text-decoration: none; color: inherit;">MeteoSimignano</a>
+    </h1>
+    <h1 class="sub-title sub-title-row">
+        <span>43°17′32.5″N 11°10′01.49″E @ 418m slm</span>
+        <span id="page-spinner" class="spinner" aria-label="Caricamento in corso"></span>
+    </h1>
+    </div>
+   
+
+    
+     <!-- Icona Menu/Indice (destra) -->
+        <div class="header-menu-container">
+            <button class="header-icon right-icon menu-toggle" title="Menu">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+                <span class="icon-label">Menu</span>
+            </button>
+            
+            <div class="submenu">
+                <a href="index.php" class="submenu-item">Home</a>
+                <a href="belle.php" class="submenu-item">Diario del cielo</a>
+                <a href='grafici_termo_plotly.php?range=24h&visible=' class="submenu-item">Grafici</a>
+                <a href="pluvio.html" class="submenu-item">Pioggia: 24h</a>
+                <a href="pluvio_tab.php" class="submenu-item">Pioggia: tabella</a>
+            </div>    
+         </div>       
+    
 </header>
 
 <!-- ========== BARRA FILTRI ========== -->
 <div class="filter-bar <?php echo $filtri_attivi ? 'active' : ''; ?>" id="filterBar">
-    <button class="filter-close" onclick="closeFilterBar()" title="Chiudi">œ•</button>
+    <button class="filter-close" onclick="closeFilterBar()" title="Chiudi">✕</button>
     <form method="GET" action="">
         <div class="filter-group">
             <label for="data_inizio">Data Inizio</label>
@@ -1230,7 +1344,7 @@ main {
         </div>
 
         <div class="filter-group">
-            <label for="sequenza">Sequenza (≥N img img)</label>
+            <label for="sequenza">Sequenza (≥N img)</label>
             <input type="number" id="sequenza" name="sequenza" min="0" max="100" value="<?php echo htmlspecialchars($filtro_sequenza); ?>" placeholder="0 = off">
         </div>
 
@@ -1861,7 +1975,26 @@ function closeFilterBar() {
 
 })();
 </script>
-
+<script>
+// Toggle menu in alto a dx
+document.addEventListener('DOMContentLoaded', function() {
+    const menuToggle = document.querySelector('.menu-toggle');
+    const submenu = document.querySelector('.submenu');
+    
+    menuToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        submenu.classList.toggle('active');
+    });
+    
+    // Chiudi menu cliccando fuori
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.header-menu-container')) {
+            submenu.classList.remove('active');
+        }
+    });
+}); 
+</script>
 
 
 
