@@ -121,7 +121,7 @@ try {
     // ========================================================================
     // COSTANTI PER CORREZIONI
     // ========================================================================
-    $TEMP_CORRECTION = 1;        // °C da aggiungere alla temperatura; 1 perchè già calibrata dal gatway
+    $TEMP_CORRECTION = 0;        // °C da aggiungere alla temperatura; 1 perchè già calibrata dal gatway
     //$ALTITUDE_M = 418;              // Altitudine in metri
     $SOLAR_CORRECTION = 1;       // Fattore moltiplicativo per radiazione solare;1 perchè già calibrata dal gatway
     $MS_TO_KMH = 3.6;              // Conversione m/s a km/h

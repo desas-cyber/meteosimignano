@@ -1,266 +1,241 @@
 <?php
+
 /**
- * ============================================================================
- *  getImageDataFromFolder()
- * ============================================================================
+ * aggiorna_galleria.php
+ * 
+ * SCOPO PRINCIPALE:
+ *   - Leggere tutte le immagini dalla cartella
+ *   - Recuperare i metadati dal database
+ *   - Restituire UN SOLO JSON con DUE array:
+ *     1) "full"     -> array leggero (solo src + data_ora) per il TIME-LAPSE veloce
+ *     2) "gallery"  -> array completo (con meteo, alba_tramonto, ecc.) + fullIndex per le miniature
  *
- *  Scopo
- *  -----
- *  Costruisce, su richiesta, una fotografia istantanea dello stato
- *  filesystem + database per una cartella di immagini.
- *
- *  La funzione:
- *  - legge i file immagine presenti nella directory indicata
- *  - recupera i metadati associati dal database
- *  - combina filesystem e DB in un array coerente per il frontend
- *
- *  Ciclo di vita
- *  -------------
- *  - La funzione NON mantiene stato
- *  - L'array restituito vive solo per la durata della request PHP
- *  - Alla request successiva, filesystem e DB vengono riletti da zero
- *  - Non esiste cache interna o persistenza tra richieste
- *
- *  Utilizzo tipico
- *  ---------------
- *  - Preparazione dati per rendering iniziale galleria
- *  - Fornitura dataset JSON/JS per lightbox o frontend dinamico
- *
- *  Nota
- *  ----
- *  Questa funzione NON:
- *  - aggiorna il database
- *  - gestisce eventi runtime (scroll, click, navigazione)
- *  - mantiene uno stato applicativo
- *
-
- *
- *  Output (array associativo)
- *  --------------------------
- *  [
- *    'error'      => string|null,       // eventuale messaggio di errore
- *    'mainImage'  => string,            // src della prima immagine (se esiste)
- *    'count'      => int,               // numero record inclusi
- *    'records'    => [
- *      [
- *        'src'           => string,     // path completo al file immagine
- *        'file'          => string,     // solo nome file (basename)
- *        'data_ora'      => string|null,// es. "dd/mm/yyyy HH:MM"
- *        'temp'          => float|null, // Â°C (come da DB)
- *        'hr'            => float|null, // % umiditÃ 
- *        'p_hpa'         => float|null, // pressione hPa
- *        'vento'         => float|null, // m/s   (calcolato da km/h se serve)
- *        'wind_ms'       => float|null, // m/s   (alias esplicito)
- *        'wind_kmh'      => float|null, // km/h  (come da DB se presente)
- *        'dir'           => float|string|null, // gradi o testo, dipende DB
- *        'dir_text'      => string|null // testo direzione (se disponibile)
- *      ],
- *      ...
- *    ]
- *  ]
- *
- *  NOTE sui campi vento/dir
- *  ------------------------
- *  - Se il DB fornisce solo km/h, convertiamo anche in m/s:
- *      vento (m/s) = vento_kmh / 3.6
- *  - Se il DB fornisce solo testo direzione (es. "NE"), lo mettiamo in 'dir_text'
- *    e lasciamo 'dir' invariato (null o testo). Se nel DB ci sono gradi, li
- *    passiamo come float in 'dir'.
- *
- *  Sicurezza
- *  ---------
- *  - Il nome tabella viene whitelistanato: sono consentiti solo [A-Za-z0-9_]
- *    per prevenire injection via identificatore.
- *
- *  @param PDO    $pdo         Connessione PDO giÃ  aperta
- *  @param string $directory   Percorso cartella immagini (con o senza / finale)
- *  @param string $tableName   Nome tabella con i metadati (colonna FILE obbligatoria)
- *  @param array  $opts        Opzioni:
- *                             - 'limit' (int)         q.tÃ  max immagini da restituire (default 200)
- *                             - 'extensions' (array)  estensioni ammesse (default jpg,jpeg,png,gif)
- *                             - 'order' ('desc'|'asc') ordinamento per nome file (default 'desc')
- *
- *  @return array Vedi struttura "Output" sopra
+ * REGOLE PER LA GALLERY (miniature visibili):
+ *   - Obiettivo: una foto rappresentativa ogni ~20 minuti
+ *   - Slot target: minuti 00, 20, 40 di ogni ora
+ *   - Priorita 1: se esiste foto ESATTAMENTE a xx:00 / xx:20 / xx:40 -> quella
+ *   - Priorita 2: altrimenti, tra tutte le foto entro ±3 minuti -> quella piu vicina (minima distanza temporale)
  */
-function getImageDataFromFolder(PDO $pdo, string $directory, string $tableName, array $opts = []): array
-{
 
-//chiamata file configurazione:
+declare(strict_types=1);
 
-// nella chiamata:
-$opts['src_prefix'] = $CAMERA_CONFIG['src_prefix'];
+header('Content-Type: application/json; charset=utf-8');
+error_reporting(E_ALL);
+ini_set('display_errors', 0); // Non mostrare errori in JSON
 
+require_once __DIR__ . '/../envelop.php';
+require_once __DIR__ . '/env_tables_helper.php';
+require_once __DIR__ . '/datetime_helper.php';  
 
-    // ---------------------------
-    // 1) Normalizzazione/Opzioni
-    // ---------------------------
-    $limit      = isset($opts['limit']) && is_int($opts['limit']) ? max(1, $opts['limit']) : 200;
-    $extensions = isset($opts['extensions']) && is_array($opts['extensions'])
-                    ? $opts['extensions']
-                    : ['jpg','jpeg','png','gif'];    
-    $order      = (isset($opts['order']) && strtolower($opts['order']) === 'asc') ? 'asc' : 'desc';
-
-    // Whitelist per nome tabella (evita injection su identificatori)
-    if (!preg_match('/^[A-Za-z0-9_]+$/', $tableName)) {
-        return [
-            'error'     => "Nome tabella non valido.",
-            'mainImage' => '',
-            'count'     => 0,
-            'records'   => []
-        ];
-    }
-
-    // Normalizza directory: assicura trailing slash
-    $directory = rtrim($directory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-
-    // ---------------------------
-    // 2) Validazione cartella
-    // ---------------------------
-    if (!is_dir($directory)) {
-        return [
-            'error'     => "La cartella '$directory' non esiste.",
-            'mainImage' => '',
-            'count'     => 0,
-            'records'   => []
-        ];
-    }
-
-    // ---------------------------
-    // 3) Raccolta file immagine
-    // ---------------------------
-    // Costruisce un pattern GLOB con estensioni ammesse
-    $patternParts = [];
-    foreach ($extensions as $ext) {
-        $patternParts[] = '*.' . ltrim(strtolower($ext), '.');
-    }
-    $pattern = '{' . implode(',', $patternParts) . '}';
-
-    $files = glob($directory . $pattern, GLOB_BRACE);
-
-    if (!$files || count($files) === 0) {
-        return [
-            'error'     => "Nessuna immagine trovata nella cartella '$directory'.",
-            'mainImage' => '',
-            'count'     => 0,
-            'records'   => []
-        ];
-    }
-
-    // Ordina per nome file (desc/asc) e applica limit
-    // Nota: rsort() fa reverse sort; sort() fa ascendente
-    if (!empty($opts['filename_pattern']) && empty($opts['alpha_sort_is_chrono'])) {
-    usort($files, function($a, $b) use ($opts, $order) {
-        preg_match($opts['filename_pattern'], basename($a), $ma);
-        preg_match($opts['filename_pattern'], basename($b), $mb);
-        $tsA = isset($ma[1]) ? ($ma[1].$ma[2].$ma[3].$ma[4].$ma[5].$ma[6]) : '';
-        $tsB = isset($mb[1]) ? ($mb[1].$mb[2].$mb[3].$mb[4].$mb[5].$mb[6]) : '';
-        return ($order === 'desc') ? strcmp($tsB, $tsA) : strcmp($tsA, $tsB);
-    });
-} else {
-    if ($order === 'desc') { rsort($files, SORT_STRING); }
-    else { sort($files, SORT_STRING); }
+if (!isset($pdo) || !($pdo instanceof PDO)) {
+    http_response_code(500);
+    echo json_encode(['error' => 'Connessione PDO non disponibile']);
+    exit;
 }
 
-    // ---------------------------
-    // 4) Preparazione batch query
-    // ---------------------------
-    // Estrae solo i basename (per join col DB sulla colonna FILE)
-    $basenames = array_map('basename', $files);
+$table_name = table_name('DB_immagini_36h');
 
-    // Costruisce placeholders (?, ?, ?, ...)
-    $placeholders = implode(',', array_fill(0, count($basenames), '?'));
+// Percorsi
+require_once __DIR__ . '/camera_config.php';
+$directory = $CAMERA_CONFIG['directory'];
+$webPath   = $CAMERA_CONFIG['src_prefix'];
 
-    // Query: recupera i metadati per TUTTI i file in un colpo solo
-    // - Colonna FILE obbligatoria
-    // - Le altre colonne sono opzionali: usa COALESCE o leggi come sono
-    $sql = "SELECT *
-            FROM {$tableName}
-            WHERE FILE IN ($placeholders)";
+// Verifica cartella
+if (!is_dir($directory) || !is_readable($directory)) {
+    echo json_encode(['full' => [], 'gallery' => [], 'stats' => ['error' => 'Directory non trovata']]);
+    exit;
+}
 
-    try {
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($basenames);
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (Throwable $e) {
-        return [
-            'error'     => "Errore nella query SQL: " . $e->getMessage(),
-            'mainImage' => '',
-            'count'     => 0,
-            'records'   => []
-        ];
-    }
+// Raccolta file
+$extPattern = implode(',', array_map(function($e){ return '*.' . $e; }, $CAMERA_CONFIG['extensions']));
+$images = glob($directory . '{' . $extPattern . '}', GLOB_BRACE);
+if (!$images || count($images) === 0) {
+    echo json_encode(['full' => [], 'gallery' => [], 'stats' => ['error' => 'Nessuna immagine trovata']]);
+    exit;
+}
 
-    // Indicizza righe per FILE per lookup rapido
-    $byFile = [];
-    foreach ($rows as $r) {
-        if (!isset($r['FILE'])) continue;
-        $byFile[$r['FILE']] = $r;
-    }
+// Ordine decrescente per nome file (piu recente prima)
+// DA:
+rsort($images, SORT_STRING);
 
-    // ---------------------------
-    // 5) Costruzione records
-    // ---------------------------
-    $records = [];
-    foreach ($files as $path) {
-        $file = basename($path);
-        $row  = $byFile[$file] ?? null;
-
-        // --- 1. LETTURA DEI CAMPI DAL DB (INCLUSA sun_phase) ---
-        $data_ora = $row['DATA_ORA'] ?? null;
-        $temp     = isset($row['Temp'])     ? (float)$row['Temp']     : null;
-        $hr       = isset($row['HR'])       ? (float)$row['HR']       : null;
-        $p_hpa    = isset($row['P_hPa'])    ? (float)$row['P_hPa']    : null;
-        $windKmh  = isset($row['vento_kmh']) ? (float)$row['vento_kmh'] : null;
-        $dirText  = $row['Dir_text'] ?? null;
-        
-        // NUOVA RIGA: Legge il valore numerico grezzo (1, 2, o null)
-        $sunPhaseRaw = isset($row['sun_phase']) ? (int)$row['sun_phase'] : null;
+// A:
+if ($CAMERA_CONFIG['alpha_sort_is_chrono']) {
+    rsort($images, SORT_STRING);
+} else {
+    $extractTs = $CAMERA_CONFIG['extract_timestamp'];
+    usort($images, function($a, $b) use ($extractTs) {
+        return strcmp($extractTs(basename($b)), $extractTs(basename($a)));
+    });
+}
 
 
-        // --- 2. CONVERSIONE E LOGICA ---
-        $windMs   = ($windKmh !== null) ? ($windKmh / 3.6) : null;
-        $dir      = $dirText; 
-        
-        // NUOVA LOGICA: Conversione da numero a testo
-        $sunPhaseText = 'N/D';
-        if ($sunPhaseRaw === 1) {
-            $sunPhaseText = 'Alba ðŸŒ…';
-        } elseif ($sunPhaseRaw === 2) {
-            $sunPhaseText = 'Tramonto ðŸŒ‡';
+// Statement per metadati
+$sql = "SELECT * FROM {$table_name} WHERE FILE = :file LIMIT 1";
+$stmt = $pdo->prepare($sql);
+
+// Costruzione array completo con tutti i dati
+$records = [];
+
+foreach ($images as $imagePath) {
+    $filename = basename($imagePath);
+    
+    $stmt->execute([':file' => $filename]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+    
+    $records[] = buildRecord($webPath, $filename, $row);
+}
+
+// Funzione buildRecord           
+function buildRecord(string $publicBasePath, string $filename, $row): array
+{
+    $data_ora = null;
+    $temp     = null;
+    $hr       = null;
+    $p_hpa    = null;
+    $windKmh  = null;
+    $windMs   = null;
+    $dir      = null;
+
+    if (is_array($row)) {
+        if (!empty($row['DATA_ORA'])) {
+            try {
+                $data_ora = (new DateTime((string)$row['DATA_ORA']))->format('d/m/Y H:i');
+            } catch (Throwable $ignored) {}
         }
 
+        $temp  = (isset($row['Temp'])  && is_numeric($row['Temp']))  ? (float)$row['Temp']  : null;
+        $hr    = (isset($row['HR'])    && is_numeric($row['HR']))    ? (float)$row['HR']    : null;
+        $p_hpa = (isset($row['P_hPa']) && is_numeric($row['P_hPa'])) ? (float)$row['P_hPa'] : null;
 
-        // --- 3. CREAZIONE DEL RECORD (INCLUSO sun_phase) ---
-        $records[] = [
-            'src' => $opts['src_prefix'] . basename($path),
-            'file'      => $file,      // nome file (basename)
-            'data_ora'  => $data_ora,  // "dd/mm/yyyy HH:MM" come da tua console
-            'temp'      => $temp,      // Â°C
-            'hr'        => $hr,        // %
-            'p_hpa'     => $p_hpa,     // hPa
+        if (isset($row['vento_kmh']) && is_numeric($row['vento_kmh'])) {
+            $windKmh = (float)$row['vento_kmh'];
+            $windMs  = $windKmh / 3.6;
+        }
 
-            // Vento
-            'vento'     => $windMs,
-            'wind_ms'   => $windMs,
-            'wind_kmh'  => $windKmh,
-
-            // Direzione
-            'dir'       => $dir,
-            'dir_text'  => $dirText,
-            
-            // NUOVO CAMPO: Fase del Sole (testo)
-            'sun_phase' => $sunPhaseText 
-        ];
+        $dir = isset($row['Dir_text']) ? (string)$row['Dir_text'] : null;
     }
 
-    // ---------------------------
-    // 6) Risposta finale
-    // ---------------------------
     return [
-        'error'     => null,
-        'mainImage' => $records[0]['src'] ?? '',
-        'count'     => count($records),
-        'records'   => $records
+        'src'       => rtrim($publicBasePath, '/') . '/' . ltrim($filename, '/'),
+        'file'      => $filename,
+        'data_ora'  => $data_ora,
+        'temp'      => $temp,
+        'hr'        => $hr,
+        'p_hpa'     => $p_hpa,
+        'vento'     => $windMs,
+        'wind_ms'   => $windMs,
+        'wind_kmh'  => $windKmh,
+        'dir'       => $dir,
+        'dir_text'  => $dir,
     ];
 }
+
+// ============================================================================
+// SELEZIONE GALLERY
+// ============================================================================
+// $records e' gia' in ordine decrescente (piu recente prima)
+$sorted_desc = $records;
+
+$gallery = [];
+
+if (!empty($sorted_desc)) {
+    $foto_piu_recente = $sorted_desc[0];
+    
+    // Parsing data piu recente
+    $ultima_dt = DateTime::createFromFormat('d/m/Y H:i', $foto_piu_recente['data_ora'] ?? '');
+    if ($ultima_dt === false) {
+        $ultima_dt = new DateTime(get_now('Y-m-d H:i:s'));
+    }
+    
+    // Slot iniziale
+    $minuto = (int)$ultima_dt->format('i');
+    $target_min = (int)(floor($minuto / 20) * 20);
+    
+    $current_target = clone $ultima_dt;
+    $current_target->setTime((int)$ultima_dt->format('H'), $target_min, 0, 0);
+    
+    // Limite (36 ore fa)
+    $limite_inferiore = clone $ultima_dt;
+    $limite_inferiore->modify('-36 hours');
+    $limite_ts = (int)floor($limite_inferiore->getTimestamp());
+    
+    $iter = 0;
+    $max_iter = 200; // sicurezza anti-loop infinito (36h * 3 foto/ora = 108 slot)
+    
+    while ($current_target->getTimestamp() >= $limite_ts && $iter < $max_iter) {
+        $iter++;
+        $target_ts = (int)floor($current_target->getTimestamp());
+        
+        $trovata_esatta = false;
+        $migliore_foto = null;
+        $migliore_dist = 999999;
+        
+        foreach ($sorted_desc as $idx => $foto) {
+            $dt_foto = DateTime::createFromFormat('d/m/Y H:i', $foto['data_ora'] ?? '');
+            if ($dt_foto === false) continue;
+            
+            $ts_foto = (int)floor($dt_foto->getTimestamp());
+            $distanza = abs($ts_foto - $target_ts);
+            
+            // Tolleranza: +/- 4 minuti = 240 secondi
+            if ($distanza <= 240) {
+                // Cerchiamo la foto piu vicina
+                if ($distanza < $migliore_dist) {
+                    $migliore_dist = $distanza;
+                    $migliore_foto = $foto;
+                }
+                
+                // Priorita: foto esatta al minuto 00/20/40
+                $min_foto = (int)$dt_foto->format('i');
+                if (in_array($min_foto, [0, 20, 40]) && $distanza <= 60) {
+                    $trovata_esatta = true;
+                    $full_idx = array_search($foto['src'], array_column($records, 'src'));
+                    if ($full_idx !== false) {
+                        $gallery[] = $foto + ['fullIndex' => $full_idx];
+                    }
+                    break; // esci dal foreach
+                }
+            }
+        }
+        
+        // Se non trovata esatta, usa la migliore entro tolleranza
+        if (!$trovata_esatta && $migliore_foto !== null) {
+            $full_idx = array_search($migliore_foto['src'], array_column($records, 'src'));
+            if ($full_idx !== false) {
+                $gallery[] = $migliore_foto + ['fullIndex' => $full_idx];
+            }
+        }
+        
+        $current_target->modify('-20 minutes');
+    }
+}
+
+// Ordine decrescente finale (piu recente prima)
+usort($gallery, function($a, $b) {
+    $dtA = DateTime::createFromFormat('d/m/Y H:i', $a['data_ora'] ?? '');
+    $dtB = DateTime::createFromFormat('d/m/Y H:i', $b['data_ora'] ?? '');
+    $tsA = ($dtA !== false) ? $dtA->getTimestamp() : 0;
+    $tsB = ($dtB !== false) ? $dtB->getTimestamp() : 0;
+    return $tsB - $tsA; // decrescente: piu recente prima
+});
+
+// Array full leggero (solo src + data_ora per time-lapse)
+$full = array_map(function($r) {
+    return [
+        'src'     => $r['src'],
+        'data_ora' => $r['data_ora']
+    ];
+}, $records);
+
+// Output JSON finale
+echo json_encode([
+    'full'    => $full,
+    'gallery' => $gallery,
+    'stats'   => [
+        'total_full'     => count($full),
+        'gallery_count'  => count($gallery),
+        'generated_at'   => date('c'),
+        'note'           => 'Gallery: foto ogni ~20 min con +/-3 min tolleranza'
+    ]
+], JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
 ?>

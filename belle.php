@@ -1,4 +1,31 @@
 <?php
+/*
+NULL=normale,0= nuvole part, 1=luna, 2=arcobaleno, 3=aur_boreale;
+
+NUVOLE
+ 0  → Nuvole (generiche — record esistenti, retrocompatibile)
+10  → Cirri
+11  → Cirrocumuli / Cirrostrati
+12  → Altocumuli / Altostrati
+13  → Cumuli
+14  → Cumulonembi
+15  → Strati / Stratocumuli
+16  → Nembostrati
+17  → Nebbia
+
+PIOGGIA
+ 6  → Pioggia (generica — record esistenti, retrocompatibile)
+60  → (riservato)
+61  → (riservato)
+62  → (riservato)
+
+NEVE
+ 4  → Neve (generica — record esistenti, retrocompatibile)
+40  → (riservato)
+41  → (riservato)
+*/
+
+
 
 /* 0) Impostazioni per non "sporcare" il JSON con warning/notice ------------- */
 ini_set('display_errors', '1');
@@ -8,6 +35,7 @@ error_reporting(E_ALL);
 require_once __DIR__ . '/../envelop.php';
 require_once __DIR__ . '/aggiornaCartellaImmagini.php';
 require_once __DIR__ . '/env_tables_helper.php';
+require_once __DIR__ . '/astro_helper.php';
 
 define('ALLOW_INTERNAL_CALL', true);
 require_once __DIR__ . '/public_php/agg_DB_belle.php';
@@ -23,7 +51,15 @@ $table_name = table_name('DB_immagini_belle');
 $filtro_data_inizio = isset($_GET['data_inizio']) ? $_GET['data_inizio'] : null;
 $filtro_data_fine = isset($_GET['data_fine']) ? $_GET['data_fine'] : null;
 $filtro_sun_phase = isset($_GET['sun_phase']) ? $_GET['sun_phase'] : 'all';
+// 'night' è un sotto-caso di sun_phase: viene gestito separatamente
+// nella logica SQL perché richiede calcoli astronomici per ogni giorno del range.
 $filtro_altro = isset($_GET['altro']) ? $_GET['altro'] : 'all';
+// altro_sub: sottocategoria contestuale (es. tipo di nuvola).
+// Presente solo quando $filtro_altro è una categoria con figli (nuvole, pioggia, neve).
+// Valore 'all' = tutte le sottocategorie della categoria padre.
+$filtro_altro_sub = isset($_GET['altro_sub']) ? $_GET['altro_sub'] : 'all';
+// sequenza: 1 = mostra solo foto marcate come sequenza, 0 = tutti.
+// Se attivo, azzera tutti gli altri filtri (gestito sotto prima della query).
 $filtro_sequenza = isset($_GET['sequenza']) ? (int)$_GET['sequenza'] : 0;
 // con_nota: 1 = mostra solo immagini con una nota compilata, 0 = tutte
 $filtro_con_nota = isset($_GET['con_nota']) ? (int)$_GET['con_nota'] : 0;
@@ -31,17 +67,38 @@ $filtro_con_nota = isset($_GET['con_nota']) ? (int)$_GET['con_nota'] : 0;
 // Determina se ci sono filtri attivi
 $filtri_attivi = !empty($filtro_data_inizio) || !empty($filtro_data_fine) || 
                  $filtro_sun_phase !== 'all' || $filtro_altro !== 'all' || 
-                 $filtro_sequenza > 0 || $filtro_con_nota > 0;
+                 $filtro_sequenza > 0 || $filtro_con_nota > 0 ||
+                 $filtro_altro_sub !== 'all';
 
-// Mappatura valori altro -> etichette descrittive con ordine personalizzato
+// Mappatura valori altro -> etichette descrittive con ordine personalizzato.
+// SCHEMA NUMERICO:
+//   0   = Nuvole generiche (retrocompatibile con record esistenti)
+//   10-16 = Sottotipi nuvole
+//   6   = Pioggia generica (retrocompatibile)
+//   60-62 = Sottotipi pioggia (riservati per futuro)
+//   4   = Neve generica (retrocompatibile)
+//   40-41 = Sottotipi neve (riservati per futuro)
+//   1,2,3,5 = altre categorie senza sottotipi
 $altro_labels = [
-    '0' => 'Nuvole',
-    '6' => 'Pioggia',
-    '4' => 'Neve',
-    '1' => 'Luna',
-    '2' => 'Arcobaleno',
-    '3' => 'Aur. boreale',    
-    '5' => 'Altro'
+    // Nuvole
+    '0'  => 'Nuvole',
+    '10' => '↳ Cirri',
+    '11' => '↳ Cirrocumuli / Cirrostrati',
+    '12' => '↳ Altocumuli / Altostrati',
+    '13' => '↳ Cumuli',
+    '14' => '↳ Cumulonembi',
+    '15' => '↳ Strati / Stratocumuli',
+    '16' => '↳ Nembostrati',
+    '17' => '↳ Nebbia',
+    // Pioggia
+    '6'  => 'Pioggia',
+    // Neve
+    '4'  => 'Neve',
+    // Altre
+    '1'  => 'Luna',
+    '2'  => 'Arcobaleno',
+    '3'  => 'Aur. boreale',
+    '5'  => 'Altro'
 ];
 
 // Recupera valori unici di "altro" dal database
@@ -66,17 +123,33 @@ if (!$filtri_attivi && !isset($_GET['page'])) {
     $page = 1;
 }
 
+// Se sequenza è attiva, azzera tutti gli altri filtri.
+// PRINCIPIO — Separazione delle responsabilità:
+//   La regola UX ("sequenza esclude tutto il resto") viene applicata qui,
+//   a monte, prima di passare i parametri alla funzione SQL.
+//   La funzione non conosce questa regola: riceve solo i parametri finali
+//   e costruisce la WHERE di conseguenza. I due livelli restano indipendenti.
+if ($filtro_sequenza) {
+    $filtri_per_query = [
+        'sequenza' => 1,
+        'page'     => $page,
+        'limit'    => $limit,
+    ];
+} else {
+    $filtri_per_query = [
+        'data_inizio' => $filtro_data_inizio,
+        'data_fine'   => $filtro_data_fine,
+        'sun_phase'   => $filtro_sun_phase,
+        'altro'       => $filtro_altro,
+        'altro_sub'   => $filtro_altro_sub,
+        'con_nota'    => $filtro_con_nota,
+        'page'        => $page,
+        'limit'       => $limit,
+    ];
+}
+
 // Ottiene i dati delle immagini con filtri applicati
-$data = getImageDataFromFolderFiltered($pdo, $directory, $table_name, [
-    'data_inizio' => $filtro_data_inizio,
-    'data_fine' => $filtro_data_fine,
-    'sun_phase' => $filtro_sun_phase,
-    'altro' => $filtro_altro,
-    'sequenza' => $filtro_sequenza,
-    'con_nota'    => $filtro_con_nota,
-    'page'        => $page,
-    'limit'       => $limit
-]);
+$data = getImageDataFromFolderFiltered($pdo, $directory, $table_name, $filtri_per_query);
   
 $records = []; 
 $errore_messaggio = null;
@@ -155,6 +228,7 @@ function getImageDataFromFolderFiltered(PDO $pdo, string $directory, string $tab
 
     if (isset($filtri['sun_phase']) && $filtri['sun_phase'] !== 'all') {
         switch ($filtri['sun_phase']) {
+
             case '1':
             case '2':
                 $where[] = "sun_phase = ?";
@@ -162,21 +236,128 @@ function getImageDataFromFolderFiltered(PDO $pdo, string $directory, string $tab
                 break;
 
             case 'day':
-            case 'null':
+                // "Pieno giorno": foto senza classificazione alba/tramonto.
+                // sun_phase IS NULL = campo non compilato dall'operatore.
+                // La voce "Nessuno" è stata rimossa perché produceva lo stesso SQL.
                 $where[] = "sun_phase IS NULL";
+                break;
+
+            case 'night':
+                // Non legge sun_phase: confronta DATA_ORA con gli intervalli
+                // astronomici calcolati da getNightIntervals() in astro_helper.php.
+                // È ortogonale a sun_phase: filtra per ORA REALE dello scatto,
+                // indipendentemente da qualsiasi classificazione manuale.
+
+                // 1) Range date: da filtri utente oppure MIN/MAX del DB
+                if (!empty($filtri['data_inizio']) && !empty($filtri['data_fine'])) {
+                    $range_from = new DateTime($filtri['data_inizio']);
+                    $range_to   = new DateTime($filtri['data_fine']);
+                } else {
+                    try {
+                        $stmtRange = $pdo->query(
+                            "SELECT MIN(DATA_ORA) AS min_dt, MAX(DATA_ORA) AS max_dt FROM {$tableName}"
+                        );
+                        $rangeRow = $stmtRange->fetch(PDO::FETCH_ASSOC);
+                    } catch (Throwable $e) {
+                        $rangeRow = null;
+                    }
+
+                    if ($rangeRow && $rangeRow['min_dt'] && $rangeRow['max_dt']) {
+                        $range_from = new DateTime($rangeRow['min_dt']);
+                        $range_to   = new DateTime($rangeRow['max_dt']);
+                    } else {
+                        $where[] = "1 = 0";
+                        break;
+                    }
+                }
+
+                // 2) Calcola intervalli tramonto+40' → alba_domani-40'
+                $night_intervals = getNightIntervals($range_from, $range_to, 40);
+
+                if (empty($night_intervals)) {
+                    $where[] = "1 = 0";
+                    break;
+                }
+
+                // 3) Costruisce (DATA_ORA >= ? AND DATA_ORA <= ?) OR (...)
+                //    Le parentesi esterne sono essenziali: senza, AND e OR
+                //    degli altri filtri si combinerebbero in modo scorretto.
+                $night_clauses = [];
+                foreach ($night_intervals as $interval) {
+                    $night_clauses[] = "(DATA_ORA >= ? AND DATA_ORA <= ?)";
+                    $params[] = $interval['start'];
+                    $params[] = $interval['end'];
+                }
+                $where[] = "(" . implode(" OR ", $night_clauses) . ")";
                 break;
         }
     }
 
+    // ── FILTRO ALTRO + ALTRO_SUB ─────────────────────────────────────────────
+    // SCHEMA:
+    //   - Se altro='all'   → nessun filtro
+    //   - Se altro='0' (Nuvole) + altro_sub='all' → IN (0,10,11,12,13,14,15,16)
+    //   - Se altro='0' (Nuvole) + altro_sub='10'  → altro = 10
+    //   - Se altro='6' (Pioggia) + altro_sub='all'→ IN (6) [+ futuri 60,61,62]
+    //   - Se altro='4' (Neve) + altro_sub='all'   → IN (4) [+ futuri 40,41]
+    //   - Qualsiasi altro valore senza figli       → altro = valore
+    //
+    // PRINCIPIO — Tabella di dispatch:
+    //   Definiamo i "figli" di ogni categoria padre in un array PHP.
+    //   Questo evita switch enormi e rende banale aggiungere nuovi sottotipi:
+    //   basta aggiungere il valore all'array del padre.
+    // ─────────────────────────────────────────────────────────────────────────
+    
+    // Mappa padre → [padre, figlio1, figlio2, ...]
+    // Il padre è incluso nell'array perché "Nuvole - tutte" include anche
+    // i record con altro=0 (classificati prima che esistessero i sottotipi).
+    $subcategories = [
+        '0' => ['0', '10', '11', '12', '13', '14', '15', '16'], // Nuvole
+        '6' => ['6', '60', '61', '62'],                          // Pioggia (riservati)
+        '4' => ['4', '40', '41'],                                // Neve (riservati)
+    ];
+
     if (isset($filtri['altro']) && $filtri['altro'] !== 'all') {
-        $where[] = "altro = ?";
-        // qui può essere stringa o numero: non castare a int
-        $params[] = $filtri['altro'];
+        $cat = (string)$filtri['altro'];
+        $sub = isset($filtri['altro_sub']) ? (string)$filtri['altro_sub'] : 'all';
+
+        if (isset($subcategories[$cat])) {
+            // Categoria CON sottotipi
+            if ($sub === 'all') {
+                // Tutte le sottocategorie: uso IN (...)
+                // implode costruisce i placeholder ?,?,? in base al numero di figli.
+                $children = $subcategories[$cat];
+                $ph = implode(',', array_fill(0, count($children), '?'));
+                $where[] = "altro IN ($ph)";
+                foreach ($children as $v) {
+                    $params[] = $v;
+                }
+            } else {
+                // Sottocategoria specifica: filtro esatto
+                $where[] = "altro = ?";
+                $params[] = $sub;
+            }
+        } else {
+            // Categoria SENZA sottotipi (Luna, Arcobaleno, ecc.): filtro diretto
+            $where[] = "altro = ?";
+            $params[] = $cat;
+        }
     }
 
     // Filtro note: mostra solo immagini che hanno il campo 'note' compilato nel DB
     if (!empty($filtri['con_nota'])) {
         $where[] = "note IS NOT NULL AND note <> ''";
+    }
+
+    // Filtro sequenza: WHERE sequenza = 1
+    // Query banale grazie alla colonna dedicata — nessuna logica applicativa,
+    // nessun LIKE, nessun calcolo matematico. L'indice su sequenza la rende
+    // velocissima anche su tabelle grandi.
+    // NOTA: quando questo filtro è attivo, tutti gli altri sono già stati
+    // azzerati a monte (vedi blocco "$filtro_sequenza" in belle.php).
+    // Quindi questa clausola sarà sempre l'unica nel WHERE quando presente.
+    if (!empty($filtri['sequenza'])) {
+        $where[] = "sequenza = 1";
     }
 
     $whereSql = $where ? ("WHERE " . implode(" AND ", $where)) : "";
@@ -240,7 +421,8 @@ function getImageDataFromFolderFiltered(PDO $pdo, string $directory, string $tab
             'dir_text'  => $row['Dir_text'] ?? null,
             'sun_phase' => isset($row['sun_phase']) ? (int)$row['sun_phase'] : null,
             'altro'     => $row['altro'] ?? null,
-            'note'      => isset($row['note']) && $row['note'] !== '' ? $row['note'] : null
+            'note'      => isset($row['note']) && $row['note'] !== '' ? $row['note'] : null,
+            'sequenza'  => !empty($row['sequenza']) ? 1 : 0,
         ];
     }
 
@@ -599,9 +781,11 @@ main {
     transform: scale(1.15);
 }
 
-/* Checkbox "Solo con note" nel form filtri */
-.filter-group-checkbox {
-    justify-content: flex-end;
+/* Checkbox Sequenza e Note: width auto per stare nella stessa riga del form */
+.filter-group-cb {
+    min-width: 0;
+    width: auto;
+    flex-shrink: 0;
 }
 
 .checkbox-label {
@@ -622,6 +806,12 @@ main {
     cursor: pointer;
     accent-color: #4CAF50;
     flex-shrink: 0;
+}
+
+/* Stato disabilitato visivo quando sequenza è attiva */
+.filter-group-cb.disabled-by-seq {
+    opacity: 0.35;
+    pointer-events: none;
 }
 
 /* ==========================================================================
@@ -806,74 +996,73 @@ main {
 }
 
 /* ==========================================================================
-   MOBILE: LAYOUT COMPATTO
+   FILTER BAR — RESPONSIVE
+   Layout desktop: tutti i gruppi in riga, flex-wrap naturale.
+   Layout mobile:  griglia a 2 colonne con assegnazione esplicita per classe,
+                   così il comportamento non dipende dall'ordine nel DOM
+                   né dalla visibilità di altro-sub-group.
    ========================================================================== */
-@media (max-width: 768px) {
+
+/* ── MOBILE PORTRAIT (≤ 600px) ─────────────────────────────────────────── */
+@media (max-width: 600px) {
     .filter-bar {
-        padding: 10px;
-        margin: 10px auto;
+        padding: 10px 10px 12px;
+        margin: 8px auto;
     }
-    
+
     .filter-bar form {
-        gap: 8px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px 6px;
+        align-items: end;
     }
-    
-    /* RIGA 1: Data Inizio + Data Fine (50% ciascuna) */
-    .filter-group:nth-child(1),
-    .filter-group:nth-child(2) {
-        width: calc(50% - 4px);
-        min-width: 0;
-    }
-    
-    /* RIGA 2: Alba/Tramonto (100% larghezza) */
-    .filter-group:nth-child(3) {
-        width: 100%;
-        min-width: 0;
-    }
-    
-    /* RIGA 3: Altro + Sequenza (50% ciascuna) */
-    .filter-group:nth-child(4),
-    .filter-group:nth-child(5) {
-        width: calc(50% - 4px);
-        min-width: 0;
-    }
-    
-    /* RIGA 4: Bottone (centrato 100%) */
-    .filter-actions {
-        width: 100%;
-        justify-content: center;
-    }
-    
-    /* Altezza ridotta per input/select */
+
+    /* RIGA 1: date */
+    .fg-data-inizio  { grid-column: 1; }
+    .fg-data-fine    { grid-column: 2; }
+
+    /* RIGA 2: fase sole (larghezza piena) */
+    .fg-sun-phase    { grid-column: 1 / -1; }
+
+    /* RIGA 3: categoria + tipo — larghezza piena per avere spazio alle opzioni */
+    .fg-categoria    { grid-column: 1 / -1; }
+    .fg-tipo         { grid-column: 1 / -1; }
+
+    /* RIGA 4: checkbox affiancate */
+    .fg-checks       { grid-column: 1 / -1; }
+
+    /* RIGA 5: bottone larghezza piena */
+    .filter-actions  { grid-column: 1 / -1; justify-content: center; }
+
+    /* Forza tutti i select e input a stare dentro la cella del grid.
+       Senza width:100%, il browser usa la larghezza naturale del contenuto
+       (es. "Cirrocumuli / Cirrostrati") che sfonda il layout. */
     .filter-group input,
     .filter-group select {
+        width: 100%;
         padding: 4px 6px;
         font-size: 13px;
         height: 32px;
-        line-height: 1.2;
         box-sizing: border-box;
+        min-width: 0;
     }
-    
-    /* Fix specifico per input date e number */
-    .filter-group input[type="date"],
-    .filter-group input[type="number"] {
-        padding: 2px 6px;
-        height: 32px;
+
+    .filter-group input[type="date"] {
+        padding: 2px 4px;
+        font-size: 12px;
     }
-    
-    /* Label piÃ¹ compatte */
+
     .filter-group label {
         font-size: 11px;
         margin-bottom: 3px;
     }
-    
-    /* Bottone piÃ¹ compatto */
+
     .filter-btn {
-        padding: 6px 12px;
+        padding: 6px 16px;
         font-size: 13px;
+        width: 100%;
     }
-    
-    /* X button leggermente piÃ¹ piccolo */
+
     .filter-close {
         font-size: 20px;
         width: 26px;
@@ -883,40 +1072,62 @@ main {
     }
 }
 
-/* Mobile molto stretto: tutto ancora piÃ¹ compatto */
-@media (max-width: 480px) {
+/* ── MOBILE LANDSCAPE (altezza ≤ 500px, larghezza > 500px) ─────────────── */
+@media (max-height: 500px) and (orientation: landscape) {
     .filter-bar {
-        padding: 8px;
-        margin: 8px auto;
+        padding: 8px 12px;
+        margin: 4px auto;
+        /* In landscape lo spazio verticale è scarso:
+           rendiamo la barra scrollabile orizzontalmente se serve */
+        overflow-x: auto;
     }
-    
+
     .filter-bar form {
-        gap: 6px;
+        display: flex;
+        flex-wrap: nowrap;     /* tutto su una riga orizzontale */
+        gap: 8px;
+        align-items: flex-end;
+        min-width: max-content; /* permette scroll se lo schermo è troppo stretto */
     }
-    
+
+    .filter-group,
+    .filter-group-cb {
+        min-width: 0;
+        flex-shrink: 0;
+    }
+
+    .fg-data-inizio,
+    .fg-data-fine    { width: 120px; }
+    .fg-sun-phase    { width: 120px; }
+    .fg-categoria    { width: 110px; }
+    .fg-tipo         { width: 140px; }
+    .filter-group-cb { width: auto; }
+
     .filter-group input,
     .filter-group select {
         padding: 3px 5px;
         font-size: 12px;
         height: 28px;
-        line-height: 1.2;
         box-sizing: border-box;
     }
-    
-    /* Fix specifico per input date e number su mobile stretto */
-    .filter-group input[type="date"],
-    .filter-group input[type="number"] {
-        padding: 1px 5px;
-        height: 28px;
+
+    .filter-group input[type="date"] {
+        font-size: 11px;
+        padding: 2px 3px;
     }
-    
+
     .filter-group label {
         font-size: 10px;
         margin-bottom: 2px;
     }
-    
+
     .filter-btn {
-        padding: 5px 10px;
+        padding: 5px 12px;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    .checkbox-label {
         font-size: 12px;
     }
 }
@@ -1304,55 +1515,98 @@ main {
 <div class="filter-bar <?php echo $filtri_attivi ? 'active' : ''; ?>" id="filterBar">
     <button class="filter-close" onclick="closeFilterBar()" title="Chiudi">✕</button>
     <form method="GET" action="">
-        <div class="filter-group">
+        <div class="filter-group fg-data-inizio">
             <label for="data_inizio">Data Inizio</label>
             <input type="date" id="data_inizio" name="data_inizio" value="<?php echo htmlspecialchars($filtro_data_inizio ?? ''); ?>">
         </div>
 
-        <div class="filter-group">
+        <div class="filter-group fg-data-fine">
             <label for="data_fine">Data Fine</label>
             <input type="date" id="data_fine" name="data_fine" value="<?php echo htmlspecialchars($filtro_data_fine ?? ''); ?>">
         </div>
 
-        <div class="filter-group">
+        <div class="filter-group fg-sun-phase">
             <label for="sun_phase">Alba/Tramonto</label>
             <select id="sun_phase" name="sun_phase">
                 <option value="all" <?php echo $filtro_sun_phase === 'all' ? 'selected' : ''; ?>>Tutti</option>
                 <option value="1" <?php echo $filtro_sun_phase === '1' ? 'selected' : ''; ?>>Alba</option>
                 <option value="2" <?php echo $filtro_sun_phase === '2' ? 'selected' : ''; ?>>Tramonto</option>
-                <option value="day" <?php echo $filtro_sun_phase === 'day' ? 'selected' : ''; ?>>
-                    Pieno giorno
-                </option>
-                <option value="null" <?php echo $filtro_sun_phase === 'null' ? 'selected' : ''; ?>>Nessuno</option>
+                <option value="night" <?php echo $filtro_sun_phase === 'night' ? 'selected' : ''; ?>>Notte</option>
+                <option value="day" <?php echo $filtro_sun_phase === 'day' ? 'selected' : ''; ?>>Pieno giorno</option>
             </select>
         </div>
 
-        <div class="filter-group">
-            <label for="altro">Altro</label>
-            <select id="altro" name="altro">
+        <div class="filter-group fg-categoria">
+            <label for="altro">Categoria</label>
+            <select id="altro" name="altro" onchange="aggiornaAltroSub(this.value)">
                 <option value="all" <?php echo $filtro_altro === 'all' ? 'selected' : ''; ?>>Tutti</option>
-                <?php foreach ($valori_altro as $valore): ?>
-                    <?php 
-                        // Usa l'etichetta descrittiva se disponibile, altrimenti il valore stesso
-                        $label = isset($altro_labels[$valore]) ? $altro_labels[$valore] : $valore;
-                    ?>
-                    <option value="<?php echo htmlspecialchars($valore); ?>" <?php echo $filtro_altro == $valore ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($label); ?>
+                <?php
+                // Mostra solo le categorie padre (senza i sottotipi)
+                // I sottotipi appaiono nel secondo select quando necessario.
+                $categorie_padre = ['0' => 'Nuvole', '6' => 'Pioggia', '4' => 'Neve',
+                                    '1' => 'Luna', '2' => 'Arcobaleno', '3' => 'Aur. boreale', '5' => 'Altro'];
+                foreach ($categorie_padre as $valore => $etichetta):
+                    // Mostra la voce solo se esistono record nel DB per questa categoria
+                    // (inclusi i figli: es. se ci sono Cirri ma non Nuvole generiche, Nuvole deve apparire)
+                    $valori_padre_db = array_unique(array_map(function($v) {
+                        if ($v >= 10 && $v < 20) return '0';
+                        if ($v >= 60 && $v < 70) return '6';
+                        if ($v >= 40 && $v < 50) return '4';
+                        return (string)$v;
+                    }, array_map('intval', $valori_altro_db)));
+                    if (!in_array((string)$valore, $valori_padre_db)) continue;
+                ?>
+                    <option value="<?php echo htmlspecialchars($valore); ?>"
+                            <?php echo $filtro_altro == $valore ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($etichetta); ?>
                     </option>
                 <?php endforeach; ?>
             </select>
         </div>
 
-        <div class="filter-group">
-            <label for="sequenza">Sequenza (≥N img)</label>
-            <input type="number" id="sequenza" name="sequenza" min="0" max="100" value="<?php echo htmlspecialchars($filtro_sequenza); ?>" placeholder="0 = off">
+        <!-- Secondo select: appare solo per categorie con sottotipi -->
+        <div class="filter-group fg-tipo" id="altro-sub-group" style="<?php echo in_array($filtro_altro, ['0','6','4']) ? '' : 'display:none'; ?>">
+            <label for="altro_sub">Tipo</label>
+            <select id="altro_sub" name="altro_sub">
+                <?php
+                // Definizione sottotipi per ogni categoria padre.
+                // PRINCIPIO DRY: stessa struttura usata in PHP per il SQL,
+                // qui serializzata in JSON per il JS che gestisce la UI.
+                $sottotipi = [
+                    '0' => ['all' => 'Tutte le nuvole', '10' => 'Cirri',
+                            '11' => 'Cirrocumuli / Cirrostrati', '12' => 'Altocumuli / Altostrati',
+                            '13' => 'Cumuli', '14' => 'Cumulonembi',
+                            '15' => 'Strati / Stratocumuli', '16' => 'Nembostrati', '17' => 'Nebbia'],
+                    '6' => ['all' => 'Tutta la pioggia'],
+                    '4' => ['all' => 'Tutta la neve'],
+                ];
+                $cat_attiva = in_array($filtro_altro, ['0','6','4']) ? $filtro_altro : '0';
+                $opzioni_attive = $sottotipi[$cat_attiva] ?? ['all' => 'Tutti'];
+                foreach ($opzioni_attive as $v => $l):
+                ?>
+                    <option value="<?php echo htmlspecialchars($v); ?>"
+                            <?php echo $filtro_altro_sub == $v ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($l); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
         </div>
 
-        <div class="filter-group filter-group-checkbox">
+        <div class="filter-group filter-group-cb">
+            <label class="checkbox-label">
+                <input type="checkbox" id="sequenza" name="sequenza" value="1"
+                    <?php echo $filtro_sequenza ? 'checked' : ''; ?>
+                    onchange="gestisciSequenza(this)">
+                Sequenza
+            </label>
+        </div>
+
+        <div class="filter-group filter-group-cb" id="group-con-nota">
             <label class="checkbox-label">
                 <input type="checkbox" id="con_nota" name="con_nota" value="1"
-                    <?php echo $filtro_con_nota ? 'checked' : ''; ?>>
-                Solo con note 📝
+                    <?php echo $filtro_con_nota ? 'checked' : ''; ?>
+                    <?php echo $filtro_sequenza ? 'disabled' : ''; ?>>
+                Note
             </label>
         </div>
 
@@ -1611,6 +1865,15 @@ $query = $_GET;
 // Passa i dati al JS
 window.images = <?php echo json_encode($records); ?>;
 
+// Mappa numerico → etichetta per il campo "altro".
+// PRINCIPIO DRY: la mappa è definita una sola volta in PHP ($altro_labels)
+// e serializzata qui in JSON. Il JS la riceve come dato, non la ridefinisce.
+// Aggiungere un nuovo valore = modifica solo a $altro_labels in PHP.
+window.altroLabels = <?php echo json_encode(array_map(function($l) {
+    // Rimuove il prefisso "↳ " per il lightbox: più pulito in una riga orizzontale
+    return ltrim($l, '↳ ');
+}, $altro_labels)); ?>;
+
 // Toggle barra filtri
 function toggleFilterBar() {
     const filterBar = document.getElementById('filterBar');
@@ -1698,17 +1961,24 @@ function closeFilterBar() {
         var dirGradi = parseFloat(record.dir_text);
         var dTxt = isFinite(dirGradi) ? dirTesto(dirGradi) : record.dir_text || 'N/A';
 
+        // sun_phase: il campo nel record si chiama 'sun_phase' (non 'alba_tramonto')
         var sunPhase = '';
-        if (record.alba_tramonto) {
-            var flag = parseInt(record.alba_tramonto);
-            if (flag === 1) {
-                sunPhase = ' | Alba';
-            } else if (flag === 2) {
-                sunPhase = ' | Tramonto';
-            }
+        var sp = parseInt(record.sun_phase);
+        if (sp === 1) { sunPhase = ' | 🌅 Alba'; }
+        else if (sp === 2) { sunPhase = ' | 🌇 Tramonto'; }
+
+        // altro: traduce il valore numerico in etichetta leggibile
+        // usando la mappa serializzata da PHP (window.altroLabels).
+        // String() perché le chiavi del JSON sono sempre stringhe.
+        var altroTxt = '';
+        var altroVal = record.altro;
+        if (altroVal !== null && altroVal !== undefined && altroVal !== '') {
+            var label = (window.altroLabels || {})[String(altroVal)];
+            if (label) { altroTxt = ' | ' + label; }
         }
 
-        return d + ' | T ' + tTxt + ' | UR ' + hTxt + ' | ' + pTxt + ' | Vento ' + wTxt + ', ' + dTxt + sunPhase;
+        return d + ' | T ' + tTxt + ' | UR ' + hTxt + ' | ' + pTxt +
+               ' | Vento ' + wTxt + ', ' + dTxt + sunPhase + altroTxt;
     }
 
     // ========== LIGHTBOX FUNCTIONS ==========
@@ -1998,6 +2268,112 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+
+<script>
+// ── MENU CONTESTUALE SOTTOCATEGORIE ──────────────────────────────────────────
+//
+// COME FUNZIONA:
+//   1. L'utente cambia il select "Categoria" (evento onchange)
+//   2. aggiornaAltroSub() riceve il valore scelto
+//   3. Se la categoria ha sottotipi → mostra il secondo select e lo popola
+//   4. Se la categoria non ha sottotipi → nasconde il secondo select
+//
+// PERCHÉ in JS e non in PHP?
+//   PHP genera HTML statico al caricamento della pagina.
+//   La reazione a un'azione dell'utente (cambio select) deve avvenire
+//   nel browser, senza ricaricare la pagina → responsabilità del JS.
+//
+// PRINCIPIO — Separazione dei dati dalla logica:
+//   I dati (quale categoria ha quali figli) stanno nell'oggetto `sottotipi`.
+//   La logica (aggiorna DOM) sta nella funzione.
+//   Aggiungere nuovi sottotipi = modificare solo l'oggetto dati.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const sottotipi = {
+    '0': { // Nuvole
+        'all': 'Tutte le nuvole',
+        '10':  'Cirri',
+        '11':  'Cirrocumuli / Cirrostrati',
+        '12':  'Altocumuli / Altostrati',
+        '13':  'Cumuli',
+        '14':  'Cumulonembi',
+        '15':  'Strati / Stratocumuli',
+        '16':  'Nembostrati',
+        '17':  'Nebbia'
+    },
+    '6': { // Pioggia (sottotipi riservati per futuro)
+        'all': 'Tutta la pioggia'
+    },
+    '4': { // Neve (sottotipi riservati per futuro)
+        'all': 'Tutta la neve'
+    }
+    // Per aggiungere nuova categoria con sottotipi:
+    // 'X': { 'all': 'Tutti', 'X0': 'Sottotipo 1', ... }
+};
+
+function aggiornaAltroSub(valore) {
+    const gruppo = document.getElementById('altro-sub-group');
+    const sel    = document.getElementById('altro_sub');
+
+    if (!sottotipi[valore]) {
+        // Categoria senza sottotipi: nascondi il secondo select
+        // e resetta il valore a 'all' per non mandare parametri spuri nella GET
+        gruppo.style.display = 'none';
+        sel.innerHTML = '<option value="all">Tutti</option>';
+        sel.value = 'all';
+        return;
+    }
+
+    // Categoria con sottotipi: popola e mostra il secondo select
+    sel.innerHTML = '';
+    for (const [val, label] of Object.entries(sottotipi[valore])) {
+        const opt = document.createElement('option');
+        opt.value = val;
+        opt.textContent = label;
+        sel.appendChild(opt);
+    }
+    sel.value = 'all'; // default: tutte le sottocategorie
+    gruppo.style.display = '';
+}
+</script>
+
+<script>
+// ── GESTIONE CHECKBOX SEQUENZA ────────────────────────────────────────────
+// Quando l'utente spunta "Sequenza", gli altri controlli del form
+// vengono visivamente disabilitati (opacity + pointer-events).
+// PERCHÉ solo visivamente e non con disabled=true?
+//   Se li disabilitassimo davvero, i loro valori non verrebbero inviati
+//   nella GET — ma non serve perché a monte (PHP) li ignoriamo comunque.
+//   La disabilitazione visiva serve solo a comunicare all'utente che
+//   quei filtri non hanno effetto in questo momento.
+function gestisciSequenza(cb) {
+    const attivo = cb.checked;
+
+    // 1) Disabilita visivamente tutti i filter-group tranne quello di sequenza
+    document.querySelectorAll('#filterBar .filter-group:not(:has(#sequenza))')
+        .forEach(function(g) {
+            g.style.opacity       = attivo ? '0.35' : '';
+            g.style.pointerEvents = attivo ? 'none'  : '';
+        });
+
+    // 2) Disabilita/abilita esplicitamente il checkbox con_nota.
+    //    PERCHÉ disabled=true e non solo pointer-events?
+    //    pointer-events blocca il click ma il valore spuntato verrebbe
+    //    comunque inviato nella GET. Con disabled=true il browser
+    //    esclude il campo dal submit — coerente con il fatto che PHP
+    //    ignora con_nota quando sequenza è attiva.
+    var notaCb = document.getElementById('con_nota');
+    if (notaCb) {
+        notaCb.disabled = attivo;
+        if (attivo) notaCb.checked = false;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    var cb = document.getElementById('sequenza');
+    if (cb) gestisciSequenza(cb);
+});
+</script>
 
 </body>
 </html>

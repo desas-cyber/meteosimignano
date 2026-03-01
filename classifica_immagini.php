@@ -45,41 +45,138 @@ define('AUTH_TOKEN',    'abc');
 define('COOKIE_SECRET', 'abc');
 define('REMEMBER_DAYS', 90);
 
-function setRememberCookie(): void {
-    $expires = time() + (86400 * REMEMBER_DAYS);
-    $payload = 'classifica_auth|' . $expires;
-    $mac = hash_hmac('sha256', $payload, COOKIE_SECRET);
-    setcookie('classifica_remember', $payload . '|' . $mac, [
-        'expires' => $expires, 'path' => '/', 'httponly' => true, 'samesite' => 'Strict',
-    ]);
+// TIMEOUT SESSIONE: 45 minuti di inattività → disconnessione automatica
+define('SESSION_TIMEOUT', 45 * 60); // 2700 secondi
+
+if (!empty($_SESSION['classifica_auth'])) {
+    if (isset($_SESSION['last_activity']) && 
+        (time() - $_SESSION['last_activity']) > SESSION_TIMEOUT) {
+        // Troppo tempo passato → distruggi tutto e nega accesso
+        session_destroy();
+        header('Location: classifica_immagini.php?token=');
+        exit;
+    }
+    // Aggiorna il timestamp ad ogni richiesta
+    $_SESSION['last_activity'] = time();
 }
 
-function checkRememberCookie(): bool {
-    if (empty($_COOKIE['classifica_remember'])) return false;
-    $parts = explode('|', $_COOKIE['classifica_remember']);
-    if (count($parts) !== 3) return false;
-    [$label, $expires, $mac] = $parts;
-    if ((int)$expires < time()) return false;
-    return hash_equals(hash_hmac('sha256', $label . '|' . $expires, COOKIE_SECRET), $mac);
+
+
+// Gestione token da URL (?token=abc) o da form POST
+$token_inviato = null;
+if (isset($_POST['token'])) {
+    $token_inviato = $_POST['token'];        // viene dal form
+} elseif (isset($_GET['token']) && $_GET['token'] !== '') {
+    $token_inviato = $_GET['token'];         // viene dall'URL diretto
 }
 
-if (isset($_GET['token'])) {
-    if (hash_equals(AUTH_TOKEN, $_GET['token'])) {
+// QUELLO CHE DEVE ESSERE
+if ($token_inviato !== null) {
+    if (hash_equals(AUTH_TOKEN, $token_inviato)) {
         $_SESSION['classifica_auth'] = true;
-        setRememberCookie();
-        $params = $_GET; unset($params['token']);
         $clean = strtok($_SERVER['REQUEST_URI'], '?');
-        if (!empty($params)) $clean .= '?' . http_build_query($params);
         header('Location: ' . $clean);
         exit;
     } else {
-        http_response_code(403); die('Token non valido.');
+        $token_error = 'Token non valido. Riprova.';
+        $_POST['token'] = '';   // ← svuota il campo
     }
 }
 
-if (empty($_SESSION['classifica_auth']) && checkRememberCookie()) {
-    $_SESSION['classifica_auth'] = true;
+if (empty($_SESSION['classifica_auth']) && (isset($_GET['token']) || !empty($token_error))) 
+    {
+    ?>
+    <!DOCTYPE html>
+    <html lang="it">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Accesso — MeteoSimignano</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+                margin: 0;
+                background: #1a1a2e;
+            }
+            .login-box {
+                background: #16213e;
+                border: 1px solid #0f3460;
+                border-radius: 12px;
+                padding: 32px 28px;
+                width: 100%;
+                max-width: 320px;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+                text-align: center;
+            }
+            .login-box h2 {
+                color: #eee;
+                margin: 0 0 24px;
+                font-size: 18px;
+            }
+            .login-box input[type="text"] {
+                width: 100%;
+                padding: 10px 14px;
+                border-radius: 6px;
+                border: 1px solid #555;
+                background: #0f3460;
+                color: #eee;
+                font-size: 15px;
+                box-sizing: border-box;
+                text-align: center;
+                letter-spacing: 2px;
+            }
+            .login-box input[type="text"]:focus {
+                outline: none;
+                border-color: #00d2ff;
+            }
+            .login-box button {
+                width: 100%;
+                margin-top: 14px;
+                padding: 10px;
+                border: none;
+                border-radius: 6px;
+                background: #00d2ff;
+                color: #000;
+                font-weight: bold;
+                font-size: 15px;
+                cursor: pointer;
+            }
+            .login-box button:hover { background: #00b4d8; }
+            .error-msg {
+                color: #f44336;
+                font-size: 13px;
+                margin-top: 12px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="login-box">
+            <h2>🔒 Inserisci il token</h2>
+            <form method="POST" action="classifica_immagini.php">
+                <input
+                    type="text"
+                    name="token"
+                    value="<?php echo htmlspecialchars($_POST['token'] ?? ''); ?>"
+                    placeholder="token"
+                    autofocus
+                    autocomplete="off"
+                >
+                <?php if (!empty($token_error)): ?>
+                    <div class="error-msg"><?php echo htmlspecialchars($token_error); ?></div>
+                <?php endif; ?>
+                <button type="submit">Entra</button>
+            </form>
+        </div>
+    </body>
+    </html>
+    <?php
+    exit;
 }
+
 
 if (empty($_SESSION['classifica_auth'])) {
     http_response_code(403); die('Accesso negato. Usa il link con token.');
@@ -87,8 +184,21 @@ if (empty($_SESSION['classifica_auth'])) {
 
 if (isset($_GET['logout'])) {
     session_destroy();
-    setcookie('classifica_remember', '', ['expires' => time() - 3600, 'path' => '/', 'httponly' => true, 'samesite' => 'Strict']);
-    die('Sessione terminata. Per rientrare usa il link con token.');
+    ?>
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="UTF-8"></head>
+    <body>
+    <script>
+        window.close(); // funziona perché la scheda è stata aperta da window.open()
+    </script>
+    <p style="font-family:Arial; text-align:center; margin-top:40px; color:#666;">
+        Sessione terminata. Puoi chiudere questa scheda.
+    </p>
+    </body>
+    </html>
+    <?php
+    exit;
 }
 
 /* ───────────────────────────────────────────────────────────────────────────
@@ -125,19 +235,33 @@ define('NOTE_TEXT_MAX_BYTES', 65000);           // ~64KB, entro il limite di TEX
 
 $sun_phase_options = [
     ''  => '— Nessuno —',
-    '1' => '🌅 Alba',
-    '2' => '🌇 Tramonto',
+    '1' => 'Alba',
+    '2' => 'Tramonto',
 ];
 
 $altro_options = [
-    ''  => '— Nessuno —',
-    '0' => 'Nuvole',
-    '6' => 'Pioggia',
-    '4' => 'Neve',
-    '1' => 'Luna',
-    '2' => 'Arcobaleno',
-    '3' => 'Aur. boreale',
-    '5' => 'Altro',
+    // ── Nuvole ──────────────────────────────────────────────────────────────
+    // Il valore 0 è il "padre": record classificati prima dei sottotipi.
+    // I valori 10-16 sono i sottotipi specifici.
+    ''   => '— Nessuno —',
+    '0'  => 'Nuvole (generiche)',
+    '10' => '↳ Cirri',
+    '11' => '↳ Cirrocumuli / Cirrostrati',
+    '12' => '↳ Altocumuli / Altostrati',
+    '13' => '↳ Cumuli',
+    '14' => '↳ Cumulonembi',
+    '15' => '↳ Strati / Stratocumuli',
+    '16' => '↳ Nembostrati',
+    '17' => '↳ Nebbia',
+    // ── Pioggia ─────────────────────────────────────────────────────────────
+    '6'  => 'Pioggia',
+    // ── Neve ────────────────────────────────────────────────────────────────
+    '4'  => 'Neve',
+    // ── Altre categorie senza sottotipi ─────────────────────────────────────
+    '1'  => 'Luna',
+    '2'  => 'Arcobaleno',
+    '3'  => 'Aur. boreale',
+    '5'  => 'Altro',
 ];
 
 /* ───────────────────────────────────────────────────────────────────────────
@@ -214,6 +338,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sun_phase_val = $input['sun_phase'] ?? '';
     $altro_val     = $input['altro'] ?? '';
     $note_val      = $input['note'] ?? '';
+    $sequenza_val  = !empty($input['sequenza']) ? 1 : 0;
     
     if ($file === '') {
         echo json_encode(['success' => false, 'error' => 'Nome file mancante']); exit;
@@ -266,8 +391,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $al = ($altro_val !== '')     ? $altro_val          : null;
         
         $sql = "INSERT INTO {$table_belle} 
-                    (FILE, DATA_ORA, Temp, HR, P_hPa, vento_kmh, Dir_text, sun_phase, altro, note)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    (FILE, DATA_ORA, Temp, HR, P_hPa, vento_kmh, Dir_text, sun_phase, altro, note, sequenza)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON DUPLICATE KEY UPDATE
                     DATA_ORA   = VALUES(DATA_ORA),
                     Temp       = VALUES(Temp),
@@ -277,7 +402,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     Dir_text   = VALUES(Dir_text),
                     sun_phase  = VALUES(sun_phase),
                     altro      = VALUES(altro),
-                    note       = VALUES(note)";
+                    note       = VALUES(note),
+                    sequenza   = VALUES(sequenza)";
         
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
@@ -291,6 +417,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $sp,
             $al,
             $note_db,
+            $sequenza_val,
         ]);
         
         echo json_encode(['success' => true]);
@@ -324,7 +451,7 @@ try {
     $existingBelle = [];
     if (!empty($fileNames)) {
         $ph = implode(',', array_fill(0, count($fileNames), '?'));
-        $stmtB = $pdo->prepare("SELECT FILE, sun_phase, altro, note FROM {$table_belle} WHERE FILE IN ({$ph})");
+        $stmtB = $pdo->prepare("SELECT FILE, sun_phase, altro, note, sequenza FROM {$table_belle} WHERE FILE IN ({$ph})");
         $stmtB->execute($fileNames);
         foreach ($stmtB->fetchAll(PDO::FETCH_ASSOC) as $b) {
             $existingBelle[$b['FILE']] = $b;
@@ -350,6 +477,18 @@ try {
         .pager a:hover { background: #0f3460; }
         .pager .disabled { color: #555; }
         .pager .current { color: #aaa; font-size: 14px; }
+        /* SELECT di navigazione pagine nel pager */
+        .pager-select {
+            padding: 5px 10px;
+            border-radius: 6px;
+            border: 1px solid #00d2ff44;
+            background: #16213e;
+            color: #00d2ff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .pager-select:focus { outline: 2px solid #00d2ff; }
         .grid { display: grid; grid-template-columns: 1fr; gap: 16px; max-width: 900px; margin: 0 auto; }
         @media (min-width: 700px) { .grid { grid-template-columns: 1fr 1fr; } }
         .card { background: #16213e; border-radius: 10px; overflow: hidden; border: 2px solid #0f3460; transition: border-color 0.2s; }
@@ -362,6 +501,8 @@ try {
         .controls .save-btn { padding: 5px 14px; border: none; border-radius: 5px; background: #00d2ff; color: #000; font-weight: bold; font-size: 13px; cursor: pointer; margin-left: auto; }
         .controls .save-btn:hover { background: #00b4d8; }
         .controls .save-btn.saved { background: #4CAF50; color: #fff; }
+        .seq-label { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #ccc; cursor: pointer; white-space: nowrap; }
+        .seq-label input[type="checkbox"] { width: 14px; height: 14px; accent-color: #00d2ff; cursor: pointer; }
         .status-msg { font-size: 11px; margin-left: 8px; }
         .status-msg.ok  { color: #4CAF50; }
         .status-msg.err { color: #f44336; }
@@ -387,9 +528,9 @@ try {
 </head>
 <body>
 
-<h1>📷 Classifica Immagini</h1>
+<h1>Classifica Immagini-Meteosimignano</h1>
 <div style="text-align:center; margin-bottom:8px;">
-    <a href="?logout=1" style="color:#f44336; font-size:12px; text-decoration:none;">🔒 Logout</a>
+    <a href="?logout=1" style="color:#f44336; font-size:14px; text-decoration:none;"> Logout e Chiudi</a>
 </div>
 
 <div class="info-bar">
@@ -401,9 +542,50 @@ try {
 </div>
 
 <div class="pager">
-    <?php if ($page > 1): ?><a href="?page=<?php echo $page - 1; ?>">◀ Prec</a><?php else: ?><span class="disabled">◀ Prec</span><?php endif; ?>
-    <span class="current">Pag. <?php echo $page; ?>/<?php echo $totalPages; ?></span>
-    <?php if ($page < $totalPages): ?><a href="?page=<?php echo $page + 1; ?>">Succ ▶</a><?php else: ?><span class="disabled">Succ ▶</span><?php endif; ?>
+    <?php if ($page > 1): ?>
+        <a href="?page=<?php echo $page - 1; ?>">◀ Prec</a>
+    <?php else: ?>
+        <span class="disabled">◀ Prec</span>
+    <?php endif; ?>
+
+    <?php
+    /*
+     * PERCHÉ un <form method="GET"> e non un semplice link?
+     *
+     * Un link (<a href="?page=X">) porta a una sola destinazione fissa.
+     * Se l'utente vuole scegliere tra 12 pagine, servirebbero 12 link.
+     * Il <form method="GET"> + <select> risolve elegantemente il problema:
+     * quando viene inviato (submit), il browser costruisce la URL
+     * aggiungendo il valore scelto come parametro GET (?page=N)
+     * e ci naviga — esattamente come se l'utente avesse cliccato quel link.
+     *
+     * Il JS si limita ad ascoltare l'evento "change" sul select
+     * e a fare submit() automatico, così non serve un bottone "Vai".
+     */
+    ?>
+    <form method="GET" action="" id="pager-form-top" style="display:inline;">
+        <select
+            class="pager-select"
+            name="page"
+            onchange="this.form.submit()"
+            title="Vai alla pagina..."
+        >
+            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                <option
+                    value="<?php echo $i; ?>"
+                    <?php echo ($i === $page) ? 'selected' : ''; ?>
+                >
+                    Pag. <?php echo $i; ?> / <?php echo $totalPages; ?>
+                </option>
+            <?php endfor; ?>
+        </select>
+    </form>
+
+    <?php if ($page < $totalPages): ?>
+        <a href="?page=<?php echo $page + 1; ?>">Succ ▶</a>
+    <?php else: ?>
+        <span class="disabled">Succ ▶</span>
+    <?php endif; ?>
 </div>
 
 <div class="grid">
@@ -416,10 +598,11 @@ try {
     }
     $temp = isset($row['Temp']) ? number_format((float)$row['Temp'], 1) . '°C' : 'N/D';
     $existing = $existingBelle[$file] ?? null;
-    $curSP = $existing['sun_phase'] ?? '';
-    $curAL = $existing['altro'] ?? '';
-    $curNote = $existing['note'] ?? '';
-    $isCl  = ($existing !== null);
+    $curSP   = $existing['sun_phase'] ?? '';
+    $curAL   = $existing['altro']     ?? '';
+    $curNote = $existing['note']      ?? '';
+    $curSeq  = !empty($existing['sequenza']) ? 1 : 0;
+    $isCl    = ($existing !== null);
 ?>
 <div class="card <?php echo $isCl ? 'classified' : ''; ?>" data-file="<?php echo htmlspecialchars($file); ?>">
     <img class="card-photo" src="<?php echo htmlspecialchars($src); ?>" alt="<?php echo htmlspecialchars($file); ?>" loading="lazy">
@@ -444,6 +627,13 @@ try {
             <?php endforeach; ?>
         </select>
 
+        <label class="seq-label">
+            <input type="checkbox" class="chk-sequenza"
+                   data-original-seq="<?php echo $curSeq; ?>"
+                   <?php echo $curSeq ? 'checked' : ''; ?>>
+            Seq.
+        </label>
+
         <button class="save-btn" onclick="salva(this)" type="button"><?php echo $isCl ? '✓' : 'Salva'; ?></button>
         <span class="status-msg"></span>
 
@@ -461,9 +651,35 @@ try {
 </div>
 
 <div class="pager" style="margin-top:20px; margin-bottom:30px;">
-    <?php if ($page > 1): ?><a href="?page=<?php echo $page - 1; ?>">◀ Prec</a><?php else: ?><span class="disabled">◀ Prec</span><?php endif; ?>
-    <span class="current">Pag. <?php echo $page; ?>/<?php echo $totalPages; ?></span>
-    <?php if ($page < $totalPages): ?><a href="?page=<?php echo $page + 1; ?>">Succ ▶</a><?php else: ?><span class="disabled">Succ ▶</span><?php endif; ?>
+    <?php if ($page > 1): ?>
+        <a href="?page=<?php echo $page - 1; ?>">◀ Prec</a>
+    <?php else: ?>
+        <span class="disabled">◀ Prec</span>
+    <?php endif; ?>
+
+    <form method="GET" action="" id="pager-form-bottom" style="display:inline;">
+        <select
+            class="pager-select"
+            name="page"
+            onchange="this.form.submit()"
+            title="Vai alla pagina..."
+        >
+            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                <option
+                    value="<?php echo $i; ?>"
+                    <?php echo ($i === $page) ? 'selected' : ''; ?>
+                >
+                    Pag. <?php echo $i; ?> / <?php echo $totalPages; ?>
+                </option>
+            <?php endfor; ?>
+        </select>
+    </form>
+
+    <?php if ($page < $totalPages): ?>
+        <a href="?page=<?php echo $page + 1; ?>">Succ ▶</a>
+    <?php else: ?>
+        <span class="disabled">Succ ▶</span>
+    <?php endif; ?>
 </div>
 
 <!-- ────────────────────────────────────────────────────────────────────────
@@ -583,30 +799,35 @@ function salva(btn) {
     var file     = card.dataset.file;
     var sunPhase = card.querySelector('.sel-sun').value;
     var altro    = card.querySelector('.sel-altro').value;
+    var seqEl    = card.querySelector('.chk-sequenza');
+    var sequenza = seqEl ? (seqEl.checked ? 1 : 0) : 0;
     var noteEl   = card.querySelector('.note-editor');
     var noteHtml = noteEl ? noteEl.innerHTML : '';
     var statusEl = card.querySelector('.status-msg');
 
     // Popup conferma se già in belle
     if (card.classList.contains('classified')) {
-        var selSun   = card.querySelector('.sel-sun');
-        var selAltro = card.querySelector('.sel-altro');
-        var oldSun   = selSun.dataset.originalLabel;
-        var oldAltro = selAltro.dataset.originalLabel;
-        var newSun   = selSun.options[selSun.selectedIndex].text;
-        var newAltro = selAltro.options[selAltro.selectedIndex].text;
-        var oldNote  = noteEl ? (noteEl.dataset.originalNote || '') : '';
+        var selSun    = card.querySelector('.sel-sun');
+        var selAltro  = card.querySelector('.sel-altro');
+        var oldSun    = selSun.dataset.originalLabel;
+        var oldAltro  = selAltro.dataset.originalLabel;
+        var oldSeq    = seqEl ? (seqEl.dataset.originalSeq === '1') : false;
+        var newSun    = selSun.options[selSun.selectedIndex].text;
+        var newAltro  = selAltro.options[selAltro.selectedIndex].text;
+        var oldNote   = noteEl ? (noteEl.dataset.originalNote || '') : '';
         var noteChanged = (noteHtml !== oldNote);
 
         var msg = '⚠️ Questa foto è già salvata in belle.\n\n'
                 + 'Classificazione attuale:\n'
-                + '  • Fase: ' + oldSun + '\n'
-                + '  • Altro: ' + oldAltro + '\n'
-                + '  • Note: ' + (oldNote ? 'presenti' : 'vuote') + '\n\n'
+                + '  • Fase: '      + oldSun   + '\n'
+                + '  • Altro: '     + oldAltro + '\n'
+                + '  • Sequenza: '  + (oldSeq ? 'sì' : 'no') + '\n'
+                + '  • Note: '      + (oldNote ? 'presenti' : 'vuote') + '\n\n'
                 + 'Nuova classificazione:\n'
-                + '  • Fase: ' + newSun + '\n'
-                + '  • Altro: ' + newAltro + '\n'
-                + '  • Note: ' + (noteHtml.trim() ? (noteChanged ? 'modificate' : 'invariate') : 'vuote') + '\n\n'
+                + '  • Fase: '      + newSun   + '\n'
+                + '  • Altro: '     + newAltro + '\n'
+                + '  • Sequenza: '  + (sequenza ? 'sì' : 'no') + '\n'
+                + '  • Note: '      + (noteHtml.trim() ? (noteChanged ? 'modificate' : 'invariate') : 'vuote') + '\n\n'
                 + 'Vuoi sovrascrivere?';
 
         if (!confirm(msg)) return;
@@ -619,7 +840,7 @@ function salva(btn) {
     fetch(window.location.pathname, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ file: file, sun_phase: sunPhase, altro: altro, note: noteHtml })
+        body: JSON.stringify({ file: file, sun_phase: sunPhase, altro: altro, sequenza: sequenza, note: noteHtml })
     })
     .then(function(r) { return r.json(); })
     .then(function(data) {
@@ -637,6 +858,8 @@ function salva(btn) {
             s1.dataset.originalLabel = s1.options[s1.selectedIndex].text;
             s2.dataset.originalValue = s2.value;
             s2.dataset.originalLabel = s2.options[s2.selectedIndex].text;
+            // Aggiorna anche lo stato originale della sequenza
+            if (seqEl) seqEl.dataset.originalSeq = sequenza ? '1' : '0';
             if (noteEl) noteEl.dataset.originalNote = noteHtml;
 
             setTimeout(function() { statusEl.textContent = ''; }, 2000);

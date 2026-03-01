@@ -505,6 +505,7 @@ require_once __DIR__ . '/camera_config.php';
                 <a href='grafici_termo_plotly.php?range=24h&visible=' class="submenu-item">Grafici</a>
                 <a href="pluvio.html" class="submenu-item">Pioggia: 24h</a>
                 <a href="pluvio_tab.php" class="submenu-item">Pioggia: tabella</a>
+                <a href="#" class="submenu-item" onclick="window.open('classifica_immagini.php?token=', '_blank'); return false;">Admin</a>
             </div>
         </div>
 </header>

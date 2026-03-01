@@ -14,6 +14,7 @@ public_html
 |--- aggiorna_dati_meteo.php (aggiorna iframe per il js)
 |--- aggiorna_dati_meteo.js (ricarica periodicamnte index.php)
 |--- camera_config.php (configurazione esterna per adattare il sito a dverse telcamere)
+|--- classifica_immagini.php (pagina admin per classificare le foto in belle)
 |--- galleria-lightbox.js (gestisce il lightbox e la galleria in index.php)
 |--- galleria-lightbox.css
 |--- aggiorna_galleria.js (aggiorna la galleria in index.php)
@@ -48,7 +49,8 @@ public_html
 |                |---snap (cartella immagine con le ultime 36 h, gestita da elimina_mag_24h)
 |
 |--------- sql
-|           |--- aggiorna_radianza_DB_simignano.php (effettua l'integrale dei valori di radianza raccolti nel db con
+|           |--- aggiorna_radianza_DB_simignano.php (effettua l'integrale dei valori di radianza raccolti
+|                nel db con
 |               l'interpolazione dei trapezi, verificato ottima nel caso di gap temporali)
 |           |--- val_sett_DB.php
 |         

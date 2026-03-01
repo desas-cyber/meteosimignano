@@ -1,6 +1,3 @@
-
-
-
 <?php
 /**
  * ============================================================================
@@ -450,6 +447,118 @@ function getSolarRadiationTheoretical(): array {
 }
 
 // ============================================================================
+// INTERVALLI NOTTE
+// ============================================================================
+
+/**
+ * Calcola gli intervalli "notte" per un range di date.
+ *
+ * DEFINIZIONE DI NOTTE usata qui:
+ *   Inizio notte = tramonto del giorno X  + $buffer_min
+ *   Fine notte   = alba    del giorno X+1 - $buffer_min
+ *
+ * PERCHÉ il buffer di 40 minuti?
+ *   Subito dopo il tramonto e subito prima dell'alba c'è ancora luce
+ *   crepuscolare: il sole è sotto l'orizzonte ma il cielo non è buio.
+ *   Il buffer esclude questa fascia dalla definizione di "notte".
+ *
+ * COME FUNZIONA IL LOOP:
+ *   Iteriamo giorno per giorno nel range [from, to].
+ *   Per ogni giorno D calcoliamo tramonto(D) e alba(D+1).
+ *   L'intervallo notte è [tramonto(D)+buffer, alba(D+1)-buffer].
+ *   Se tramonto+buffer >= alba_domani-buffer (notti polari o date errate)
+ *   l'intervallo viene scartato.
+ *
+ * PRINCIPIO — Single Responsibility:
+ *   Questa funzione sa solo calcolare intervalli astronomici.
+ *   Non sa nulla di SQL, PDO, o della galleria foto.
+ *   Chi la chiama decide cosa farne.
+ *
+ * @param DateTime $from        Primo giorno del range (incluso)
+ * @param DateTime $to          Ultimo giorno del range (incluso)
+ * @param int      $buffer_min  Minuti di buffer dopo tramonto / prima alba (default 40)
+ * @return array   Array di coppie ['start' => string, 'end' => string]
+ *                 con date nel formato 'Y-m-d H:i:s' (compatibile con MySQL DATETIME)
+ *
+ * Esempio di output per un range di 2 giorni:
+ *   [
+ *     ['start' => '2025-01-15 18:12:00', 'end' => '2025-01-16 07:43:00'],
+ *     ['start' => '2025-01-16 18:13:00', 'end' => '2025-01-17 07:42:00'],
+ *   ]
+ */
+function getNightIntervals(DateTime $from, DateTime $to, int $buffer_min = 40): array
+{
+    $tz = new DateTimeZone(ASTRO_TZ);
+    $buffer_sec = $buffer_min * 60;
+
+    // Normalizziamo: partiamo sempre dall'inizio del giorno "from"
+    // e arriviamo alla fine del giorno "to".
+    // Usiamo clone per non modificare gli oggetti originali passati dal chiamante.
+    // PRINCIPIO — Immutability: non modificare mai i parametri di input.
+    $current = clone $from;
+    $current->setTime(0, 0, 0);
+
+    $end = clone $to;
+    $end->setTime(23, 59, 59);
+
+    $intervals = [];
+
+    // Sicurezza anti-loop infinito: max 400 giorni (~13 mesi)
+    $max_iterations = 400;
+    $i = 0;
+
+    while ($current <= $end && $i < $max_iterations) {
+        $i++;
+
+        // --- Tramonto di oggi ---
+        // date_sun_info() è una funzione PHP nativa che calcola i tempi solari
+        // a partire da un timestamp Unix, latitudine e longitudine.
+        // Restituisce un array con chiavi 'sunrise', 'sunset', ecc. (timestamp UTC).
+        $ts_today = $current->getTimestamp();
+        $sun_today = date_sun_info($ts_today, ASTRO_LAT, ASTRO_LON);
+
+        // Applichiamo la stessa correzione di altitudine già usata in calculateAstroData()
+        // Tramonto: -5 minuti (orizzonte rialzato a 418m slm)
+        $sunset_correction = -5 * 60;
+        $sunset_ts = $sun_today['sunset'] + $sunset_correction + $buffer_sec;
+
+        // --- Alba di domani ---
+        $tomorrow = clone $current;
+        $tomorrow->modify('+1 day');
+        $ts_tomorrow = $tomorrow->getTimestamp();
+        $sun_tomorrow = date_sun_info($ts_tomorrow, ASTRO_LAT, ASTRO_LON);
+
+        // Alba: +7 minuti (orizzonte rialzato a 418m slm)
+        $sunrise_correction = 7 * 60;
+        $sunrise_ts = $sun_tomorrow['sunrise'] + $sunrise_correction - $buffer_sec;
+
+        // Costruiamo i DateTime dall'UTC e convertiamo in Europe/Rome
+        // PERCHÉ? date_sun_info restituisce timestamp UTC.
+        // MySQL memorizza DATA_ORA in Europe/Rome (o comunque ora locale).
+        // Dobbiamo confrontare stessa zona oraria.
+        $dt_start = new DateTime('@' . $sunset_ts);
+        $dt_start->setTimezone($tz);
+
+        $dt_end = new DateTime('@' . $sunrise_ts);
+        $dt_end->setTimezone($tz);
+
+        // Sanity check: l'intervallo deve essere positivo
+        // (evita problemi con date anomale o estati ad alta latitudine)
+        if ($dt_start < $dt_end) {
+            $intervals[] = [
+                'start' => $dt_start->format('Y-m-d H:i:s'),
+                'end'   => $dt_end->format('Y-m-d H:i:s'),
+            ];
+        }
+
+        // Avanza al giorno successivo
+        $current->modify('+1 day');
+    }
+
+    return $intervals;
+}
+
+// ============================================================================
 // CLI MODE
 // ============================================================================
 if (php_sapi_name() === 'cli' && basename(__FILE__) === basename($_SERVER['PHP_SELF'] ?? '')) {
@@ -509,9 +618,3 @@ if (php_sapi_name() === 'cli' && basename(__FILE__) === basename($_SERVER['PHP_S
         exit(1);
     }
 }
-
-
-
-
-
-
