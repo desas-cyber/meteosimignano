@@ -855,6 +855,10 @@ function enforceY2Exclusive(traces) {
       return { ...t, visible: STATE.y2_mode === 'dirvento' };
     }
 
+    if (t.metricType === 'ua') {
+      return { ...t, visible: STATE.y2_mode === 'ua' };
+    }
+
     return t;
   });
 }
@@ -872,6 +876,7 @@ function initStateFromUrl() {
     // deduce y2_mode da visible
     if (names.includes('Dir. Vento')) STATE.y2_mode = 'dirvento';
     else if (names.includes('Pressione')) STATE.y2_mode = 'pressione';
+    else if (names.includes('Umid. Assoluta') || names.includes('Umidita Assoluta') || names.includes('Umidità Assoluta')) STATE.y2_mode = 'ua';
     else if (names.includes('Umidita') || names.includes('Umidità')) STATE.y2_mode = 'umidita';
     else STATE.y2_mode = null;
 
@@ -956,6 +961,29 @@ function y2LayoutFor(mode) {
     tickformat: null
   };
 }
+
+  if (mode === 'ua') {
+    const rawMin = Number(CONFIG.metadata?.y_ua_range?.min);
+    const rawMax = Number(CONFIG.metadata?.y_ua_range?.max);
+    const safeMin = Number.isFinite(rawMin) ? rawMin : 0;
+    const safeMax = Number.isFinite(rawMax) ? rawMax : 20;
+
+    let min = Math.max(0, Math.min(safeMin, safeMax));
+    let max = Math.max(safeMin, safeMax);
+    if (max - min < 2) { min = Math.max(0, min - 1); max += 1; }
+
+    return {
+      titleText: (isMobile ? 'UA(g/m\u00b3)' : 'Umid. Assoluta (g/m\u00b3)'),
+      color: '#ff00ff',
+      range: [min, max],
+      fixedrange: false,
+      autorange: false,
+      tickmode: 'linear',
+      tick0: 0,
+      dtick: 1,
+      tickformat: '.1f'
+    };
+  }
 
 
   return {
@@ -1084,6 +1112,7 @@ function showLegend() {
     { label: isMobile ? 'Umid'  : 'Umidità',       name: 'Umidita',       color: '#0000FF', dashed: false },
     { label: isMobile ? 'Press' : 'Pressione',     name: 'Pressione',     color: '#27ae60', dashed: false },
     { label: isMobile ? 'Vento' : 'Dir. Vento',    name: 'Dir. Vento',    color: '#ff8c00', dashed: false, markers: true },
+    { label: isMobile ? 'UA'   : 'Umid. Assoluta', name: 'Umid. Assoluta', color: '#ff00ff', dashed: false },
     { label: isMobile ? 'DP'    : 'Dew Point',     name: 'Dew Point',     color: 'gradient', dashed: false },
     { label: isMobile ? 'Media' : 'Media Periodo', name: 'Media Periodo', color: '#ff6b35', dashed: 'dot' },
     { label: isMobile ? '*Max7gg'   : '*Media Max 7gg', name: 'Media Max 7gg', color: '#e74c3c', dashed: true },
@@ -1120,8 +1149,11 @@ function showLegend() {
   }).join('');
 
   document.querySelectorAll('.legend-item').forEach(item => {
-    item.addEventListener('click', async () => {
-      const traceName = item.dataset.trace;
+    // cloneNode rimuove tutti i listener precedenti accumulati dai reload
+    const fresh = item.cloneNode(true);
+    item.replaceWith(fresh);
+    fresh.addEventListener('click', async () => {
+      const traceName = fresh.dataset.trace;
       await runWithSpinner(async () => {
         await toggleTrace(traceName);
       });
@@ -1184,12 +1216,13 @@ function replaceDewpointWithSegments(traces, dewpointSegments) {
 // ====================================================================
 
 function findY2IndicesByMetric(data) {
-  const idxs = { umidita: null, pressione: null, dirvento: null };
+  const idxs = { umidita: null, pressione: null, dirvento: null, ua: null };
   for (let i = 0; i < data.length; i++) {
     const mt = data[i].metricType;
     if (mt === 'umidita') idxs.umidita = i;
     else if (mt === 'pressione') idxs.pressione = i;
     else if (mt === 'dirvento') idxs.dirvento = i;
+    else if (mt === 'ua') idxs.ua = i;
   }
   return idxs;
 }
@@ -1202,7 +1235,7 @@ async function toggleY2Metric(mode) {
   if (!chartDiv || !chartDiv.data) return;
 
   const idxs = findY2IndicesByMetric(chartDiv.data);
-  const all = [idxs.umidita, idxs.pressione, idxs.dirvento].filter(v => v !== null);
+  const all = [idxs.umidita, idxs.pressione, idxs.dirvento, idxs.ua].filter(v => v !== null);
 
   if (all.length) await Plotly.restyle(chartDiv, { visible: all.map(() => false) }, all);
 
@@ -1265,6 +1298,11 @@ async function toggleTrace(traceName) {
   }
   if (traceName === 'Dir. Vento') {
     const next = (STATE.y2_mode === 'dirvento') ? null : 'dirvento';
+    await toggleY2Metric(next);
+    return;
+  }
+  if (traceName === 'Umid. Assoluta') {
+    const next = (STATE.y2_mode === 'ua') ? null : 'ua';
     await toggleY2Metric(next);
     return;
   }

@@ -1,5 +1,3 @@
-
-
 <?php
 /**
  * ============================================================================
@@ -408,12 +406,12 @@ FROM (
             'separator' => true
         ],
         
-        // ---- SEZIONE UMIDITà€ ----
+        // ---- SEZIONE UMIDITA' ----
         [
             'type' => 'data',
             'label' => 'Umidità  relativa',
             'value' => formatValue($raw['hr_act'], '%', 0),
-            'note' => '',
+            'note' => '<span class="riquadro-dati" onclick="event.stopPropagation(); window.top.location.href=\'grafici_termo_plotly.php?range=24h&visible=\'+ encodeURIComponent(\'Umidita Assoluta,Temperatura\');">Umidità assoluta (g/m³)</span>',
             'link'  => 'grafici_termo_plotly.php?range=24h&visible=' . rawurlencode('Umidità,Temperatura'),
   'separator' => false,
   'interactive' => [
@@ -1652,9 +1650,3 @@ console.log('📷 DB table_name_bis (immagini):', '<?php echo table_name("DB_imm
         </svg>
     </button>
 </div>
-
-
-
-
-
-
