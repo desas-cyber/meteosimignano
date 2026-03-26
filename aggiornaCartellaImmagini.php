@@ -17,20 +17,20 @@
  *   - Priorita 2: altrimenti, tra tutte le foto entro ±3 minuti -> quella piu vicina (minima distanza temporale)
  */
 
-declare(strict_types=1);
-
-header('Content-Type: application/json; charset=utf-8');
+// Se incluso da altro file (es. belle.php), non emettere header/JSON direttamente
+if (!defined('ALLOW_INTERNAL_CALL')) {
+    header('Content-Type: application/json; charset=utf-8');
+}
 error_reporting(E_ALL);
-ini_set('display_errors', 0); // Non mostrare errori in JSON
+ini_set('display_errors', 0);
 
 require_once __DIR__ . '/../envelop.php';
 require_once __DIR__ . '/env_tables_helper.php';
 require_once __DIR__ . '/datetime_helper.php';  
 
 if (!isset($pdo) || !($pdo instanceof PDO)) {
-    http_response_code(500);
-    echo json_encode(['error' => 'Connessione PDO non disponibile']);
-    exit;
+    if (!defined('ALLOW_INTERNAL_CALL')) { http_response_code(500); echo json_encode(['error' => 'Connessione PDO non disponibile']); exit; }
+    // Se incluso: $full e $gallery resteranno non definiti — belle.php gestira' il caso
 }
 
 $table_name = table_name('DB_immagini_36h');
@@ -42,16 +42,16 @@ $webPath   = $CAMERA_CONFIG['src_prefix'];
 
 // Verifica cartella
 if (!is_dir($directory) || !is_readable($directory)) {
-    echo json_encode(['full' => [], 'gallery' => [], 'stats' => ['error' => 'Directory non trovata']]);
-    exit;
+    if (!defined('ALLOW_INTERNAL_CALL')) { echo json_encode(['full' => [], 'gallery' => [], 'stats' => ['error' => 'Directory non trovata']]); exit; }
+    $full = []; $gallery = []; $records = [];
 }
 
 // Raccolta file
 $extPattern = implode(',', array_map(function($e){ return '*.' . $e; }, $CAMERA_CONFIG['extensions']));
 $images = glob($directory . '{' . $extPattern . '}', GLOB_BRACE);
 if (!$images || count($images) === 0) {
-    echo json_encode(['full' => [], 'gallery' => [], 'stats' => ['error' => 'Nessuna immagine trovata']]);
-    exit;
+    if (!defined('ALLOW_INTERNAL_CALL')) { echo json_encode(['full' => [], 'gallery' => [], 'stats' => ['error' => 'Nessuna immagine trovata']]); exit; }
+    $full = []; $gallery = []; $records = [];
 }
 
 // Ordine decrescente per nome file (piu recente prima)
@@ -227,15 +227,18 @@ $full = array_map(function($r) {
     ];
 }, $records);
 
-// Output JSON finale
-echo json_encode([
-    'full'    => $full,
-    'gallery' => $gallery,
-    'stats'   => [
-        'total_full'     => count($full),
-        'gallery_count'  => count($gallery),
-        'generated_at'   => date('c'),
-        'note'           => 'Gallery: foto ogni ~20 min con +/-3 min tolleranza'
-    ]
-], JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+// Output JSON finale — solo se chiamato direttamente, non incluso
+if (!defined('ALLOW_INTERNAL_CALL')) {
+    echo json_encode([
+        'full'    => $full,
+        'gallery' => $gallery,
+        'stats'   => [
+            'total_full'     => count($full),
+            'gallery_count'  => count($gallery),
+            'generated_at'   => date('c'),
+            'note'           => 'Gallery: foto ogni ~20 min con +/-3 min tolleranza'
+        ]
+    ], JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+    exit;
+}
 ?>

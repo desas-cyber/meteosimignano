@@ -140,7 +140,64 @@ $ultimo = $dati[0] ?? null;
     border-radius: 0 0 8px 8px;
 }
 
+/*=================================
+* VOCE CON SOTTO MENU ANNIDIATO *
+=================================*/
+.submenu-item.has-sub {
+    position: relative;
+    cursor: pointer;
+    padding: 12px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    user-select: none;
+}
+.submenu-item.has-sub:hover,
+.submenu-item.has-sub.sub-active {
+    background-color: #f8f8f8;
+}
+.sub-submenu {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    margin-left: 4px;
+    background: white;
+    border: 2px solid #333;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    min-width: max-content;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-6px);
+    transition: all 0.2s ease;
+    z-index: 1100;
+}
+.submenu-item.has-sub.sub-active .sub-submenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+@media (max-width: 768px) {
+    .sub-submenu {
+        left: auto;
+        right: 0;
+        top: 100%;
+        margin-left: 0;
+        margin-top: 2px;
+        transform: translateY(-6px);
+    }
+    .submenu-item.has-sub.sub-active .sub-submenu {
+        transform: translateY(0);
+    }
+}
+.submenu-item.has-sub.sub-active .sub-submenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+.sub-submenu .submenu-item {
+    padding: 6px 16px;
+}
 
+   
 /*==========================
 **GESTIONE CONTENUTO**
 /*==========================*/
@@ -371,6 +428,13 @@ $ultimo = $dati[0] ?? null;
                 <a href="index.php" class="submenu-item">Home</a>
                 <a href="belle.php" class="submenu-item">Diario del cielo</a>
                 <a href='grafici_termo_plotly.php?range=24h&visible=' class="submenu-item">Grafici</a>
+                 <div class="submenu-item has-sub">
+                    <span class="submenu-item-label">Statistiche &#9658;</span>
+                    <div class="sub-submenu">
+                        <a href="stat_display.php" class="submenu-item" target="_blank">Tabelle</a>
+                        <a href="lavori_in_corso.html" class="submenu-item" target="_blank">Grafici</a>
+                    </div>
+                </div>
                 <a href="pluvio.html" class="submenu-item">Pioggia: 24h</a>
                 <a href="pluvio_tab.php" class="submenu-item">Pioggia: tabella</a>
             </div>
@@ -451,25 +515,56 @@ $ultimo = $dati[0] ?? null;
         
         <a href="?refresh=1" class="refresh">🔄 Aggiorna Pagina</a>
     </div>
+   <!-- Toggle menu in alto DX -->
     <script>
-// Toggle menu
-document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
     const menuToggle = document.querySelector('.menu-toggle');
     const submenu = document.querySelector('.submenu');
-    
+    var autoCloseTimer = null;
+
+    function openMenu() {
+        submenu.classList.add('active');
+        clearTimeout(autoCloseTimer);
+        autoCloseTimer = setTimeout(closeMenu, 5000);
+    }
+
+    function closeMenu() {
+        submenu.classList.remove('active');
+        clearTimeout(autoCloseTimer);
+        // chiudi anche eventuali sub-submenu aperti
+        document.querySelectorAll('.has-sub.sub-active').forEach(function(el) {
+            el.classList.remove('sub-active');
+        });
+    }
+
     menuToggle.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        submenu.classList.toggle('active');
-    });
-    
-    // Chiudi menu cliccando fuori
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.header-menu-container')) {
-            submenu.classList.remove('active');
+        if (submenu.classList.contains('active')) {
+            closeMenu();
+        } else {
+            openMenu();
         }
     });
-}); 
+
+    // Gestione sub-submenu (click su .has-sub)
+    document.querySelectorAll('.has-sub').forEach(function(item) {
+        item.addEventListener('click', function(e) {
+            e.stopPropagation();
+            // resetta timer auto-close: l'utente sta interagendo
+            clearTimeout(autoCloseTimer);
+            autoCloseTimer = setTimeout(closeMenu, 5000);
+            item.classList.toggle('sub-active');
+        });
+    });
+
+    // Chiudi tutto cliccando fuori
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.header-menu-container')) {
+            closeMenu();
+        }
+    });
+});
 </script>
 </body>
 </html>

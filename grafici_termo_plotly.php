@@ -584,6 +584,62 @@ if (!in_array($range, $ranges_validi)) {
 .submenu-item:last-child {
     border-radius: 0 0 8px 8px;
 }
+/*=================================
+* VOCE CON SOTTO MENU ANNIDIATO *
+=================================*/
+.submenu-item.has-sub {
+    position: relative;
+    cursor: pointer;
+    padding: 12px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    user-select: none;
+}
+.submenu-item.has-sub:hover,
+.submenu-item.has-sub.sub-active {
+    background-color: #f8f8f8;
+}
+.sub-submenu {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    margin-left: 4px;
+    background: white;
+    border: 2px solid #333;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    min-width: max-content;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-6px);
+    transition: all 0.2s ease;
+    z-index: 1100;
+}
+.submenu-item.has-sub.sub-active .sub-submenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+@media (max-width: 768px) {
+    .sub-submenu {
+        left: auto;
+        right: 0;
+        top: 100%;
+        margin-left: 0;
+        margin-top: 2px;
+        transform: translateY(-6px);
+    }
+    .submenu-item.has-sub.sub-active .sub-submenu {
+        transform: translateY(0);
+    }
+}
+.submenu-item.has-sub.sub-active .sub-submenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+.sub-submenu .submenu-item {
+    padding: 6px 16px;
+}
     </style>
 </head>
 <body>
@@ -622,6 +678,13 @@ if (!in_array($range, $ranges_validi)) {
                 <a href="index.php" class="submenu-item">Home</a>
                 <a href="belle.php" class="submenu-item">Diario del cielo</a>
                 <a href='grafici_termo_plotly.php?range=24h&visible=' class="submenu-item">Grafici</a>
+                <div class="submenu-item has-sub">
+                    <span class="submenu-item-label">Statistiche &#9658;</span>
+                    <div class="sub-submenu">
+                        <a href="stat_display.php" class="submenu-item" target="_blank">Tabelle</a>
+                        <a href="lavori_in_corso.html" class="submenu-item" target="_blank">Grafici</a>
+                    </div>
+                </div>
                 <a href="pluvio.html" class="submenu-item">Pioggia: 24h</a>
                 <a href="pluvio_tab.php" class="submenu-item">Pioggia: tabella</a>
             </div>
@@ -855,10 +918,6 @@ function enforceY2Exclusive(traces) {
       return { ...t, visible: STATE.y2_mode === 'dirvento' };
     }
 
-    if (t.metricType === 'ua') {
-      return { ...t, visible: STATE.y2_mode === 'ua' };
-    }
-
     return t;
   });
 }
@@ -876,7 +935,6 @@ function initStateFromUrl() {
     // deduce y2_mode da visible
     if (names.includes('Dir. Vento')) STATE.y2_mode = 'dirvento';
     else if (names.includes('Pressione')) STATE.y2_mode = 'pressione';
-    else if (names.includes('Umid. Assoluta') || names.includes('Umidita Assoluta') || names.includes('Umidità Assoluta')) STATE.y2_mode = 'ua';
     else if (names.includes('Umidita') || names.includes('Umidità')) STATE.y2_mode = 'umidita';
     else STATE.y2_mode = null;
 
@@ -961,29 +1019,6 @@ function y2LayoutFor(mode) {
     tickformat: null
   };
 }
-
-  if (mode === 'ua') {
-    const rawMin = Number(CONFIG.metadata?.y_ua_range?.min);
-    const rawMax = Number(CONFIG.metadata?.y_ua_range?.max);
-    const safeMin = Number.isFinite(rawMin) ? rawMin : 0;
-    const safeMax = Number.isFinite(rawMax) ? rawMax : 20;
-
-    let min = Math.max(0, Math.min(safeMin, safeMax));
-    let max = Math.max(safeMin, safeMax);
-    if (max - min < 2) { min = Math.max(0, min - 1); max += 1; }
-
-    return {
-      titleText: (isMobile ? 'UA(g/m\u00b3)' : 'Umid. Assoluta (g/m\u00b3)'),
-      color: '#ff00ff',
-      range: [min, max],
-      fixedrange: false,
-      autorange: false,
-      tickmode: 'linear',
-      tick0: 0,
-      dtick: 1,
-      tickformat: '.1f'
-    };
-  }
 
 
   return {
@@ -1112,7 +1147,6 @@ function showLegend() {
     { label: isMobile ? 'Umid'  : 'Umidità',       name: 'Umidita',       color: '#0000FF', dashed: false },
     { label: isMobile ? 'Press' : 'Pressione',     name: 'Pressione',     color: '#27ae60', dashed: false },
     { label: isMobile ? 'Vento' : 'Dir. Vento',    name: 'Dir. Vento',    color: '#ff8c00', dashed: false, markers: true },
-    { label: isMobile ? 'UA'   : 'Umid. Assoluta', name: 'Umid. Assoluta', color: '#ff00ff', dashed: false },
     { label: isMobile ? 'DP'    : 'Dew Point',     name: 'Dew Point',     color: 'gradient', dashed: false },
     { label: isMobile ? 'Media' : 'Media Periodo', name: 'Media Periodo', color: '#ff6b35', dashed: 'dot' },
     { label: isMobile ? '*Max7gg'   : '*Media Max 7gg', name: 'Media Max 7gg', color: '#e74c3c', dashed: true },
@@ -1149,11 +1183,8 @@ function showLegend() {
   }).join('');
 
   document.querySelectorAll('.legend-item').forEach(item => {
-    // cloneNode rimuove tutti i listener precedenti accumulati dai reload
-    const fresh = item.cloneNode(true);
-    item.replaceWith(fresh);
-    fresh.addEventListener('click', async () => {
-      const traceName = fresh.dataset.trace;
+    item.addEventListener('click', async () => {
+      const traceName = item.dataset.trace;
       await runWithSpinner(async () => {
         await toggleTrace(traceName);
       });
@@ -1216,13 +1247,12 @@ function replaceDewpointWithSegments(traces, dewpointSegments) {
 // ====================================================================
 
 function findY2IndicesByMetric(data) {
-  const idxs = { umidita: null, pressione: null, dirvento: null, ua: null };
+  const idxs = { umidita: null, pressione: null, dirvento: null };
   for (let i = 0; i < data.length; i++) {
     const mt = data[i].metricType;
     if (mt === 'umidita') idxs.umidita = i;
     else if (mt === 'pressione') idxs.pressione = i;
     else if (mt === 'dirvento') idxs.dirvento = i;
-    else if (mt === 'ua') idxs.ua = i;
   }
   return idxs;
 }
@@ -1235,7 +1265,7 @@ async function toggleY2Metric(mode) {
   if (!chartDiv || !chartDiv.data) return;
 
   const idxs = findY2IndicesByMetric(chartDiv.data);
-  const all = [idxs.umidita, idxs.pressione, idxs.dirvento, idxs.ua].filter(v => v !== null);
+  const all = [idxs.umidita, idxs.pressione, idxs.dirvento].filter(v => v !== null);
 
   if (all.length) await Plotly.restyle(chartDiv, { visible: all.map(() => false) }, all);
 
@@ -1298,11 +1328,6 @@ async function toggleTrace(traceName) {
   }
   if (traceName === 'Dir. Vento') {
     const next = (STATE.y2_mode === 'dirvento') ? null : 'dirvento';
-    await toggleY2Metric(next);
-    return;
-  }
-  if (traceName === 'Umid. Assoluta') {
-    const next = (STATE.y2_mode === 'ua') ? null : 'ua';
     await toggleY2Metric(next);
     return;
   }
@@ -2031,25 +2056,56 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// Toggle menu in alto a dx
-document.addEventListener('DOMContentLoaded', function() {
+/* Toggle menu in alto DX */
+    
+    document.addEventListener('DOMContentLoaded', function() {
     const menuToggle = document.querySelector('.menu-toggle');
     const submenu = document.querySelector('.submenu');
-    
+    var autoCloseTimer = null;
+
+    function openMenu() {
+        submenu.classList.add('active');
+        clearTimeout(autoCloseTimer);
+        autoCloseTimer = setTimeout(closeMenu, 5000);
+    }
+
+    function closeMenu() {
+        submenu.classList.remove('active');
+        clearTimeout(autoCloseTimer);
+        // chiudi anche eventuali sub-submenu aperti
+        document.querySelectorAll('.has-sub.sub-active').forEach(function(el) {
+            el.classList.remove('sub-active');
+        });
+    }
+
     menuToggle.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        submenu.classList.toggle('active');
-    });
-    
-    // Chiudi menu cliccando fuori
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.header-menu-container')) {
-            submenu.classList.remove('active');
+        if (submenu.classList.contains('active')) {
+            closeMenu();
+        } else {
+            openMenu();
         }
     });
-}); 
 
+    // Gestione sub-submenu (click su .has-sub)
+    document.querySelectorAll('.has-sub').forEach(function(item) {
+        item.addEventListener('click', function(e) {
+            e.stopPropagation();
+            // resetta timer auto-close: l'utente sta interagendo
+            clearTimeout(autoCloseTimer);
+            autoCloseTimer = setTimeout(closeMenu, 5000);
+            item.classList.toggle('sub-active');
+        });
+    });
+
+    // Chiudi tutto cliccando fuori
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.header-menu-container')) {
+            closeMenu();
+        }
+    });
+});
 
     </script>
 </body>

@@ -101,7 +101,6 @@ SELECT
   AVG(dew_point_C) AS dewpoint_avg,
   AVG(pressione_hPa) AS pressione_avg,
   AVG(vento_kmh) AS velocita_avg,
-  AVG(abs_hum_gm3) AS ua_avg,
 
   MOD(
     DEGREES(ATAN2(
@@ -137,20 +136,23 @@ if (empty($rows)) {
     exit;
 }
 
-// SAMPLING UNIFORME se troppi punti
-$MAX_POINTS = 4000;
+// âœ… SAMPLING UNIFORME se troppi punti
+$MAX_POINTS = 4000;  // Limite punti (aumentabile se serve)
 $total_points = count($rows);
 $sampled_rows = $rows;
 
 if ($total_points > $MAX_POINTS) {
+    // Campiona uniformemente
     $step = $total_points / $MAX_POINTS;
     $sampled_rows = [];
+    
     for ($i = 0; $i < $MAX_POINTS; $i++) {
         $index = (int)floor($i * $step);
         if (isset($rows[$index])) {
             $sampled_rows[] = $rows[$index];
         }
     }
+    
     error_log("SAMPLING: $total_points punti -> " . count($sampled_rows) . " punti (step: " . round($step, 2) . ")");
 } else {
     error_log("NO SAMPLING: $total_points punti (sotto limite $MAX_POINTS)");
@@ -160,18 +162,15 @@ $rows = $sampled_rows;
 
 // FUNZIONE COLORE VENTO
 function get_wind_color($velocita_kmh) {
-    if ($velocita_kmh <= 5) return '#b0b0b0';
-    if ($velocita_kmh <= 10) return '#87ceeb';
-    if ($velocita_kmh <= 15) return '#4169e1';
-    if ($velocita_kmh <= 25) return '#00008b';
-    return '#ff00ff';
+    if ($velocita_kmh <= 5) return '#b0b0b0';      // Grigio chiaro (0-5 km/h)
+    if ($velocita_kmh <= 10) return '#87ceeb';     // Azzurro (6-10 km/h)
+    if ($velocita_kmh <= 15) return '#4169e1';     // Blu (11-15 km/h)
+    if ($velocita_kmh <= 25) return '#00008b';     // Blu scuro (16-25 km/h)
+    return '#ff00ff';                               // Fucsia (>25 km/h)
 }
 
 // ELABORAZIONE
-$labels = []; $data_temp = []; $data_temp_min = []; $data_temp_max = [];
-$data_umidita = []; $data_dewpoint = []; $data_pressione = [];
-$data_dirvento = []; $velocita_vento = []; $colori_vento = []; $data_ua = [];
-
+$labels = []; $data_temp = []; $data_temp_min = []; $data_temp_max = []; $data_umidita = []; $data_dewpoint = []; $data_pressione = []; $data_dirvento = []; $velocita_vento = []; $colori_vento = [];
 foreach ($rows as $row) {
     $labels[] = $row['timestamp'];
     $data_temp[] = round((float)$row['temp_avg'], 1);
@@ -181,8 +180,8 @@ foreach ($rows as $row) {
     $data_dewpoint[] = round((float)$row['dewpoint_avg'], 1);
     $data_pressione[] = round((float)$row['pressione_avg'], 1);
     $data_dirvento[] = round((float)$row['dirvento_avg'], 0);
-    $data_ua[] = isset($row['ua_avg']) && $row['ua_avg'] !== null ? round((float)$row['ua_avg'], 2) : null;
-
+    
+    // Velocita vento e colore
     $vel = round((float)$row['velocita_avg'], 1);
     $velocita_vento[] = $vel;
     $colori_vento[] = get_wind_color($vel);
@@ -203,16 +202,10 @@ $y_press_max = ceil($pressione_max_assoluto + 5);
 $y_dirvento_min = 0;
 $y_dirvento_max = 360;
 
-// Range umidita assoluta (con padding 1 g/m3)
-$ua_validi = array_filter($data_ua, fn($v) => $v !== null && $v > 0);
-$ua_min_assoluto = !empty($ua_validi) ? min($ua_validi) : 0;
-$ua_max_assoluto = !empty($ua_validi) ? max($ua_validi) : 20;
-$y_ua_min = max(0, floor($ua_min_assoluto - 1));
-$y_ua_max = ceil($ua_max_assoluto + 1);
-
-// MEDIA MOBILE
+// MEDIA MOBILE (temperatura media dei punti visualizzati)
 function calcola_media_mobile($data_temp, $labels) {
     $media_valore = round(array_sum($data_temp) / count($data_temp), 1);
+    // Crea array costante per tutti i punti
     return array_fill(0, count($labels), $media_valore);
 }
 $data_media_mobile = calcola_media_mobile($data_temp, $labels);
@@ -380,19 +373,6 @@ $traces = [
     ],
     [
         'x' => $labels,
-        'y' => $data_ua,
-        'type' => 'scatter',
-        'mode' => 'lines',
-        'name' => 'Umid. Assoluta',
-        'line' => ['color' => '#ff00ff', 'width' => 1.5],
-        'hovertemplate' => '%{x|%d %b, %H:%M} • <b>%{y:.2f} g/m&#179;</b><extra></extra>',
-        'yaxis' => 'y2',
-        'visible' => false,
-        'showlegend' => false,
-        'metricType' => 'ua'
-    ],
-    [
-        'x' => $labels,
         'y' => $data_dirvento,
         'type' => 'scatter',
         'mode' => 'markers',
@@ -412,43 +392,9 @@ $traces = [
 echo json_encode([
     'success' => true,
     'traces' => $traces,
-    'metadata' => [
-        'range' => $range,
-        'start_time' => $start_time,
-        'end_time' => $end_time,
-        'data_points' => count($rows),
-        'y_temp_range' => ['min' => $y_temp_min, 'max' => $y_temp_max],
-        'y_umid_range' => ['min' => 0, 'max' => 100],
-        'y_press_range' => ['min' => $y_press_min, 'max' => $y_press_max],
-        'y_dirvento_range' => ['min' => $y_dirvento_min, 'max' => $y_dirvento_max],
-        'y_ua_range' => ['min' => $y_ua_min, 'max' => $y_ua_max],
-        'media_max_7d' => round($media_max_7d, 1),
-        'media_min_7d' => round($media_min_7d, 1),
-        'temp_min' => $temp_min_assoluto,
-        'temp_max' => $temp_max_assoluto,
-        'pressione_min' => $pressione_min_assoluto,
-        'pressione_max' => $pressione_max_assoluto,
-        'first_data_ever' => $first_data_ever,
-        'last_data_ever' => $last_data_ever,
-        'wind_color_scale' => [
-            ['range' => '0-5 km/h', 'color' => '#b0b0b0', 'label' => 'Calmo'],
-            ['range' => '6-10 km/h', 'color' => '#87ceeb', 'label' => 'Brezza leggera'],
-            ['range' => '11-15 km/h', 'color' => '#4169e1', 'label' => 'Brezza moderata'],
-            ['range' => '16-25 km/h', 'color' => '#00008b', 'label' => 'Brezza tesa'],
-            ['range' => '>25 km/h', 'color' => '#ff00ff', 'label' => 'Vento forte']
-        ]
-    ],
+    'metadata' => ['range' => $range, 'start_time' => $start_time, 'end_time' => $end_time, 'data_points' => count($rows), 'y_temp_range' => ['min' => $y_temp_min, 'max' => $y_temp_max], 'y_umid_range' => ['min' => 0, 'max' => 100], 'y_press_range' => ['min' => $y_press_min, 'max' => $y_press_max], 'y_dirvento_range' => ['min' => $y_dirvento_min, 'max' => $y_dirvento_max], 'media_max_7d' => round($media_max_7d, 1), 'media_min_7d' => round($media_min_7d, 1), 'temp_min' => $temp_min_assoluto, 'temp_max' => $temp_max_assoluto, 'pressione_min' => $pressione_min_assoluto, 'pressione_max' => $pressione_max_assoluto, 'first_data_ever' => $first_data_ever, 'last_data_ever' => $last_data_ever, 'wind_color_scale' => [['range' => '0-5 km/h', 'color' => '#b0b0b0', 'label' => 'Calmo'], ['range' => '6-10 km/h', 'color' => '#87ceeb', 'label' => 'Brezza leggera'], ['range' => '11-15 km/h', 'color' => '#4169e1', 'label' => 'Brezza moderata'], ['range' => '16-25 km/h', 'color' => '#00008b', 'label' => 'Brezza tesa'], ['range' => '>25 km/h', 'color' => '#ff00ff', 'label' => 'Vento forte']]],
     'stats' => $stats,
-    'legend' => [
-        ['label' => 'Temperatura', 'color' => '#000000', 'dashed' => false],
-        ['label' => 'Umidita', 'color' => '#0000FF', 'dashed' => false],
-        ['label' => 'Pressione', 'color' => '#27ae60', 'dashed' => false],
-        ['label' => 'Dir. Vento', 'color' => '#ff8c00', 'dashed' => false],
-        ['label' => 'Umid. Assoluta', 'color' => '#ff00ff', 'dashed' => false],
-        ['label' => 'Dew Point', 'color' => '#feca57', 'dashed' => false],
-        ['label' => 'Media Max 7gg', 'color' => '#e74c3c', 'dashed' => true],
-        ['label' => 'Media Min 7gg', 'color' => '#3498db', 'dashed' => true]
-    ],
+    'legend' => [['label' => 'Temperatura', 'color' => '#000000', 'dashed' => false], ['label' => 'Umidita', 'color' => '#0000FF', 'dashed' => false], ['label' => 'Pressione', 'color' => '#27ae60', 'dashed' => false], ['label' => 'Dir. Vento', 'color' => '#ff8c00', 'dashed' => false], ['label' => 'Dew Point', 'color' => '#feca57', 'dashed' => false], ['label' => 'Media Max 7gg', 'color' => '#e74c3c', 'dashed' => true], ['label' => 'Media Min 7gg', 'color' => '#3498db', 'dashed' => true]],
     'dewpoint_segments' => $dewpoint_segments,
     'chart_info' => $chart_info
 ], JSON_PRETTY_PRINT);

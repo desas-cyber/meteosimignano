@@ -51,7 +51,7 @@
     
     // === CONFIGURAZIONE ===
     $directory = __DIR__ . "/../belle"; // Percorso alla directory delle immagini
-    $debug = true; // 👉 Mostra output a schermo
+    $debug = false; // 👉 Mostra output a schermo
     
     
     
