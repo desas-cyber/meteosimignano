@@ -325,6 +325,7 @@ if (!isset($mainImageDate)) {
             .main-container > .date-text::after { content: none !important; }
             .stat-section-title { font-size: 20px !important; }
         }
+        #stat-iframe-tab2 { height: 465px !important; }
     </style>
 </head>
 
@@ -430,7 +431,6 @@ if (!isset($mainImageDate)) {
             <iframe src="tabella_stat_display.php"
                     id="stat-iframe-tab1"
                     width="100%"
-                    height="300px"
                     frameborder="0"
                     title="Statistiche mensili"></iframe>
         </div>
@@ -444,7 +444,6 @@ if (!isset($mainImageDate)) {
             <iframe src="tabella_stat2_display.php"
                     id="stat-iframe-tab2"
                     width="100%"
-                    height="310px"
                     frameborder="0"
                     title="Soglie termiche"></iframe>
         </div>
@@ -458,7 +457,6 @@ if (!isset($mainImageDate)) {
             <iframe src="tabella_stat3_display.php"
                     id="stat-iframe-tab3"
                     width="100%"
-                    height="200px"
                     frameborder="0"
                     title="Record pioggia"></iframe>
         </div>

@@ -168,7 +168,7 @@ function leggiImmaginiDaDatabase(PDO $pdo, string $table_name): array  {
 }    
     
  function sincronizzaDatabase(PDO $pdo, array $file_map_dir, array $file_map_db, string $table_name) {
-    $stmt_insert = $pdo->prepare("INSERT INTO " . $table_name . " (FILE, DATA_ORA) VALUES (:file, :data_ora)");
+    $stmt_insert = $pdo->prepare("INSERT IGNORE INTO " . $table_name . " (FILE, DATA_ORA) VALUES (:file, :data_ora)");
     $stmt_delete = $pdo->prepare("DELETE FROM " . $table_name . " WHERE FILE = :file");
 
     $inseriti = 0;
