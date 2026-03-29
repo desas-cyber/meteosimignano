@@ -509,7 +509,14 @@ document.addEventListener('click', function(e) {
         if (!CAL2_STATE[id]) initCal2State(id);
         renderCal2(id);
         var r = icon.getBoundingClientRect();
-        popup.style.left = Math.max(0, r.left) + 'px';
+        // posiziona centrato orizzontalmente nella viewport
+        popup.style.visibility = 'hidden';
+        popup.style.display = 'block';
+        var pw = popup.offsetWidth;
+        popup.style.display = '';
+        popup.style.visibility = '';
+        var left = Math.max(4, Math.round((window.innerWidth - pw) / 2));
+        popup.style.left = left + 'px';
         popup.style.top  = (r.bottom + 4) + 'px';
         popup.classList.add('open');
     } else if (!e.target.closest('.cal-popup')) {
