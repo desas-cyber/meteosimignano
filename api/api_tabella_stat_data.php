@@ -790,7 +790,7 @@ function getStat2Data(): array
         $r_sopra35 = ['primo' => $primoGiorno('temp_max_abs', '>=', 35.0, $caldo_inizio),  'ultimo' => $ultimoGiorno('temp_max_abs', '>=', 35.0)];
         $r_sopra30 = ['primo' => $primoGiorno('temp_max_abs', '>',  30.0, $caldo_inizio),  'ultimo' => $ultimoGiorno('temp_max_abs', '>',  30.0)];
         $r_sopra20 = ['primo' => $primoGiorno('temp_max_abs', '>',  20.0, $caldo_inizio),  'ultimo' => $ultimoGiorno('temp_max_abs', '>',  20.0)];
-        $r_sotto8  = ['primo' => $primoGiorno('temp_min_abs', '<=',  8.0, $freddo_inizio), 'ultimo' => $ultimoGiorno('temp_min_abs', '<=',  8.0)];
+        $r_sotto8  = ['primo' => $primoGiorno('temp_min_abs', '<=',  5.0, $freddo_inizio), 'ultimo' => $ultimoGiorno('temp_min_abs', '<=',  5.0)];
         $r_sotto0  = ['primo' => $primoGiorno('temp_min_abs', '<=',  0.0, $freddo_inizio), 'ultimo' => $ultimoGiorno('temp_min_abs', '<=',  0.0)];
         $r_sottoM5 = ['primo' => $primoGiorno('temp_min_abs', '<=', -5.0, $freddo_inizio), 'ultimo' => $ultimoGiorno('temp_min_abs', '<=', -5.0)];
 
@@ -889,7 +889,7 @@ function getStat2Data(): array
         ['label' => 'Max &gt; 20&#176;C', 'grigio' => false,
          'primo'  => stat2FmtDataEstesa($r_sopra20['primo']),
          'ultimo' => stat2FmtDataEstesa($r_sopra20['ultimo'])],
-        ['label' => 'Min &le; 8&#176;C',  'grigio' => true,
+        ['label' => 'Min &le; 5&#176;C',  'grigio' => true,
          'primo'  => stat2FmtDataEstesa($r_sotto8['primo']),
          'ultimo' => stat2FmtDataEstesa($r_sotto8['ultimo'])],
         ['label' => 'Min &le; 0&#176;C',  'grigio' => false,
