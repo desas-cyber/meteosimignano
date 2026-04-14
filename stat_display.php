@@ -490,6 +490,37 @@ if (!isset($mainImageDate)) {
 
     <!-- Toggle menu -->
     <script>
+    // ---- postMessage: gestisce resize e swap grafico/tabella ----
+    // Mappa degli src originali degli iframe (per poter tornare indietro)
+    var _iframeSrcOriginali = {};
+    document.querySelectorAll('.stat-table-block iframe').forEach(function(fr) {
+        if (fr.id) _iframeSrcOriginali[fr.id] = fr.src;
+    });
+
+    window.addEventListener('message', function(e) {
+        var d = e.data;
+        if (!d || !d.action) return;
+        var fr = d.iframeId ? document.getElementById(d.iframeId) : null;
+
+        if (d.action === 'resize' && fr && d.height) {
+            // Aggiunge 16px di margine per evitare scrollbar
+            fr.style.height = (parseInt(d.height) + 16) + 'px';
+        }
+
+        if (d.action === 'mostraGrafico' && fr && d.src) {
+            // Salva src originale se non ancora salvato
+            if (!_iframeSrcOriginali[fr.id]) _iframeSrcOriginali[fr.id] = fr.src;
+            fr.src = d.src;
+        }
+
+        if (d.action === 'tornaTabella' && fr) {
+            var srcOriginale = _iframeSrcOriginali[fr.id];
+            if (srcOriginale) fr.src = srcOriginale;
+        }
+    });
+    </script>
+
+    <script>
     document.addEventListener('DOMContentLoaded', function() {
     const menuToggle = document.querySelector('.menu-toggle');
     const submenu = document.querySelector('.submenu');

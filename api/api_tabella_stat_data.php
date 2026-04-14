@@ -1154,3 +1154,86 @@ function getStat3Data(): array
         ],
     ];
 }
+
+// ============================================================
+// GRAFICO TERMICO - dati giornalieri per timeline soglie
+// ============================================================
+// Restituisce per ogni anno disponibile nel DB l'array
+// dei valori giornalieri temp_max_abs e temp_min_abs.
+// Il JS del grafico usa questi dati per colorare la timeline
+// senza ulteriori chiamate al server.
+//
+// Parametri GET:
+//   (nessuno - restituisce sempre tutti gli anni disponibili)
+//
+// Struttura risposta:
+//   anni[]        -> lista anni disponibili (ordinati ASC)
+//   dati[anno][]  -> array di { d: "YYYY-MM-DD", mx: float, mn: float }
+//   oggi          -> data odierna "YYYY-MM-DD"
+// ============================================================
+function getGraficoTermicoData(): array
+{
+    global $pdo_lettura;
+
+    $table_g = table_name('dati_meteo_giornaliero_simignano');
+    $oggi    = get_now('Y-m-d');
+
+    // Anni disponibili nel DB
+    $stmt = $pdo_lettura->prepare(
+        "SELECT DISTINCT YEAR(data_giorno) AS anno
+         FROM $table_g
+         WHERE temp_max_abs BETWEEN -30 AND 50
+           AND temp_min_abs BETWEEN -30 AND 50
+         ORDER BY anno ASC"
+    );
+    $stmt->execute();
+    $anni = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+    if (empty($anni)) {
+        return ['success' => false, 'error' => 'Nessun dato disponibile'];
+    }
+
+    // Dati giornalieri per ogni anno
+    // Usiamo un'unica query e poi raggruppiamo in PHP
+    $anno_min = (int)$anni[0];
+    $anno_max = (int)$anni[count($anni) - 1];
+
+    $stmt = $pdo_lettura->prepare(
+        "SELECT DATE_FORMAT(data_giorno, '%Y-%m-%d') AS d,
+                ROUND(temp_max_abs, 1) AS mx,
+                ROUND(temp_min_abs, 1) AS mn
+         FROM $table_g
+         WHERE data_giorno BETWEEN :da AND :a
+           AND temp_max_abs BETWEEN -30 AND 50
+           AND temp_min_abs BETWEEN -30 AND 50
+         ORDER BY data_giorno ASC"
+    );
+    $stmt->execute([
+        ':da' => $anno_min . '-01-01',
+        ':a'  => $oggi,
+    ]);
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Raggruppa per anno
+    $dati = [];
+    foreach ($anni as $a) {
+        $dati[(int)$a] = [];
+    }
+    foreach ($rows as $row) {
+        $y = (int)substr($row['d'], 0, 4);
+        if (isset($dati[$y])) {
+            $dati[$y][] = [
+                'd'  => $row['d'],
+                'mx' => (float)$row['mx'],
+                'mn' => (float)$row['mn'],
+            ];
+        }
+    }
+
+    return [
+        'success' => true,
+        'anni'    => array_map('intval', $anni),
+        'dati'    => $dati,
+        'oggi'    => $oggi,
+    ];
+}

@@ -303,6 +303,7 @@ $ref_data      = isset($_GET['ref_data']) ? $_GET['ref_data'] : $meta['oggi_real
     <span class="custom-trigger<?= $custom_attivo ? ' attivo' : '' ?>" id="custom-trigger">
         &#9881;<?php if ($custom_attivo): ?>&nbsp;<?= htmlspecialchars(($cur_campo === 'temp_max_abs' ? 'Max' : 'Min') . ' ' . $cur_op . ' ' . $cur_val) ?>&#176;C<?php else: ?>&nbsp;Personalizza<?php endif; ?>
     </span>
+    <span class="custom-trigger" id="btn-grafico" title="Mostra grafico soglie">&#128200;&nbsp;Grafico</span>
 </div>
 
 <!-- Popup personalizza -->
@@ -645,6 +646,39 @@ function resetRefData() {
     else                      params['anno'] = CTX2.anno_rif;
     window.location.href = buildUrl(params);
 }
+
+// ---- pulsante grafico: apre stat2_grafico.php nel padre ----
+document.getElementById('btn-grafico').addEventListener('click', function() {
+    // Calcola i default: se c'e' una soglia custom attiva, usala
+    // altrimenti usa i default standard 30/35/5/0
+    var s1 = 30, s2 = 35, s3 = 5, s4 = 0;
+    if (CTX2.custom_val !== '') {
+        var v = parseFloat(CTX2.custom_val);
+        if (!isNaN(v)) {
+            if (CTX2.custom_campo === 'temp_max_abs') { s1 = v; s2 = Math.max(v, 35); }
+            else                                       { s3 = v; s4 = Math.min(v, 0); }
+        }
+    }
+    var src = 'grafico_stat2_display.php?s1=' + s1 + '&s2=' + s2 + '&s3=' + s3 + '&s4=' + s4;
+    window.parent.postMessage({
+        action:   'mostraGrafico',
+        iframeId: 'stat-iframe-tab2',
+        src:      src
+    }, '*');
+});
+
+// ---- comunica altezza reale al padre (per resize iframe) ----
+function sendResize() {
+    window.parent.postMessage({
+        action:   'resize',
+        iframeId: 'stat-iframe-tab2',
+        height:   document.body.scrollHeight
+    }, '*');
+}
+window.addEventListener('load', function() {
+    sendResize();
+    setTimeout(sendResize, 300);
+});
 </script>
 
 </body>
