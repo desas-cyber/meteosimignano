@@ -60,7 +60,7 @@ $ref_data      = isset($_GET['ref_data']) ? $_GET['ref_data'] : $meta['oggi_real
         /* ---- barra cima ---- */
         .top-bar {
             display: flex;
-            align-items: center;
+            align-items: stretch;
             justify-content: flex-end;
             max-width: 95%;
             margin: 4px auto 4px auto;

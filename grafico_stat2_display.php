@@ -34,10 +34,10 @@ $def_s3 = isset($_GET['s3']) ? (float)$_GET['s3'] : 5;
 $def_s4 = isset($_GET['s4']) ? (float)$_GET['s4'] : 0;
 
 // Sanity check range
-$def_s1 = max(20, min(40, $def_s1));
-$def_s2 = max(25, min(45, $def_s2));
-$def_s3 = max(-2, min(15, $def_s3));
-$def_s4 = max(-5, min(10, $def_s4));
+$def_s1 = max(8,  min(45, $def_s1));
+$def_s2 = max(8,  min(45, $def_s2));
+$def_s3 = max(-5, min(20, $def_s3));
+$def_s4 = max(-5, min(20, $def_s4));
 
 // Dati dal DB
 $response = getGraficoTermicoData();
@@ -105,15 +105,39 @@ $anni_js  = json_encode($anni);
             max-width: 95%;
             margin: 0 auto 10px auto;
         }
-        .controls-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px 16px;
+        .soglia-group {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 6px 10px;
+            margin-bottom: 8px;
+        }
+        .soglia-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .soglia-title {
+            font-size: 10px;
+            font-weight: bold;
+            color: #444;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .soglia-op {
+            font-size: 10px;
+            padding: 2px 4px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            background: #fff;
+            color: #333;
+            cursor: pointer;
         }
         .ctrl-row {
             display: flex;
             align-items: center;
             gap: 6px;
+            margin-bottom: 4px;
         }
         .ctrl-dot {
             width: 10px;
@@ -125,14 +149,13 @@ $anni_js  = json_encode($anni);
             font-size: 10px;
             color: #555;
             white-space: nowrap;
-            min-width: 24px;
+            min-width: 44px;
         }
         .ctrl-row input[type=range] {
             flex: 1;
             min-width: 0;
             height: 20px;
             cursor: pointer;
-            /* area touch generosa per mobile */
             -webkit-appearance: none;
             appearance: none;
             background: transparent;
@@ -171,6 +194,49 @@ $anni_js  = json_encode($anni);
             min-width: 28px;
             text-align: right;
         }
+        .btn-reset {
+            font-size: 15px;
+            cursor: pointer;
+            opacity: 0.5;
+            padding: 2px 4px;
+            border: none;
+            background: none;
+            color: #333;
+            line-height: 1;
+        }
+        .btn-reset:hover { opacity: 1; color: #c00; }
+
+        @media (max-width: 480px) {
+            .ctrl-dot { width: 7px; height: 7px; }
+            .ctrl-label { font-size: 8px; min-width: 36px; }
+            .ctrl-val { font-size: 8px; min-width: 20px; }
+            .ctrl-row input[type=range]::-webkit-slider-runnable-track { height: 3px; }
+            .ctrl-row input[type=range]::-webkit-slider-thumb {
+                width: 13px;
+                height: 13px;
+                margin-top: -5px;
+            }
+            .ctrl-row input[type=range]::-moz-range-track { height: 3px; }
+            .ctrl-row input[type=range]::-moz-range-thumb {
+                width: 13px;
+                height: 13px;
+            }
+        }
+
+        /* ---- tooltip ---- */
+        .bar-tooltip {
+            position: fixed;
+            background: rgba(40,40,40,0.88);
+            color: #fff;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 3px 7px;
+            border-radius: 3px;
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 9999;
+            display: none;
+        }
 
         /* ---- timeline ---- */
         .chart-wrap {
@@ -191,6 +257,17 @@ $anni_js  = json_encode($anni);
             border-radius: 3px;
             overflow: hidden;
         }
+        .bar-wrap::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(255,255,255,0.6);
+            pointer-events: none;
+            z-index: 1;
+        }
         .seg {
             position: absolute;
             top: 0;
@@ -199,20 +276,41 @@ $anni_js  = json_encode($anni);
 
         /* ---- asse mesi ---- */
         .axis {
-            display: flex;
-            justify-content: space-between;
+            position: relative;
             max-width: 95%;
             margin: 4px auto 10px auto;
+            height: 14px;
         }
-        .axis span { font-size: 10px; color: #aaa; }
+        .axis span {
+            position: absolute;
+            font-size: 10px;
+            color: #aaa;
+            white-space: nowrap;
+        }
 
-        /* ---- card statistiche ---- */
+        /* ---- asse mesi per anno ---- */
+        .axis-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 2px 0 10px 0;
+        }
+        .axis-row span { font-size: 9px; color: #bbb; }
+
+        /* ---- card statistiche per anno ---- */
+        .stats-anno {
+            max-width: 95%;
+            margin: 0 auto 12px auto;
+        }
+        .stats-anno-title {
+            font-size: 11px;
+            font-weight: bold;
+            color: #444;
+            margin-bottom: 5px;
+        }
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 6px;
-            max-width: 95%;
-            margin: 0 auto 8px auto;
         }
         .stat-card {
             background: #f7f7f7;
@@ -221,7 +319,7 @@ $anni_js  = json_encode($anni);
             text-align: center;
         }
         .stat-card .val {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             line-height: 1.1;
         }
@@ -256,52 +354,65 @@ $anni_js  = json_encode($anni);
 <!-- BARRA CIMA -->
 <div class="top-bar">
     <button class="btn-torna" id="btn-torna">&#8592; Tabella</button>
-    <span style="font-size:10px;color:#aaa;" id="lbl-oggi">
-        aggiornato al <?= htmlspecialchars($oggi) ?>
-    </span>
+    <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:10px;color:#aaa;" id="lbl-oggi">aggiornato al <?= htmlspecialchars($oggi) ?></span>
+        <button class="btn-reset" id="btn-reset" title="Ripristina valori default">&#8635;</button>
+    </div>
 </div>
 
 <!-- SLIDER CONTROLLI -->
 <div class="controls-wrap">
-    <div class="controls-grid">
-        <div class="ctrl-row">
-            <span class="ctrl-dot" style="background:#F09595;"></span>
-            <span class="ctrl-label">&#8805;&nbsp;<span id="v1"><?= $def_s1 ?></span>&#176;C</span>
-            <input type="range" id="s1" min="20" max="40" step="1" value="<?= $def_s1 ?>">
-            <span class="ctrl-val" style="color:#E24B4A;"><?= $def_s1 ?>&#176;</span>
+    <div class="soglia-group">
+        <div class="soglia-header">
+            <span class="soglia-title">Massime</span>
+            <select class="soglia-op" id="op-max">
+                <option value=">=">&gt;=</option>
+                <option value="<=">&lt;=</option>
+            </select>
         </div>
         <div class="ctrl-row">
-            <span class="ctrl-dot" style="background:#85B7EB;"></span>
-            <span class="ctrl-label">&#8804;&nbsp;<span id="v3"><?= $def_s3 ?></span>&#176;C</span>
-            <input type="range" id="s3" min="-2" max="15" step="1" value="<?= $def_s3 ?>">
-            <span class="ctrl-val" style="color:#378ADD;"><?= $def_s3 ?>&#176;</span>
+            <span class="ctrl-dot" style="background:#F09595;"></span>
+            <span class="ctrl-label" id="lbl-s1">&#8805;&nbsp;<span id="v1"><?= $def_s1 ?></span>&#176;C</span>
+            <input type="range" id="s1" min="8" max="45" step="1" value="<?= $def_s1 ?>">
+            <span class="ctrl-val" id="cv1" style="color:#E24B4A;"><?= $def_s1 ?>&#176;</span>
         </div>
         <div class="ctrl-row">
             <span class="ctrl-dot" style="background:#A32D2D;"></span>
-            <span class="ctrl-label">&#8805;&nbsp;<span id="v2"><?= $def_s2 ?></span>&#176;C</span>
-            <input type="range" id="s2" min="25" max="45" step="1" value="<?= $def_s2 ?>">
-            <span class="ctrl-val" style="color:#A32D2D;"><?= $def_s2 ?>&#176;</span>
+            <span class="ctrl-label" id="lbl-s2">&#8805;&nbsp;<span id="v2"><?= $def_s2 ?></span>&#176;C</span>
+            <input type="range" id="s2" min="8" max="45" step="1" value="<?= $def_s2 ?>">
+            <span class="ctrl-val" id="cv2" style="color:#A32D2D;"><?= $def_s2 ?>&#176;</span>
+        </div>
+    </div>
+    <div class="soglia-group">
+        <div class="soglia-header">
+            <span class="soglia-title">Minime</span>
+            <select class="soglia-op" id="op-min">
+                <option value="<=">&lt;=</option>
+                <option value=">=">&gt;=</option>
+            </select>
+        </div>
+        <div class="ctrl-row">
+            <span class="ctrl-dot" style="background:#85B7EB;"></span>
+            <span class="ctrl-label" id="lbl-s3">&#8804;&nbsp;<span id="v3"><?= $def_s3 ?></span>&#176;C</span>
+            <input type="range" id="s3" min="-5" max="20" step="1" value="<?= $def_s3 ?>">
+            <span class="ctrl-val" id="cv3" style="color:#378ADD;"><?= $def_s3 ?>&#176;</span>
         </div>
         <div class="ctrl-row">
             <span class="ctrl-dot" style="background:#0C447C;"></span>
-            <span class="ctrl-label">&#8804;&nbsp;<span id="v4"><?= $def_s4 ?></span>&#176;C</span>
-            <input type="range" id="s4" min="-5" max="10" step="1" value="<?= $def_s4 ?>">
-            <span class="ctrl-val" style="color:#0C447C;"><?= $def_s4 ?>&#176;</span>
+            <span class="ctrl-label" id="lbl-s4">&#8804;&nbsp;<span id="v4"><?= $def_s4 ?></span>&#176;C</span>
+            <input type="range" id="s4" min="-5" max="20" step="1" value="<?= $def_s4 ?>">
+            <span class="ctrl-val" id="cv4" style="color:#0C447C;"><?= $def_s4 ?>&#176;</span>
         </div>
     </div>
 </div>
 
-<!-- TIMELINE -->
+<div id="bar-tooltip" class="bar-tooltip"></div>
+
+<!-- TIMELINE (mesi inclusi dentro ogni anno via JS) -->
 <div class="chart-wrap" id="chart-wrap"></div>
 
-<!-- ASSE MESI -->
-<div class="axis">
-    <span>Gen</span><span>Feb</span><span>Mar</span><span>Apr</span><span>Mag</span><span>Giu</span>
-    <span>Lug</span><span>Ago</span><span>Set</span><span>Ott</span><span>Nov</span><span>Dic</span>
-</div>
-
-<!-- STATISTICHE -->
-<div class="stats-grid" id="stats-grid"></div>
+<!-- STATISTICHE PER ANNO -->
+<div id="stats-anni"></div>
 
 <div class="stat-footer" id="footer-note"></div>
 
@@ -326,12 +437,18 @@ function dataToPct(dateStr) {
 
 // Colore del giorno in base alle 4 soglie
 // Priorita': s2 > s1 per il caldo; s4 > s3 per il freddo
-function coloreGiorno(mx, mn, s1, s2, s3, s4) {
+function coloreMassima(mx, s1, s2) {
+    if (mx === null) return '#e0e0e0';
     if (mx >= s2) return '#A32D2D';
     if (mx >= s1) return '#F09595';
+    return null;
+}
+
+function coloreMinima(mn, s3, s4) {
+    if (mn === null) return '#e0e0e0';
     if (mn <= s4) return '#0C447C';
     if (mn <= s3) return '#85B7EB';
-    return null; // nella norma: trasparente
+    return null;
 }
 
 function render() {
@@ -339,45 +456,46 @@ function render() {
     var s2 = parseInt(document.getElementById('s2').value);
     var s3 = parseInt(document.getElementById('s3').value);
     var s4 = parseInt(document.getElementById('s4').value);
+    var opMax = document.getElementById('op-max').value;
+    var opMin = document.getElementById('op-min').value;
 
-    // Blocco gerarchia soglie:
-    // s1 (caldo chiaro) non puo' raggiungere o superare s2 (caldo scuro)
-    // s3 (freddo chiaro) non puo' raggiungere o scendere sotto s4 (freddo scuro)
-    var conflitto_caldo  = (s1 >= s2);
-    var conflitto_freddo = (s3 <= s4);
+    // Simboli operatori per le etichette
+    var symMax = (opMax === '>=') ? '\u2265' : '\u2264';
+    var symMin = (opMin === '<=') ? '\u2264' : '\u2265';
 
+    // Aggiorna etichette slider con operatore corretto
+    document.getElementById('lbl-s1').innerHTML = symMax + '&nbsp;<span id="v1">' + s1 + '</span>&#176;C';
+    document.getElementById('lbl-s2').innerHTML = symMax + '&nbsp;<span id="v2">' + s2 + '</span>&#176;C';
+    document.getElementById('lbl-s3').innerHTML = symMin + '&nbsp;<span id="v3">' + s3 + '</span>&#176;C';
+    document.getElementById('lbl-s4').innerHTML = symMin + '&nbsp;<span id="v4">' + s4 + '</span>&#176;C';
+    document.getElementById('cv1').textContent = s1 + '\u00b0';
+    document.getElementById('cv2').textContent = s2 + '\u00b0';
+    document.getElementById('cv3').textContent = s3 + '\u00b0';
+    document.getElementById('cv4').textContent = s4 + '\u00b0';
+
+    // Conflitto gerarchia slider
+    var conflitto_caldo  = (opMax === '>=') ? (s1 >= s2) : (s1 <= s2);
+    var conflitto_freddo = (opMin === '<=') ? (s3 <= s4) : (s3 >= s4);
     var sliderS1 = document.getElementById('s1');
     var sliderS3 = document.getElementById('s3');
-
-    // Aspetto grigio se in conflitto — slider resta attivo per tornare indietro
-    sliderS1.style.opacity = conflitto_caldo ? '0.35' : '1';
-    sliderS1.parentNode.querySelector('.ctrl-dot').style.background = conflitto_caldo ? '#bbb' : '#F09595';
-    sliderS1.nextElementSibling.style.color = conflitto_caldo ? '#bbb' : '#E24B4A';
-
+    sliderS1.style.opacity = conflitto_caldo  ? '0.35' : '1';
     sliderS3.style.opacity = conflitto_freddo ? '0.35' : '1';
+    sliderS1.parentNode.querySelector('.ctrl-dot').style.background = conflitto_caldo  ? '#bbb' : '#F09595';
     sliderS3.parentNode.querySelector('.ctrl-dot').style.background = conflitto_freddo ? '#bbb' : '#85B7EB';
-    sliderS3.nextElementSibling.style.color = conflitto_freddo ? '#bbb' : '#378ADD';
+    document.getElementById('cv1').style.color = conflitto_caldo  ? '#bbb' : '#E24B4A';
+    document.getElementById('cv3').style.color = conflitto_freddo ? '#bbb' : '#378ADD';
+    // Se in conflitto: s1 assume il valore di s2, s3 assume il valore di s4
+    // così entrambe le fasce mostrano solo il colore scuro
+    if (conflitto_caldo)  s1 = s2;
+    if (conflitto_freddo) s3 = s4;
 
-    // Se bloccato, usa il valore di s2-1 / s4+1 per il calcolo colori
-    if (conflitto_caldo)  s1 = s2 - 1;
-    if (conflitto_freddo) s3 = s4 + 1;
-
-    // Aggiorna etichette slider
-    var ids = ['v1','v2','v3','v4'];
-    var vals = [s1, s2, s3, s4];
-    for (var i = 0; i < 4; i++) {
-        var el = document.getElementById(ids[i]);
-        if (el) el.textContent = vals[i];
-        var row = document.getElementById('s' + (i+1));
-        if (row && row.nextElementSibling) {
-            row.nextElementSibling.textContent = vals[i] + '\u00b0';
-        }
-    }
-
+    var oggiStr = '<?= $oggi ?>';
     var wrap = document.getElementById('chart-wrap');
     wrap.innerHTML = '';
+    var MESI_NOMI_SHORT = ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
 
-    var tot1 = 0, tot2 = 0, tot3 = 0, tot4 = 0;
+    // Conteggi per anno: struttura { anno: [c1,c2,c3,c4] }
+    var conteggioAnni = {};
 
     ANNI.forEach(function(anno) {
         var giorni = DATI[anno];
@@ -394,76 +512,137 @@ function render() {
         var bar = document.createElement('div');
         bar.className = 'bar-wrap';
 
-        // Costruisce segmenti contigui dello stesso colore
-        // (evita di creare un div per ogni giorno = 365 div per anno)
-        var segs = [];
-        var corrColore = coloreGiorno(giorni[0].mx, giorni[0].mn, s1, s2, s3, s4);
-        var corrStart  = giorni[0].d;
-
-        for (var i = 1; i <= giorni.length; i++) {
-            var c = (i < giorni.length)
-                ? coloreGiorno(giorni[i].mx, giorni[i].mn, s1, s2, s3, s4)
-                : '__end__';
-            if (c !== corrColore) {
-                segs.push({ colore: corrColore, da: corrStart, a: (i < giorni.length ? giorni[i].d : null) });
-                corrColore = c;
-                corrStart  = (i < giorni.length ? giorni[i].d : null);
-            }
+        var idx = {};
+        for (var i = 0; i < giorni.length; i++) {
+            idx[giorni[i].d] = giorni[i];
         }
 
-        segs.forEach(function(s) {
-            if (!s.colore) return; // giorni nella norma: non disegniamo nulla (sfondo grigio chiaro)
-            var el = document.createElement('div');
-            el.className = 'seg';
-            el.style.left = dataToPct(s.da);
-            // Larghezza: dalla data iniziale alla finale (o fine barra)
-            if (s.a) {
-                var pDa = parseFloat(dataToPct(s.da));
-                var pA  = parseFloat(dataToPct(s.a));
-                el.style.width = (pA - pDa).toFixed(3) + '%';
-            } else {
-                el.style.width = (100 - parseFloat(dataToPct(s.da))).toFixed(3) + '%';
+        function costruisciFascia(fnColore, isTop) {
+            var segs = [];
+            var corrColore = null;
+            var corrStart  = null;
+            for (var m = 0; m < 12; m++) {
+                for (var gg = 1; gg <= MESE_GG[m]; gg++) {
+                    var ds = anno + '-'
+                        + (m + 1 < 10 ? '0' : '') + (m + 1) + '-'
+                        + (gg < 10 ? '0' : '') + gg;
+                    if (ds > oggiStr && anno === (oggiStr.substring(0,4)|0)) break;
+                    var rec = idx[ds] || null;
+                    var c   = fnColore(rec);
+                    if (c !== corrColore) {
+                        if (corrStart !== null) segs.push({ colore: corrColore, da: corrStart, a: ds });
+                        corrColore = c;
+                        corrStart  = ds;
+                    }
+                }
+                if (anno === (oggiStr.substring(0,4)|0) && corrStart > oggiStr) break;
             }
-            el.style.background = s.colore;
-            bar.appendChild(el);
-        });
+            if (corrStart !== null) segs.push({ colore: corrColore, da: corrStart, a: null });
+            segs.forEach(function(s) {
+                if (!s.colore) return;
+                var el = document.createElement('div');
+                el.className = 'seg';
+                el.style.top    = isTop ? '0' : '50%';
+                el.style.height = '50%';
+                el.style.left   = dataToPct(s.da);
+                if (s.a) {
+                    el.style.width = (parseFloat(dataToPct(s.a)) - parseFloat(dataToPct(s.da))).toFixed(3) + '%';
+                } else {
+                    el.style.width = (100 - parseFloat(dataToPct(s.da))).toFixed(3) + '%';
+                }
+                el.style.background = s.colore;
+                bar.appendChild(el);
+            });
+        }
+
+        // Funzioni colore con operatore
+        costruisciFascia(function(rec) {
+            if (!rec || rec.mx === null) return '#e0e0e0';
+            var v = rec.mx;
+            var ok2 = opMax === '>=' ? v >= s2 : v <= s2;
+            var ok1 = opMax === '>=' ? v >= s1 : v <= s1;
+            if (ok2) return '#A32D2D';
+            if (ok1) return '#F09595';
+            return null;
+        }, true);
+
+        costruisciFascia(function(rec) {
+            if (!rec || rec.mn === null) return '#e0e0e0';
+            var v = rec.mn;
+            var ok4 = opMin === '<=' ? v <= s4 : v >= s4;
+            var ok3 = opMin === '<=' ? v <= s3 : v >= s3;
+            if (ok4) return '#0C447C';
+            if (ok3) return '#85B7EB';
+            return null;
+        }, false);
 
         block.appendChild(bar);
+
+        // Asse mesi sotto ogni barra
+        var axisRow = document.createElement('div');
+        axisRow.className = 'axis-row';
+        MESI_NOMI_SHORT.forEach(function(nm) {
+            var sp = document.createElement('span');
+            sp.textContent = nm;
+            axisRow.appendChild(sp);
+        });
+        block.appendChild(axisRow);
         wrap.appendChild(block);
 
-        // Conteggi per statistiche
+        // Conteggi per questo anno
+        var c1=0, c2=0, c3=0, c4=0;
         giorni.forEach(function(g) {
-            if (g.mx >= s2) tot2++;
-            else if (g.mx >= s1) tot1++;
-            if (g.mn <= s4) tot4++;
-            else if (g.mn <= s3) tot3++;
+            var mx = g.mx, mn = g.mn;
+            if (mx !== null) {
+                if (opMax === '>=') {
+                    // >= esclusivo: chi supera s2 non conta in s1
+                    if (mx >= s2) c2++;
+                    else if (mx >= s1) c1++;
+                } else {
+                    // <= inclusivo: ogni soglia conta indipendentemente
+                    if (mx <= s2) c2++;
+                    if (mx <= s1) c1++;
+                }
+            }
+            if (mn !== null) {
+                if (opMin === '<=') {
+                    // <= esclusivo: chi scende sotto s4 non conta in s3
+                    if (mn <= s4) c4++;
+                    else if (mn <= s3) c3++;
+                } else {
+                    // >= inclusivo: ogni soglia conta indipendentemente
+                    if (mn >= s4) c4++;
+                    if (mn >= s3) c3++;
+                }
+            }
         });
+        conteggioAnni[anno] = [c1, c2, c3, c4];
     });
 
-    // Card statistiche — media per anno
-    var n = ANNI.length;
-    var statsEl = document.getElementById('stats-grid');
-    var datiStat = [
-        { val: Math.round(tot1/n), lbl: '\u2265 ' + s1 + '\u00b0C\ncaldo',        colore: '#F09595' },
-        { val: Math.round(tot2/n), lbl: '\u2265 ' + s2 + '\u00b0C\nmolto caldo',  colore: '#A32D2D' },
-        { val: Math.round(tot3/n), lbl: '\u2264 ' + s3 + '\u00b0C\nfreddo',       colore: '#85B7EB' },
-        { val: Math.round(tot4/n), lbl: '\u2264 ' + s4 + '\u00b0C\nmolto freddo', colore: '#0C447C' },
-    ];
+    // Statistiche per anno
+    var opMaxSym = opMax === '>=' ? '&gt;=' : '&lt;=';
+    var opMinSym = opMin === '<=' ? '&lt;=' : '&gt;=';
+    var statsEl = document.getElementById('stats-anni');
     statsEl.innerHTML = '';
-    datiStat.forEach(function(s) {
-        var lines = s.lbl.split('\n');
-        statsEl.innerHTML += '<div class="stat-card">'
-            + '<div class="val" style="color:' + s.colore + ';">' + s.val + '</div>'
-            + '<div class="lbl">' + lines[0] + '<br>' + lines[1] + '<br>gg/anno (media)</div>'
-            + '</div>';
+    ANNI.forEach(function(anno) {
+        var c = conteggioAnni[anno];
+        if (!c) return;
+        statsEl.innerHTML +=
+            '<div class="stats-anno">'
+            + '<div class="stats-anno-title">' + anno + '</div>'
+            + '<div class="stats-grid">'
+            + '<div class="stat-card"><div class="val" style="color:#A32D2D;">' + c[1] + '</div><div class="lbl">Max ' + opMaxSym + ' ' + s2 + '&#176;C</div></div>'
+            + '<div class="stat-card"><div class="val" style="color:#F09595;">' + c[0] + '</div><div class="lbl">Max ' + opMaxSym + ' ' + s1 + '&#176;C</div></div>'
+            + '<div class="stat-card"><div class="val" style="color:#85B7EB;">' + c[2] + '</div><div class="lbl">Min ' + opMinSym + ' ' + s3 + '&#176;C</div></div>'
+            + '<div class="stat-card"><div class="val" style="color:#0C447C;">' + c[3] + '</div><div class="lbl">Min ' + opMinSym + ' ' + s4 + '&#176;C</div></div>'
+            + '</div></div>';
     });
 
-    // Nota footer
     document.getElementById('footer-note').textContent =
-        ANNI.length + ' anni &bull; dati: temp max / temp min giornaliera';
+        ANNI.length + ' anni \u2022 dati: temp max / temp min giornaliera';
 
-    // Comunica altezza al padre per resize iframe
     sendResize();
+    if (typeof aggiungiTooltipBarre === 'function') aggiungiTooltipBarre();
 }
 
 // Invia al padre (stat_display.php) l'altezza reale del contenuto
@@ -485,28 +664,92 @@ document.getElementById('btn-torna').addEventListener('click', function() {
     }, '*');
 });
 
-// Collega tutti gli slider a render() con clamp per rispettare la gerarchia
-// s1 non puo' raggiungere s2: se ci prova viene riportato a s2-1
-// s3 non puo' raggiungere s4: se ci prova viene riportato a s4+1
+// Collega slider a render() con clamp gerarchia
 document.getElementById('s1').addEventListener('input', function() {
     var s2 = parseInt(document.getElementById('s2').value);
-    if (parseInt(this.value) >= s2) this.value = s2 - 1;
+    var opMax = document.getElementById('op-max').value;
+    var val = parseInt(this.value);
+    if (opMax === '>=' && val >= s2) this.value = s2 - 1;
+    if (opMax === '<=' && val <= s2) this.value = s2 + 1;
     render();
 });
-document.getElementById('s2').addEventListener('input', function() {
-    render();
-});
+document.getElementById('s2').addEventListener('input', function() { render(); });
 document.getElementById('s3').addEventListener('input', function() {
     var s4 = parseInt(document.getElementById('s4').value);
-    if (parseInt(this.value) <= s4) this.value = s4 + 1;
+    var opMin = document.getElementById('op-min').value;
+    var val = parseInt(this.value);
+    if (opMin === '<=' && val <= s4) this.value = s4 + 1;
+    if (opMin === '>=' && val >= s4) this.value = s4 - 1;
     render();
 });
-document.getElementById('s4').addEventListener('input', function() {
+document.getElementById('s4').addEventListener('input', function() { render(); });
+
+// Operatori
+document.getElementById('op-max').addEventListener('change', render);
+document.getElementById('op-min').addEventListener('change', render);
+
+// Reset ai valori default
+document.getElementById('btn-reset').addEventListener('click', function() {
+    document.getElementById('s1').value = <?= $def_s1 ?>;
+    document.getElementById('s2').value = <?= $def_s2 ?>;
+    document.getElementById('s3').value = <?= $def_s3 ?>;
+    document.getElementById('s4').value = <?= $def_s4 ?>;
+    document.getElementById('op-max').value = '>=';
+    document.getElementById('op-min').value = '<=';
     render();
 });
 
+// Converte percentuale X (0-100) in stringa "GGmmm"
+// es. 0% -> "01 gen", 50% -> "02 lug"
+var MESI_NOMI = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+function pctToData(pct) {
+    var gg_tot = Math.round(pct / 100 * GG_ANNO);
+    gg_tot = Math.max(0, Math.min(GG_ANNO - 1, gg_tot));
+    var m = 0, r = gg_tot;
+    while (m < 11 && r >= MESE_GG[m]) { r -= MESE_GG[m]; m++; }
+    return (r + 1 < 10 ? '0' : '') + (r + 1) + ' ' + MESI_NOMI[m];
+}
+
+var tooltip = document.getElementById('bar-tooltip');
+
+function mostraTooltip(e, bar) {
+    var rect = bar.getBoundingClientRect();
+    var clientX, clientY;
+    if (e.touches) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+    } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+    }
+    var pct = Math.max(0, Math.min(100, (clientX - rect.left) / rect.width * 100));
+    tooltip.textContent = pctToData(pct);
+    tooltip.style.display = 'block';
+    // Posiziona sopra il cursore, centrato orizzontalmente
+    tooltip.style.left = (clientX - tooltip.offsetWidth / 2) + 'px';
+    tooltip.style.top  = (clientY - 28) + 'px';
+}
+
+function nascondiTooltip() {
+    tooltip.style.display = 'none';
+}
+
+// Aggiunge i listener su ogni bar-wrap dopo render()
+function aggiungiTooltipBarre() {
+    document.querySelectorAll('.bar-wrap').forEach(function(bar) {
+        bar.addEventListener('mousemove',  function(e) { mostraTooltip(e, bar); });
+        bar.addEventListener('mouseleave', nascondiTooltip);
+        bar.addEventListener('touchmove',  function(e) {
+            e.preventDefault(); // evita scroll accidentale
+            mostraTooltip(e, bar);
+        }, { passive: false });
+        bar.addEventListener('touchend',   nascondiTooltip);
+    });
+}
+
 // Render iniziale
 render();
+aggiungiTooltipBarre();
 
 // Secondo resize dopo che il DOM si e' stabilizzato
 // (necessario su mobile dove il layout si aggiusta dopo il paint)
