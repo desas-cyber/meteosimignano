@@ -343,6 +343,19 @@ document.addEventListener('click', function(e) {
         else                     navigaA3({anno: parts[1]});
     }
 });
+
+// ---- resize dinamico iframe ----
+function sendResize() {
+    window.parent.postMessage({
+        action:   'resize',
+        iframeId: 'stat-iframe-tab3',
+        height:   document.body.scrollHeight
+    }, '*');
+}
+window.addEventListener('load', function() {
+    sendResize();
+    setTimeout(sendResize, 300);
+});
 </script>
 
 </body>

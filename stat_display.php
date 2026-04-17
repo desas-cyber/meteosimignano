@@ -451,6 +451,7 @@ if (!isset($mainImageDate)) {
         <!-- TABELLA 3: Record pioggia per durata -->
         <div class="stat-section-header">
             <h2 class="stat-section-title">Record pioggia</h2>
+            <a href="#" class="stat-section-cta" id="btn-grafico-stat3" data-iframe="stat-iframe-tab3" data-src="grafico_stat3_display.php" data-mode="tabella">&#128200;&nbsp;Grafico</a>
         </div>
         <div class="stat-table-block">
             <div id="placeholder-tab3" class="stat-table-placeholder">Caricamento dati...</div>
@@ -549,6 +550,31 @@ if (!isset($mainImageDate)) {
                 if (srcOriginale) fr.src = srcOriginale;
                 btn.innerHTML = '&#128200;&nbsp;Grafico';
                 btn.setAttribute('data-mode', 'tabella');
+            }
+        });
+    });
+
+    // Toggle grafico/tabella per stat3
+    document.addEventListener('DOMContentLoaded', function() {
+        var btn3 = document.getElementById('btn-grafico-stat3');
+        if (!btn3) return;
+        btn3.addEventListener('click', function(e) {
+            e.preventDefault();
+            var iframeId = btn3.getAttribute('data-iframe');
+            var src      = btn3.getAttribute('data-src');
+            var mode     = btn3.getAttribute('data-mode');
+            var fr = document.getElementById(iframeId);
+            if (!fr) return;
+            if (mode === 'tabella') {
+                if (!_iframeSrcOriginali[iframeId]) _iframeSrcOriginali[iframeId] = fr.src;
+                fr.src = src;
+                btn3.innerHTML = '&#8592;&nbsp;Tabella';
+                btn3.setAttribute('data-mode', 'grafico');
+            } else {
+                var srcOriginale = _iframeSrcOriginali[iframeId];
+                if (srcOriginale) fr.src = srcOriginale;
+                btn3.innerHTML = '&#128200;&nbsp;Grafico';
+                btn3.setAttribute('data-mode', 'tabella');
             }
         });
     });

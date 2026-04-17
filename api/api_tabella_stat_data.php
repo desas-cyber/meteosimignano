@@ -1353,3 +1353,88 @@ function getGrafico1Data(): array
         ],
     ];
 }
+
+// ============================================================
+// GRAFICO STAT3 - record pluvio mensili per anno
+// ============================================================
+// Restituisce per l'anno selezionato i 12 mesi con i record
+// pluviometrici per le 4 durate (1h, 6h, 12h, 24h).
+//
+// PARAMETRI GET:
+//   ?anno=YYYY  anno da visualizzare (default: anno corrente)
+//
+// Struttura risposta:
+//   anno_sel    -> anno selezionato
+//   anni_disp   -> lista anni disponibili nel DB
+//   mesi[]      -> 12 elementi, uno per mese:
+//                  { mese, r1h, r6h, r12h, r24h,
+//                    d1h, d6h, d12h, d24h }
+// ============================================================
+function getGrafico3Data(): array
+{
+    global $pdo_lettura;
+
+    $table   = table_name('pluvio_record_mensili');
+    $oggi    = get_now('Y-m-d');
+    $anno_oggi = (int)date('Y', strtotime($oggi));
+
+    // Anno selezionato
+    $anno_sel = $anno_oggi;
+    if (!empty($_GET['anno'])) {
+        $a = (int)$_GET['anno'];
+        if ($a >= 2020 && $a <= $anno_oggi) $anno_sel = $a;
+    }
+
+    // Anni disponibili
+    $stmt = $pdo_lettura->prepare(
+        "SELECT DISTINCT anno FROM $table ORDER BY anno DESC"
+    );
+    $stmt->execute();
+    $anni_disp = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+    if (empty($anni_disp)) {
+        return ['success' => false, 'error' => 'Nessun dato disponibile'];
+    }
+
+    // Dati 12 mesi per l'anno selezionato
+    $stmt = $pdo_lettura->prepare(
+        "SELECT mese,
+                record_1h,  record_6h,  record_12h,  record_24h,
+                data_record_1h, data_record_6h, data_record_12h, data_record_24h
+         FROM $table
+         WHERE anno = :a
+         ORDER BY mese ASC"
+    );
+    $stmt->execute([':a' => $anno_sel]);
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Indicizza per mese
+    $byMese = [];
+    foreach ($rows as $r) {
+        $byMese[(int)$r['mese']] = $r;
+    }
+
+    // Costruisce array 12 mesi (null se mese mancante)
+    $mesi = [];
+    for ($m = 1; $m <= 12; $m++) {
+        $r = $byMese[$m] ?? null;
+        $mesi[] = [
+            'mese' => $m,
+            'r1h'  => $r && $r['record_1h']  !== null ? (float)$r['record_1h']  : null,
+            'r6h'  => $r && $r['record_6h']  !== null ? (float)$r['record_6h']  : null,
+            'r12h' => $r && $r['record_12h'] !== null ? (float)$r['record_12h'] : null,
+            'r24h' => $r && $r['record_24h'] !== null ? (float)$r['record_24h'] : null,
+            'd1h'  => $r['data_record_1h']  ?? null,
+            'd6h'  => $r['data_record_6h']  ?? null,
+            'd12h' => $r['data_record_12h'] ?? null,
+            'd24h' => $r['data_record_24h'] ?? null,
+        ];
+    }
+
+    return [
+        'success'   => true,
+        'anno_sel'  => $anno_sel,
+        'anni_disp' => array_map('intval', $anni_disp),
+        'mesi'      => $mesi,
+    ];
+}
