@@ -1237,3 +1237,119 @@ function getGraficoTermicoData(): array
         'oggi'    => $oggi,
     ];
 }
+
+// ============================================================
+// GRAFICO STAT1 - dati giornalieri per 4 zone temporali
+// ============================================================
+// Restituisce i dati grezzi giornalieri per:
+//   oggi         : 1 giorno (il giorno di riferimento)
+//   10gg         : 10 giorni precedenti
+//   30gg         : 30 giorni precedenti
+//   anno         : dall'1 gennaio al giorno di riferimento
+//
+// Per ogni giorno: data, temp_max_abs, temp_min_abs, temp_media,
+//                  pioggia cumulata da pluvio_giornaliero
+//
+// PARAMETRI GET:
+//   ?data=YYYY-MM-DD  giorno di riferimento (default: ieri)
+// ============================================================
+function getGrafico1Data(): array
+{
+    global $pdo_lettura;
+
+    $table_g = table_name('dati_meteo_giornaliero_simignano');
+    $table_p = table_name('pluvio_giornaliero');
+
+    $oggi_reale = get_now('Y-m-d');
+    $ref = date('Y-m-d', strtotime($oggi_reale . ' -1 day'));
+
+    if (!empty($_GET['data'])) {
+        $d = DateTime::createFromFormat('Y-m-d', $_GET['data']);
+        if ($d && $d->format('Y-m-d') <= $oggi_reale) {
+            $ref = $d->format('Y-m-d');
+        }
+    }
+
+    // Calcola i 4 periodi
+    $periodi = [
+        'oggi' => [
+            'da' => $ref,
+            'a'  => $ref,
+        ],
+        'gg10' => [
+            'da' => date('Y-m-d', strtotime($ref . ' -10 days')),
+            'a'  => date('Y-m-d', strtotime($ref . ' -1 day')),
+        ],
+        'gg30' => [
+            'da' => date('Y-m-d', strtotime($ref . ' -30 days')),
+            'a'  => date('Y-m-d', strtotime($ref . ' -1 day')),
+        ],
+        'anno' => [
+            'da' => date('Y-01-01', strtotime($ref)),
+            'a'  => $ref,
+        ],
+    ];
+
+    // Query unica per tutti i dati necessari
+    // Prende il range massimo (da inizio anno a oggi) e filtra in PHP
+    $da_min  = $periodi['anno']['da'];
+    $a_max   = $ref;
+
+    $stmt = $pdo_lettura->prepare("
+        SELECT
+            DATE_FORMAT(g.data_giorno, '%Y-%m-%d') AS d,
+            ROUND(g.temp_max_abs, 1)  AS mx,
+            ROUND(g.temp_min_abs, 1)  AS mn,
+            ROUND(g.temp_media,   1)  AS avg,
+            COALESCE(ROUND(p.cumulato_24h, 1), 0) AS pioggia
+        FROM $table_g g
+        LEFT JOIN $table_p p ON p.data = g.data_giorno
+        WHERE g.data_giorno BETWEEN :da AND :a
+          AND g.temp_max_abs BETWEEN -30 AND 50
+          AND g.temp_min_abs BETWEEN -30 AND 50
+        ORDER BY g.data_giorno ASC
+    ");
+    $stmt->execute([':da' => $da_min, ':a' => $a_max]);
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Indice per lookup rapido per data
+    $idx = [];
+    foreach ($rows as $r) {
+        $idx[$r['d']] = [
+            'd'       => $r['d'],
+            'mx'      => $r['mx'] !== null ? (float)$r['mx'] : null,
+            'mn'      => $r['mn'] !== null ? (float)$r['mn'] : null,
+            'avg'     => $r['avg'] !== null ? (float)$r['avg'] : null,
+            'pioggia' => (float)$r['pioggia'],
+        ];
+    }
+
+    // Costruisce i 4 array di dati filtrando per periodo
+    $risultato = [];
+    foreach ($periodi as $nome => $p) {
+        $lista = [];
+        $cur = new DateTime($p['da']);
+        $fine = new DateTime($p['a']);
+        while ($cur <= $fine) {
+            $ds = $cur->format('Y-m-d');
+            $lista[] = isset($idx[$ds]) ? $idx[$ds] : [
+                'd' => $ds, 'mx' => null, 'mn' => null, 'avg' => null, 'pioggia' => 0
+            ];
+            $cur->modify('+1 day');
+        }
+        $risultato[$nome] = $lista;
+    }
+
+    return [
+        'success'  => true,
+        'ref'      => $ref,
+        'oggi_reale' => $oggi_reale,
+        'periodi'  => $risultato,
+        'labels'   => [
+            'oggi' => date('d/m', strtotime($ref)),
+            'gg10' => '10 giorni',
+            'gg30' => '30 giorni',
+            'anno' => 'anno ' . date('Y', strtotime($ref)),
+        ],
+    ];
+}

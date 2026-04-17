@@ -157,6 +157,36 @@ $copertura = $response['copertura'] ?? ['oggi'=>1.0,'p10'=>1.0,'mese'=>1.0,'anno
             white-space: nowrap;
         }
 
+        /* ---- pulsante grafico ---- */
+        .top-bar-stat1 {
+            display: flex;
+            align-items: stretch;
+            justify-content: flex-end;
+            max-width: 98%;
+            margin: 4px auto 4px auto;
+            gap: 6px;
+        }
+        .btn-grafico-stat1 {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 4px 10px;
+            border-radius: 3px;
+            border: 2px solid black;
+            background: transparent;
+            color: black;
+            user-select: none;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+        .btn-grafico-stat1:hover { border-color: #3366cc; color: #3366cc; }
+        @media (min-width: 768px) {
+            .btn-grafico-stat1 { font-size: 13px; }
+        }
+
         /* ================================================================
            ASTERISCO COPERTURA DATI
         ================================================================ */
@@ -542,6 +572,19 @@ document.addEventListener('click', function(e) {
         else if (st.tipo==='mese')  navigaA({mese:val});
         else if (st.tipo==='anno')  navigaA({anno:val});
     }
+});
+
+// ---- resize dinamico iframe ----
+function sendResize() {
+    window.parent.postMessage({
+        action:   'resize',
+        iframeId: 'stat-iframe-tab1',
+        height:   document.body.scrollHeight
+    }, '*');
+}
+window.addEventListener('load', function() {
+    sendResize();
+    setTimeout(sendResize, 300);
 });
 </script>
 

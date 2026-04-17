@@ -688,12 +688,12 @@ document.getElementById('s4').addEventListener('input', function() { render(); }
 document.getElementById('op-max').addEventListener('change', render);
 document.getElementById('op-min').addEventListener('change', render);
 
-// Reset ai valori default
+// Reset ai valori default fissi (sempre 30/35/5/0 indipendentemente dai parametri GET)
 document.getElementById('btn-reset').addEventListener('click', function() {
-    document.getElementById('s1').value = <?= $def_s1 ?>;
-    document.getElementById('s2').value = <?= $def_s2 ?>;
-    document.getElementById('s3').value = <?= $def_s3 ?>;
-    document.getElementById('s4').value = <?= $def_s4 ?>;
+    document.getElementById('s1').value = 30;
+    document.getElementById('s2').value = 35;
+    document.getElementById('s3').value = 5;
+    document.getElementById('s4').value = 0;
     document.getElementById('op-max').value = '>=';
     document.getElementById('op-min').value = '<=';
     render();

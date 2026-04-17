@@ -424,7 +424,7 @@ if (!isset($mainImageDate)) {
         <!-- TABELLA 1 -->
         <div class="stat-section-header">
             <h2 class="stat-section-title">Statistiche mensili</h2>
-            <a href="#" class="stat-section-cta">Dettaglio</a>
+            <a href="#" class="stat-section-cta" id="btn-grafico-stat1" data-iframe="stat-iframe-tab1" data-src="grafico_stat1_display.php" data-mode="tabella">&#128200;&nbsp;Grafico</a>
         </div>
         <div class="stat-table-block">
             <div id="placeholder-tab1" class="stat-table-placeholder">Caricamento dati...</div>
@@ -516,7 +516,41 @@ if (!isset($mainImageDate)) {
         if (d.action === 'tornaTabella' && fr) {
             var srcOriginale = _iframeSrcOriginali[fr.id];
             if (srcOriginale) fr.src = srcOriginale;
+            // Resetta il pulsante se esiste
+            var btnReset = document.querySelector('[data-iframe="' + fr.id + '"]');
+            if (btnReset) {
+                btnReset.innerHTML = '&#128200;&nbsp;Grafico';
+                btnReset.setAttribute('data-mode', 'tabella');
+            }
         }
+    });
+
+    // Pulsante "Grafico" / "← Tabella" esterno (header sezione) — swap src dell'iframe
+    document.addEventListener('DOMContentLoaded', function() {
+        var btn = document.getElementById('btn-grafico-stat1');
+        if (!btn) return;
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            var iframeId = btn.getAttribute('data-iframe');
+            var src      = btn.getAttribute('data-src');
+            var mode     = btn.getAttribute('data-mode');
+            var fr = document.getElementById(iframeId);
+            if (!fr) return;
+
+            if (mode === 'tabella') {
+                // Passa a grafico
+                if (!_iframeSrcOriginali[iframeId]) _iframeSrcOriginali[iframeId] = fr.src;
+                fr.src = src;
+                btn.innerHTML = '&#8592;&nbsp;Tabella';
+                btn.setAttribute('data-mode', 'grafico');
+            } else {
+                // Torna a tabella
+                var srcOriginale = _iframeSrcOriginali[iframeId];
+                if (srcOriginale) fr.src = srcOriginale;
+                btn.innerHTML = '&#128200;&nbsp;Grafico';
+                btn.setAttribute('data-mode', 'tabella');
+            }
+        });
     });
     </script>
 
