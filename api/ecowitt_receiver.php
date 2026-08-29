@@ -18,6 +18,13 @@
  * - winddir -> direzione_vento_deg
  * - solarradiation -> radianza_wm2
  * - dateutc -> data_ora (conversione timezone) - OBBLIGATORIO!
+ * 
+ * parametri gateway gw3000 ecowitt:
+ * serverIP/hostname: www.meteosimignano.it
+ * path: /api/ecowitt_receiver.php
+ * port: 80
+ * la connessione deve essere solo http; modificare il fle htacess in modo da forzare http per la cartella api/ (per evitare problemi di certificati SSL e configurazione)
+ * method: POST
  */
 
 // === INCLUDE FILES ===

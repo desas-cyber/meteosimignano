@@ -136,11 +136,27 @@ Script: sincronizza directory snapshot Foscam con tabella DB_immagini_36h(_test)
 
                 $file_age = $now - $timestamp_file;
 
+                // Sanity check: file con data nel futuro (>3h)
+                if ($file_age < -10800) {
+                    scriviLog("SANITY FUTURO: $data_ora_str - file $file eliminato dalla cartella.");
+                    debugEcho("SANITY FUTURO: $file ($data_ora_str) eliminato dalla cartella.");
+                    if (file_exists($path)) { unlink($path); }
+                    continue;
+                }
+
+                // Sanity check: file con data troppo vecchia (>60gg)
+                if ($file_age > 5184000) {
+                    scriviLog("SANITY VECCHIO: $data_ora_str - file $file eliminato dalla cartella.");
+                    debugEcho("SANITY VECCHIO: $file ($data_ora_str) eliminato dalla cartella.");
+                    if (file_exists($path)) { unlink($path); }
+                    continue;
+                }
+
                 if ($file_age <= $threshold_sec) {
-                    $files_vivi[$file] = true;  // oppure puoi salvare $timestamp_file se serve
+                    $files_vivi[$file] = true;
                 } else {
                     if (unlink($path)) {
-                        debugEcho("🗑️ Eliminato file troppo vecchio: $file");
+                        debugEcho("Eliminato file troppo vecchio: $file");
                     }
                 }
             }
@@ -167,7 +183,7 @@ function leggiImmaginiDaDatabase(PDO $pdo, string $table_name): array  {
     return $files_nel_db;
 }    
     
- function sincronizzaDatabase(PDO $pdo, array $file_map_dir, array $file_map_db, string $table_name) {
+ function sincronizzaDatabase(PDO $pdo, array $file_map_dir, array $file_map_db, string $table_name, string $directory) {
     $stmt_insert = $pdo->prepare("INSERT IGNORE INTO " . $table_name . " (FILE, DATA_ORA) VALUES (:file, :data_ora)");
     $stmt_delete = $pdo->prepare("DELETE FROM " . $table_name . " WHERE FILE = :file");
 
@@ -237,8 +253,40 @@ function leggiImmaginiDaDatabase(PDO $pdo, string $table_name): array  {
         }
     }
 
-    debugEcho("✅ Inseriti nel DB: $inseriti nuovi file.");
-    debugEcho("🗑️ Eliminati dal DB: $eliminati file non più presenti.");
+    debugEcho("Inseriti nel DB: $inseriti nuovi file.");
+    debugEcho("Eliminati dal DB: $eliminati file non piu presenti.");
+
+    // ❌ SANITY CHECK DB: elimina record con DATA_ORA anomala
+    $now_ts         = get_time();
+    $limite_futuro  = $now_ts + 10800;   // +3 ore
+    $limite_passato = $now_ts - 5184000; // -60 giorni
+    $stmt_select_all = $pdo->query("SELECT FILE, DATA_ORA FROM " . $table_name);
+    $stmt_del_sanity = $pdo->prepare("DELETE FROM " . $table_name . " WHERE FILE = :file");
+    $sanity_db = 0;
+    if ($stmt_select_all) {
+        while ($row = $stmt_select_all->fetch(PDO::FETCH_ASSOC)) {
+            $ts = get_strtotime($row['DATA_ORA']);
+            if ($ts === false) continue;
+            $anomala = false;
+            if ($ts > $limite_futuro) {
+                scriviLog("SANITY DB FUTURO: " . $row['DATA_ORA'] . " - file " . $row['FILE'] . " eliminato dal DB.");
+                debugEcho("SANITY DB FUTURO: " . $row['FILE'] . " (" . $row['DATA_ORA'] . ") eliminato dal DB.");
+                $anomala = true;
+            } elseif ($ts < $limite_passato) {
+                scriviLog("SANITY DB VECCHIO: " . $row['DATA_ORA'] . " - file " . $row['FILE'] . " eliminato dal DB.");
+                debugEcho("SANITY DB VECCHIO: " . $row['FILE'] . " (" . $row['DATA_ORA'] . ") eliminato dal DB.");
+                $anomala = true;
+            }
+            if ($anomala) {
+                $stmt_del_sanity->execute([':file' => $row['FILE']]);
+                // Elimina anche il file fisico se esiste
+                $path = rtrim($directory, '/') . '/' . $row['FILE'];
+                if (file_exists($path)) { unlink($path); }
+                $sanity_db++;
+            }
+        }
+    }
+    if ($sanity_db > 0) { debugEcho("SANITY DB: $sanity_db record anomali eliminati dal DB."); }
 }   
     
     function aggiornaDatiMeteo(PDO $pdo, PDO $pdo_lettura, string $table_name) {
@@ -601,7 +649,7 @@ function aggiornaSunPhase(PDO $pdo, PDO $pdo_lettura, string $table_name) {
     separatoreEsecuzione();
     $files_vivi = filtraFileVivi($directory, $threshold_sec);
     $files_nel_db = leggiImmaginiDaDatabase($pdo,$table_name);
-    sincronizzaDatabase($pdo, $files_vivi, $files_nel_db, $table_name);
+    sincronizzaDatabase($pdo, $files_vivi, $files_nel_db, $table_name, $directory);
     aggiornaDatiMeteo($pdo, $pdo_lettura, $table_name);
     aggiornaSunPhase($pdo, $pdo_lettura, $table_name);
     $durata = round(microtime(true) - $start, 2);

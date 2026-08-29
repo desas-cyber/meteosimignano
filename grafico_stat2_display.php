@@ -290,11 +290,16 @@ $anni_js  = json_encode($anni);
 
         /* ---- asse mesi per anno ---- */
         .axis-row {
-            display: flex;
-            justify-content: space-between;
+            position: relative;
+            height: 14px;
             margin: 2px 0 10px 0;
         }
-        .axis-row span { font-size: 9px; color: #bbb; }
+        .axis-row span {
+            position: absolute;
+            font-size: 9px;
+            color: #bbb;
+            white-space: nowrap;
+        }
 
         /* ---- card statistiche per anno ---- */
         .stats-anno {
@@ -581,10 +586,13 @@ function render() {
         // Asse mesi sotto ogni barra
         var axisRow = document.createElement('div');
         axisRow.className = 'axis-row';
-        MESI_NOMI_SHORT.forEach(function(nm) {
+        var gg = 0;
+        MESI_NOMI_SHORT.forEach(function(nm, mi) {
             var sp = document.createElement('span');
             sp.textContent = nm;
+            sp.style.left = (gg / GG_ANNO * 100).toFixed(3) + '%';
             axisRow.appendChild(sp);
+            gg += MESE_GG[mi];
         });
         block.appendChild(axisRow);
         wrap.appendChild(block);

@@ -58,6 +58,14 @@ require_once __DIR__ . '/camera_config.php';
             cursor: pointer;
             height: auto;
         }
+
+        /* Placeholder: tag img identico a .main-image, nascosto di default */
+        #no-image-placeholder {
+            display: none;
+            width: calc(100% + 6px);
+            max-width: 1000px;
+        }
+        #no-image-placeholder.visible { display: block; }
         
         /* Overlay con data e temperatura sopra l'immagine principale */
         .main-container > .date-text {
@@ -578,11 +586,20 @@ require_once __DIR__ . '/camera_config.php';
              ================================================================ -->
         
         <div class="main-container">
-            <!-- Immagine principale (src popolato da JavaScript) -->
-            <img id="main-image" 
-                src="" 
-                alt="Caricamento immagine..." 
+            <!-- Placeholder "nessuna immagine": img con SVG nero 1920x1080 -->
+            <img id="no-image-placeholder"
+                src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1920' height='1080'%3E%3Crect width='1920' height='1080' fill='%231a1a1a'/%3E%3Ctext x='960' y='560' font-family='Arial' font-size='48' fill='%23555' text-anchor='middle'%3ENessuna immagine disponibile%3C/text%3E%3C/svg%3E"
+                alt="Nessuna immagine disponibile"
                 class="main-image">
+
+            <!-- Immagine principale (src popolato da JavaScript) -->
+            <img id="main-image"
+                src=""
+                alt="Caricamento immagine..."
+                class="main-image"
+                style="display:none;"
+                onload="this.style.display=''; document.getElementById('no-image-placeholder').classList.remove('visible');"
+                onerror="this.style.display='none'; document.getElementById('no-image-placeholder').classList.add('visible');">
             
             <!-- Overlay con data e temperatura -->
             <h2 class="date-text" id="main-image-date">
@@ -794,6 +811,12 @@ require_once __DIR__ . '/camera_config.php';
     (function(){
       var img = document.getElementById('main-image');
       if (!img) { markDone('main'); return; }
+
+      // src vuoto: placeholder gia' visibile, niente da aspettare
+      if (!img.src || img.src === window.location.href) {
+        markDone('main');
+        return;
+      }
 
       function done(){ markDone('main'); }
       if (img.complete) return done();

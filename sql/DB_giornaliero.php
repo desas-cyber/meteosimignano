@@ -45,10 +45,10 @@ define('IS_CLI', PHP_SAPI === 'cli');
 // ============================================================================
 
 $base_dir = __DIR__;
-require_once $base_dir . '/../envelop.php';
-require_once $base_dir . '/env_tables_helper.php';
-require_once $base_dir . '/datetime_helper.php';
-require_once $base_dir . '/astro_helper.php';   // per calculateSolarRadiationTheoretical()
+require_once $base_dir . '/../../envelop.php';
+require_once $base_dir . '/../env_tables_helper.php';
+require_once $base_dir . '/../datetime_helper.php';
+require_once $base_dir . '/../astro_helper.php';   // per calculateSolarRadiationTheoretical()
 
 if (!isset($pdo) || !($pdo instanceof PDO)) {
     fatalError('Connessione PDO non disponibile.');
@@ -74,9 +74,8 @@ define('SOGLIA_COMPLETEZZA', 0.75);
 // Fallback record attesi se non ci sono dati storici sufficienti per la mediana
 define('RECORD_ATTESI_FALLBACK', 1440);
 
-// Valore sentinella scritto nel DB quando una metrica non raggiunge la soglia 75%
-// Usato invece di NULL per distinguere 'dato non affidabile' da 'dato mai ricevuto'
-define('SENTINELLA', 9999);
+// Valore sentinella scritto nel DB quando una metrica non raggiunge la soglia 75% NULL
+
 
 
 
@@ -145,26 +144,6 @@ if (!IS_CLI) {
 log_msg('=== calcola_giornaliero.php avviato ===');
 log_msg('Giorni da calcolare: ' . count($giorni_da_calcolare));
 
-// ============================================================
-// DEBUG - rimuovere dopo aver risolto il problema
-// ============================================================
-log_msg('[DEBUG] PHP version: ' . PHP_VERSION);
-log_msg('[DEBUG] TABLE_SRC  : ' . $TABLE_SRC);
-log_msg('[DEBUG] TABLE_DEST : ' . $TABLE_DEST);
-try {
-    $dbname = $pdo->query('SELECT DATABASE()')->fetchColumn();
-    log_msg('[DEBUG] Database connesso: ' . $dbname);
-    $cnt = $pdo->query("SELECT COUNT(*) FROM {$TABLE_SRC}")->fetchColumn();
-    log_msg('[DEBUG] Righe totali in TABLE_SRC: ' . $cnt);
-    $minmax = $pdo->query("SELECT MIN(DATE(data_ora)), MAX(DATE(data_ora)) FROM {$TABLE_SRC}")->fetch(PDO::FETCH_NUM);
-    log_msg('[DEBUG] Range date in TABLE_SRC: ' . $minmax[0] . ' -> ' . $minmax[1]);
-    $campione = $pdo->query("SELECT COUNT(*) FROM {$TABLE_SRC} WHERE DATE(data_ora) = '2024-07-19'")->fetchColumn();
-    log_msg('[DEBUG] Righe per 2024-07-19: ' . $campione);
-} catch (Exception $e) {
-    log_msg('[DEBUG] ERRORE query debug: ' . $e->getMessage());
-}
-// ============================================================
-
 $ok = 0;
 $ko = 0;
 
@@ -173,19 +152,18 @@ foreach ($giorni_da_calcolare as $giorno) {
         $risultato = consolidaGiorno($pdo, $TABLE_SRC, $TABLE_DEST, $giorno);
         if ($risultato['success']) {
             log_msg(sprintf(
-                '[OK] %s - %d record | T %.1f/%.1f/%.1f°C | P %.1f hPa | Vdom %d° (%d%%) %.1f km/h | Rad %s%%',
+                '[OK] %s - %d record | T %s/%s/%s°C | P %s hPa | Vdom %s° (%s%%) %s km/h | Rad %s%%',
                 $giorno,
                 $risultato['n_record'],
-                $risultato['temp_min_abs']        ?? 0,
-                $risultato['temp_media']          ?? 0,
-                $risultato['temp_max_abs']        ?? 0,
-                $risultato['press_media']         ?? 0,
-                $risultato['vento_dir_dom_deg']   ?? 0,
-                $risultato['vento_dir_dom_perc']  ?? 0,
-                $risultato['vento_dom_kmh']       ?? 0,
+                $risultato['temp_min_abs']        ?? 'N/A',
+                $risultato['temp_media']          ?? 'N/A',
+                $risultato['temp_max_abs']        ?? 'N/A',
+                $risultato['press_media']         ?? 'N/A',
+                $risultato['vento_dir_dom_deg']   ?? 'N/A',
+                $risultato['vento_dir_dom_perc']  ?? 'N/A',
+                $risultato['vento_dom_kmh']       ?? 'N/A',
                 $risultato['rad_percent_24h'] !== null ? $risultato['rad_percent_24h'] : 'N/A'
             ));
-            $ok++;
         } else {
             log_msg("[SKIP] {$giorno} - {$risultato['motivo']}");
         }
@@ -382,23 +360,23 @@ function consolidaGiorno(PDO $pdo, string $src, string $dest, string $giorno): a
     $data = [
         'data_giorno'            => $giorno,
 
-        // Temperatura: 9999 se meno del 75% dei record e' valido
-        'temp_media'             => $tempOk ? arrotonda($raw['temp_media'], 2)   : SENTINELLA,
-        'temp_max_abs'           => $tempOk ? arrotonda($raw['temp_max_abs'], 2) : SENTINELLA,
+        // Temperatura: NULL se meno del 75% dei record e' valido
+        'temp_media'             => $tempOk ? arrotonda($raw['temp_media'], 2)   : null,
+        'temp_max_abs'           => $tempOk ? arrotonda($raw['temp_max_abs'], 2) : null,
         'temp_max_abs_ora'       => $tempOk ? ($raw['temp_max_abs_ora'] ?? null)  : null,
-        'temp_min_abs'           => $tempOk ? arrotonda($raw['temp_min_abs'], 2) : SENTINELLA,
+        'temp_min_abs'           => $tempOk ? arrotonda($raw['temp_min_abs'], 2) : null,
         'temp_min_abs_ora'       => $tempOk ? ($raw['temp_min_abs_ora'] ?? null)  : null,
-
-        // Pressione: 9999 se meno del 75% dei record e' valido
-        'press_media'            => $pressOk ? arrotonda($raw['press_media'], 2) : SENTINELLA,
-        'press_max'              => $pressOk ? arrotonda($raw['press_max'], 2)   : SENTINELLA,
-        'press_min'              => $pressOk ? arrotonda($raw['press_min'], 2)   : SENTINELLA,
-
-        // Vento: 9999 se meno del 75% dei record e' valido
-        'vento_dir_dom_deg'      => $ventoOk ? $dirDomDeg     : SENTINELLA,
+        
+        // Pressione: NULL se meno del 75% dei record e' valido
+        'press_media'            => $pressOk ? arrotonda($raw['press_media'], 2) : null,
+        'press_max'              => $pressOk ? arrotonda($raw['press_max'], 2)   : null,
+        'press_min'              => $pressOk ? arrotonda($raw['press_min'], 2)   : null,
+        
+        // Vento: NULL se meno del 75% dei record e' valido
+        'vento_dir_dom_deg'      => $ventoOk ? $dirDomDeg     : null,
         'vento_dir_dom_perc'     => $ventoOk ? $dirDomPerc    : null,
-        'vento_dom_kmh'          => $ventoOk ? $velDirDomKmh  : SENTINELLA,
-
+        'vento_dom_kmh'          => $ventoOk ? $velDirDomKmh  : null,
+        
         // Radianza: 9999 se non calcolabile (dati insufficienti o notte)
         'rad_percent_24h'        => $radPercent24h,
 

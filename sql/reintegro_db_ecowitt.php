@@ -54,7 +54,7 @@ try {
     // LETTURA INTESTAZIONE CSV
     // ========================================================================
     // Legge la prima riga per mappare le colonne
-    $header = fgetcsv($handle);
+    $header = fgetcsv($handle, 0, ",", "\"", "\\");
     
     // Trova gli indici delle colonne necessarie
     $colIndexes = [
@@ -115,8 +115,8 @@ try {
     // ========================================================================
     // DEFINIZIONE FINESTRA TEMPORALE
     // ========================================================================
-    $start = '2026-01-01 00:00:00';
-    $end   = '2026-01-31 23:59:59';
+    $start = '2026-06-18 00:00:00';
+    $end   = '2026-08-27 23:59:59';
 
     // ========================================================================
     // COSTANTI PER CORREZIONI
@@ -139,7 +139,7 @@ try {
     // ========================================================================
     // CICLO DI LETTURA E IMPORTAZIONE CSV
     // ========================================================================
-    while (($data = fgetcsv($handle)) !== false) {
+    while (($data = fgetcsv($handle, 0, ",", "\"", "\\")) !== false) {
         $lineNumber++;
         
         // ====================================================================
@@ -290,12 +290,12 @@ try {
     echo "<br>========================================<br>\n";
     echo "Importazione completata con successo!<br>\n";
     echo "========================================<br>\n";
-    /*echo "CORREZIONI APPLICATE:<br>\n";
+    echo "CORREZIONI APPLICATE:<br>\n";
     echo "- Temperatura: {$TEMP_CORRECTION}°C<br>\n";
     //echo "- Pressione: +" . round($PRESSURE_CORRECTION, 2) . " hPa (altitudine {$ALTITUDE_M}m)<br>\n";
     echo "- Radiazione solare: *{$SOLAR_CORRECTION}<br>\n";
     echo "- Vento: convertito da m/s a km/h (*{$MS_TO_KMH}), usato max tra Wind e Gust<br>\n";
-    echo "----------------------------------------<br>\n";*/
+    echo "----------------------------------------<br>\n";
     echo "- Inseriti: $inseriti nuovi record<br>\n";
     echo "- Aggiornati: $aggiornati record esistenti<br>\n";
     echo "- Saltati: $saltati record<br>\n";

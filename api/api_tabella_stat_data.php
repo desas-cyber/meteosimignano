@@ -20,7 +20,7 @@
  *   - pluvio_giornaliero               : pioggia (cumulato_24h, data)
  */
 
-require_once __DIR__ . '/../../envelop.php';
+require_once __DIR__ . '/../../envelop_lettura.php';
 require_once __DIR__ . '/../datetime_helper.php';
 require_once __DIR__ . '/../env_tables_helper.php';
 
@@ -111,14 +111,14 @@ function statVentoDominante(array $rows_periodo): array
 /**
  * Recupera tutti i dati statistici per i 4 periodi
  *
- * @param PDO $pdo
+ * @param PDO $pdo_lettura
  * @return array ['success' => bool, 'periodi' => [...], 'righe' => [...]]
  */
 function getStatData(): array
 {
     // global deve stare all'inizio della funzione, non dentro un if
-    global $pdo;
-    if (!($pdo instanceof PDO)) {
+    global $pdo_lettura;
+    if (!($pdo_lettura instanceof PDO)) {
         return ['success' => false, 'error' => 'Connessione database non disponibile'];
     }
 
@@ -197,7 +197,7 @@ function getStatData(): array
 
     try {
         // --- OGGI ---
-        $stmt = $pdo->prepare("
+        $stmt = $pdo_lettura->prepare("
             SELECT *
             FROM $table_g
             WHERE data_giorno = :oggi
@@ -207,7 +207,7 @@ function getStatData(): array
         $oggi_row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
 
         // --- PERIODO 10GG ---
-        $stmt = $pdo->prepare("
+        $stmt = $pdo_lettura->prepare("
             SELECT *
             FROM $table_g
             WHERE data_giorno BETWEEN :inizio AND :fine
@@ -217,7 +217,7 @@ function getStatData(): array
         $rows_10gg = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Aggregati periodo 10gg
-        $stmt = $pdo->prepare("
+        $stmt = $pdo_lettura->prepare("
             SELECT
                 AVG(CASE WHEN temp_media  BETWEEN -30 AND 50 THEN temp_media  END)  AS t_media,
                 MAX(CASE WHEN temp_max_abs BETWEEN -30 AND 50 THEN temp_max_abs END) AS t_max,
@@ -287,11 +287,11 @@ function getStatData(): array
         $agg_10gg = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
 
         // --- MESE ---
-        $stmt = $pdo->prepare("SELECT * FROM $table_g WHERE data_giorno BETWEEN :inizio AND :fine ORDER BY data_giorno ASC");
+        $stmt = $pdo_lettura->prepare("SELECT * FROM $table_g WHERE data_giorno BETWEEN :inizio AND :fine ORDER BY data_giorno ASC");
         $stmt->execute([':inizio' => $mese_inizio, ':fine' => $mese_fine]);
         $rows_mese = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $stmt = $pdo->prepare("
+        $stmt = $pdo_lettura->prepare("
             SELECT
                 AVG(CASE WHEN temp_media   BETWEEN -30 AND 50 THEN temp_media   END) AS t_media,
                 MAX(CASE WHEN temp_max_abs BETWEEN -30 AND 50 THEN temp_max_abs END) AS t_max,
@@ -319,11 +319,11 @@ function getStatData(): array
         $agg_mese = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
 
         // --- ANNO ---
-        $stmt = $pdo->prepare("SELECT * FROM $table_g WHERE data_giorno BETWEEN :inizio AND :fine ORDER BY data_giorno ASC");
+        $stmt = $pdo_lettura->prepare("SELECT * FROM $table_g WHERE data_giorno BETWEEN :inizio AND :fine ORDER BY data_giorno ASC");
         $stmt->execute([':inizio' => $anno_inizio, ':fine' => $anno_fine]);
         $rows_anno = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $stmt = $pdo->prepare("
+        $stmt = $pdo_lettura->prepare("
             SELECT
                 AVG(CASE WHEN temp_media   BETWEEN -30 AND 50 THEN temp_media   END) AS t_media,
                 MAX(CASE WHEN temp_max_abs BETWEEN -30 AND 50 THEN temp_max_abs END) AS t_max,
@@ -360,12 +360,12 @@ function getStatData(): array
     // ========================================================================
     try {
         // Pioggia oggi
-        $stmt = $pdo->prepare("SELECT cumulato_24h FROM $table_p WHERE DATE(data) = :oggi ORDER BY data DESC LIMIT 1");
+        $stmt = $pdo_lettura->prepare("SELECT cumulato_24h FROM $table_p WHERE DATE(data) = :oggi ORDER BY data DESC LIMIT 1");
         $stmt->execute([':oggi' => $oggi_orig]);
         $pioggia_oggi = $stmt->fetchColumn();
 
         // Pioggia periodo 10gg
-        $stmt = $pdo->prepare("
+        $stmt = $pdo_lettura->prepare("
             SELECT SUM(cumulato_24h) AS tot, COUNT(CASE WHEN cumulato_24h >= 1 THEN 1 END) AS gg_pioggia
             FROM $table_p
             WHERE DATE(data) BETWEEN :inizio AND :fine
@@ -374,7 +374,7 @@ function getStatData(): array
         $pioggia_10gg = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
 
         // Pioggia mese
-        $stmt = $pdo->prepare("
+        $stmt = $pdo_lettura->prepare("
             SELECT SUM(cumulato_24h) AS tot, COUNT(CASE WHEN cumulato_24h >= 1 THEN 1 END) AS gg_pioggia
             FROM $table_p
             WHERE DATE(data) BETWEEN :inizio AND :fine
@@ -383,7 +383,7 @@ function getStatData(): array
         $pioggia_mese = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
 
         // Pioggia anno
-        $stmt = $pdo->prepare("
+        $stmt = $pdo_lettura->prepare("
             SELECT SUM(cumulato_24h) AS tot, COUNT(CASE WHEN cumulato_24h >= 1 THEN 1 END) AS gg_pioggia
             FROM $table_p
             WHERE DATE(data) BETWEEN :inizio AND :fine
@@ -669,8 +669,8 @@ function stat2FmtDataEstesa(?string $data_sql): string
 
 function getStat2Data(): array
 {
-    global $pdo;
-    if (!($pdo instanceof PDO)) {
+    global $pdo_lettura;
+    if (!($pdo_lettura instanceof PDO)) {
         return ['success' => false, 'error' => 'Connessione database non disponibile'];
     }
 
@@ -743,7 +743,7 @@ function getStat2Data(): array
     }
     $giorni_attesi = (int)((new DateTime($inizio))->diff(new DateTime($fine_raw_cov))->days) + 1;
     try {
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM $table_g WHERE data_giorno BETWEEN :i AND :f");
+        $stmt = $pdo_lettura->prepare("SELECT COUNT(*) FROM $table_g WHERE data_giorno BETWEEN :i AND :f");
         $stmt->execute([':i' => $inizio, ':f' => $fine]);
         $copertura = $giorni_attesi > 0 ? (int)$stmt->fetchColumn() / $giorni_attesi : 0.0;
     } catch (PDOException $e) {
@@ -755,9 +755,9 @@ function getStat2Data(): array
     // ========================================================================
     try {
         $ultimoGiorno = function(string $campo, string $op, float $soglia)
-            use ($pdo, $table_g, $ref_data): ?string
+            use ($pdo_lettura, $table_g, $ref_data): ?string
         {
-            $stmt = $pdo->prepare(
+            $stmt = $pdo_lettura->prepare(
                 "SELECT MAX(data_giorno) FROM $table_g
                  WHERE $campo $op :s
                    AND $campo BETWEEN -30 AND 50
@@ -768,9 +768,9 @@ function getStat2Data(): array
         };
 
         $primoGiorno = function(string $campo, string $op, float $soglia, string $fin_inizio)
-            use ($pdo, $table_g, $ref_data): ?string
+            use ($pdo_lettura, $table_g, $ref_data): ?string
         {
-            $stmt = $pdo->prepare(
+            $stmt = $pdo_lettura->prepare(
                 "SELECT MIN(data_giorno) FROM $table_g
                  WHERE $campo $op :s
                    AND $campo BETWEEN -30 AND 50
@@ -823,9 +823,9 @@ function getStat2Data(): array
     // ========================================================================
     try {
         $contaGiorni = function(string $campo, string $op, float $soglia)
-            use ($pdo, $table_g, $inizio, $fine): int
+            use ($pdo_lettura, $table_g, $inizio, $fine): int
         {
-            $stmt = $pdo->prepare(
+            $stmt = $pdo_lettura->prepare(
                 "SELECT COUNT(*) FROM $table_g
                  WHERE data_giorno BETWEEN :i AND :f
                    AND $campo $op :s
@@ -953,8 +953,8 @@ function stat3FmtData(?string $dt_sql): string
 
 function getStat3Data(): array
 {
-    global $pdo;
-    if (!($pdo instanceof PDO)) {
+    global $pdo_lettura;
+    if (!($pdo_lettura instanceof PDO)) {
         return ['success' => false, 'error' => 'Connessione database non disponibile'];
     }
 
@@ -984,7 +984,7 @@ function getStat3Data(): array
     // QUERY - riga mese selezionato
     // ========================================================================
     try {
-        $stmt = $pdo->prepare(
+        $stmt = $pdo_lettura->prepare(
             "SELECT record_1h, record_6h, record_12h, record_24h,
                     data_record_1h, data_record_6h, data_record_12h, data_record_24h
              FROM $table
@@ -1011,7 +1011,7 @@ function getStat3Data(): array
     // QUERY - record annuale (MAX su tutti i mesi dell'anno selezionato)
     // ========================================================================
     try {
-        $stmt = $pdo->prepare(
+        $stmt = $pdo_lettura->prepare(
             "SELECT record_1h, record_6h, record_12h, record_24h,
                     data_record_1h, data_record_6h, data_record_12h, data_record_24h
              FROM $table
@@ -1021,7 +1021,7 @@ function getStat3Data(): array
         );
         // Strategia: per ogni durata prendo il MAX con una query aggregata,
         // poi recupero la data dalla riga con quel valore massimo
-        $stmt2 = $pdo->prepare(
+        $stmt2 = $pdo_lettura->prepare(
             "SELECT
                 MAX(record_1h)  AS r1h,  MAX(record_6h)  AS r6h,
                 MAX(record_12h) AS r12h, MAX(record_24h) AS r24h
@@ -1037,10 +1037,10 @@ function getStat3Data(): array
 
         // Data del record per ciascuna durata
         $fetchDataAnno = function(?float $val, string $campo_rec, string $campo_data)
-            use ($pdo, $table, $anno_sel): ?string
+            use ($pdo_lettura, $table, $anno_sel): ?string
         {
             if ($val === null) return null;
-            $s = $pdo->prepare(
+            $s = $pdo_lettura->prepare(
                 "SELECT $campo_data FROM $table
                  WHERE anno = :a AND $campo_rec = :v
                  ORDER BY $campo_data DESC LIMIT 1"
@@ -1069,7 +1069,7 @@ function getStat3Data(): array
     $fine_mese_cov = ($fine_mese_raw > $oggi) ? $oggi : $fine_mese_raw;
     $giorni_attesi_mese = (int)(new DateTime($inizio_mese))->diff(new DateTime($fine_mese_raw))->days + 1;
     try {
-        $stmt_cov = $pdo->prepare("SELECT COUNT(*) FROM $table_g_cov WHERE data_giorno BETWEEN :i AND :f");
+        $stmt_cov = $pdo_lettura->prepare("SELECT COUNT(*) FROM $table_g_cov WHERE data_giorno BETWEEN :i AND :f");
         $stmt_cov->execute([':i' => $inizio_mese, ':f' => $fine_mese_cov]);
         $giorni_con_dati = (int)$stmt_cov->fetchColumn();
         $copertura = $giorni_attesi_mese > 0 ? $giorni_con_dati / $giorni_attesi_mese : 0.0;
@@ -1085,7 +1085,7 @@ function getStat3Data(): array
     $fine_anno_cov    = ($fine_anno_raw > $oggi) ? $oggi : $fine_anno_raw;
     $giorni_attesi_anno = (int)(new DateTime($inizio_anno))->diff(new DateTime($fine_anno_raw))->days + 1;
     try {
-        $stmt_cov_a = $pdo->prepare("SELECT COUNT(*) FROM $table_g_cov WHERE data_giorno BETWEEN :i AND :f");
+        $stmt_cov_a = $pdo_lettura->prepare("SELECT COUNT(*) FROM $table_g_cov WHERE data_giorno BETWEEN :i AND :f");
         $stmt_cov_a->execute([':i' => $inizio_anno, ':f' => $fine_anno_cov]);
         $giorni_con_dati_anno = (int)$stmt_cov_a->fetchColumn();
         $copertura_anno = $giorni_attesi_anno > 0 ? $giorni_con_dati_anno / $giorni_attesi_anno : 0.0;
