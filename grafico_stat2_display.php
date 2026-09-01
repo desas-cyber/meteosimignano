@@ -1,7 +1,7 @@
 <?php
 /**
  * ============================================================================
- * GRAFICO TERMICO SOGLIE - stat2_grafico.php
+ * GRAFICO TERMICO SOGLIE - grafico_sta2_display.php
  * ============================================================================
  * Timeline orizzontale colorata per soglie di temperatura.
  * Ogni anno e' una riga; ogni giorno e' colorato in base a 4 soglie:
@@ -597,28 +597,24 @@ function render() {
         block.appendChild(axisRow);
         wrap.appendChild(block);
 
-        // Conteggi per questo anno
+                // Conteggi per questo anno (ogni soglia indipendente, coerente con tabella_stat2)
         var c1=0, c2=0, c3=0, c4=0;
         giorni.forEach(function(g) {
             var mx = g.mx, mn = g.mn;
             if (mx !== null) {
                 if (opMax === '>=') {
-                    // >= esclusivo: chi supera s2 non conta in s1
                     if (mx >= s2) c2++;
-                    else if (mx >= s1) c1++;
+                    if (mx >= s1) c1++;
                 } else {
-                    // <= inclusivo: ogni soglia conta indipendentemente
                     if (mx <= s2) c2++;
                     if (mx <= s1) c1++;
                 }
             }
             if (mn !== null) {
                 if (opMin === '<=') {
-                    // <= esclusivo: chi scende sotto s4 non conta in s3
                     if (mn <= s4) c4++;
-                    else if (mn <= s3) c3++;
+                    if (mn <= s3) c3++;
                 } else {
-                    // >= inclusivo: ogni soglia conta indipendentemente
                     if (mn >= s4) c4++;
                     if (mn >= s3) c3++;
                 }

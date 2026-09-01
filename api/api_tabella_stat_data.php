@@ -1,7 +1,7 @@
 <?php
 /**
  * ============================================================================
- * TABELLA STATISTICHE PERIODICHE - DATA LAYER
+ * TABELLA STATISTICHE PERIODICHE - DATA LAYER - api_tabella_sta_data.php
  * ============================================================================
  *
  * RESPONSABILITA':
@@ -52,15 +52,34 @@ function statFmtData(?string $data_sql, string $oggi_anno): string
         $giorno = (int)$dt->format('j');
         $mese   = $mesi[(int)$dt->format('n')];
         $anno   = $dt->format('Y');
-        if ($anno !== $oggi_anno) {
-            return $giorno . $mese . substr($anno, 2);
-        }
-        return $giorno . $mese;
+        // Anno sempre mostrato accanto a giorno/mese
+        return $giorno . $mese . substr($anno, 2);
     } catch (Exception $e) {
         return '';
     }
 }
 
+/** Differenza sicura tra due valori (gestisce N/D e sentinelle) */
+function statDiffValore($now, $prev)
+{
+    if ($now === null || $prev === null || $now === false || $prev === false) return null;
+    if (!is_numeric($now) || !is_numeric($prev)) return null;
+    $now = (float)$now; $prev = (float)$prev;
+    if ($now == 9999 || $now < -30 || $now > 9990) return null;
+    if ($prev == 9999 || $prev < -30 || $prev > 9990) return null;
+    return $now - $prev;
+}
+
+/** Sottrae esattamente un anno da una data, gestendo il 29 febbraio */
+function statSottraiAnno(string $data): string
+{
+    $dt = DateTime::createFromFormat('Y-m-d', $data);
+    $y = (int)$dt->format('Y') - 1;
+    $m = (int)$dt->format('m');
+    $d = (int)$dt->format('d');
+    if ($m == 2 && $d == 29 && !checkdate(2, 29, $y)) $d = 28;
+    return sprintf('%04d-%02d-%02d', $y, $m, $d);
+}
 /**
  * Calcola direzione dominante aggregata su un periodo
  * (moda per settore, ponderata sul numero di record per giorno)
@@ -107,14 +126,27 @@ function statVentoDominante(array $rows_periodo): array
         'kmh'       => $kmh
     ];
 }
-
+/**xxxxxx
+ * Classifica una differenza numerica in una delle 5 fasce, restituendo colore e etichetta.
+ * Ordine dei controlli: dal caso piu' estremo al piu' centrale, ciascun ramo assume
+ * che i precedenti siano gia' falliti (catena if/elseif = fasce mutuamente esclusive).
+ */
+function statColoreDiff(?float $val): array
+{
+    if ($val === null) return ['colore' => '#999999', 'label' => 'N/D'];
+    if ($val > 2)      return ['colore' => '#b30000', 'label' => '> +2'];
+    if ($val >= 0.6)   return ['colore' => '#e08a00', 'label' => '+0.6 / +2'];
+    if ($val >= -0.5)  return ['colore' => '#2e9e44', 'label' => '-0.5 / +0.5'];
+    if ($val >= -2)    return ['colore' => '#3366cc', 'label' => '-0.6 / -2'];
+    return                    ['colore' => '#001f66', 'label' => '< -2'];
+}
 /**
  * Recupera tutti i dati statistici per i 4 periodi
  *
  * @param PDO $pdo_lettura
  * @return array ['success' => bool, 'periodi' => [...], 'righe' => [...]]
  */
-function getStatData(): array
+function getStatData(?string $data_forzata = null, bool $ignora_altri_get = false): array
 {
     // global deve stare all'inizio della funzione, non dentro un if
     global $pdo_lettura;
@@ -134,14 +166,15 @@ function getStatData(): array
     // ?p10_centro=YYYY-MM-DD -> centro del periodo 10gg
     // ?mese=YYYY-MM          -> mostra quel mese
     // ?anno=YYYY             -> mostra quell'anno
-    if (!empty($_GET['data'])) {
-        $d = DateTime::createFromFormat('Y-m-d', $_GET['data']);
+    $data_richiesta = $data_forzata !== null ? $data_forzata : ($_GET['data'] ?? null);
+    if (!empty($data_richiesta)) {
+        $d = DateTime::createFromFormat('Y-m-d', $data_richiesta);
         if ($d && $d->format('Y-m-d') <= $oggi_reale) $oggi = $d->format('Y-m-d');
     }
     $oggi_anno = (new DateTime($oggi))->format('Y');
 
     // Range periodi
-    if (!empty($_GET['p10_centro'])) {
+    if (!$ignora_altri_get && !empty($_GET['p10_centro'])) {
         $dc = DateTime::createFromFormat('Y-m-d', $_GET['p10_centro']);
         if ($dc) {
             $p10_fine   = $dc->format('Y-m-d');
@@ -156,8 +189,8 @@ function getStatData(): array
         $p10_inizio = date('Y-m-d', strtotime($oggi . ' -10 days'));
     }
 
-    if (!empty($_GET['mese'])) {
-        $dm = DateTime::createFromFormat('Y-m', $_GET['mese']);
+    if (!$ignora_altri_get && !empty($_GET['mese'])) {
+        $dm = DateTime::createFromFormat('Y-m-d', $_GET['mese'] . '-01');
         if ($dm) {
             $mese_inizio = $dm->format('Y-m-01');
             $mese_fine_raw = $dm->format('Y-m-t');
@@ -172,7 +205,7 @@ function getStatData(): array
         $mese_fine   = $oggi;
     }
 
-    if (!empty($_GET['anno'])) {
+    if (!$ignora_altri_get && !empty($_GET['anno'])) {
         $anno_sel = (int)$_GET['anno'];
         if ($anno_sel >= 2020 && $anno_sel <= (int)$oggi_anno) {
             $anno_inizio = $anno_sel . '-01-01';
@@ -473,11 +506,11 @@ function getStatData(): array
     // Intestazioni colonne periodo
     $dt_oggi = new DateTime($oggi_orig);
     $mesi_it = ['','gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
-    $label_oggi = $dt_oggi->format('j') . ' ' . $mesi_it[(int)$dt_oggi->format('n')];
+    $label_oggi = $dt_oggi->format('j') . ' ' . $mesi_it[(int)$dt_oggi->format('n')] . ' ' . $dt_oggi->format('Y');
 
     $dt_p10_i = new DateTime($p10_inizio);
     $dt_p10_f = new DateTime($p10_fine);
-    $label_10gg = $dt_p10_i->format('j') . '-' . $dt_p10_f->format('j') . ' ' . $mesi_it[(int)$dt_p10_f->format('n')];
+    $label_10gg = $dt_p10_i->format('j') . '-' . $dt_p10_f->format('j') . ' ' . $mesi_it[(int)$dt_p10_f->format('n')] . ' ' . $dt_p10_f->format('Y');
 
     $mesi_it_long = ['','gennaio','febbraio','marzo','aprile','maggio','giugno',
                      'luglio','agosto','settembre','ottobre','novembre','dicembre'];
@@ -493,8 +526,7 @@ function getStatData(): array
     // Radianza: oggi (ultimo valore disponibile da tabella giornaliero)
     $rad_oggi  = ($oggi_row && isset($oggi_row['rad_percent_24h'])) ? $oggi_row['rad_percent_24h'] : null;
 
-    $righe = [
-        // Separatore date
+        $righe = [
         [
             'label'     => 'Data',
             'oggi'      => $label_oggi,
@@ -504,14 +536,14 @@ function getStatData(): array
             'grigio'    => false,
             'separatore'=> true,
         ],
-
-        // Temperatura
         [
             'label'  => 'T media',
             'oggi'   => $fv($oggi_row['temp_media'] ?? null, ' &#176;C'),
             'p10'    => $fv($agg_10gg['t_media']  ?? null, ' &#176;C'),
             'mese'   => $fv($agg_mese['t_media']  ?? null, ' &#176;C'),
             'anno'   => $fv($agg_anno['t_media']  ?? null, ' &#176;C'),
+            'raw'    => ['oggi'=>$oggi_row['temp_media'] ?? null, 'p10'=>$agg_10gg['t_media'] ?? null, 'mese'=>$agg_mese['t_media'] ?? null, 'anno'=>$agg_anno['t_media'] ?? null],
+            'unit'   => ' &#176;C', 'dec' => 1,
             'grigio' => false,
         ],
         [
@@ -520,6 +552,8 @@ function getStatData(): array
             'p10'    => $fvdata($agg_10gg['t_max'] ?? null, $agg_10gg['t_max_data'] ?? null),
             'mese'   => $fvdata($agg_mese['t_max'] ?? null, $agg_mese['t_max_data'] ?? null),
             'anno'   => $fvdata($agg_anno['t_max'] ?? null, $agg_anno['t_max_data'] ?? null),
+            'raw'    => ['oggi'=>$oggi_row['temp_max_abs'] ?? null, 'p10'=>$agg_10gg['t_max'] ?? null, 'mese'=>$agg_mese['t_max'] ?? null, 'anno'=>$agg_anno['t_max'] ?? null],
+            'unit'   => ' &#176;C', 'dec' => 1,
             'grigio' => false,
         ],
         [
@@ -528,6 +562,8 @@ function getStatData(): array
             'p10'    => $fvdata($agg_10gg['t_min'] ?? null, $agg_10gg['t_min_data'] ?? null),
             'mese'   => $fvdata($agg_mese['t_min'] ?? null, $agg_mese['t_min_data'] ?? null),
             'anno'   => $fvdata($agg_anno['t_min'] ?? null, $agg_anno['t_min_data'] ?? null),
+            'raw'    => ['oggi'=>$oggi_row['temp_min_abs'] ?? null, 'p10'=>$agg_10gg['t_min'] ?? null, 'mese'=>$agg_mese['t_min'] ?? null, 'anno'=>$agg_anno['t_min'] ?? null],
+            'unit'   => ' &#176;C', 'dec' => 1,
             'grigio' => false,
         ],
         [
@@ -536,6 +572,8 @@ function getStatData(): array
             'p10'    => $fv($agg_10gg['t_max_media'] ?? null, ' &#176;C'),
             'mese'   => $fv($agg_mese['t_max_media'] ?? null, ' &#176;C'),
             'anno'   => $fv($agg_anno['t_max_media'] ?? null, ' &#176;C'),
+            'raw'    => ['oggi'=>null, 'p10'=>$agg_10gg['t_max_media'] ?? null, 'mese'=>$agg_mese['t_max_media'] ?? null, 'anno'=>$agg_anno['t_max_media'] ?? null],
+            'unit'   => ' &#176;C', 'dec' => 1,
             'grigio' => true,
         ],
         [
@@ -544,17 +582,19 @@ function getStatData(): array
             'p10'    => $fv($agg_10gg['t_min_media'] ?? null, ' &#176;C'),
             'mese'   => $fv($agg_mese['t_min_media'] ?? null, ' &#176;C'),
             'anno'   => $fv($agg_anno['t_min_media'] ?? null, ' &#176;C'),
+            'raw'    => ['oggi'=>null, 'p10'=>$agg_10gg['t_min_media'] ?? null, 'mese'=>$agg_mese['t_min_media'] ?? null, 'anno'=>$agg_anno['t_min_media'] ?? null],
+            'unit'   => ' &#176;C', 'dec' => 1,
             'grigio' => true,
             'separatore' => true,
         ],
-
-        // Pressione
         [
             'label'  => 'P media',
             'oggi'   => $fv($oggi_row['press_media'] ?? null, ' hPa'),
             'p10'    => $fv($agg_10gg['p_media']    ?? null, ' hPa'),
             'mese'   => $fv($agg_mese['p_media']    ?? null, ' hPa'),
             'anno'   => $fv($agg_anno['p_media']    ?? null, ' hPa'),
+            'raw'    => ['oggi'=>$oggi_row['press_media'] ?? null, 'p10'=>$agg_10gg['p_media'] ?? null, 'mese'=>$agg_mese['p_media'] ?? null, 'anno'=>$agg_anno['p_media'] ?? null],
+            'unit'   => ' hPa', 'dec' => 1,
             'grigio' => false,
         ],
         [
@@ -563,6 +603,8 @@ function getStatData(): array
             'p10'    => $fvdata($agg_10gg['p_max'] ?? null, $agg_10gg['p_max_data'] ?? null, ' hPa'),
             'mese'   => $fvdata($agg_mese['p_max'] ?? null, $agg_mese['p_max_data'] ?? null, ' hPa'),
             'anno'   => $fvdata($agg_anno['p_max'] ?? null, $agg_anno['p_max_data'] ?? null, ' hPa'),
+            'raw'    => ['oggi'=>$oggi_row['press_max'] ?? null, 'p10'=>$agg_10gg['p_max'] ?? null, 'mese'=>$agg_mese['p_max'] ?? null, 'anno'=>$agg_anno['p_max'] ?? null],
+            'unit'   => ' hPa', 'dec' => 1,
             'grigio' => false,
         ],
         [
@@ -571,17 +613,18 @@ function getStatData(): array
             'p10'    => $fvdata($agg_10gg['p_min'] ?? null, $agg_10gg['p_min_data'] ?? null, ' hPa'),
             'mese'   => $fvdata($agg_mese['p_min'] ?? null, $agg_mese['p_min_data'] ?? null, ' hPa'),
             'anno'   => $fvdata($agg_anno['p_min'] ?? null, $agg_anno['p_min_data'] ?? null, ' hPa'),
+            'raw'    => ['oggi'=>$oggi_row['press_min'] ?? null, 'p10'=>$agg_10gg['p_min'] ?? null, 'mese'=>$agg_mese['p_min'] ?? null, 'anno'=>$agg_anno['p_min'] ?? null],
+            'unit'   => ' hPa', 'dec' => 1,
             'grigio' => false,
             'separatore' => true,
         ],
-
-        // Vento
         [
             'label'  => 'Vdom',
             'oggi'   => $fvento($vento_oggi),
             'p10'    => $fvento($vento_10gg),
             'mese'   => $fvento($vento_mese),
             'anno'   => $fvento($vento_anno),
+            'raw'    => ['oggi'=>null, 'p10'=>null, 'mese'=>null, 'anno'=>null],
             'grigio' => false,
         ],
         [
@@ -590,17 +633,19 @@ function getStatData(): array
             'p10'    => $fv($vento_10gg['kmh'] ?? null, ' km/h'),
             'mese'   => $fv($vento_mese['kmh'] ?? null, ' km/h'),
             'anno'   => $fv($vento_anno['kmh'] ?? null, ' km/h'),
+            'raw'    => ['oggi'=>$vento_oggi['kmh'] ?? null, 'p10'=>$vento_10gg['kmh'] ?? null, 'mese'=>$vento_mese['kmh'] ?? null, 'anno'=>$vento_anno['kmh'] ?? null],
+            'unit'   => ' km/h', 'dec' => 1,
             'grigio' => false,
             'separatore' => true,
         ],
-
-        // Pioggia
         [
             'label'  => 'Pioggia cumulato',
             'oggi'   => $fv($pioggia_oggi !== false ? $pioggia_oggi : null, ' mm'),
             'p10'    => $fv($pioggia_10gg['tot'] ?? null, ' mm'),
             'mese'   => $fv($pioggia_mese['tot'] ?? null, ' mm'),
             'anno'   => $fv($pioggia_anno['tot'] ?? null, ' mm'),
+            'raw'    => ['oggi'=>$pioggia_oggi !== false ? $pioggia_oggi : null, 'p10'=>$pioggia_10gg['tot'] ?? null, 'mese'=>$pioggia_mese['tot'] ?? null, 'anno'=>$pioggia_anno['tot'] ?? null],
+            'unit'   => ' mm', 'dec' => 1,
             'grigio' => false,
         ],
         [
@@ -609,17 +654,19 @@ function getStatData(): array
             'p10'    => $fv($pioggia_10gg['gg_pioggia'] ?? null, ' gg', 0),
             'mese'   => $fv($pioggia_mese['gg_pioggia'] ?? null, ' gg', 0),
             'anno'   => $fv($pioggia_anno['gg_pioggia'] ?? null, ' gg', 0),
+            'raw'    => ['oggi'=>null, 'p10'=>$pioggia_10gg['gg_pioggia'] ?? null, 'mese'=>$pioggia_mese['gg_pioggia'] ?? null, 'anno'=>$pioggia_anno['gg_pioggia'] ?? null],
+            'unit'   => ' gg', 'dec' => 0,
             'grigio' => true,
             'separatore' => true,
         ],
-
-        // Radianza
         [
             'label'  => 'Radianza media',
             'oggi'   => $fv($rad_oggi, '%', 0),
             'p10'    => $fv($agg_10gg['rad_media'] ?? null, '%', 0),
             'mese'   => $fv($agg_mese['rad_media'] ?? null, '%', 0),
             'anno'   => $fv($agg_anno['rad_media'] ?? null, '%', 0),
+            'raw'    => ['oggi'=>$rad_oggi, 'p10'=>$agg_10gg['rad_media'] ?? null, 'mese'=>$agg_mese['rad_media'] ?? null, 'anno'=>$agg_anno['rad_media'] ?? null],
+            'unit'   => '%', 'dec' => 0,
             'grigio' => false,
         ],
     ];

@@ -1,7 +1,7 @@
 <?php
 /**
  * ============================================================================
- * TABELLA STATISTICHE PERIODICHE - DISPLAY LAYER
+ * TABELLA STATISTICHE PERIODICHE - DISPLAY LAYER tabella_stat_display.php
  * ============================================================================
  *
  * RESPONSABILITA':
@@ -21,6 +21,120 @@ require_once __DIR__ . '/../envelop.php';
 require_once __DIR__ . '/api/api_tabella_stat_data.php';
 
 $response = getStatData();
+
+// ============================================================================
+// BLOCCO "Δ ANNO" — confronta i periodi correnti con lo stesso periodo
+// dell'anno precedente. Attivato dal pulsante "Δ Anno" in stat_display.php,
+// che aggiunge ?diff=1 all'src dell'iframe.
+// ============================================================================
+$modo_diff  = !empty($_GET['diff']);
+$righe_diff = null;
+
+if ($modo_diff && $response['success']) {
+    $oggi_fa     = statSottraiAnno($response['meta']['oggi']);
+    $response_fa = getStatData($oggi_fa, true);
+
+    if ($response_fa['success']) {
+        $righe_fa_by_label = [];
+        foreach ($response_fa['righe'] as $r) $righe_fa_by_label[$r['label']] = $r;
+
+        $righe_diff = [];
+        foreach ($response['righe'] as $r) {
+            $fa    = $righe_fa_by_label[$r['label']] ?? null;
+            $nuova = $r;
+
+            if (!empty($r['separatore']) && $r['label'] === 'Data') {
+                $righe_diff[] = $nuova;
+                continue;
+            }
+
+            foreach (['oggi','p10','mese','anno'] as $periodo) {
+                $now  = $r['raw'][$periodo] ?? null;
+                $prev = $fa['raw'][$periodo]  ?? null;
+                $d = statDiffValore($now, $prev);
+                if ($d === null) {
+                    $nuova[$periodo] = ($r[$periodo] === '&mdash;') ? '&mdash;' : 'N/D';
+                    continue;
+                }
+                $dec   = $r['dec']  ?? 1;
+                $unit  = $r['unit'] ?? '';
+                $val   = round($d, $dec);
+                $segno = $val > 0 ? '+' : '';
+                $info  = statColoreDiff($val);
+
+                $nuova[$periodo] = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:'
+                                  . $info['colore'] . ';margin-right:4px;" title="' . $info['label'] . '"></span>'
+                                  . $segno . $val . $unit;
+            }
+            $righe_diff[] = $nuova;
+        }
+    }
+}
+
+/*yyyyyyyyyyyyy*/
+$giorno_esplicito  = !empty($_GET['data']);
+$righe_con_pallino = null;
+
+// Il confronto "vs oggi" ha senso solo se non sei gia' nella modalita' "Delta Anno"
+// (che sostituisce del tutto i valori) e solo se hai scelto un giorno diverso da oggi.
+$sel_oggi = !empty($_GET['data']);
+$sel_p10  = !empty($_GET['p10_centro']);
+$sel_mese = !empty($_GET['mese']);
+$sel_anno = !empty($_GET['anno']);
+$giorno_esplicito = $sel_oggi || $sel_p10 || $sel_mese || $sel_anno;
+
+$righe_con_pallino = null;
+
+if ($giorno_esplicito && empty($modo_diff) && $response['success']) {
+
+    $oggi_reale_rif = date('Y-m-d', strtotime($response['meta']['oggi_reale'] . ' -1 day'));
+    $response_rif   = getStatData($oggi_reale_rif, true);
+
+    if ($response_rif['success']) {
+        $righe_rif_by_label = [];
+        foreach ($response_rif['righe'] as $r) $righe_rif_by_label[$r['label']] = $r;
+
+        if ($sel_oggi) {
+            // Selezione del giorno: pallino su tutte le colonne
+            $selezionato = ['oggi' => true, 'p10' => true, 'mese' => true, 'anno' => true];
+        } else {
+            // Selezione di un singolo periodo (10gg / mese / anno): pallino solo su quella colonna
+            $selezionato = ['oggi' => false, 'p10' => $sel_p10, 'mese' => $sel_mese, 'anno' => $sel_anno];
+        }
+
+        $righe_con_pallino = [];
+        foreach ($response['righe'] as $r) {
+            $rif   = $righe_rif_by_label[$r['label']] ?? null;
+            $nuova = $r;
+
+            if (!empty($r['separatore']) && $r['label'] === 'Data') {
+                $righe_con_pallino[] = $nuova;
+                continue;
+            }
+
+            foreach (['oggi','p10','mese','anno'] as $periodo) {
+                if (!$selezionato[$periodo]) continue;
+
+                $now     = $r['raw'][$periodo] ?? null;
+                $rif_val = $rif['raw'][$periodo] ?? null;
+                $d = statDiffValore($now, $rif_val);
+                if ($d === null) continue;
+
+                $dec  = $r['dec'] ?? 1;
+                $val  = round($d, $dec);
+                $info = statColoreDiff($val);
+
+                $pallino = ' <span style="display:inline-block;width:8px;height:8px;border-radius:50%;'
+                         . 'background:' . $info['colore'] . ';vertical-align:middle;" title="' . $info['label'] . '"></span>';
+
+                $nuova[$periodo] = $r[$periodo] . $pallino;
+            }
+            $righe_con_pallino[] = $nuova;
+        }
+    }
+}
+
+$righe_da_mostrare = $righe_con_pallino ?? ($righe_diff ?? $response['righe']);
 
 if (!$response['success']) {
     echo "<div style='font-family:Arial;font-size:13px;color:#c00;padding:10px;'>
@@ -267,6 +381,7 @@ $copertura = $response['copertura'] ?? ['oggi'=>1.0,'p10'=>1.0,'mese'=>1.0,'anno
         }
         .cal-btn:hover { background: #dde8f5; border-color: #6699cc; }
         .cal-btn.selected { background: #6699cc; color: #fff; border-color: #4477aa; }
+        
 
         /* Navigazione anno */
         .cal-nav {
@@ -288,6 +403,17 @@ $copertura = $response['copertura'] ?? ['oggi'=>1.0,'p10'=>1.0,'mese'=>1.0,'anno
         }
         .cal-nav-btn:hover { color: #000; }
         .cal-nav-year { font-weight: bold; min-width: 36px; }
+
+        .cal-mese-anno-sel {
+            font-size: 11px;
+            font-weight: bold;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            background: #fff;
+            padding: 2px 4px;
+            cursor: pointer;
+            max-width: 140px;
+}
 
         /* Mini-calendario giorno */
         .cal-days-grid {
@@ -364,7 +490,7 @@ $copertura = $response['copertura'] ?? ['oggi'=>1.0,'p10'=>1.0,'mese'=>1.0,'anno
         'mese' => ($copertura['mese'] < $soglia) ? ' dato-scarso' : '',
         'anno' => ($copertura['anno'] < $soglia) ? ' dato-scarso' : '',
     ];
-    foreach ($righe as $riga):
+    foreach ($righe_da_mostrare as $riga):
         $cls = [];
         if ($riga['grigio']     ?? false) $cls[] = 'riga-grigia';
         if ($riga['separatore'] ?? false) $cls[] = 'riga-separatore';
@@ -384,6 +510,25 @@ $copertura = $response['copertura'] ?? ['oggi'=>1.0,'p10'=>1.0,'mese'=>1.0,'anno
     </tbody>
 
 </table>
+
+<?php if ($righe_diff !== null || $righe_con_pallino !== null): ?>
+<div style="font-size:10px; color:#777; text-align:center; margin-top:8px;">
+    <?php if ($righe_diff !== null): ?>
+        Differenza: anno corrente &minus; stesso periodo anno precedente
+    <?php else: ?>
+        Differenza: valore selezionato &minus; dato attuale
+    <?php endif; ?>
+</div>
+<div style="font-size:10px; color:#555; margin-top:3px; padding:0 8px; display:flex; flex-wrap:wrap; gap:8px; justify-content:center; box-sizing:border-box;">
+    <?php foreach ([2.01, 1.0, 0.0, -1.0, -2.01] as $campione):
+        $info = statColoreDiff($campione); ?>
+        <span style="display:inline-flex; align-items:center; gap:3px; white-space:nowrap;">
+            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:<?= $info['colore'] ?>;flex-shrink:0;"></span>
+            <?= htmlspecialchars($info['label']) ?>
+        </span>
+    <?php endforeach; ?>
+</div>
+<?php endif; ?>
 
 <!-- POPUP CALENDARIO - fuori dalla tabella per HTML valido -->
 <div id="cal-oggi" class="cal-popup"></div>
@@ -496,13 +641,20 @@ function renderCal(id) {
 
     if (st.tipo === 'giorno') {
         var y=st.y, m=st.m;
+        var maxM = (y === oggi.y) ? oggi.m : 12;
+        if (m > maxM) { m = maxM; st.m = maxM; }
         var primo = (new Date(y,m-1,1).getDay()+6)%7;
         var ngg   = daysInMonth(y,m);
-        html += '<div class="cal-nav">'
-              + '<span class="cal-nav-btn" data-cal="'+id+'" data-nav="-1">&#8249;</span>'
-              + '<span class="cal-nav-year">'+MESI_IT_LONG[m]+' '+y+'</span>'
-              + '<span class="cal-nav-btn" data-cal="'+id+'" data-nav="1">&#8250;</span>'
-              + '</div><div class="cal-days-grid">';
+
+        html += '<div class="cal-nav"><select class="cal-mese-anno-sel" data-cal="'+id+'">';
+        for (var yy=oggi.y; yy>=2023; yy--) {
+            var maxMm = (yy===oggi.y) ? oggi.m : 12;
+            for (var mm=maxMm; mm>=1; mm--) {
+                var selAttr = (yy===y && mm===m) ? ' selected' : '';
+                html += '<option value="'+yy+'-'+mm+'"'+selAttr+'>'+MESI_IT_LONG[mm]+' '+yy+'</option>';
+            }
+        }
+        html += '</select></div><div class="cal-days-grid">';
         ['L','M','M','G','V','S','D'].forEach(function(g){ html+='<span class="cal-day-head">'+g+'</span>'; });
         for (var i=0;i<primo;i++) html+='<span class="cal-day empty"></span>';
         for (var d=1;d<=ngg;d++) {
@@ -573,7 +725,18 @@ document.addEventListener('click', function(e) {
         else if (st.tipo==='anno')  navigaA({anno:val});
     }
 });
-
+// ---- select mese/anno del calendarietto giorno ----
+document.addEventListener('change', function(e) {
+    var el = e.target;
+    if (!el.classList || !el.classList.contains('cal-mese-anno-sel')) return;
+    var id = el.dataset.cal;
+    var st = CAL_STATE[id];
+    if (!st) return;
+    var parts = el.value.split('-');
+    st.y = parseInt(parts[0]);
+    st.m = parseInt(parts[1]);
+    renderCal(id);
+});
 // ---- resize dinamico iframe ----
 function sendResize() {
     window.parent.postMessage({

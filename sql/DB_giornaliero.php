@@ -75,7 +75,9 @@ define('SOGLIA_COMPLETEZZA', 0.75);
 define('RECORD_ATTESI_FALLBACK', 1440);
 
 // Valore sentinella scritto nel DB quando una metrica non raggiunge la soglia 75% NULL
-
+// Soglia fissa di record minimi per considerare valida una metrica
+// (75% di 1440 record/giorno, cioè 1 record/minuto)
+define('SOGLIA_RECORD_FISSA', 1080);
 
 
 
@@ -256,11 +258,22 @@ function consolidaGiorno(PDO $pdo, string $src, string $dest, string $giorno): a
     //     degli intervalli tra record degli ultimi 7 giorni: in questo modo
     //     il controllo e' corretto per qualsiasi frequenza di campionamento.
     // ----------------------------------------------------------------
-    $recordAttesi = calcolaRecordAttesiGiorno($pdo, $src, $giorno);
-    $soglia       = (int)ceil($recordAttesi * SOGLIA_COMPLETEZZA);
-    $tempOk       = (int)$raw['n_temp']  >= $soglia;
-    $pressOk      = (int)$raw['n_press'] >= $soglia;
-    $ventoOk      = (int)$raw['n_vento'] >= $soglia;
+    
+        $soglia       = (int)ceil($recordAttesi * SOGLIA_COMPLETEZZA);
+        $tempOk       = (int)$raw['n_temp']  >= $soglia;
+        $pressOk      = (int)$raw['n_press'] >= $soglia;
+        $ventoOk      = (int)$raw['n_vento'] >= $soglia;
+        
+        // Log se una o piu' metriche non raggiungono la soglia fissa
+        if (!$tempOk) {
+            log_msg("[SOGLIA] {$giorno} - temperatura sotto soglia: {$raw['n_temp']}/{$soglia} record");
+        }
+        if (!$pressOk) {
+            log_msg("[SOGLIA] {$giorno} - pressione sotto soglia: {$raw['n_press']}/{$soglia} record");
+        }
+        if (!$ventoOk) {
+            log_msg("[SOGLIA] {$giorno} - vento sotto soglia: {$raw['n_vento']}/{$soglia} record");
+        }
 
     // ----------------------------------------------------------------
     // 2. DIREZIONE DOMINANTE: moda sui 16 settori della rosa dei venti

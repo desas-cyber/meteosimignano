@@ -421,10 +421,13 @@ if (!isset($mainImageDate)) {
              4. Regola height se la tabella e' piu' alta/bassa di 300px
              ================================================================ -->
 
-        <!-- TABELLA 1 -->
+        <!-- TABELLA 1 yuuuuuuuuuuuuuu-->
         <div class="stat-section-header">
             <h2 class="stat-section-title">Statistiche mensili</h2>
-            <a href="#" class="stat-section-cta" id="btn-grafico-stat1" data-iframe="stat-iframe-tab1" data-src="grafico_stat1_display.php" data-mode="tabella">&#128200;&nbsp;Grafico</a>
+            <div style="display:flex; gap:6px;">
+                <a href="#" class="stat-section-cta" id="btn-diff-stat1" data-iframe="stat-iframe-tab1">&#916;&nbsp;Anno</a>
+                <a href="#" class="stat-section-cta" id="btn-grafico-stat1" data-iframe="stat-iframe-tab1" data-src="grafico_stat1_display.php" data-mode="tabella">&#128200;&nbsp;Grafico</a>
+            </div>
         </div>
         <div class="stat-table-block">
             <div id="placeholder-tab1" class="stat-table-placeholder">Caricamento dati...</div>
@@ -553,7 +556,44 @@ if (!isset($mainImageDate)) {
             }
         });
     });
+        // Pulsante "Delta Anno" — toggla il parametro diff=1 nell'src dell'iframe tabella
+    document.addEventListener('DOMContentLoaded', function() {
+        var btnDiff = document.getElementById('btn-diff-stat1');
+        var frDiff  = document.getElementById('stat-iframe-tab1');
+        if (!btnDiff || !frDiff) return;
 
+        // Aggiorna l'aspetto del pulsante leggendo lo stato REALE dall'URL corrente
+        // dell'iframe. Scatta ad ogni ricaricamento dell'iframe, non solo al click
+        // sul pulsante: cosi' se l'utente naviga con un calendarietto (che ricostruisce
+        // l'URL da zero e quindi elimina automaticamente ?diff=1), il pulsante si
+        // "spegne" da solo, senza bisogno di codice dedicato in ogni punto che tocca l'iframe.
+        function sincronizzaBottoneDiff() {
+            var attivo = false;
+            try {
+                var params = new URLSearchParams(frDiff.contentWindow.location.search);
+                attivo = params.get('diff') === '1';
+            } catch (e) {
+                // fallback (es. iframe non ancora pronto): niente aggiornamento
+                return;
+            }
+            btnDiff.style.background = attivo ? '#333' : 'transparent';
+            btnDiff.style.color      = attivo ? '#fff' : 'black';
+        }
+        frDiff.addEventListener('load', sincronizzaBottoneDiff);
+
+        btnDiff.addEventListener('click', function(e) {
+            e.preventDefault();
+            var url = new URL(frDiff.src, window.location.href);
+            var attivo = url.searchParams.get('diff') === '1';
+
+            if (attivo) url.searchParams.delete('diff');
+            else        url.searchParams.set('diff', '1');
+
+            frDiff.src = url.pathname + url.search;
+            // Non serve piu' impostare qui lo stile: lo fara' 'load' non appena
+            // l'iframe avra' finito di ricaricarsi con il nuovo URL.
+        });
+    });
     // Toggle grafico/tabella per stat3
     document.addEventListener('DOMContentLoaded', function() {
         var btn3 = document.getElementById('btn-grafico-stat3');
