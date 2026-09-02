@@ -1307,40 +1307,58 @@ function getGrafico1Data(): array
     $table_g = table_name('dati_meteo_giornaliero_simignano');
     $table_p = table_name('pluvio_giornaliero');
 
-    $oggi_reale = get_now('Y-m-d');
-    $ref = date('Y-m-d', strtotime($oggi_reale . ' -1 day'));
+        $oggi_reale = get_now('Y-m-d');//inizio
+    $ref = date('Y-m-d', strtotime($oggi_reale . ' -1 day')); // riferimento fisso (ieri), non cambia con la selezione
 
+    // Giorno selezionato dall'utente (opzionale): si affianca al riferimento su TUTTE le zone, non lo sostituisce
+    $giorno_sel = null;
     if (!empty($_GET['data'])) {
         $d = DateTime::createFromFormat('Y-m-d', $_GET['data']);
         if ($d && $d->format('Y-m-d') <= $oggi_reale) {
-            $ref = $d->format('Y-m-d');
+            $sel = $d->format('Y-m-d');
+            if ($sel !== $ref) {
+                $giorno_sel = $sel;
+            }
         }
     }
 
-    // Calcola i 4 periodi
-    $periodi = [
-        'oggi' => [
-            'da' => $ref,
-            'a'  => $ref,
-        ],
-        'gg10' => [
-            'da' => date('Y-m-d', strtotime($ref . ' -10 days')),
-            'a'  => date('Y-m-d', strtotime($ref . ' -1 day')),
-        ],
-        'gg30' => [
-            'da' => date('Y-m-d', strtotime($ref . ' -30 days')),
-            'a'  => date('Y-m-d', strtotime($ref . ' -1 day')),
-        ],
-        'anno' => [
-            'da' => date('Y-01-01', strtotime($ref)),
-            'a'  => $ref,
-        ],
-    ];
+    // Costruisce i 4 periodi (oggi/gg10/gg30/anno) ancorati su una data base
+    $buildPeriodi = function (string $base): array {
+        return [
+            'oggi' => ['da' => $base, 'a' => $base],
+            'gg10' => [
+                'da' => date('Y-m-d', strtotime($base . ' -10 days')),
+                'a'  => date('Y-m-d', strtotime($base . ' -1 day')),
+            ],
+            'gg30' => [
+                'da' => date('Y-m-d', strtotime($base . ' -30 days')),
+                'a'  => date('Y-m-d', strtotime($base . ' -1 day')),
+            ],
+            'anno' => [
+                'da' => date('Y-01-01', strtotime($base)),
+                'a'  => $base,
+            ],
+        ];
+    };
 
-    // Query unica per tutti i dati necessari
-    // Prende il range massimo (da inizio anno a oggi) e filtra in PHP
-    $da_min  = $periodi['anno']['da'];
-    $a_max   = $ref;
+    // Periodi di riferimento (fissi)
+    $periodi = $buildPeriodi($ref);
+
+    // Periodi della selezione, se presente: stesse finestre ma ancorate su $giorno_sel,
+    // aggiunte con suffisso _sel accanto a quelle di riferimento
+    if ($giorno_sel) {
+        foreach ($buildPeriodi($giorno_sel) as $k => $v) {
+            $periodi[$k . '_sel'] = $v;
+        }
+    }
+
+    // Query unica per tutti i dati necessari: range minimo/massimo su TUTTI i periodi
+    $da_min = $periodi['anno']['da'];
+    $a_max  = $ref;
+    foreach ($periodi as $p) {
+        if ($p['da'] < $da_min) { $da_min = $p['da']; }
+        if ($p['a']  > $a_max)  { $a_max  = $p['a'];  }
+    }
 
     $stmt = $pdo_lettura->prepare("
         SELECT
@@ -1371,7 +1389,7 @@ function getGrafico1Data(): array
         ];
     }
 
-    // Costruisce i 4 array di dati filtrando per periodo
+    // Costruisce gli array di dati filtrando per periodo (4 o 8 chiavi, a seconda della selezione)
     $risultato = [];
     foreach ($periodi as $nome => $p) {
         $lista = [];
@@ -1387,17 +1405,26 @@ function getGrafico1Data(): array
         $risultato[$nome] = $lista;
     }
 
+    $labels = [
+        'oggi' => date('d/m', strtotime($ref)),
+        'gg10' => '10 giorni',
+        'gg30' => '30 giorni',
+        'anno' => 'anno ' . date('Y', strtotime($ref)),
+    ];
+    if ($giorno_sel) {
+        $labels['oggi_sel'] = date('d/m/Y', strtotime($giorno_sel));
+        $labels['gg10_sel'] = '10gg sel.';
+        $labels['gg30_sel'] = '30gg sel.';
+        $labels['anno_sel'] = 'anno ' . date('Y', strtotime($giorno_sel)) . ' sel.';
+    }
+
     return [
-        'success'  => true,
-        'ref'      => $ref,
+        'success'    => true,
+        'ref'        => $ref,
         'oggi_reale' => $oggi_reale,
-        'periodi'  => $risultato,
-        'labels'   => [
-            'oggi' => date('d/m', strtotime($ref)),
-            'gg10' => '10 giorni',
-            'gg30' => '30 giorni',
-            'anno' => 'anno ' . date('Y', strtotime($ref)),
-        ],
+        'giorno_sel' => $giorno_sel,
+        'periodi'    => $risultato,
+        'labels'     => $labels,
     ];
 }
 

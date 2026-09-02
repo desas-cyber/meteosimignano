@@ -36,9 +36,11 @@ if (!$response['success']) {
     exit;
 }
 
-$ref        = $response['ref'];
-$periodi_js = json_encode($response['periodi'],  JSON_UNESCAPED_UNICODE);
-$labels_js  = json_encode($response['labels'],   JSON_UNESCAPED_UNICODE);
+$ref         = $response['ref'];
+$giorno_sel  = $response['giorno_sel'];
+$periodi_js  = json_encode($response['periodi'],  JSON_UNESCAPED_UNICODE);
+$labels_js   = json_encode($response['labels'],   JSON_UNESCAPED_UNICODE);
+$giorno_sel_js = json_encode($giorno_sel, JSON_UNESCAPED_UNICODE);
 
 // Formatta data per display
 $ref_display = (new DateTime($ref))->format('d/m/Y');
@@ -164,7 +166,7 @@ $ref_display = (new DateTime($ref))->format('d/m/Y');
     <div class="top-bar-right">
         <span class="date-label">Giorno</span>
         <input type="date" id="data-sel"
-               value="<?= htmlspecialchars($ref) ?>"
+               value="<?= htmlspecialchars($giorno_sel ?? $ref) ?>"
                max="<?= htmlspecialchars($response['oggi_reale']) ?>">
         <button class="btn-reset" id="btn-reset" title="Oggi">&#8635;</button>
     </div>
@@ -187,15 +189,36 @@ $ref_display = (new DateTime($ref))->format('d/m/Y');
     <span class="leg-item"><span style="display:inline-block;width:14px;height:8px;background:rgba(55,138,221,0.35);border-radius:1px;vertical-align:middle;"></span>pioggia</span>
 </div>
 
+<?php if ($giorno_sel): ?>
+<div class="legend" style="margin-top:2px;">
+    <span class="leg-item"><span class="leg-line" style="background:#E8954A;"></span>media max sel.</span>
+    <span class="leg-item"><span class="leg-line" style="background:#C99A2E;"></span>media sel.</span>
+    <span class="leg-item"><span class="leg-line" style="background:#3AAFA9;"></span>media min sel.</span>
+    <span class="leg-item"><span class="leg-dot" style="background:#E8954A;border:1.5px solid #222;"></span>max ass. sel.</span>
+    <span class="leg-item"><span class="leg-dot" style="background:#3AAFA9;border:1.5px solid #222;"></span>min ass. sel.</span>
+    <span class="leg-item"><span style="display:inline-block;width:14px;height:8px;background:rgba(217,138,61,0.45);border-radius:1px;vertical-align:middle;"></span>pioggia sel.</span>
+</div>
+<?php endif; ?>
+
 <div class="stat-footer" id="footer-note"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-var PERIODI = <?= $periodi_js ?>;
-var LABELS  = <?= $labels_js ?>;
+var PERIODI    = <?= $periodi_js ?>;
+var LABELS     = <?= $labels_js ?>;
+var GIORNO_SEL = <?= $giorno_sel_js ?>;
 var rScaleNuvola = 1.0;
 var rScaleAss    = 1.0;
 var palliniAssoluti = [];
+var medieSegmenti   = [];
+var zoneGeom = {}; // geometria (cx, y dei 5 valori chiave) indicizzata per id zona
+
+var PALETTE = {
+    default: { max: '#E24B4A', avg: '#888',    min: '#378ADD',
+               pioggiaFill: 'rgba(55,138,221,0.45)', pioggiaStroke: 'rgba(55,138,221,0.8)',  pioggiaText: '#185FA5' },
+    sel:     { max: '#E8954A', avg: '#C99A2E', min: '#3AAFA9',
+               pioggiaFill: 'rgba(217,138,61,0.45)', pioggiaStroke: 'rgba(217,138,61,0.85)', pioggiaText: '#B5661F' }
+};
 
 var mainChart = null;
 
@@ -203,6 +226,8 @@ var graficoPlugin = {
     id: 'gp',
     afterDraw: function(chart) {
         palliniAssoluti = [];
+        medieSegmenti = [];
+        zoneGeom        = {};
         var ctx  = chart.ctx;
         var xS   = chart.scales.x;
         var yS   = chart.scales.y;
@@ -218,12 +243,27 @@ var graficoPlugin = {
         //   xp_r  = X centro barra pioggia (sulla stessa riga, a destra della nuvola)
         //   spread = raggio orizzontale nuvola (stretto = ovale)
         //   wBar  = larghezza barra pioggia
-        var ZONE = [
-            { id: 'oggi', xc: 1.6,  xp_r: 3.3,  spread: 0.35, wBar: 0.9 },
-            { id: 'gg10', xc: 6.0,  xp_r: 8.0,  spread: 0.65, wBar: 1.0 },
-            { id: 'gg30', xc: 12.0, xp_r: 14.5, spread: 1.0,  wBar: 1.1 },
-            { id: 'anno', xc: 20.0, xp_r: 24.0, spread: 1.6,  wBar: 1.3 },
-        ];
+        var ZONE = [];
+            if (GIORNO_SEL) {
+                // Ogni zona si sdoppia in due colonne piu' strette: riferimento (sx) + selezione (dx)
+                ZONE.push({ id: 'oggi',     xc: 0.85, xp_r: 1.45,  spread: 0.20, wBar: 0.40, pal: 'default' });
+                ZONE.push({ id: 'oggi_sel', xc: 2.35, xp_r: 2.95,  spread: 0.20, wBar: 0.40, pal: 'sel' });
+
+                ZONE.push({ id: 'gg10',     xc: 5.4,  xp_r: 6.35,  spread: 0.30, wBar: 0.55, pal: 'default' });
+                ZONE.push({ id: 'gg10_sel', xc: 8.0,  xp_r: 8.95,  spread: 0.30, wBar: 0.55, pal: 'sel' });
+
+                ZONE.push({ id: 'gg30',     xc: 11.4, xp_r: 12.65, spread: 0.45, wBar: 0.65, pal: 'default' });
+                ZONE.push({ id: 'gg30_sel', xc: 14.6, xp_r: 15.85, spread: 0.45, wBar: 0.65, pal: 'sel' });
+
+                ZONE.push({ id: 'anno',     xc: 18.9, xp_r: 20.7,  spread: 0.75, wBar: 0.85, pal: 'default' });
+                ZONE.push({ id: 'anno_sel', xc: 23.5, xp_r: 25.3,  spread: 0.75, wBar: 0.85, pal: 'sel' });
+            } else {
+                // Comportamento originale: una sola colonna per zona
+                ZONE.push({ id: 'oggi', xc: 1.6,  xp_r: 3.3,  spread: 0.35, wBar: 0.9,  pal: 'default' });
+                ZONE.push({ id: 'gg10', xc: 6.0,  xp_r: 8.0,  spread: 0.65, wBar: 1.0,  pal: 'default' });
+                ZONE.push({ id: 'gg30', xc: 12.0, xp_r: 14.5, spread: 1.0,  wBar: 1.1,  pal: 'default' });
+                ZONE.push({ id: 'anno', xc: 20.0, xp_r: 24.0, spread: 1.6,  wBar: 1.3,  pal: 'default' });
+            }
 
         function rand(s) {
             var x = Math.sin(s * 127.1 + 311.7) * 43758.5453;
@@ -232,6 +272,7 @@ var graficoPlugin = {
 
         ZONE.forEach(function(z) {
             var dati = PERIODI[z.id];
+            var pal  = PALETTE[z.pal] || PALETTE.default;
             if (!dati || dati.length === 0) return;
 
             var n = dati.length;
@@ -253,6 +294,15 @@ var graficoPlugin = {
             var medAv = avArr.length > 0
                 ? Math.round(avArr.reduce(function(a,b){return a+b;},0)/avArr.length*10)/10
                 : Math.round((medMx+medMn)/2*10)/10;
+
+            // Registra la geometria di questa colonna (serve per i connettori rif <-> sel)
+            zoneGeom[z.id] = {
+                cx: cx,
+                yMx: yp(medMx), yAv: yp(medAv), yMn: yp(medMn),
+                yAbsMx: yp(absMx), yAbsMn: yp(absMn)
+            };
+
+            // Stelo verticale centrale (da min ass a max ass)
 
             // Stelo verticale centrale (da min ass a max ass)
             ctx.strokeStyle = 'rgba(160,160,160,0.4)';
@@ -291,12 +341,19 @@ var graficoPlugin = {
             // Linee ORIZZONTALI (whisker) che intersecano lo stelo
             // larghezza = doppio dello spread della nuvola + margine
             var wh = Math.max(10, spreadPx * 2 + 6);
-            ctx.strokeStyle = '#E24B4A'; ctx.lineWidth = 2;
-            ctx.beginPath(); ctx.moveTo(cx - wh, yp(medMx)); ctx.lineTo(cx + wh, yp(medMx)); ctx.stroke();
-            ctx.strokeStyle = '#888'; ctx.lineWidth = 1.5;
-            ctx.beginPath(); ctx.moveTo(cx - wh, yp(medAv)); ctx.lineTo(cx + wh, yp(medAv)); ctx.stroke();
-            ctx.strokeStyle = '#378ADD'; ctx.lineWidth = 2;
-            ctx.beginPath(); ctx.moveTo(cx - wh, yp(medMn)); ctx.lineTo(cx + wh, yp(medMn)); ctx.stroke();
+                ctx.strokeStyle = pal.max; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(cx - wh, yp(medMx)); ctx.lineTo(cx + wh, yp(medMx)); ctx.stroke();
+                ctx.strokeStyle = pal.avg; ctx.lineWidth = 1.5;
+                ctx.beginPath(); ctx.moveTo(cx - wh, yp(medAv)); ctx.lineTo(cx + wh, yp(medAv)); ctx.stroke();
+                ctx.strokeStyle = pal.min; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(cx - wh, yp(medMn)); ctx.lineTo(cx + wh, yp(medMn)); ctx.stroke();
+
+                // Registra le linee media per il tooltip (hover / touch)
+                medieSegmenti.push(
+                    { xMin: cx - wh, xMax: cx + wh, py: yp(medMx), valore: medMx, tipo: 'max',   zona: LABELS[z.id] },
+                    { xMin: cx - wh, xMax: cx + wh, py: yp(medAv), valore: medAv, tipo: 'media', zona: LABELS[z.id] },
+                    { xMin: cx - wh, xMax: cx + wh, py: yp(medMn), valore: medMn, tipo: 'min',   zona: LABELS[z.id] }
+                );
 
             // Pallini max e min assoluti — rScale * 0.7 su mobile, rScale su desktop
             var rAss = 5 * rScaleAss;
@@ -307,7 +364,7 @@ var graficoPlugin = {
             var dataMn = dati.filter(function(d){return d.mn===absMn;})[0];
 
             ctx.beginPath(); ctx.arc(cx, yp(absMx), rAss, 0, Math.PI * 2);
-            ctx.fillStyle = '#E24B4A'; ctx.fill();
+            ctx.fillStyle = pal.max; ctx.fill();
             ctx.strokeStyle = '#222'; ctx.lineWidth = 1.5; ctx.stroke();
             palliniAssoluti.push({
                 px: cx, py: yp(absMx), r: rAss,
@@ -317,7 +374,7 @@ var graficoPlugin = {
             });
 
             ctx.beginPath(); ctx.arc(cx, yp(absMn), rAss, 0, Math.PI * 2);
-            ctx.fillStyle = '#378ADD'; ctx.fill();
+            ctx.fillStyle = pal.min; ctx.fill();
             ctx.strokeStyle = '#222'; ctx.lineWidth = 1.5; ctx.stroke();
             palliniAssoluti.push({
                 px: cx, py: yp(absMn), r: rAss,
@@ -336,18 +393,17 @@ var graficoPlugin = {
             var yTop  = pp(Math.min(totPioggia, 1200));
 
             if (totPioggia > 0) {
-                ctx.fillStyle = 'rgba(55,138,221,0.45)';
-                ctx.fillRect(cxP - wBarPx, yTop, wBarPx * 2, yBase - yTop);
-                ctx.strokeStyle = 'rgba(55,138,221,0.8)';
-                ctx.lineWidth = 0.5;
-                ctx.strokeRect(cxP - wBarPx, yTop, wBarPx * 2, yBase - yTop);
-                // Valore mm sopra la barra
-                ctx.fillStyle = '#185FA5';
-                ctx.font = 'bold 9px Arial';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'bottom';
-                ctx.fillText(totPioggia + ' mm', cxP, yTop - 2);
-            }
+            ctx.fillStyle = pal.pioggiaFill;
+            ctx.fillRect(cxP - wBarPx, yTop, wBarPx * 2, yBase - yTop);
+            ctx.strokeStyle = pal.pioggiaStroke;
+            ctx.lineWidth = 0.5;
+            ctx.strokeRect(cxP - wBarPx, yTop, wBarPx * 2, yBase - yTop);
+            ctx.fillStyle = pal.pioggiaText;
+            ctx.font = 'bold 9px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText(totPioggia + ' mm', cxP, yTop - 2);
+}
 
             // Etichetta zona — centrata su cx, allineata ai pallini max/min assoluti
             ctx.fillStyle = '#aaa';
@@ -356,6 +412,27 @@ var graficoPlugin = {
             ctx.textBaseline = 'bottom';
             ctx.fillText(LABELS[z.id], cx, yp(chart.scales.y.min) - 2);
         });
+
+// Linee tratteggiate: collegano lo stesso valore tra colonna di riferimento e selezione
+        if (GIORNO_SEL) {
+            var basiZona = ['oggi', 'gg10', 'gg30', 'anno'];
+            var metriche = ['yMx', 'yAv', 'yMn', 'yAbsMx', 'yAbsMn'];
+            ctx.strokeStyle = 'rgba(120,120,120,0.55)';
+            ctx.lineWidth = 2.5;
+            ctx.setLineDash([4, 3]);
+            basiZona.forEach(function(base) {
+                var gRif = zoneGeom[base];
+                var gSel = zoneGeom[base + '_sel'];
+                if (!gRif || !gSel) return;
+                metriche.forEach(function(m) {
+                    ctx.beginPath();
+                    ctx.moveTo(gRif.cx, gRif[m]);
+                    ctx.lineTo(gSel.cx, gSel[m]);
+                    ctx.stroke();
+                });
+            });
+            ctx.setLineDash([]);
+        }
 
         // Separatori verticali tra zone
         ctx.strokeStyle = 'rgba(128,128,128,0.12)';
@@ -471,7 +548,7 @@ function aggiornaTooltip(clientX, clientY) {
     var my = clientY - rect.top;
 
     var trovato = null;
-    var soglia = 18; // px distanza massima
+    var soglia = 18; // px distanza massima per i pallini assoluti
     for (var i = 0; i < palliniAssoluti.length; i++) {
         var p = palliniAssoluti[i];
         var dist = Math.sqrt((mx - p.px) * (mx - p.px) + (my - p.py) * (my - p.py));
@@ -485,7 +562,28 @@ function aggiornaTooltip(clientX, clientY) {
         var label = trovato.tipo === 'max' ? 'Max' : 'Min';
         tooltipEl.innerHTML = label + ': ' + trovato.valore + '\u00b0C<br>' + fmtData(trovato.data);
         tooltipEl.style.display = 'block';
-        // Posiziona sopra il cursore
+        tooltipEl.style.left = (clientX - tooltipEl.offsetWidth / 2) + 'px';
+        tooltipEl.style.top  = (clientY - tooltipEl.offsetHeight - 10) + 'px';
+        return;
+    }
+
+    // Linee delle medie (media max / media / media min)
+    var sogliaLinea = 8; // px distanza verticale massima dalla linea
+    var trovataMedia = null;
+    for (var j = 0; j < medieSegmenti.length; j++) {
+        var s = medieSegmenti[j];
+        if (mx >= s.xMin && mx <= s.xMax && Math.abs(my - s.py) <= sogliaLinea) {
+            trovataMedia = s;
+            break;
+        }
+    }
+
+    if (trovataMedia) {
+        var labelMedia = trovataMedia.tipo === 'max' ? 'Media max'
+                        : trovataMedia.tipo === 'min' ? 'Media min'
+                        : 'Media';
+        tooltipEl.innerHTML = labelMedia + ': ' + trovataMedia.valore + '\u00b0C<br>' + trovataMedia.zona;
+        tooltipEl.style.display = 'block';
         tooltipEl.style.left = (clientX - tooltipEl.offsetWidth / 2) + 'px';
         tooltipEl.style.top  = (clientY - tooltipEl.offsetHeight - 10) + 'px';
     } else {

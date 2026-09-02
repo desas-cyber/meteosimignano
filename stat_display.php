@@ -59,6 +59,14 @@ if (!isset($mainImageDate)) {
             height: auto;
         }
 
+        /* Placeholder: tag img identico a .main-image, nascosto di default */
+        #no-image-placeholder {
+            display: none;
+            width: calc(100% + 6px);
+            max-width: 1000px;
+        }
+        #no-image-placeholder.visible { display: block; }
+
         .main-container > .date-text {
             position: relative;
             bottom: 0px;
@@ -383,7 +391,19 @@ if (!isset($mainImageDate)) {
 
         <!-- IMMAGINE PRINCIPALE - src e temp popolati da aggiorna_galleria.js -->
         <div class="main-container">
-            <img id="main-image" src="" alt="Caricamento immagine..." class="main-image">
+            <!-- Placeholder "nessuna immagine": img con SVG nero 1920x1080 -->
+            <img id="no-image-placeholder"
+                src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1920' height='1080'%3E%3Crect width='1920' height='1080' fill='%231a1a1a'/%3E%3Ctext x='960' y='560' font-family='Arial' font-size='48' fill='%23555' text-anchor='middle'%3ENessuna immagine disponibile%3C/text%3E%3C/svg%3E"
+                alt="Nessuna immagine disponibile"
+                class="main-image">
+
+            <img id="main-image"
+                src=""
+                alt="Caricamento immagine..."
+                class="main-image"
+                style="display:none;"
+                onload="this.style.display=''; document.getElementById('no-image-placeholder').classList.remove('visible');"
+                onerror="this.style.display='none'; document.getElementById('no-image-placeholder').classList.add('visible');">
 
             <h2 class="date-text" id="main-image-date">
                 <span id="date-label">
@@ -421,7 +441,7 @@ if (!isset($mainImageDate)) {
              4. Regola height se la tabella e' piu' alta/bassa di 300px
              ================================================================ -->
 
-        <!-- TABELLA 1 yuuuuuuuuuuuuuu-->
+        <!-- TABELLA 1 -->
         <div class="stat-section-header">
             <h2 class="stat-section-title">Statistiche mensili</h2>
             <div style="display:flex; gap:6px;">
