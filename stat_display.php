@@ -601,18 +601,60 @@ if (!isset($mainImageDate)) {
         }
         frDiff.addEventListener('load', sincronizzaBottoneDiff);
 
-        btnDiff.addEventListener('click', function(e) {
-            e.preventDefault();
-            var url = new URL(frDiff.src, window.location.href);
-            var attivo = url.searchParams.get('diff') === '1';
+        // SOSTITUISCI L'INTERO BLOCCO btnDiff.addEventListener('click', ...) CON QUESTO
 
-            if (attivo) url.searchParams.delete('diff');
-            else        url.searchParams.set('diff', '1');
+btnDiff.addEventListener('click', function(e) {
+    e.preventDefault();
 
-            frDiff.src = url.pathname + url.search;
-            // Non serve piu' impostare qui lo stile: lo fara' 'load' non appena
-            // l'iframe avra' finito di ricaricarsi con il nuovo URL.
-        });
+    var modeBtn = document.getElementById('btn-grafico-stat1');
+    var mode = modeBtn ? modeBtn.getAttribute('data-mode') : 'tabella';
+
+    if (mode === 'grafico') {
+        // ---- MODALITA' GRAFICO: sposta la data selezionata di un anno indietro ----
+
+        // Legge la posizione REALE del documento dentro l'iframe (non l'attributo
+        // src statico, che il calendarietto interno aggiorna via window.location.href
+        // senza toccare l'attributo visto dal genitore)
+        var hrefCorrente;
+        try {
+            hrefCorrente = frDiff.contentWindow.location.href;
+        } catch (err) {
+            hrefCorrente = frDiff.src; // fallback se il contentWindow non e' accessibile
+        }
+        var url = new URL(hrefCorrente);
+        var dataAttuale = url.searchParams.get('data');
+
+        var base = dataAttuale
+            ? new Date(dataAttuale + 'T00:00:00')
+            : (function () {
+                var d = new Date();
+                d.setDate(d.getDate() - 1); // default server-side: ieri
+                return d;
+            })();
+
+        base.setFullYear(base.getFullYear() - 1);
+
+        var yyyy = base.getFullYear();
+        var mm   = String(base.getMonth() + 1).padStart(2, '0');
+        var dd   = String(base.getDate()).padStart(2, '0');
+
+        var urlGrafico = new URL(frDiff.src, window.location.href); // usa il path del grafico, non della tabella
+        urlGrafico.searchParams.set('data', yyyy + '-' + mm + '-' + dd);
+        urlGrafico.searchParams.delete('diff'); // il grafico non usa questo parametro
+
+        frDiff.src = urlGrafico.pathname + urlGrafico.search;
+        return;
+    }
+
+    // ---- MODALITA' TABELLA: comportamento originale, invariato ----
+    var url = new URL(frDiff.src, window.location.href);
+    var attivo = url.searchParams.get('diff') === '1';
+
+    if (attivo) url.searchParams.delete('diff');
+    else        url.searchParams.set('diff', '1');
+
+    frDiff.src = url.pathname + url.search;
+});
     });
     // Toggle grafico/tabella per stat3
     document.addEventListener('DOMContentLoaded', function() {
