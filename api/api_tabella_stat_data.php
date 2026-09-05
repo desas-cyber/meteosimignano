@@ -70,6 +70,21 @@ function statDiffValore($now, $prev)
     return $now - $prev;
 }
 
+/**
+ * Sanifica un valore "grezzo" del singolo giorno (oggi_row), scartando
+ * sentinelle/valori fuori dal range fisico plausibile per quel campo.
+ * Usata per allineare la validazione di 'oggi' a quella gia' applicata
+ * in SQL (CASE WHEN ... BETWEEN min AND max) per p10/mese/anno.
+ */
+function statSaneVal($v, float $min, float $max)
+{
+    if ($v === null || $v === false || $v === '') return null;
+    if (!is_numeric($v)) return null;
+    $v = (float)$v;
+    if ($v < $min || $v > $max) return null;
+    return $v;
+}
+
 /** Sottrae esattamente un anno da una data, gestendo il 29 febbraio */
 function statSottraiAnno(string $data): string
 {
@@ -538,31 +553,31 @@ function getStatData(?string $data_forzata = null, bool $ignora_altri_get = fals
         ],
         [
             'label'  => 'T media',
-            'oggi'   => $fv($oggi_row['temp_media'] ?? null, ' &#176;C'),
+            'oggi'   => $fv(statSaneVal($oggi_row['temp_media'] ?? null, -30, 50), ' &#176;C'),
             'p10'    => $fv($agg_10gg['t_media']  ?? null, ' &#176;C'),
             'mese'   => $fv($agg_mese['t_media']  ?? null, ' &#176;C'),
             'anno'   => $fv($agg_anno['t_media']  ?? null, ' &#176;C'),
-            'raw'    => ['oggi'=>$oggi_row['temp_media'] ?? null, 'p10'=>$agg_10gg['t_media'] ?? null, 'mese'=>$agg_mese['t_media'] ?? null, 'anno'=>$agg_anno['t_media'] ?? null],
+            'raw'    => ['oggi'=>statSaneVal($oggi_row['temp_media'] ?? null, -30, 50), 'p10'=>$agg_10gg['t_media'] ?? null, 'mese'=>$agg_mese['t_media'] ?? null, 'anno'=>$agg_anno['t_media'] ?? null],
             'unit'   => ' &#176;C', 'dec' => 1,
             'grigio' => false,
         ],
         [
             'label'  => 'Max abs',
-            'oggi'   => $fv($oggi_row['temp_max_abs'] ?? null, ' &#176;C'),
+            'oggi'   => $fv(statSaneVal($oggi_row['temp_max_abs'] ?? null, -30, 50), ' &#176;C'),
             'p10'    => $fvdata($agg_10gg['t_max'] ?? null, $agg_10gg['t_max_data'] ?? null),
             'mese'   => $fvdata($agg_mese['t_max'] ?? null, $agg_mese['t_max_data'] ?? null),
             'anno'   => $fvdata($agg_anno['t_max'] ?? null, $agg_anno['t_max_data'] ?? null),
-            'raw'    => ['oggi'=>$oggi_row['temp_max_abs'] ?? null, 'p10'=>$agg_10gg['t_max'] ?? null, 'mese'=>$agg_mese['t_max'] ?? null, 'anno'=>$agg_anno['t_max'] ?? null],
+            'raw'    => ['oggi'=>statSaneVal($oggi_row['temp_max_abs'] ?? null, -30, 50), 'p10'=>$agg_10gg['t_max'] ?? null, 'mese'=>$agg_mese['t_max'] ?? null, 'anno'=>$agg_anno['t_max'] ?? null],
             'unit'   => ' &#176;C', 'dec' => 1,
             'grigio' => false,
         ],
         [
             'label'  => 'Min abs',
-            'oggi'   => $fv($oggi_row['temp_min_abs'] ?? null, ' &#176;C'),
+            'oggi'   => $fv(statSaneVal($oggi_row['temp_min_abs'] ?? null, -30, 50), ' &#176;C'),
             'p10'    => $fvdata($agg_10gg['t_min'] ?? null, $agg_10gg['t_min_data'] ?? null),
             'mese'   => $fvdata($agg_mese['t_min'] ?? null, $agg_mese['t_min_data'] ?? null),
             'anno'   => $fvdata($agg_anno['t_min'] ?? null, $agg_anno['t_min_data'] ?? null),
-            'raw'    => ['oggi'=>$oggi_row['temp_min_abs'] ?? null, 'p10'=>$agg_10gg['t_min'] ?? null, 'mese'=>$agg_mese['t_min'] ?? null, 'anno'=>$agg_anno['t_min'] ?? null],
+            'raw'    => ['oggi'=>statSaneVal($oggi_row['temp_min_abs'] ?? null, -30, 50), 'p10'=>$agg_10gg['t_min'] ?? null, 'mese'=>$agg_mese['t_min'] ?? null, 'anno'=>$agg_anno['t_min'] ?? null],
             'unit'   => ' &#176;C', 'dec' => 1,
             'grigio' => false,
         ],
