@@ -222,7 +222,7 @@ function getStatData(?string $data_forzata = null, bool $ignora_altri_get = fals
 
     if (!$ignora_altri_get && !empty($_GET['anno'])) {
         $anno_sel = (int)$_GET['anno'];
-        if ($anno_sel >= 2020 && $anno_sel <= (int)$oggi_anno) {
+        if ($anno_sel >= 2001 && $anno_sel <= (int)$oggi_anno) {
             $anno_inizio = $anno_sel . '-01-01';
             $anno_fine_raw = $anno_sel . '-12-31';
             $anno_fine = ($anno_fine_raw > $oggi_reale) ? $oggi : $anno_fine_raw;
@@ -408,13 +408,16 @@ function getStatData(?string $data_forzata = null, bool $ignora_altri_get = fals
     // ========================================================================
     try {
         // Pioggia oggi
-        $stmt = $pdo_lettura->prepare("SELECT cumulato_24h FROM $table_p WHERE DATE(data) = :oggi ORDER BY data DESC LIMIT 1");
+        $stmt = $pdo_lettura->prepare("SELECT cumulato_24h FROM $table_p WHERE DATE(data) = :oggi AND usa_per_giornaliero = 1 ORDER BY data DESC LIMIT 1");
         $stmt->execute([':oggi' => $oggi_orig]);
         $pioggia_oggi = $stmt->fetchColumn();
 
         // Pioggia periodo 10gg
         $stmt = $pdo_lettura->prepare("
-            SELECT SUM(cumulato_24h) AS tot, COUNT(CASE WHEN cumulato_24h >= 1 THEN 1 END) AS gg_pioggia
+             SELECT SUM(cumulato_24h) AS tot,
+                   COUNT(cumulato_24h) AS n_gg,
+                   MIN(usa_per_giornaliero) AS conv_min,
+                   COUNT(CASE WHEN cumulato_24h >= 1 THEN 1 END) AS gg_pioggia
             FROM $table_p
             WHERE DATE(data) BETWEEN :inizio AND :fine
         ");
@@ -423,7 +426,10 @@ function getStatData(?string $data_forzata = null, bool $ignora_altri_get = fals
 
         // Pioggia mese
         $stmt = $pdo_lettura->prepare("
-            SELECT SUM(cumulato_24h) AS tot, COUNT(CASE WHEN cumulato_24h >= 1 THEN 1 END) AS gg_pioggia
+             SELECT SUM(cumulato_24h) AS tot,
+                   COUNT(cumulato_24h) AS n_gg,
+                   MIN(usa_per_giornaliero) AS conv_min,
+                   COUNT(CASE WHEN cumulato_24h >= 1 THEN 1 END) AS gg_pioggia
             FROM $table_p
             WHERE DATE(data) BETWEEN :inizio AND :fine
         ");
@@ -432,7 +438,10 @@ function getStatData(?string $data_forzata = null, bool $ignora_altri_get = fals
 
         // Pioggia anno
         $stmt = $pdo_lettura->prepare("
-            SELECT SUM(cumulato_24h) AS tot, COUNT(CASE WHEN cumulato_24h >= 1 THEN 1 END) AS gg_pioggia
+             SELECT SUM(cumulato_24h) AS tot,
+                   COUNT(cumulato_24h) AS n_gg,
+                   MIN(usa_per_giornaliero) AS conv_min,
+                   COUNT(CASE WHEN cumulato_24h >= 1 THEN 1 END) AS gg_pioggia
             FROM $table_p
             WHERE DATE(data) BETWEEN :inizio AND :fine
         ");
@@ -483,6 +492,68 @@ function getStatData(?string $data_forzata = null, bool $ignora_altri_get = fals
         'p10'  => $giorni_10gg  > 0 ? count($rows_10gg)  / $giorni_10gg  : 0.0,
         'mese' => $giorni_mese  > 0 ? count($rows_mese)  / $giorni_mese  : 0.0,
         'anno' => $giorni_anno  > 0 ? count($rows_anno)  / $giorni_anno  : 0.0,
+    ];
+    
+        // ========================================================================
+    // COPERTURA EFFETTIVA — usata SOLO per validare i raffronti.
+    //
+    // Due differenze dalla copertura sopra:
+    //  1. il denominatore e' il numero di giorni TRASCORSI del periodo, non il
+    //     periodo naturale intero. Un anno in corso non e' "incompleto", e' in
+    //     corso, e il confronto fra due periodi entrambi in corso e' legittimo.
+    //  2. e' calcolata per metrica. Una riga esiste in tabella quando il giorno
+    //     supera MIN_RECORD_VALIDI, ma le singole metriche possono essere NULL
+    //     per non aver raggiunto il 75% dei record attesi: contarle come giorni
+    //     buoni vanificherebbe il filtro di calcola_giornaliero.php.
+    // ========================================================================
+    $ggAttesi = function (string $i, string $f): int {
+        return (int)((new DateTime($i))->diff(new DateTime($f))->days) + 1;
+    };
+    $n10  = $ggAttesi($p10_inizio,  $p10_fine);
+    $nmes = $ggAttesi($mese_inizio, $mese_fine);
+    $nann = $ggAttesi($anno_inizio, $anno_fine);
+
+    $ggValidi = function (array $rows, string $campo): int {
+        $n = 0;
+        foreach ($rows as $r) { if (($r[$campo] ?? null) !== null) { $n++; } }
+        return $n;
+    };
+
+    // La colonna sentinella di ciascuna metrica: se e' NULL, quel giorno non
+    // conta per quella metrica. rad_percent_24h non ha una soglia propria
+    // (viene calcolata a parte dal cumulato progressivo), quindi si aggancia
+    // alla termica, che e' la scelta piu' prudente.
+    $campo_fonte = [
+        'termica'   => 'temp_media',
+        'pressione' => 'press_media',
+        'vento'     => 'vento_dom_kmh',
+    ];
+
+    $copertura_eff = [];
+    foreach ($campo_fonte as $fonte => $col) {
+        $copertura_eff[$fonte] = [
+            'oggi' => (($oggi_row[$col] ?? null) !== null) ? 1.0 : 0.0,
+            'p10'  => $n10  > 0 ? $ggValidi($rows_10gg, $col) / $n10  : 0.0,
+            'mese' => $nmes > 0 ? $ggValidi($rows_mese, $col) / $nmes : 0.0,
+            'anno' => $nann > 0 ? $ggValidi($rows_anno, $col) / $nann : 0.0,
+        ];
+    }
+
+    // Il pluviometro ha uno storico diverso dalla tabella termica
+    $copertura_eff['pluvio'] = [
+        'oggi' => ($pioggia_oggi !== false && $pioggia_oggi !== null) ? 1.0 : 0.0,
+        'p10'  => $n10  > 0 ? (int)($pioggia_10gg['n_gg'] ?? 0) / $n10  : 0.0,
+        'mese' => $nmes > 0 ? (int)($pioggia_mese['n_gg'] ?? 0) / $nmes : 0.0,
+        'anno' => $nann > 0 ? (int)($pioggia_anno['n_gg'] ?? 0) / $nann : 0.0,
+    ];
+
+    // Convenzione 09-09 nel periodo: non e' incompletezza, ma rende
+    // inconfrontabile tutto cio' che dipende dall'attribuzione al giorno.
+    $conv_ok = [
+        'oggi' => true,
+        'p10'  => (int)($pioggia_10gg['conv_min'] ?? 1) === 1,
+        'mese' => (int)($pioggia_mese['conv_min'] ?? 1) === 1,
+        'anno' => (int)($pioggia_anno['conv_min'] ?? 1) === 1,
     ];
 
     // ========================================================================
@@ -553,6 +624,7 @@ function getStatData(?string $data_forzata = null, bool $ignora_altri_get = fals
         ],
         [
             'label'  => 'T media',
+            'fonte_dati' => 'termica',
             'oggi'   => $fv(statSaneVal($oggi_row['temp_media'] ?? null, -30, 50), ' &#176;C'),
             'p10'    => $fv($agg_10gg['t_media']  ?? null, ' &#176;C'),
             'mese'   => $fv($agg_mese['t_media']  ?? null, ' &#176;C'),
@@ -563,6 +635,7 @@ function getStatData(?string $data_forzata = null, bool $ignora_altri_get = fals
         ],
         [
             'label'  => 'Max abs',
+            'fonte_dati' => 'termica',
             'oggi'   => $fv(statSaneVal($oggi_row['temp_max_abs'] ?? null, -30, 50), ' &#176;C'),
             'p10'    => $fvdata($agg_10gg['t_max'] ?? null, $agg_10gg['t_max_data'] ?? null),
             'mese'   => $fvdata($agg_mese['t_max'] ?? null, $agg_mese['t_max_data'] ?? null),
@@ -573,6 +646,7 @@ function getStatData(?string $data_forzata = null, bool $ignora_altri_get = fals
         ],
         [
             'label'  => 'Min abs',
+            'fonte_dati' => 'termica',
             'oggi'   => $fv(statSaneVal($oggi_row['temp_min_abs'] ?? null, -30, 50), ' &#176;C'),
             'p10'    => $fvdata($agg_10gg['t_min'] ?? null, $agg_10gg['t_min_data'] ?? null),
             'mese'   => $fvdata($agg_mese['t_min'] ?? null, $agg_mese['t_min_data'] ?? null),
@@ -583,6 +657,7 @@ function getStatData(?string $data_forzata = null, bool $ignora_altri_get = fals
         ],
         [
             'label'  => 'Max media',
+            'fonte_dati' => 'termica',
             'oggi'   => '&mdash;',
             'p10'    => $fv($agg_10gg['t_max_media'] ?? null, ' &#176;C'),
             'mese'   => $fv($agg_mese['t_max_media'] ?? null, ' &#176;C'),
@@ -593,6 +668,7 @@ function getStatData(?string $data_forzata = null, bool $ignora_altri_get = fals
         ],
         [
             'label'  => 'Min media',
+            'fonte_dati' => 'termica',
             'oggi'   => '&mdash;',
             'p10'    => $fv($agg_10gg['t_min_media'] ?? null, ' &#176;C'),
             'mese'   => $fv($agg_mese['t_min_media'] ?? null, ' &#176;C'),
@@ -604,6 +680,7 @@ function getStatData(?string $data_forzata = null, bool $ignora_altri_get = fals
         ],
         [
             'label'  => 'P media',
+            'fonte_dati' => 'pressione',
             'oggi'   => $fv($oggi_row['press_media'] ?? null, ' hPa'),
             'p10'    => $fv($agg_10gg['p_media']    ?? null, ' hPa'),
             'mese'   => $fv($agg_mese['p_media']    ?? null, ' hPa'),
@@ -614,6 +691,7 @@ function getStatData(?string $data_forzata = null, bool $ignora_altri_get = fals
         ],
         [
             'label'  => 'P max',
+            'fonte_dati' => 'pressione',
             'oggi'   => $fv($oggi_row['press_max'] ?? null, ' hPa'),
             'p10'    => $fvdata($agg_10gg['p_max'] ?? null, $agg_10gg['p_max_data'] ?? null, ' hPa'),
             'mese'   => $fvdata($agg_mese['p_max'] ?? null, $agg_mese['p_max_data'] ?? null, ' hPa'),
@@ -624,6 +702,7 @@ function getStatData(?string $data_forzata = null, bool $ignora_altri_get = fals
         ],
         [
             'label'  => 'P min',
+            'fonte_dati' => 'pressione',
             'oggi'   => $fv($oggi_row['press_min'] ?? null, ' hPa'),
             'p10'    => $fvdata($agg_10gg['p_min'] ?? null, $agg_10gg['p_min_data'] ?? null, ' hPa'),
             'mese'   => $fvdata($agg_mese['p_min'] ?? null, $agg_mese['p_min_data'] ?? null, ' hPa'),
@@ -635,6 +714,7 @@ function getStatData(?string $data_forzata = null, bool $ignora_altri_get = fals
         ],
         [
             'label'  => 'Vdom',
+            'fonte_dati' => 'vento',
             'oggi'   => $fvento($vento_oggi),
             'p10'    => $fvento($vento_10gg),
             'mese'   => $fvento($vento_mese),
@@ -644,6 +724,7 @@ function getStatData(?string $data_forzata = null, bool $ignora_altri_get = fals
         ],
         [
             'label'  => 'Vdom km/h',
+            'fonte_dati' => 'vento',
             'oggi'   => $fv($vento_oggi['kmh'] ?? null, ' km/h'),
             'p10'    => $fv($vento_10gg['kmh'] ?? null, ' km/h'),
             'mese'   => $fv($vento_mese['kmh'] ?? null, ' km/h'),
@@ -655,6 +736,7 @@ function getStatData(?string $data_forzata = null, bool $ignora_altri_get = fals
         ],
         [
             'label'  => 'Pioggia cumulato',
+            'fonte_dati' => 'pluvio',
             'oggi'   => $fv($pioggia_oggi !== false ? $pioggia_oggi : null, ' mm'),
             'p10'    => $fv($pioggia_10gg['tot'] ?? null, ' mm'),
             'mese'   => $fv($pioggia_mese['tot'] ?? null, ' mm'),
@@ -665,6 +747,8 @@ function getStatData(?string $data_forzata = null, bool $ignora_altri_get = fals
         ],
         [
             'label'  => 'Gg pioggia (&ge;1mm)',
+            'fonte_dati' => 'pluvio',
+            'dipende_dal_giorno' => true,
             'oggi'   => '&mdash;',
             'p10'    => $fv($pioggia_10gg['gg_pioggia'] ?? null, ' gg', 0),
             'mese'   => $fv($pioggia_mese['gg_pioggia'] ?? null, ' gg', 0),
@@ -676,6 +760,7 @@ function getStatData(?string $data_forzata = null, bool $ignora_altri_get = fals
         ],
         [
             'label'  => 'Radianza media',
+            'fonte_dati' => 'termica',
             'oggi'   => $fv($rad_oggi, '%', 0),
             'p10'    => $fv($agg_10gg['rad_media'] ?? null, '%', 0),
             'mese'   => $fv($agg_mese['rad_media'] ?? null, '%', 0),
@@ -700,6 +785,8 @@ function getStatData(?string $data_forzata = null, bool $ignora_altri_get = fals
         'headers'   => $headers,
         'righe'     => $righe,
         'copertura' => $copertura,
+        'copertura_eff' => $copertura_eff,
+        'conv_ok'       => $conv_ok,
         'meta'    => [
             'oggi'       => $oggi_orig,
             'oggi_reale' => $oggi_reale,
@@ -1375,33 +1462,49 @@ function getGrafico1Data(): array
         if ($p['a']  > $a_max)  { $a_max  = $p['a'];  }
     }
 
+       // Due query separate: la tabella termica e il pluviometro hanno storici
+    // diversi (la prima parte da dicembre 2025, il secondo dal 2001) e una
+    // JOIN farebbe sparire i giorni presenti solo in una delle due.
     $stmt = $pdo_lettura->prepare("
-        SELECT
-            DATE_FORMAT(g.data_giorno, '%Y-%m-%d') AS d,
-            ROUND(g.temp_max_abs, 1)  AS mx,
-            ROUND(g.temp_min_abs, 1)  AS mn,
-            ROUND(g.temp_media,   1)  AS avg,
-            COALESCE(ROUND(p.cumulato_24h, 1), 0) AS pioggia
-        FROM $table_g g
-        LEFT JOIN $table_p p ON p.data = g.data_giorno
-        WHERE g.data_giorno BETWEEN :da AND :a
-          AND g.temp_max_abs BETWEEN -30 AND 50
-          AND g.temp_min_abs BETWEEN -30 AND 50
-        ORDER BY g.data_giorno ASC
+        SELECT DATE_FORMAT(data_giorno, '%Y-%m-%d') AS d,
+               ROUND(temp_max_abs, 1) AS mx,
+               ROUND(temp_min_abs, 1) AS mn,
+               ROUND(temp_media,   1) AS avg
+        FROM $table_g
+        WHERE data_giorno BETWEEN :da AND :a
+          AND temp_max_abs BETWEEN -30 AND 50
+          AND temp_min_abs BETWEEN -30 AND 50
+        ORDER BY data_giorno ASC
     ");
     $stmt->execute([':da' => $da_min, ':a' => $a_max]);
-    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Indice per lookup rapido per data
     $idx = [];
-    foreach ($rows as $r) {
+    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $r) {
         $idx[$r['d']] = [
             'd'       => $r['d'],
-            'mx'      => $r['mx'] !== null ? (float)$r['mx'] : null,
-            'mn'      => $r['mn'] !== null ? (float)$r['mn'] : null,
+            'mx'      => $r['mx']  !== null ? (float)$r['mx']  : null,
+            'mn'      => $r['mn']  !== null ? (float)$r['mn']  : null,
             'avg'     => $r['avg'] !== null ? (float)$r['avg'] : null,
-            'pioggia' => (float)$r['pioggia'],
+            'pioggia' => null,
         ];
+    }
+
+    $stmt = $pdo_lettura->prepare("
+        SELECT DATE_FORMAT(data, '%Y-%m-%d') AS d,
+               ROUND(cumulato_24h, 1) AS pioggia
+        FROM $table_p
+        WHERE data BETWEEN :da AND :a
+          AND usa_per_giornaliero = 1
+        ORDER BY data ASC
+    ");
+    $stmt->execute([':da' => $da_min, ':a' => $a_max]);
+
+    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $r) {
+        if (!isset($idx[$r['d']])) {
+            $idx[$r['d']] = ['d' => $r['d'], 'mx' => null, 'mn' => null, 'avg' => null];
+        }
+        // null resta null: un giorno senza misura non e' un giorno secco
+        $idx[$r['d']]['pioggia'] = $r['pioggia'] !== null ? (float)$r['pioggia'] : null;
     }
 
     // Costruisce gli array di dati filtrando per periodo (4 o 8 chiavi, a seconda della selezione)
@@ -1413,7 +1516,7 @@ function getGrafico1Data(): array
         while ($cur <= $fine) {
             $ds = $cur->format('Y-m-d');
             $lista[] = isset($idx[$ds]) ? $idx[$ds] : [
-                'd' => $ds, 'mx' => null, 'mn' => null, 'avg' => null, 'pioggia' => 0
+                'd' => $ds, 'mx' => null, 'mn' => null, 'avg' => null, 'pioggia' => null
             ];
             $cur->modify('+1 day');
         }
@@ -1432,6 +1535,19 @@ function getGrafico1Data(): array
         $labels['gg30_sel'] = '30gg sel.';
         $labels['anno_sel'] = 'anno ' . date('Y', strtotime($giorno_sel)) . ' sel.';
     }
+    
+        // Copertura per zona, separata per grandezza: una colonna storica puo'
+    // avere la pioggia completa e nessun dato termico.
+    $copertura_zona = [];
+    foreach ($risultato as $nome => $lista) {
+        $n = max(1, count($lista));
+        $t = 0; $p = 0;
+        foreach ($lista as $g) {
+            if ($g['mx'] !== null && $g['mn'] !== null) { $t++; }
+            if ($g['pioggia'] !== null)                 { $p++; }
+        }
+        $copertura_zona[$nome] = ['temp' => $t / $n, 'pioggia' => $p / $n];
+    }
 
     return [
         'success'    => true,
@@ -1440,6 +1556,7 @@ function getGrafico1Data(): array
         'giorno_sel' => $giorno_sel,
         'periodi'    => $risultato,
         'labels'     => $labels,
+        'copertura_zona' => $copertura_zona
     ];
 }
 

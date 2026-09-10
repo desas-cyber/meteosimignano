@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guida alle statistiche - MeteoSimignano</title>
+    <link rel="stylesheet" href="header_shared.css">
+    <style>
+        /* ====================================================================
+           STILI GENERALI (coerenti con index.php / stat_display.php)
+           ==================================================================== */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+            background: #fff;
+        }
+
+        main {
+            width: 100%;
+            max-width: 860px;
+            box-sizing: border-box;
+            padding: 12px 16px 40px 16px;
+        }
+
+        h1.page-title {
+            font-size: 22px;
+            margin: 10px 0 4px 0;
+            text-align: center;
+        }
+
+        p.page-subtitle {
+            font-size: 13px;
+            color: #777;
+            text-align: center;
+            margin: 0 0 18px 0;
+        }
+
+        h2.sec-title {
+            font-size: 18px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 4px;
+            margin: 28px 0 10px 0;
+        }
+
+        h3.sub-title-info {
+            font-size: 15px;
+            margin: 18px 0 6px 0;
+            color: #333;
+        }
+
+        p, li {
+            font-size: 14px;
+            line-height: 1.55;
+            color: #222;
+        }
+
+        ul { padding-left: 22px; margin: 6px 0 12px 0; }
+        li { margin-bottom: 5px; }
+
+        .btn-sample {
+            display: inline-block;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 1px 8px;
+            font-size: 12px;
+            background: #f5f5f5;
+            white-space: nowrap;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 16px;
+            font-size: 13px;
+            background: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin: 8px 0 14px 0;
+        }
+        .legend span.item { white-space: nowrap; }
+
+        .note-box {
+            background: #f2f6fb;
+            border-left: 4px solid #6699cc;
+            border-radius: 0 6px 6px 0;
+            padding: 8px 12px;
+            font-size: 13px;
+            margin: 10px 0;
+        }
+
+        .toc {
+            background: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+        .toc a { color: #336699; text-decoration: none; }
+        .toc a:hover { text-decoration: underline; }
+
+        /* ---- HEADER MENU (identico alle altre pagine) ---- */
+        .header-menu-container { position: relative; }
+        .menu-toggle { background: none; border: none; cursor: pointer; padding: 0; }
+
+        .submenu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: max-content;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+            z-index: 1000;
+        }
+        .submenu.active { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        .submenu-item {
+            display: block;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .submenu-item:last-child  { border-bottom: none; }
+        .submenu-item:hover       { background-color: #f8f8f8; }
+        .submenu-item:first-child { border-radius: 8px 8px 0 0; }
+        .submenu-item:last-child  { border-radius: 0 0 8px 8px; }
+
+        /* Voce con sotto-menu annidato */
+        .submenu-item.has-sub {
+            position: relative;
+            cursor: pointer;
+            padding: 12px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            user-select: none;
+        }
+        .submenu-item.has-sub:hover,
+        .submenu-item.has-sub.sub-active { background-color: #f8f8f8; }
+        .sub-submenu {
+            position: absolute;
+            top: 0;
+            left: 100%;
+            margin-left: 4px;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: max-content;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-6px);
+            transition: all 0.2s ease;
+            z-index: 1100;
+        }
+        .submenu-item.has-sub.sub-active .sub-submenu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+        @media (max-width: 768px) {
+            .sub-submenu {
+                left: auto;
+                right: 0;
+                top: 100%;
+                margin-left: 0;
+                margin-top: 2px;
+                transform: translateY(-6px);
+            }
+            .submenu-item.has-sub.sub-active .sub-submenu {
+                transform: translateY(0);
+            }
+        }
+        .sub-submenu .submenu-item { padding: 6px 16px; }
+    </style>
+</head>
+
+<body>
+
+    <!-- ====================================================================
+         HEADER - identico a stat_display.php, ma con "Indietro" a sinistra
+         ==================================================================== -->
+    <header class="main-header">
+
+        <!-- Pulsante Indietro (al posto di Info) -->
+        <a href="stat_display.php" class="header-icon left-icon" title="Torna alle statistiche">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span class="icon-label">Indietro</span>
+        </a>
+
+        <div class="header-content">
+            <h1 class="main-title">
+                <a href="index.php" style="text-decoration: none; color: inherit;">MeteoSimignano</a>
+            </h1>
+            <h1 class="sub-title sub-title-row">
+                <span>43&#176;17&#8242;32.5&#8243;N 11&#176;10&#8242;01.49&#8243;E @ 418m slm</span>
+                <span id="page-spinner" class="spinner hidden" aria-label="Caricamento in corso"></span>
+            </h1>
+        </div>
+
+        <!-- Icona Menu (destra) - stesse voci delle altre pagine -->
+        <div class="header-menu-container">
+            <button class="header-icon right-icon menu-toggle" title="Menu">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+                <span class="icon-label">Menu</span>
+            </button>
+
+            <div class="submenu">
+                <a href="index.php" class="submenu-item">Home</a>
+                <a href="belle.php" class="submenu-item">Diario del cielo</a>
+                <a href='grafici_termo_plotly.php?range=24h&visible=' class="submenu-item">Grafici</a>
+                <a href="pluvio.html" class="submenu-item">Pioggia: 24h</a>
+                <a href="pluvio_tab.php" class="submenu-item">Pioggia: tabella</a>
+                <div class="submenu-item has-sub">
+                    <span class="submenu-item-label">Statistiche &#9658;</span>
+                    <div class="sub-submenu">
+                        <a href="stat_display.php" class="submenu-item">Tabelle</a>
+                        <a href="lavori_in_corso.html" class="submenu-item">Grafici</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ====================================================================
+         CONTENUTO
+         ==================================================================== -->
+    <main>
+
+        <h1 class="page-title">Guida alle statistiche</h1>
+        <p class="page-subtitle">Come leggere e usare le tabelle statistiche di MeteoSimignano</p>
+
+        <div class="toc">
+            <strong>Indice:</strong>
+            <a href="#sez1">Statistiche mensili</a> &middot;
+            <a href="#confronti">Confronti</a> &middot;
+            <a href="#sez2">Soglie termiche</a> &middot;
+            <a href="#sez3">Record pioggia</a> &middot;
+            <a href="#note">Note di lettura</a>
+        </div>
+
+        <h2 class="sec-title" id="sez0">Panoramica</h2>
+        <p>
+            La pagina delle statistiche &egrave; composta da tre blocchi indipendenti:
+            <strong>Statistiche mensili</strong>, <strong>Soglie termiche</strong> e
+            <strong>Record pioggia</strong>. Ogni blocco &egrave; una tabella interattiva:
+            le icone a calendario <span class="btn-sample">&#128197;</span> permettono di
+            cambiare il periodo mostrato, mentre i pulsanti
+            <span class="btn-sample">&#128200;&nbsp;Grafico</span> e
+            <span class="btn-sample">&#8592;&nbsp;Tabella</span> alternano la vista
+            tabellare con quella grafica. L'icona <span class="btn-sample">&#8635;</span>
+            riporta sempre alla situazione di partenza.
+        </p>
+        <div class="note-box">
+            I dati giornalieri vengono consolidati a fine giornata: per questo il giorno
+            di riferimento predefinito &egrave; <strong>ieri</strong>, l'ultimo giorno completo.
+        </div>
+
+        <h2 class="sec-title" id="sez1">Statistiche mensili</h2>
+        <p>
+            La tabella mostra i principali parametri (temperature, pioggia, ecc.) su quattro
+            colonne: <strong>ieri</strong>, <strong>10 giorni prima</strong>,
+            <strong>mese</strong> e <strong>anno</strong>. Ogni riga &egrave; un parametro,
+            ogni colonna un periodo.
+        </p>
+        <h3 class="sub-title-info">Navigazione temporale</h3>
+        <p>
+            Cliccando l'icona <span class="btn-sample">&#128197;</span> nell'intestazione di
+            una colonna si apre un calendarietto per scegliere un giorno, una decade, un mese
+            o un anno diverso. La selezione di un <em>giorno</em> riancora tutte le colonne a
+            quella data; la selezione di un singolo periodo (10 giorni, mese o anno) cambia
+            solo la colonna corrispondente.
+        </p>
+
+        <h2 class="sec-title" id="confronti">I confronti</h2>
+        <p>
+            La parte pi&ugrave; utile della tabella sono i confronti, disponibili in due modi
+            distinti (non cumulabili tra loro).
+        </p>
+
+        <h3 class="sub-title-info">1) Confronto con il dato attuale (pallini colorati)</h3>
+        <p>
+            Quando dal calendarietto si seleziona un periodo diverso da quello predefinito,
+            accanto a ogni valore compare un <strong>pallino colorato</strong>: indica di
+            quanto il valore selezionato si discosta dal dato attuale (riferito a ieri).
+            Se hai selezionato un giorno, il pallino compare su tutte le colonne; se hai
+            selezionato un singolo periodo, solo su quella colonna. Passando il mouse sul
+            pallino compare la fascia di scostamento.
+        </p>
+        <div class="legend">
+            <span class="item"><span class="dot" style="background:#b30000;"></span>&gt; +2</span>
+            <span class="item"><span class="dot" style="background:#e08a00;"></span>+0.6 / +2</span>
+            <span class="item"><span class="dot" style="background:#2e9e44;"></span>-0.5 / +0.5</span>
+            <span class="item"><span class="dot" style="background:#3366cc;"></span>-0.6 / -2</span>
+            <span class="item"><span class="dot" style="background:#001f66;"></span>&lt; -2</span>
+            <span class="item"><span class="dot" style="background:#999999;"></span>N/D</span>
+        </div>
+        <p>
+            La differenza &egrave; calcolata come
+            <em>valore selezionato &minus; dato attuale</em>: pallini nelle tonalit&agrave;
+            rosse/arancio indicano valori superiori al riferimento, quelli blu valori
+            inferiori, il verde uno scostamento trascurabile.
+        </p>
+
+        <h3 class="sub-title-info">2) Confronto con l'anno precedente (&#916; Anno)</h3>
+        <p>
+            Il pulsante <span class="btn-sample">&#916;&nbsp;Anno</span> sostituisce i valori
+            della tabella con la <strong>differenza rispetto allo stesso periodo dell'anno
+            precedente</strong> (con segno + o &minus; e pallino colorato secondo la stessa
+            legenda). Un secondo click riporta ai valori normali. Sotto la tabella compare
+            la nota che ricorda quale differenza stai guardando.
+        </p>
+        <div class="note-box">
+            <strong>Attenzione alla colonna anno:</strong> in tutti i confronti l'anno
+            considera i dati dall'1 gennaio fino al giorno in cui si esegue il raffronto.
+            I due anni vengono quindi confrontati sulla stessa porzione di anno
+            (ad esempio, a marzo si confrontano solo i primi tre mesi di ciascun anno),
+            non sull'anno intero.
+        </div>
+
+        <h3 class="sub-title-info">Confronti e dati incompleti</h3>
+        <p>
+            I periodi con <strong>copertura dati inferiore al 75%</strong> sono segnalati
+            da un pallino accanto al periodo: il valore viene comunque mostrato, ma va
+            letto con cautela. Nei confronti, se una delle due parti (il periodo
+            selezionato o il suo riferimento) non ha tutti i dati, al posto della
+            differenza compare <strong>na*</strong>: il raffronto non sarebbe attendibile
+            e non viene calcolato.
+        </p>
+
+        <h3 class="sub-title-info">La vista grafico</h3>
+        <p>
+            Il pulsante <span class="btn-sample">&#128200;&nbsp;Grafico</span> trasforma la
+            tabella in un grafico a quattro zone (giorno, 10 giorni, 30 giorni, anno).
+            Per ogni zona:
+        </p>
+        <ul>
+            <li>la <strong>nuvola di punti</strong> mostra i valori giornalieri di massima,
+                minima e media;</li>
+            <li>le <strong>linee orizzontali</strong> segnano le medie del periodo
+                (massime, medie, minime);</li>
+            <li>i <strong>pallini pieni</strong> agli estremi indicano il massimo e il minimo
+                assoluti del periodo (toccandoli si legge valore e data);</li>
+            <li>la <strong>barra azzurra</strong> a destra di ogni zona &egrave; la pioggia
+                cumulata del periodo, in mm.</li>
+        </ul>
+        <p>
+            Anche nel grafico &egrave; disponibile il confronto: selezionando un giorno dal
+            calendarietto interno, ogni zona <strong>si sdoppia in due colonne
+            affiancate</strong> &mdash; a sinistra il riferimento (ieri), a destra il periodo
+            selezionato &mdash; e delle <strong>linee tratteggiate</strong> collegano i valori
+            corrispondenti (medie ed estremi), rendendo immediato vedere se il periodo scelto
+            &egrave; stato pi&ugrave; caldo, pi&ugrave; freddo o pi&ugrave; piovoso.
+        </p>
+        <div class="note-box">
+            In modalit&agrave; grafico il pulsante <strong>&#916; Anno</strong> sposta la data
+            selezionata di un anno indietro: premuto pi&ugrave; volte, permette di confrontare
+            rapidamente lo stesso periodo su anni successivi.
+        </div>
+        <p>
+            Il pulsante <span class="btn-sample">&#8592;&nbsp;Tabella</span> riporta alla
+            vista tabellare.
+        </p>
+
+        <h2 class="sec-title" id="sez2">Soglie termiche</h2>
+        <p>La tabella &egrave; divisa in due sezioni.</p>
+
+        <h3 class="sub-title-info">A) Primo e ultimo giorno stagionale</h3>
+        <p>
+            Per una serie di soglie fisse di caldo (Max &ge; 35&#176;C, &gt; 30&#176;C,
+            &gt; 20&#176;C) e di freddo (Min &le; 5&#176;C, &le; 0&#176;C, &le; -5&#176;C)
+            mostra il <strong>primo</strong> e l'<strong>ultimo giorno</strong> in cui la
+            soglia &egrave; stata raggiunta nella finestra stagionale corrente. Con il
+            calendarietto <span class="btn-sample">&#128197;</span> puoi scegliere una
+            <strong>data di riferimento</strong> passata: la tabella diventa una "fotografia"
+            di come apparivano primo e ultimo giorno a quella data. L'icona
+            <span class="btn-sample">&#8635;</span> riporta a oggi.
+        </p>
+
+        <h3 class="sub-title-info">B) Giorni nel periodo</h3>
+        <p>
+            Conta quanti giorni hanno superato ciascuna soglia nel periodo scelto:
+            di default l'anno corrente, ma dal calendarietto puoi selezionare un mese o un
+            anno diverso.
+        </p>
+
+        <h3 class="sub-title-info">Soglia personalizzata</h3>
+        <p>
+            Il pulsante <span class="btn-sample">&#9881;&nbsp;Personalizza</span> apre un
+            popup dove scegliere il campo (Min o Max), l'operatore
+            (&ge;, &gt;, &le;, &lt;) e il valore in &#176;C. La soglia personalizzata viene
+            aggiunta come riga evidenziata in <em>entrambe</em> le sezioni e resta attiva
+            anche cambiando periodo, finch&eacute; non la rimuovi.
+        </p>
+
+        <h3 class="sub-title-info">Il grafico delle soglie</h3>
+        <p>
+            Il pulsante <span class="btn-sample">&#128200;&nbsp;Grafico</span> mostra una
+            <strong>timeline</strong>: una riga per ogni anno, con ogni giorno colorato in
+            base a quattro soglie regolabili tramite gli slider:
+        </p>
+        <div class="legend">
+            <span class="item"><span class="dot" style="background:#A32D2D;"></span>molto caldo (Max &ge; 35&#176;C)</span>
+            <span class="item"><span class="dot" style="background:#F09595;"></span>caldo (Max &ge; 30&#176;C)</span>
+            <span class="item"><span class="dot" style="background:#85B7EB;"></span>freddo (Min &le; 5&#176;C)</span>
+            <span class="item"><span class="dot" style="background:#0C447C;"></span>molto freddo (Min &le; 0&#176;C)</span>
+            <span class="item"><span class="dot" style="background:#e0e0e0;"></span>dato mancante</span>
+        </div>
+        <p>
+            Muovendo gli slider il grafico e i conteggi per anno si aggiornano subito, cos&igrave;
+            puoi vedere a colpo d'occhio come si distribuiscono nel tempo i giorni oltre soglia
+            e confrontare gli anni tra loro. Se al momento dell'apertura era attiva una soglia
+            personalizzata, gli slider partono da quel valore. Il pulsante di reset riporta ai
+            valori predefiniti (30 / 35 / 5 / 0).
+        </p>
+
+        <h2 class="sec-title" id="sez3">Record pioggia</h2>
+        <p>
+            La tabella mostra i <strong>record di precipitazione per durata</strong>
+            (dagli intervalli brevi fino alle 24 ore), con il valore massimo registrato e
+            la data in cui &egrave; avvenuto. Anche qui il pulsante
+            <span class="btn-sample">&#128200;&nbsp;Grafico</span> offre una vista grafica
+            dei record, e <span class="btn-sample">&#8592;&nbsp;Tabella</span> riporta
+            alla tabella.
+        </p>
+
+        <h2 class="sec-title" id="note">Note di lettura</h2>
+        <ul>
+            <li><strong>&mdash;</strong> (trattino): dato non disponibile per quel periodo.</li>
+            <li><strong>N/D</strong>: differenza non calcolabile (manca uno dei due valori).</li>
+            <li><strong>copertura &lt;75%</strong>: i periodi con meno del 75% dei dati
+                attesi sono segnalati da un pallino; il valore &egrave; indicativo e va
+                letto con cautela (nota anche a fondo tabella).</li>
+            <li><strong>na*</strong>: nei confronti, una delle due parti non ha tutti i
+                dati e la differenza non viene calcolata.</li>
+            <li>Nei confronti, la colonna anno copre i dati dall'1 gennaio al giorno del
+                raffronto (stessa finestra parziale per entrambi gli anni).</li>
+            <li>In fondo a ogni tabella &egrave; riportata la data e ora di generazione
+                dei dati ("aggiornato: ...").</li>
+        </ul>
+
+    </main>
+
+    <!-- ====================================================================
+         JAVASCRIPT - toggle menu (identico alle altre pagine)
+         ==================================================================== -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var menuToggle = document.querySelector('.menu-toggle');
+        var submenu    = document.querySelector('.submenu');
+        var autoCloseTimer = null;
+
+        function openMenu() {
+            submenu.classList.add('active');
+            clearTimeout(autoCloseTimer);
+            autoCloseTimer = setTimeout(closeMenu, 5000);
+        }
+        function closeMenu() {
+            submenu.classList.remove('active');
+            clearTimeout(autoCloseTimer);
+            document.querySelectorAll('.submenu-item.has-sub.sub-active')
+                .forEach(function(el) { el.classList.remove('sub-active'); });
+        }
+
+        menuToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (submenu.classList.contains('active')) closeMenu();
+            else openMenu();
+        });
+
+        // Chiude cliccando fuori
+        document.addEventListener('click', function(e) {
+            if (!submenu.contains(e.target) && !menuToggle.contains(e.target)) closeMenu();
+        });
+
+        // Sotto-menu annidato "Statistiche"
+        document.querySelectorAll('.submenu-item.has-sub').forEach(function(item) {
+            item.addEventListener('click', function(e) {
+                if (e.target.closest('.sub-submenu')) return; // click su una voce interna
+                e.stopPropagation();
+                clearTimeout(autoCloseTimer);
+                autoCloseTimer = setTimeout(closeMenu, 5000);
+                item.classList.toggle('sub-active');
+            });
+        });
+    });
+    </script>
+
+</body>
+</html>

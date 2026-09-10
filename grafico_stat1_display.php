@@ -1,7 +1,7 @@
 <?php
 /**
  * ============================================================================
- * GRAFICO STAT1 - stat1_grafico.php
+ * GRAFICO STAT1 - grafico_stat1_display.php
  * ============================================================================
  * Grafico orizzontale temperatura su 4 zone temporali:
  *   oggi / 10 giorni / 30 giorni / anno
@@ -9,20 +9,20 @@
  * Per ogni zona:
  *   - linea verticale stelo (da min assoluto a max assoluto)
  *   - nuvola di punti rosa (tutti i valori mx, mn, avg)
- *   - linee verticali: media max (rossa), media (grigia), media min (blu)
+ *   - linee orizzontali: media max (rossa), media (grigia), media min (blu)
  *   - pallini bordati: max assoluta (rosso), min assoluta (blu)
- *   - barra pioggia in alto (semitrasparente blu, asse mm separato)
+ *   - barra pioggia a destra della nuvola (asse mm separato)
  *
  * PARAMETRI GET:
- *   ?data=YYYY-MM-DD  giorno di riferimento (default: ieri)
+ *   ?data=YYYY-MM-DD  giorno di confronto (default: nessuno)
  *
  * Comunicazione con stat_display.php via postMessage:
- *   - resize  : aggiorna altezza iframe
- *   - tornaTabella : torna a tabella_stat_display.php
+ *   - resize : aggiorna altezza iframe
+ * ============================================================================
  */
 
-ini_set('display_errors', 0);
-error_reporting(0);
+ini_set('display_errors', 1);
+error_reporting(1);
 
 require_once __DIR__ . '/../envelop_lettura.php';
 require_once __DIR__ . '/api/api_tabella_stat_data.php';
@@ -36,13 +36,13 @@ if (!$response['success']) {
     exit;
 }
 
-$ref         = $response['ref'];
-$giorno_sel  = $response['giorno_sel'];
-$periodi_js  = json_encode($response['periodi'],  JSON_UNESCAPED_UNICODE);
-$labels_js   = json_encode($response['labels'],   JSON_UNESCAPED_UNICODE);
+$ref           = $response['ref'];
+$giorno_sel    = $response['giorno_sel'];
+$periodi_js    = json_encode($response['periodi'], JSON_UNESCAPED_UNICODE);
+$labels_js     = json_encode($response['labels'],  JSON_UNESCAPED_UNICODE);
 $giorno_sel_js = json_encode($giorno_sel, JSON_UNESCAPED_UNICODE);
+$cop_zona_js   = json_encode($response['copertura_zona'] ?? [], JSON_UNESCAPED_UNICODE);
 
-// Formatta data per display
 $ref_display = (new DateTime($ref))->format('d/m/Y');
 ?>
 <!DOCTYPE html>
@@ -152,6 +152,20 @@ $ref_display = (new DateTime($ref))->format('d/m/Y');
             display: none;
             line-height: 1.5;
         }
+
+        /* Legenda compatta: visibile solo sotto i 480px, sostituisce le sei
+           voci duplicate del confronto con le due tinte di riferimento. */
+        .legend-sel-mini { display: none; }
+
+        @media (max-width: 480px) {
+            .leg-opt         { display: none; }
+            .legend-sel      { display: none; }
+            .legend-sel-mini { display: flex; }
+            .legend   { gap: 8px; font-size: 9px; margin-top: 4px; }
+            .leg-line { width: 14px; }
+            .top-bar  { margin-bottom: 4px; }
+        }
+
         @media (min-width: 600px) {
             .btn-torna { font-size: 13px; }
             .legend { font-size: 11px; }
@@ -182,21 +196,26 @@ $ref_display = (new DateTime($ref))->format('d/m/Y');
     <span class="leg-item"><span class="leg-line" style="background:#E24B4A;"></span>media max</span>
     <span class="leg-item"><span class="leg-line" style="background:#888;"></span>media</span>
     <span class="leg-item"><span class="leg-line" style="background:#378ADD;"></span>media min</span>
-    <span class="leg-item"><span class="leg-dot" style="background:rgba(220,100,140,0.5);"></span>massime</span>
-    <span class="leg-item"><span class="leg-dot" style="background:rgba(100,180,220,0.5);"></span>minime</span>
-    <span class="leg-item"><span class="leg-dot" style="background:#E24B4A;border:1.5px solid #222;"></span>max ass.</span>
-    <span class="leg-item"><span class="leg-dot" style="background:#378ADD;border:1.5px solid #222;"></span>min ass.</span>
+    <span class="leg-item leg-opt"><span class="leg-dot" style="background:rgba(220,100,140,0.5);"></span>massime</span>
+    <span class="leg-item leg-opt"><span class="leg-dot" style="background:rgba(100,180,220,0.5);"></span>minime</span>
+    <span class="leg-item leg-opt"><span class="leg-dot" style="background:#E24B4A;border:1.5px solid #222;"></span>max ass.</span>
+    <span class="leg-item leg-opt"><span class="leg-dot" style="background:#378ADD;border:1.5px solid #222;"></span>min ass.</span>
     <span class="leg-item"><span style="display:inline-block;width:14px;height:8px;background:rgba(55,138,221,0.35);border-radius:1px;vertical-align:middle;"></span>pioggia</span>
 </div>
 
 <?php if ($giorno_sel): ?>
-<div class="legend" style="margin-top:2px;">
+<div class="legend legend-sel" style="margin-top:2px;">
     <span class="leg-item"><span class="leg-line" style="background:#E8954A;"></span>media max sel.</span>
     <span class="leg-item"><span class="leg-line" style="background:#C99A2E;"></span>media sel.</span>
     <span class="leg-item"><span class="leg-line" style="background:#3AAFA9;"></span>media min sel.</span>
     <span class="leg-item"><span class="leg-dot" style="background:#E8954A;border:1.5px solid #222;"></span>max ass. sel.</span>
     <span class="leg-item"><span class="leg-dot" style="background:#3AAFA9;border:1.5px solid #222;"></span>min ass. sel.</span>
     <span class="leg-item"><span style="display:inline-block;width:14px;height:8px;background:rgba(217,138,61,0.45);border-radius:1px;vertical-align:middle;"></span>pioggia sel.</span>
+</div>
+
+<div class="legend legend-sel-mini">
+    <span class="leg-item"><span class="leg-dot" style="background:#E24B4A;"></span>riferimento</span>
+    <span class="leg-item"><span class="leg-dot" style="background:#E8954A;"></span>giorno selezionato</span>
 </div>
 <?php endif; ?>
 
@@ -206,12 +225,18 @@ $ref_display = (new DateTime($ref))->format('d/m/Y');
 <script>
 var PERIODI    = <?= $periodi_js ?>;
 var LABELS     = <?= $labels_js ?>;
+var COP_ZONA   = <?= $cop_zona_js ?>;
 var GIORNO_SEL = <?= $giorno_sel_js ?>;
+
+var SOGLIA_Z   = 0.75;   // copertura minima di una zona perche' venga disegnata
+var MOBILE     = false;  // valorizzata in build(), letta dal plugin
+
 var rScaleNuvola = 1.0;
 var rScaleAss    = 1.0;
 var palliniAssoluti = [];
 var medieSegmenti   = [];
-var zoneGeom = {}; // geometria (cx, y dei 5 valori chiave) indicizzata per id zona
+var zoneGeom    = {};  // geometria temperatura per id zona
+var pioggiaGeom = {};  // geometria barre pioggia per id zona
 
 var PALETTE = {
     default: { max: '#E24B4A', avg: '#888',    min: '#378ADD',
@@ -226,85 +251,123 @@ var graficoPlugin = {
     id: 'gp',
     afterDraw: function(chart) {
         palliniAssoluti = [];
-        medieSegmenti = [];
+        medieSegmenti   = [];
         zoneGeom        = {};
-        var ctx  = chart.ctx;
-        var xS   = chart.scales.x;
-        var yS   = chart.scales.y;
-        var pS   = chart.scales.px;
+        pioggiaGeom     = {};
 
+        var ctx = chart.ctx;
+        var xS  = chart.scales.x;
+        var yS  = chart.scales.y;
+        var pS  = chart.scales.px;
 
         function xp(v) { return xS.getPixelForValue(v); }
         function yp(v) { return yS.getPixelForValue(v); }
         function pp(v) { return pS.getPixelForValue(v); }
 
-        // Geometria zone: ogni zona ha
-        //   xc    = X centro nuvola (temperatura)
-        //   xp_r  = X centro barra pioggia (sulla stessa riga, a destra della nuvola)
-        //   spread = raggio orizzontale nuvola (stretto = ovale)
-        //   wBar  = larghezza barra pioggia
+        // Geometria zone:
+        //   xc     = X centro nuvola (temperatura)
+        //   xp_r   = X centro barra pioggia
+        //   spread = raggio orizzontale nuvola
+        //   wBar   = larghezza barra pioggia
         var ZONE = [];
-            if (GIORNO_SEL) {
-                // Ogni zona si sdoppia in due colonne piu' strette: riferimento (sx) + selezione (dx)
-                ZONE.push({ id: 'oggi',     xc: 0.85, xp_r: 1.45,  spread: 0.20, wBar: 0.40, pal: 'default' });
-                ZONE.push({ id: 'oggi_sel', xc: 2.35, xp_r: 2.95,  spread: 0.20, wBar: 0.40, pal: 'sel' });
+        if (GIORNO_SEL) {
+            // Ogni zona si sdoppia: riferimento (sx) + selezione (dx)
+            ZONE.push({ id: 'oggi',     xc: 0.85, xp_r: 1.45,  spread: 0.20, wBar: 0.40, pal: 'default' });
+            ZONE.push({ id: 'oggi_sel', xc: 2.35, xp_r: 2.95,  spread: 0.20, wBar: 0.40, pal: 'sel' });
 
-                ZONE.push({ id: 'gg10',     xc: 5.4,  xp_r: 6.35,  spread: 0.30, wBar: 0.55, pal: 'default' });
-                ZONE.push({ id: 'gg10_sel', xc: 8.0,  xp_r: 8.95,  spread: 0.30, wBar: 0.55, pal: 'sel' });
+            ZONE.push({ id: 'gg10',     xc: 5.4,  xp_r: 6.35,  spread: 0.30, wBar: 0.55, pal: 'default' });
+            ZONE.push({ id: 'gg10_sel', xc: 8.0,  xp_r: 8.95,  spread: 0.30, wBar: 0.55, pal: 'sel' });
 
-                ZONE.push({ id: 'gg30',     xc: 11.4, xp_r: 12.65, spread: 0.45, wBar: 0.65, pal: 'default' });
-                ZONE.push({ id: 'gg30_sel', xc: 14.6, xp_r: 15.85, spread: 0.45, wBar: 0.65, pal: 'sel' });
+            ZONE.push({ id: 'gg30',     xc: 11.4, xp_r: 12.65, spread: 0.45, wBar: 0.65, pal: 'default' });
+            ZONE.push({ id: 'gg30_sel', xc: 14.6, xp_r: 15.85, spread: 0.45, wBar: 0.65, pal: 'sel' });
 
-                ZONE.push({ id: 'anno',     xc: 18.9, xp_r: 20.7,  spread: 0.75, wBar: 0.85, pal: 'default' });
-                ZONE.push({ id: 'anno_sel', xc: 23.5, xp_r: 25.3,  spread: 0.75, wBar: 0.85, pal: 'sel' });
-            } else {
-                // Comportamento originale: una sola colonna per zona
-                ZONE.push({ id: 'oggi', xc: 1.6,  xp_r: 3.3,  spread: 0.35, wBar: 0.9,  pal: 'default' });
-                ZONE.push({ id: 'gg10', xc: 6.0,  xp_r: 8.0,  spread: 0.65, wBar: 1.0,  pal: 'default' });
-                ZONE.push({ id: 'gg30', xc: 12.0, xp_r: 14.5, spread: 1.0,  wBar: 1.1,  pal: 'default' });
-                ZONE.push({ id: 'anno', xc: 20.0, xp_r: 24.0, spread: 1.6,  wBar: 1.3,  pal: 'default' });
-            }
+            ZONE.push({ id: 'anno',     xc: 18.9, xp_r: 20.7,  spread: 0.75, wBar: 0.85, pal: 'default' });
+            ZONE.push({ id: 'anno_sel', xc: 23.5, xp_r: 25.3,  spread: 0.75, wBar: 0.85, pal: 'sel' });
+        } else {
+            ZONE.push({ id: 'oggi', xc: 1.6,  xp_r: 3.3,  spread: 0.35, wBar: 0.9, pal: 'default' });
+            ZONE.push({ id: 'gg10', xc: 6.0,  xp_r: 8.0,  spread: 0.65, wBar: 1.0, pal: 'default' });
+            ZONE.push({ id: 'gg30', xc: 12.0, xp_r: 14.5, spread: 1.0,  wBar: 1.1, pal: 'default' });
+            ZONE.push({ id: 'anno', xc: 20.0, xp_r: 24.0, spread: 1.6,  wBar: 1.3, pal: 'default' });
+        }
 
         function rand(s) {
             var x = Math.sin(s * 127.1 + 311.7) * 43758.5453;
             return x - Math.floor(x);
         }
 
+        // ====================================================================
+        // DISEGNO DELLE ZONE
+        // ====================================================================
         ZONE.forEach(function(z) {
             var dati = PERIODI[z.id];
             var pal  = PALETTE[z.pal] || PALETTE.default;
-            if (!dati || dati.length === 0) return;
+            if (!dati || dati.length === 0) { return; }
 
-            var n = dati.length;
+            var n  = dati.length;
             var cx = xp(z.xc);
-            // Spread in pixel: metà della larghezza orizzontale della nuvola
+            var copZ = COP_ZONA[z.id] || { temp: 1, pioggia: 1 };
+
+            // ---- BARRA PIOGGIA ----
+            // Disegnata per prima: piu' sotto ci sono dei 'return' che
+            // scattano quando mancano le temperature, e la barra non verrebbe
+            // mai disegnata per le zone senza dato termico.
+            if (copZ.pioggia >= SOGLIA_Z) {
+                var totPioggia = Math.round(dati.reduce(function(a, d) {
+                    return a + (d.pioggia || 0);
+                }, 0) * 10) / 10;
+
+                var cxP    = xp(z.xp_r);
+                var wBarPx = Math.abs(xp(z.xp_r + z.wBar * 0.5) - cxP);
+                var yBase  = pp(0);
+                var yTop   = pp(Math.min(totPioggia, 1200));
+
+                if (totPioggia > 0) {
+                    ctx.fillStyle = pal.pioggiaFill;
+                    ctx.fillRect(cxP - wBarPx, yTop, wBarPx * 2, yBase - yTop);
+                    ctx.strokeStyle = pal.pioggiaStroke;
+                    ctx.lineWidth = 0.5;
+                    ctx.strokeRect(cxP - wBarPx, yTop, wBarPx * 2, yBase - yTop);
+
+                    // Su mobile il valore non ci sta: 8 etichette da 9px in
+                    // colonne da 44px si sovrappongono. La scala e' sull'asse dx.
+                    if (!MOBILE) {
+                        ctx.fillStyle = pal.pioggiaText;
+                        ctx.font = 'bold 9px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'bottom';
+                        ctx.fillText(totPioggia + ' mm', cxP, yTop - 2);
+                    }
+                }
+                pioggiaGeom[z.id] = { cx: cxP, yTop: yTop, tot: totPioggia };
+            }
+
+            // Zona senza dato termico sufficiente: si ferma qui.
+            // L'etichetta viene scritta dopo, una per coppia di colonne.
+            if (copZ.temp < SOGLIA_Z) { return; }
+
             var spreadPx = Math.abs(xp(z.xc + z.spread) - cx);
 
-            // Filtra valori validi
-            var mxArr = dati.filter(function(d){return d.mx!==null;}).map(function(d){return d.mx;});
-            var mnArr = dati.filter(function(d){return d.mn!==null;}).map(function(d){return d.mn;});
-            var avArr = dati.filter(function(d){return d.avg!==null;}).map(function(d){return d.avg;});
+            var mxArr = dati.filter(function(d) { return d.mx  !== null; }).map(function(d) { return d.mx;  });
+            var mnArr = dati.filter(function(d) { return d.mn  !== null; }).map(function(d) { return d.mn;  });
+            var avArr = dati.filter(function(d) { return d.avg !== null; }).map(function(d) { return d.avg; });
 
-            if (mxArr.length === 0) return;
+            if (mxArr.length === 0 || mnArr.length === 0) { return; }
 
             var absMx = Math.max.apply(null, mxArr);
             var absMn = Math.min.apply(null, mnArr);
-            var medMx = Math.round(mxArr.reduce(function(a,b){return a+b;},0)/mxArr.length*10)/10;
-            var medMn = Math.round(mnArr.reduce(function(a,b){return a+b;},0)/mnArr.length*10)/10;
+            var medMx = Math.round(mxArr.reduce(function(a, b) { return a + b; }, 0) / mxArr.length * 10) / 10;
+            var medMn = Math.round(mnArr.reduce(function(a, b) { return a + b; }, 0) / mnArr.length * 10) / 10;
             var medAv = avArr.length > 0
-                ? Math.round(avArr.reduce(function(a,b){return a+b;},0)/avArr.length*10)/10
-                : Math.round((medMx+medMn)/2*10)/10;
+                ? Math.round(avArr.reduce(function(a, b) { return a + b; }, 0) / avArr.length * 10) / 10
+                : Math.round((medMx + medMn) / 2 * 10) / 10;
 
-            // Registra la geometria di questa colonna (serve per i connettori rif <-> sel)
             zoneGeom[z.id] = {
                 cx: cx,
                 yMx: yp(medMx), yAv: yp(medAv), yMn: yp(medMn),
                 yAbsMx: yp(absMx), yAbsMn: yp(absMn)
             };
 
-            // Stelo verticale centrale (da min ass a max ass)
-
-            // Stelo verticale centrale (da min ass a max ass)
+            // ---- Stelo verticale (da min ass a max ass) ----
             ctx.strokeStyle = 'rgba(160,160,160,0.4)';
             ctx.lineWidth = 1;
             ctx.beginPath();
@@ -312,7 +375,7 @@ var graficoPlugin = {
             ctx.lineTo(cx, yp(absMn));
             ctx.stroke();
 
-            // Nuvola punti — mx rosa, mn celeste, avg rosa chiaro
+            // ---- Nuvola punti ----
             if (n > 1) {
                 dati.forEach(function(d, i) {
                     var jitter = (rand(i * 13.7 + z.xc * 0.3) * 2 - 1) * spreadPx;
@@ -338,39 +401,33 @@ var graficoPlugin = {
                 });
             }
 
-            // Linee ORIZZONTALI (whisker) che intersecano lo stelo
-            // larghezza = doppio dello spread della nuvola + margine
+            // ---- Linee orizzontali delle medie ----
             var wh = Math.max(10, spreadPx * 2 + 6);
-                ctx.strokeStyle = pal.max; ctx.lineWidth = 2;
-                ctx.beginPath(); ctx.moveTo(cx - wh, yp(medMx)); ctx.lineTo(cx + wh, yp(medMx)); ctx.stroke();
-                ctx.strokeStyle = pal.avg; ctx.lineWidth = 1.5;
-                ctx.beginPath(); ctx.moveTo(cx - wh, yp(medAv)); ctx.lineTo(cx + wh, yp(medAv)); ctx.stroke();
-                ctx.strokeStyle = pal.min; ctx.lineWidth = 2;
-                ctx.beginPath(); ctx.moveTo(cx - wh, yp(medMn)); ctx.lineTo(cx + wh, yp(medMn)); ctx.stroke();
 
-                // Registra le linee media per il tooltip (hover / touch)
-                medieSegmenti.push(
-                    { xMin: cx - wh, xMax: cx + wh, py: yp(medMx), valore: medMx, tipo: 'max',   zona: LABELS[z.id] },
-                    { xMin: cx - wh, xMax: cx + wh, py: yp(medAv), valore: medAv, tipo: 'media', zona: LABELS[z.id] },
-                    { xMin: cx - wh, xMax: cx + wh, py: yp(medMn), valore: medMn, tipo: 'min',   zona: LABELS[z.id] }
-                );
+            ctx.strokeStyle = pal.max; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(cx - wh, yp(medMx)); ctx.lineTo(cx + wh, yp(medMx)); ctx.stroke();
+            ctx.strokeStyle = pal.avg; ctx.lineWidth = 1.5;
+            ctx.beginPath(); ctx.moveTo(cx - wh, yp(medAv)); ctx.lineTo(cx + wh, yp(medAv)); ctx.stroke();
+            ctx.strokeStyle = pal.min; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(cx - wh, yp(medMn)); ctx.lineTo(cx + wh, yp(medMn)); ctx.stroke();
 
-            // Pallini max e min assoluti — rScale * 0.7 su mobile, rScale su desktop
-            var rAss = 5 * rScaleAss;
-            var iMx = mxArr.indexOf(absMx);
-            var iMn = mnArr.indexOf(absMn);
-            // Recupera le date: cerca nel dataset il giorno del max/min
-            var dataMx = dati.filter(function(d){return d.mx===absMx;})[0];
-            var dataMn = dati.filter(function(d){return d.mn===absMn;})[0];
+            medieSegmenti.push(
+                { xMin: cx - wh, xMax: cx + wh, py: yp(medMx), valore: medMx, tipo: 'max',   zona: LABELS[z.id] },
+                { xMin: cx - wh, xMax: cx + wh, py: yp(medAv), valore: medAv, tipo: 'media', zona: LABELS[z.id] },
+                { xMin: cx - wh, xMax: cx + wh, py: yp(medMn), valore: medMn, tipo: 'min',   zona: LABELS[z.id] }
+            );
+
+            // ---- Pallini max e min assoluti ----
+            var rAss   = 5 * rScaleAss;
+            var dataMx = dati.filter(function(d) { return d.mx === absMx; })[0];
+            var dataMn = dati.filter(function(d) { return d.mn === absMn; })[0];
 
             ctx.beginPath(); ctx.arc(cx, yp(absMx), rAss, 0, Math.PI * 2);
             ctx.fillStyle = pal.max; ctx.fill();
             ctx.strokeStyle = '#222'; ctx.lineWidth = 1.5; ctx.stroke();
             palliniAssoluti.push({
                 px: cx, py: yp(absMx), r: rAss,
-                valore: absMx,
-                data: dataMx ? dataMx.d : '',
-                tipo: 'max'
+                valore: absMx, data: dataMx ? dataMx.d : '', tipo: 'max'
             });
 
             ctx.beginPath(); ctx.arc(cx, yp(absMn), rAss, 0, Math.PI * 2);
@@ -378,52 +435,46 @@ var graficoPlugin = {
             ctx.strokeStyle = '#222'; ctx.lineWidth = 1.5; ctx.stroke();
             palliniAssoluti.push({
                 px: cx, py: yp(absMn), r: rAss,
-                valore: absMn,
-                data: dataMn ? dataMn.d : '',
-                tipo: 'min'
+                valore: absMn, data: dataMn ? dataMn.d : '', tipo: 'min'
             });
-
-            // ===== BARRA PIOGGIA VERTICALE (colonna separata a destra) =====
-            var totPioggia = Math.round(dati.reduce(function(a,d){return a+d.pioggia;},0)*10)/10;
-            var cxP = xp(z.xp_r);
-            var wBarPx = Math.abs(xp(z.xp_r + z.wBar * 0.5) - cxP);
-
-            // Baseline barra pioggia = bottom del plot area (y=0 pioggia)
-            var yBase = pp(0);
-            var yTop  = pp(Math.min(totPioggia, 1200));
-
-            if (totPioggia > 0) {
-            ctx.fillStyle = pal.pioggiaFill;
-            ctx.fillRect(cxP - wBarPx, yTop, wBarPx * 2, yBase - yTop);
-            ctx.strokeStyle = pal.pioggiaStroke;
-            ctx.lineWidth = 0.5;
-            ctx.strokeRect(cxP - wBarPx, yTop, wBarPx * 2, yBase - yTop);
-            ctx.fillStyle = pal.pioggiaText;
-            ctx.font = 'bold 9px Arial';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'bottom';
-            ctx.fillText(totPioggia + ' mm', cxP, yTop - 2);
-}
-
-            // Etichetta zona — centrata su cx, allineata ai pallini max/min assoluti
-            ctx.fillStyle = '#aaa';
-            ctx.font = 'bold 9px Arial';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'bottom';
-            ctx.fillText(LABELS[z.id], cx, yp(chart.scales.y.min) - 2);
         });
 
-// Linee tratteggiate: collegano lo stesso valore tra colonna di riferimento e selezione
+        // ====================================================================
+        // ETICHETTE ZONA — una per coppia rif/sel, centrata fra le due colonne
+        // Fuori dal ciclo: una colonna senza dato termico esce prima con
+        // 'return' e resterebbe anonima. Su mobile 8 etichette non ci stanno.
+        // ====================================================================
+        var xZona = {};
+        ZONE.forEach(function(zz) { xZona[zz.id] = zz.xc; });
+
+        var LAB_BREVE = { oggi: LABELS.oggi, gg10: '10 gg', gg30: '30 gg', anno: 'anno' };
+
+        ctx.fillStyle = '#999';
+        ctx.font = 'bold ' + (MOBILE ? 9 : 10) + 'px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ['oggi', 'gg10', 'gg30', 'anno'].forEach(function(b) {
+            if (xZona[b] === undefined) { return; }
+            var x2 = (GIORNO_SEL && xZona[b + '_sel'] !== undefined) ? xZona[b + '_sel'] : xZona[b];
+            var testo = MOBILE ? (LAB_BREVE[b] || b) : LABELS[b];
+            ctx.fillText(testo, xp((xZona[b] + x2) / 2), yp(chart.scales.y.min) - 2);
+        });
+
+        // ====================================================================
+        // CONNETTORI riferimento <-> selezione
+        // ====================================================================
         if (GIORNO_SEL) {
             var basiZona = ['oggi', 'gg10', 'gg30', 'anno'];
             var metriche = ['yMx', 'yAv', 'yMn', 'yAbsMx', 'yAbsMn'];
+
+            // Temperature
             ctx.strokeStyle = 'rgba(120,120,120,0.55)';
             ctx.lineWidth = 2.5;
             ctx.setLineDash([4, 3]);
             basiZona.forEach(function(base) {
                 var gRif = zoneGeom[base];
                 var gSel = zoneGeom[base + '_sel'];
-                if (!gRif || !gSel) return;
+                if (!gRif || !gSel) { return; }
                 metriche.forEach(function(m) {
                     ctx.beginPath();
                     ctx.moveTo(gRif.cx, gRif[m]);
@@ -432,9 +483,39 @@ var graficoPlugin = {
                 });
             });
             ctx.setLineDash([]);
+
+            // Pioggia: connettore + differenza in mm.
+            // Salta da solo se una delle due barre non e' stata registrata.
+            basiZona.forEach(function(base) {
+                var pRif = pioggiaGeom[base];
+                var pSel = pioggiaGeom[base + '_sel'];
+                if (!pRif || !pSel) { return; }
+
+                ctx.strokeStyle = 'rgba(55,138,221,0.65)';
+                ctx.setLineDash([4, 3]);
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(pRif.cx, pRif.yTop);
+                ctx.lineTo(pSel.cx, pSel.yTop);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                if (!MOBILE) {
+                    var delta = Math.round((pSel.tot - pRif.tot) * 10) / 10;
+                    ctx.fillStyle = delta >= 0 ? '#185FA5' : '#B5661F';
+                    ctx.font = 'bold 9px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.fillText((delta > 0 ? '+' : '') + delta + ' mm',
+                                 (pRif.cx + pSel.cx) / 2,
+                                 Math.min(pRif.yTop, pSel.yTop) - 12);
+                }
+            });
         }
 
-        // Separatori verticali tra zone
+        // ====================================================================
+        // SEPARATORI VERTICALI TRA ZONE
+        // ====================================================================
         ctx.strokeStyle = 'rgba(128,128,128,0.12)';
         ctx.lineWidth = 1;
         ctx.setLineDash([3, 3]);
@@ -452,15 +533,19 @@ function build() {
     if (mainChart) { mainChart.destroy(); mainChart = null; }
 
     var W = document.querySelector('.chart-container').offsetWidth || 400;
-    var H = Math.max(280, Math.min(Math.round(W * 0.55), 420));
+    MOBILE = W < 480;
+
+    // Su mobile il grafico va sviluppato in altezza: con 8 colonne in modalita'
+    // confronto, un rapporto 0.55 lascia meno di 200px di area utile.
+    var H = MOBILE
+          ? Math.max(320, Math.round(W * 0.95))
+          : Math.max(280, Math.min(Math.round(W * 0.55), 420));
+
     document.getElementById('mainChart').style.height = H + 'px';
     document.querySelector('.chart-container').style.height = H + 'px';
 
-    // Scala punti separata per i due tipi:
-    // nuvola: ok su mobile (1.0), doppio su PC
-    // assoluti: ok su PC (1.0), -30% su mobile
-    rScaleNuvola = W < 480 ? 1.0 : 2.0;
-    rScaleAss    = W < 480 ? 0.7 : 1.0;
+    rScaleNuvola = MOBILE ? 1.0 : 2.0;
+    rScaleAss    = MOBILE ? 0.7 : 1.0;
 
     var ctx = document.getElementById('mainChart').getContext('2d');
     mainChart = new Chart(ctx, {
@@ -471,7 +556,11 @@ function build() {
             responsive: true,
             maintainAspectRatio: false,
             plugins: { legend: { display: false }, tooltip: { enabled: false } },
-            layout: { padding: { left: 8, right: 8, top: 18, bottom: 18 } },
+            layout: {
+                padding: MOBILE
+                    ? { left: 2, right: 2, top: 10, bottom: 14 }
+                    : { left: 8, right: 8, top: 18, bottom: 18 }
+            },
             scales: {
                 x: { min: 0, max: 27, display: false },
                 y: {
@@ -479,9 +568,9 @@ function build() {
                     position: 'left',
                     grid: { color: 'rgba(128,128,128,0.1)' },
                     ticks: {
-                        font: { size: 9 },
+                        font: { size: MOBILE ? 8 : 9 },
                         color: '#888',
-                        stepSize: 5,
+                        stepSize: MOBILE ? 10 : 5,
                         callback: function(v) { return v + '\u00b0'; }
                     }
                 },
@@ -490,10 +579,12 @@ function build() {
                     position: 'right',
                     grid: { display: false },
                     ticks: {
-                        font: { size: 9 },
+                        font: { size: MOBILE ? 8 : 9 },
                         color: '#85B7EB',
-                        stepSize: 200,
-                        callback: function(v) { return v + ' mm'; }
+                        stepSize: MOBILE ? 400 : 200,
+                        // Su mobile l'unita' sta nel footer: ' mm' su ogni tacca
+                        // ruba una decina di pixel di larghezza al grafico.
+                        callback: function(v) { return MOBILE ? v : v + ' mm'; }
                     }
                 }
             }
@@ -501,20 +592,23 @@ function build() {
         plugins: [graficoPlugin]
     });
 
-    // Footer
-    var ref = '<?= $ref ?>';
-    document.getElementById('footer-note').textContent =
-        'rif. ' + ref + ' \u2022 temp max / min / media giornaliera + pioggia cumulata';
+    // Footer: recupera le informazioni tolte dal canvas
+    var ref  = '<?= $ref ?>';
+    var note = 'rif. ' + ref;
+    if (GIORNO_SEL) { note += ' \u2022 confronto ' + GIORNO_SEL; }
+    note += MOBILE
+          ? ' \u2022 asse dx: mm \u2022 tocca i pallini per i valori'
+          : ' \u2022 temp max / min / media giornaliera + pioggia cumulata';
+    document.getElementById('footer-note').textContent = note;
 
     sendResize();
 }
 
 function sendResize() {
-    var h = document.body.scrollHeight;
     window.parent.postMessage({
         action:   'resize',
         iframeId: 'stat-iframe-tab1',
-        height:   h
+        height:   document.body.scrollHeight
     }, '*');
 }
 
@@ -526,19 +620,21 @@ document.getElementById('data-sel').addEventListener('change', function() {
     }
 });
 
-// Reset — torna a ieri (default senza parametri)
+// Reset — torna al default senza parametri
 document.getElementById('btn-reset').addEventListener('click', function() {
     window.location.href = window.location.pathname;
 });
 
-// ---- Tooltip pallini assoluti ----
+// ============================================================================
+// TOOLTIP
+// ============================================================================
 var tooltipEl = document.getElementById('chart-tooltip');
 
 function fmtData(s) {
-    if (!s) return '';
-    var p = s.split('-');
+    if (!s) { return ''; }
+    var p  = s.split('-');
     var mm = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
-    return p[2] + ' ' + mm[+p[1]-1] + ' ' + p[0];
+    return p[2] + ' ' + mm[+p[1] - 1] + ' ' + p[0];
 }
 
 function aggiornaTooltip(clientX, clientY) {
@@ -548,14 +644,11 @@ function aggiornaTooltip(clientX, clientY) {
     var my = clientY - rect.top;
 
     var trovato = null;
-    var soglia = 18; // px distanza massima per i pallini assoluti
+    var soglia  = 18;
     for (var i = 0; i < palliniAssoluti.length; i++) {
         var p = palliniAssoluti[i];
         var dist = Math.sqrt((mx - p.px) * (mx - p.px) + (my - p.py) * (my - p.py));
-        if (dist <= Math.max(soglia, p.r + 6)) {
-            trovato = p;
-            break;
-        }
+        if (dist <= Math.max(soglia, p.r + 6)) { trovato = p; break; }
     }
 
     if (trovato) {
@@ -567,8 +660,7 @@ function aggiornaTooltip(clientX, clientY) {
         return;
     }
 
-    // Linee delle medie (media max / media / media min)
-    var sogliaLinea = 8; // px distanza verticale massima dalla linea
+    var sogliaLinea  = 8;
     var trovataMedia = null;
     for (var j = 0; j < medieSegmenti.length; j++) {
         var s = medieSegmenti[j];
@@ -580,8 +672,8 @@ function aggiornaTooltip(clientX, clientY) {
 
     if (trovataMedia) {
         var labelMedia = trovataMedia.tipo === 'max' ? 'Media max'
-                        : trovataMedia.tipo === 'min' ? 'Media min'
-                        : 'Media';
+                       : trovataMedia.tipo === 'min' ? 'Media min'
+                       : 'Media';
         tooltipEl.innerHTML = labelMedia + ': ' + trovataMedia.valore + '\u00b0C<br>' + trovataMedia.zona;
         tooltipEl.style.display = 'block';
         tooltipEl.style.left = (clientX - tooltipEl.offsetWidth / 2) + 'px';
@@ -595,7 +687,6 @@ function nascondiTooltip() {
     tooltipEl.style.display = 'none';
 }
 
-// Listener aggiunti dopo build() quando il canvas esiste
 function aggiungiListenerTooltip() {
     var canvas = document.getElementById('mainChart');
     canvas.addEventListener('mousemove', function(e) {
@@ -615,6 +706,15 @@ build();
 aggiungiListenerTooltip();
 setTimeout(sendResize, 150);
 setTimeout(sendResize, 500);
+
+// Ridisegna al cambio di orientamento o larghezza: MOBILE va rivalutata
+window.addEventListener('resize', function() {
+    clearTimeout(window._rebuildT);
+    window._rebuildT = setTimeout(function() {
+        build();
+        aggiungiListenerTooltip();
+    }, 200);
+});
 </script>
 
 </body>

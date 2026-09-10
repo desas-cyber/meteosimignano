@@ -32,7 +32,7 @@ public_html
 |     |---- ecowitt_receiver_gw1100.php (riceve chiamata POST da interfaccia GW 1000 (du backup) con i dati meteo, li elabora ed invia al DB di baxup
 |.          per riconciliazione)
 |     |-----iconciliazione_backup_gw1100.php (riconcilia i dati del DB di backop -vedi sopra- ogni 6 ore avendo cura di cancellare dopo ogni
-|.      riconciliazione il db di backup e tracciando tutto nei file di log presenti nella stessa cartella) 
+|.     8 riconciliazione il db di backup e tracciando tutto nei file di log presenti nella stessa cartella) 
 |     |---- api_grafici_termo_plotly.php (back end della parte grafica -> invia a grafici_termo_plotly.php)
 |    |-----atabella_home_data.php (gestisce ed elabora i dati solo da mysql che passa al visualizzatore tabella_home_display.php) 
 |

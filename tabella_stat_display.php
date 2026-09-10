@@ -20,6 +20,30 @@ error_reporting(E_ALL);
 require_once __DIR__ . '/../envelop.php';
 require_once __DIR__ . '/api/api_tabella_stat_data.php';
 
+// Cella di raffronto non calcolabile: una delle due parti ha copertura
+// insufficiente. Diverso da 'N/D', che significa valore assente.
+const SOGLIA_RAFFRONTO = 0.75;
+$NA_CELLA = 'NA<span style="color:#c00;font-size:0.85em;vertical-align:super;">*</span>';
+
+/**
+ * Il raffronto fra due periodi regge?
+ * Entrambe le parti devono superare la soglia, sulla copertura della
+ * sorgente da cui la riga legge davvero.
+ */
+$raffrontoValido = function (array $riga, string $periodo, array $a, array $b): bool {
+    // Default 'termica': se una riga non dichiara la sorgente, il criterio
+    // piu' restrittivo e' anche il piu' sicuro.
+    $fonte = $riga['fonte_dati'] ?? 'termica';
+    $ca = $a['copertura_eff'][$fonte][$periodo] ?? 0.0;
+    $cb = $b['copertura_eff'][$fonte][$periodo] ?? 0.0;
+    if ($ca < SOGLIA_RAFFRONTO || $cb < SOGLIA_RAFFRONTO) return false;
+    if (!empty($riga['dipende_dal_giorno'])) {
+        if (!($a['conv_ok'][$periodo] ?? true)) return false;
+        if (!($b['conv_ok'][$periodo] ?? true)) return false;
+    }
+    return true;
+};
+
 $response = getStatData();
 
 // ============================================================================
@@ -33,7 +57,23 @@ $righe_diff = null;
 if ($modo_diff && $response['success']) {
     $oggi_fa     = statSottraiAnno($response['meta']['oggi']);
     $response_fa = getStatData($oggi_fa, true);
+$response_fa = getStatData($oggi_fa, true);
 
+// DEBUG TEMPORANEO — rimuovere dopo
+error_log('DEBUG oggi=' . $response['meta']['oggi'] . ' oggi_fa=' . $oggi_fa);
+foreach ($response['righe'] as $rdbg) {
+    if (in_array($rdbg['label'], ['T media','Max abs','Min abs'])) {
+        error_log('DEBUG ' . $rdbg['label'] . ' now=' . var_export($rdbg['raw']['oggi'] ?? null, true));
+    }
+}
+if ($response_fa['success']) {
+    foreach ($response_fa['righe'] as $rdbg) {
+        if (in_array($rdbg['label'], ['T media','Max abs','Min abs'])) {
+            error_log('DEBUG ' . $rdbg['label'] . ' prev=' . var_export($rdbg['raw']['oggi'] ?? null, true));
+        }
+    }
+}
+// FINE DEBUG
     if ($response_fa['success']) {
         $righe_fa_by_label = [];
         foreach ($response_fa['righe'] as $r) $righe_fa_by_label[$r['label']] = $r;
@@ -49,6 +89,10 @@ if ($modo_diff && $response['success']) {
             }
 
             foreach (['oggi','p10','mese','anno'] as $periodo) {
+                if (!$raffrontoValido($r, $periodo, $response, $response_fa)) {
+                    $nuova[$periodo] = ($r[$periodo] === '&mdash;') ? '&mdash;' : $NA_CELLA;
+                    continue;
+                }
                 $now  = $r['raw'][$periodo] ?? null;
                 $prev = $fa['raw'][$periodo]  ?? null;
                 $d = statDiffValore($now, $prev);
@@ -71,7 +115,7 @@ if ($modo_diff && $response['success']) {
     }
 }
 
-/*yyyyyyyyyyyyy*/
+
 $giorno_esplicito  = !empty($_GET['data']);
 $righe_con_pallino = null;
 
@@ -112,14 +156,19 @@ if ($giorno_esplicito && empty($modo_diff) && $response['success']) {
                 continue;
             }
 
-            foreach (['oggi','p10','mese','anno'] as $periodo) {
-                if (!$selezionato[$periodo]) continue;
+                foreach (['oggi','p10','mese','anno'] as $periodo) {
+                    if (!$selezionato[$periodo]) continue;
+    
+                    if (!$raffrontoValido($r, $periodo, $response, $response_rif)) {
+                        // Il valore resta, il confronto no
+                        $nuova[$periodo] = $r[$periodo] . ' ' . $NA_CELLA;
+                        continue;
+                    }
 
                 $now     = $r['raw'][$periodo] ?? null;
                 $rif_val = $rif['raw'][$periodo] ?? null;
                 $d = statDiffValore($now, $rif_val);
                 if ($d === null) continue;
-
                 $dec  = $r['dec'] ?? 1;
                 $val  = round($d, $dec);
                 $info = statColoreDiff($val);
@@ -512,7 +561,10 @@ $copertura = $response['copertura'] ?? ['oggi'=>1.0,'p10'=>1.0,'mese'=>1.0,'anno
 </table>
 
 <?php if ($righe_diff !== null || $righe_con_pallino !== null): ?>
-<div style="font-size:10px; color:#777; text-align:center; margin-top:8px;">
+    <div style="font-size:10px; color:#777; text-align:center; margin-top:3px;">
+        NA<span style="color:#c00;font-size:0.85em;vertical-align:super;">*</span>
+        = non calcolabile per dati incompleti
+    </div>
     <?php if ($righe_diff !== null): ?>
         Differenza: anno corrente &minus; stesso periodo anno precedente
     <?php else: ?>
@@ -647,7 +699,7 @@ function renderCal(id) {
         var ngg   = daysInMonth(y,m);
 
         html += '<div class="cal-nav"><select class="cal-mese-anno-sel" data-cal="'+id+'">';
-        for (var yy=oggi.y; yy>=2023; yy--) {
+        for (var yy=oggi.y; yy>=2001; yy--) {
             var maxMm = (yy===oggi.y) ? oggi.m : 12;
             for (var mm=maxMm; mm>=1; mm--) {
                 var selAttr = (yy===y && mm===m) ? ' selected' : '';
@@ -686,7 +738,7 @@ function renderCal(id) {
 
     } else if (st.tipo === 'anno') {
         html += '<div style="font-size:10px;margin-bottom:3px;">Seleziona anno</div><div class="cal-mesi-grid">';
-        for (var y=oggi.y;y>=2023;y--) {
+        for (var y=oggi.y;y>=2001;y--) {
             html+='<span class="cal-btn'+(y===st.selY?' selected':'')+'" data-cal="'+id+'" data-sel="'+y+'">'+y+'</span>';
         }
         html += '</div>';

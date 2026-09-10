@@ -62,7 +62,7 @@ $TABLE_SRC  = table_name('dati_meteo_simignano');
 $TABLE_DEST = table_name('dati_meteo_giornaliero_simignano');
 
 // Numero minimo di record per considerare il giorno elaborabile
-define('MIN_RECORD_VALIDI', 100);
+define('MIN_RECORD_VALIDI', 1000);
 
 // Soglia minima di completezza per considerare valida una metrica (75%)
 // Se COUNT(metrica) < soglia -> il campo viene salvato come 9999 (dato mancante)
@@ -73,11 +73,6 @@ define('SOGLIA_COMPLETEZZA', 0.75);
 
 // Fallback record attesi se non ci sono dati storici sufficienti per la mediana
 define('RECORD_ATTESI_FALLBACK', 1440);
-
-// Valore sentinella scritto nel DB quando una metrica non raggiunge la soglia 75% NULL
-// Soglia fissa di record minimi per considerare valida una metrica
-// (75% di 1440 record/giorno, cioè 1 record/minuto)
-define('SOGLIA_RECORD_FISSA', 1080);
 
 
 
@@ -166,6 +161,7 @@ foreach ($giorni_da_calcolare as $giorno) {
                 $risultato['vento_dom_kmh']       ?? 'N/A',
                 $risultato['rad_percent_24h'] !== null ? $risultato['rad_percent_24h'] : 'N/A'
             ));
+            $ok++;
         } else {
             log_msg("[SKIP] {$giorno} - {$risultato['motivo']}");
         }
@@ -258,7 +254,7 @@ function consolidaGiorno(PDO $pdo, string $src, string $dest, string $giorno): a
     //     degli intervalli tra record degli ultimi 7 giorni: in questo modo
     //     il controllo e' corretto per qualsiasi frequenza di campionamento.
     // ----------------------------------------------------------------
-    
+        $recordAttesi = calcolaRecordAttesiGiorno($pdo, $src, $giorno);
         $soglia       = (int)ceil($recordAttesi * SOGLIA_COMPLETEZZA);
         $tempOk       = (int)$raw['n_temp']  >= $soglia;
         $pressOk      = (int)$raw['n_press'] >= $soglia;
