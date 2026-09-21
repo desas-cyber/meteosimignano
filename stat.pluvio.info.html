@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guida alle statistiche pluviometriche - MeteoSimignano</title>
+    <link rel="stylesheet" href="header_shared.css">
+    <style>
+        /* ====================================================================
+           STILI GENERALI (identici a stat.info.html)
+           ==================================================================== */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+            background: #fff;
+        }
+
+        main {
+            width: 100%;
+            max-width: 860px;
+            box-sizing: border-box;
+            padding: 12px 16px 40px 16px;
+        }
+
+        h1.page-title {
+            font-size: 22px;
+            margin: 10px 0 4px 0;
+            text-align: center;
+        }
+
+        p.page-subtitle {
+            font-size: 13px;
+            color: #777;
+            text-align: center;
+            margin: 0 0 18px 0;
+        }
+
+        .sec-title {
+            font-size: 18px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 4px;
+            margin: 28px 0 10px 0;
+        }
+
+        .sub-title-info {
+            font-size: 15px;
+            margin: 18px 0 6px 0;
+            color: #333;
+        }
+
+        p, li {
+            font-size: 14px;
+            line-height: 1.55;
+            color: #222;
+        }
+
+        ul { padding-left: 22px; margin: 6px 0 12px 0; }
+        li { margin-bottom: 5px; }
+
+        .btn-sample {
+            display: inline-block;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 1px 8px;
+            font-size: 12px;
+            background: #f5f5f5;
+            white-space: nowrap;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+
+        /* Campioni grafici per la legenda */
+        .swatch-box {
+            display: inline-block;
+            width: 14px; height: 10px;
+            border-radius: 1px;
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+        .swatch-line {
+            display: inline-block;
+            width: 20px; height: 0;
+            border-top: 3px solid #000;
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 16px;
+            font-size: 13px;
+            background: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin: 8px 0 14px 0;
+        }
+        .legend span.item { white-space: nowrap; }
+
+        .note-box {
+            background: #f2f6fb;
+            border-left: 4px solid #6699cc;
+            border-radius: 0 6px 6px 0;
+            padding: 8px 12px;
+            font-size: 13px;
+            margin: 10px 0;
+        }
+
+        /* Titolo di CAPITOLO: separa le tre parti corrispondenti ai tre grafici */
+        .cap-title {
+            font-size: 19px;
+            margin: 40px 0 6px 0;
+            padding: 9px 12px;
+            background: #f2f2f2;
+            border-left: 5px solid #333;
+            border-radius: 0 6px 6px 0;
+            line-height: 1.3;
+        }
+        .cap-title .cap-num {
+            display: inline-block;
+            font-size: 12px;
+            color: #777;
+            font-weight: normal;
+            margin-right: 8px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .cap-intro {
+            font-size: 13px;
+            color: #666;
+            margin: 0 0 8px 2px;
+        }
+        .cap-title:first-of-type { margin-top: 20px; }
+
+        .toc {
+            background: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+        .toc a { color: #336699; text-decoration: none; }
+        .toc a:hover { text-decoration: underline; }
+
+        /* Tabella riferimenti */
+        table.rif {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin: 10px 0 16px 0;
+        }
+        table.rif th, table.rif td {
+            border: 1px solid #ddd;
+            padding: 7px 9px;
+            vertical-align: top;
+            text-align: left;
+        }
+        table.rif th {
+            background: #f2f2f2;
+            font-weight: bold;
+        }
+        table.rif td a { color: #336699; text-decoration: none; word-break: break-word; }
+        table.rif td a:hover { text-decoration: underline; }
+        @media (max-width: 560px) {
+            table.rif, table.rif tbody, table.rif tr, table.rif td { display: block; width: 100%; box-sizing: border-box; }
+            table.rif thead { display: none; }
+            table.rif tr { margin-bottom: 10px; border: 1px solid #ddd; }
+            table.rif td { border: none; border-bottom: 1px solid #f0f0f0; }
+            table.rif td:last-child { border-bottom: none; }
+            table.rif td::before { content: attr(data-lbl) ": "; font-weight: bold; color: #555; }
+        }
+
+        /* ====================================================================
+           GRAFICO SPI: campioni della striscia e schema del trimestre
+           ==================================================================== */
+        .spi-sw {
+            display: inline-block;
+            width: 16px; height: 11px;
+            border-radius: 2px;
+            vertical-align: middle;
+            margin-right: 4px;
+            box-sizing: border-box;
+        }
+        .spi-sw.futuro   { background: transparent; border: 1px dashed #cfcfcf; }
+        .spi-sw.mancante { background: repeating-linear-gradient(45deg, #fff 0 3px, #c9c9c9 3px 5px); box-shadow: inset 0 0 0 1px #c9c9c9; }
+        .spi-sw.corrente { background: #D9D9D9; outline: 1.5px dashed #D62828; outline-offset: 1px; }
+        .spi-dot {
+            display: inline-block;
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: #D62828;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 3px rgba(214,40,40,0.3);
+            vertical-align: middle;
+            margin: 0 6px 0 3px;
+        }
+
+        /* Schema: tre mesi di pioggia -> una cella SPI-3 */
+        .trim-schema {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fafafa;
+            padding: 12px 12px 10px 12px;
+            margin: 10px 0 14px 0;
+        }
+        .trim-grid {
+            display: grid;
+            grid-template-columns: 92px repeat(6, 1fr);
+            gap: 4px 4px;
+            align-items: center;
+            font-size: 12px;
+        }
+        .trim-lbl  { font-size: 11px; color: #666; text-align: right; padding-right: 4px; line-height: 1.25; }
+        .trim-mese { text-align: center; font-weight: bold; color: #555; }
+        .trim-mm   { text-align: center; background: #fff; border: 1px solid #e3e3e3; border-radius: 3px; padding: 4px 0; color: #2B6DB3; }
+        .trim-mm.in { border-color: #2B6DB3; background: #eaf2fb; font-weight: bold; }
+        .trim-graffa {
+            grid-column: 4 / 7;
+            height: 10px;
+            border: 2px solid #2B6DB3;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            margin: 0 6px;
+        }
+        .trim-testo { grid-column: 4 / 7; font-size: 11px; color: #2B6DB3; text-align: center; line-height: 1.3; }
+        .trim-cella { height: 22px; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; }
+        .trim-cella.focus { outline: 2px solid #2B6DB3; outline-offset: 2px; }
+        .trim-freccia { grid-column: 6 / 7; text-align: center; color: #2B6DB3; font-size: 14px; line-height: 1; }
+        @media (max-width: 560px) {
+            .trim-grid { grid-template-columns: 62px repeat(6, 1fr); font-size: 11px; }
+            .trim-cella { font-size: 10px; }
+        }
+
+        table.spi-classi td:first-child { white-space: nowrap; }
+
+        /* ---- HEADER MENU (identico alle altre pagine) ---- */
+        .header-menu-container { position: relative; }
+        .menu-toggle { background: none; border: none; cursor: pointer; padding: 0; }
+
+        .submenu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: max-content;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+            z-index: 1000;
+        }
+        .submenu.active { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        .submenu-item {
+            display: block;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .submenu-item:last-child  { border-bottom: none; }
+        .submenu-item:hover       { background-color: #f8f8f8; }
+        .submenu-item:first-child { border-radius: 8px 8px 0 0; }
+        .submenu-item:last-child  { border-radius: 0 0 8px 8px; }
+
+        /* Voce con sotto-menu annidato */
+        .submenu-item.has-sub {
+            position: relative;
+            cursor: pointer;
+            padding: 12px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            user-select: none;
+        }
+        .submenu-item.has-sub:hover,
+        .submenu-item.has-sub.sub-active { background-color: #f8f8f8; }
+        .sub-submenu {
+            position: absolute;
+            top: 0;
+            left: 100%;
+            margin-left: 4px;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: max-content;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-6px);
+            transition: all 0.2s ease;
+            z-index: 1100;
+        }
+        .submenu-item.has-sub.sub-active .sub-submenu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+        @media (max-width: 768px) {
+            .sub-submenu {
+                left: auto;
+                right: 0;
+                top: 100%;
+                margin-left: 0;
+                margin-top: 2px;
+                transform: translateY(-6px);
+            }
+            .submenu-item.has-sub.sub-active .sub-submenu {
+                transform: translateY(0);
+            }
+        }
+        .sub-submenu .submenu-item { padding: 6px 16px; }
+    </style>
+</head>
+
+<body>
+
+    <!-- ====================================================================
+         HEADER - come stat.info.html, con "Indietro" verso le statistiche pioggia
+         ==================================================================== -->
+    <header class="main-header">
+
+        <a href="pluvio_stat_display.php" class="header-icon left-icon" title="Torna alle statistiche pioggia">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span class="icon-label">Indietro</span>
+        </a>
+
+        <div class="header-content">
+            <h1 class="main-title">
+                <a href="index.php" style="text-decoration: none; color: inherit;">MeteoSimignano</a>
+            </h1>
+            <h1 class="sub-title sub-title-row">
+                <span>43&#176;17&#8242;32.5&#8243;N 11&#176;10&#8242;01.49&#8243;E @ 418m slm</span>
+                <span id="page-spinner" class="spinner hidden" aria-label="Caricamento in corso"></span>
+            </h1>
+        </div>
+
+        <div class="header-menu-container">
+            <button class="header-icon right-icon menu-toggle" title="Menu">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+                <span class="icon-label">Menu</span>
+            </button>
+
+            <div class="submenu">
+                <a href="index.php" class="submenu-item">Home</a>
+                <a href="belle.php" class="submenu-item">Diario del cielo</a>
+                <a href='grafici_termo_plotly.php?range=24h&visible=' class="submenu-item">Grafici</a>
+                <a href="pluvio.html" class="submenu-item">Pioggia: 24h</a>
+                <a href="pluvio_tab.php" class="submenu-item">Pioggia: tabella</a>
+                <div class="submenu-item has-sub">
+                    <span class="submenu-item-label">Statistiche &#9658;</span>
+                    <div class="sub-submenu">
+                        <a href="stat_display.php" class="submenu-item">Tabelle</a>
+                        <a href="lavori_in_corso.html" class="submenu-item">Grafici</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ====================================================================
+         CONTENUTO
+         ==================================================================== -->
+    <main>
+
+        <h1 class="page-title">Guida alle statistiche pluviometriche</h1>
+        <p class="page-subtitle">Come leggere i tre grafici della pagina: cumulato, indice di siccit&agrave; SPI e sequenze di giorni</p>
+
+        <div class="toc">
+            <strong>Generale:</strong>
+            <a href="#giorno">Il giorno di pioggia</a> &middot;
+            <a href="#mediana">Perch&eacute; la mediana</a> &middot;
+            <a href="#percentili">I percentili</a> &middot;
+            <a href="#periodo">Periodo di riferimento</a>
+            <br>
+            <strong>Grafico 1 &ndash; cumulato:</strong>
+            <a href="#lettura">Come si legge</a> &middot;
+            <a href="#modalita">Le due modalit&agrave;</a>
+            <br>
+            <strong>Grafico 2 &ndash; SPI:</strong>
+            <a href="#spi">Cos'&egrave; l'SPI</a> &middot;
+            <a href="#spi-finestra">La finestra di 3 e 6 mesi</a> &middot;
+            <a href="#spi-lettura">Come si legge</a> &middot;
+            <a href="#spi-celle">La striscia dei mesi</a> &middot;
+            <a href="#spi-classi">Le classi</a> &middot;
+            <a href="#spi-calcolo">Come si calcola</a> &middot;
+            <a href="#spi-riferimento">Periodo di riferimento</a>
+            <br>
+            <strong>Grafico 3 &ndash; sequenze:</strong>
+            <a href="#seq">Come si legge</a> &middot;
+            <a href="#seq-stagione">La stagionalit&agrave;</a> &middot;
+            <a href="#seq-corso">La sequenza in corso</a> &middot;
+            <a href="#seq-asimmetria">Pioggia e siccit&agrave;</a>
+            <br>
+            <a href="#riferimenti">Riferimenti</a> &middot;
+            <a href="#note">Note di lettura</a>
+        </div><h3 class="sec-title" id="panoramica">Panoramica</h3>
+        <p>
+            Il grafico risponde a una sola domanda: <em>quanto sta piovendo rispetto al
+            normale?</em> Per farlo affianca ai valori in corso &mdash; millimetri cumulati e
+            giorni di pioggia &mdash; la distribuzione degli stessi valori negli anni
+            precedenti, su tre finestre temporali: il <strong>mese</strong> corrente, la
+            <strong>stagione</strong> corrente (dic&ndash;feb, mar&ndash;mag,
+            giu&ndash;ago, set&ndash;nov) e l'<strong>anno</strong> in corso.
+        </p>
+        <p>
+            La pagina contiene <strong>tre grafici</strong>, e questa guida segue lo stesso
+            ordine. Una parte generale raccoglie le definizioni comuni a tutti e tre; poi un
+            capitolo per ciascuno:
+        </p>
+        <ul>
+            <li><a href="#lettura"><strong>Cumulato mm e giorni di pioggia</strong></a>:
+                quanta acqua &egrave; caduta finora, confrontata con la distribuzione storica
+                di mese, stagione e anno;</li>
+            <li><a href="#spi"><strong>Siccit&agrave;: SPI-3 e SPI-6</strong></a>: se il
+                periodo in corso sia secco o piovoso rispetto al clima locale, con l'indice
+                standard adottato dalla WMO;</li>
+            <li><a href="#seq"><strong>Sequenze secche e piovose</strong></a>: come si
+                distribuiscono nel tempo i giorni piovosi e quelli asciutti, mese per mese.</li>
+        </ul>
+        <p>
+            Sapere che sono caduti 60 mm non dice molto. Sapere che 60 mm stanno sopra il
+            75&deg; percentile della serie storica, cio&egrave; che solo un anno su quattro
+            &egrave; stato pi&ugrave; piovoso a questo punto della stagione, dice molto di
+            pi&ugrave;. &Egrave; questa la logica dell'intera pagina.
+        </p>
+
+        
+        <h2 class="cap-title"><span class="cap-num">Parte generale</span>Concetti comuni ai tre grafici</h2>
+        <p class="cap-intro">Definizioni e criteri statistici usati da tutti e tre i blocchi della pagina.</p>
+
+<h3 class="sec-title" id="giorno">Il &ldquo;giorno di pioggia&rdquo;</h3>
+        <p>
+            Un giorno viene contato come piovoso quando la pioggia cumulata raggiunge
+            <strong>1,0 mm</strong>. La soglia non &egrave; scelta a caso: &egrave; la
+            definizione di <em>wet day</em> adottata dagli indici ETCCDI, dove tutti gli
+            indicatori sui giorni piovosi partono da precipitazione maggiore o uguale a 1 mm.
+        </p>
+        <p>
+            La ragione pratica &egrave; che sotto il millimetro si entra nel campo della
+            rugiada, delle brinate sciolte e dei singoli scatti della bascula: quantit&agrave;
+            reali ma non significative, e soprattutto non confrontabili tra strumenti e periodi
+            diversi. Contare quei giorni gonfierebbe il totale in modo arbitrario.
+        </p>
+        <div class="note-box">
+            Conseguenza da ricordare: un anno pu&ograve; avere <em>molti</em> giorni di pioggia
+            e <em>pochi</em> millimetri, se le piogge sono state frequenti ma deboli. Le due
+            barre vanno lette insieme, non come misure ridondanti della stessa cosa.
+        </div>
+
+        <h3 class="sec-title" id="mediana">Perch&eacute; la mediana e non la media</h3>
+        <p>
+            La barra rappresenta la <strong>mediana</strong> (il 50&deg; percentile), non la
+            media aritmetica. La ragione &egrave; che la pioggia ha una distribuzione fortemente
+            <strong>asimmetrica</strong>: pochi episodi molto intensi spostano la media verso
+            l'alto, allontanandola dal valore che descrive un'annata tipica.
+        </p>
+        <p>
+            Su questa stazione l'effetto &egrave; ben visibile. Nella finestra 1&ndash;9
+            settembre la media storica dei millimetri &egrave; quasi il doppio della mediana:
+            la media &egrave; gonfiata da pochi anni con temporali forti, mentre nella maggior
+            parte dei settembri cade molto meno. Sull'anno intero, dove le asimmetrie si
+            compensano su oltre 250 giorni, media e mediana quasi coincidono.
+        </p>
+        <p>
+            C'&egrave; anche una ragione di coerenza interna: se i baffi sono percentili,
+            il valore centrale coerente &egrave; il percentile centrale. Con la media, la barra
+            potrebbe perfino cadere fuori dall'intervallo p25&ndash;p75, il che sarebbe
+            visivamente contraddittorio. La media resta comunque disegnata come trattino
+            tratteggiato, per chi voglia confrontarla con i valori pubblicati altrove, che
+            sono quasi sempre medie.
+        </p>
+
+        <h3 class="sec-title" id="percentili">I percentili: cosa sono e chi li usa</h3>
+        <p>
+            Un percentile &egrave; la soglia sotto la quale ricade una data percentuale delle
+            osservazioni. Il 90&deg; percentile dei millimetri annuali &egrave; il valore
+            superato solo da un anno su dieci; il 10&deg; percentile &egrave; quello sotto cui
+            scende un anno su dieci. Rispetto a una soglia fissa in millimetri, il percentile
+            si adatta automaticamente al clima del luogo: lo stesso indice ha senso a Simignano
+            come in un deserto o in una foresta pluviale.
+        </p>
+        <p>
+            Non &egrave; una scelta arbitraria di questo sito: gli indicatori climatici basati
+            sui percentili sono lo standard nella climatologia operativa.
+        </p>
+        <h4 class="sub-title-info">Nella climatologia degli estremi</h4>
+        <p>
+            L'<strong>ETCCDI</strong> (Expert Team on Climate Change Detection and Indices,
+            gruppo di esperti nato in ambito WMO) ha definito un insieme di indici diventato
+            riferimento internazionale. Tra questi <strong>R95p</strong> e <strong>R99p</strong>
+            misurano la pioggia caduta nei giorni che superano rispettivamente il 95&deg; e il
+            99&deg; percentile dei giorni piovosi, calcolati su un periodo di riferimento
+            standard. Gli stessi indici compaiono nell'annesso sugli indicatori climatici del
+            sesto rapporto di valutazione dell'<strong>IPCC</strong>.
+        </p>
+        <h4 class="sub-title-info">Nel monitoraggio della siccit&agrave;</h4>
+        <p>
+            Lo <strong>U.S. Drought Monitor</strong>, prodotto congiuntamente da NOAA, USDA e
+            National Drought Mitigation Center, classifica la siccit&agrave; in categorie
+            definite <em>esattamente</em> come intervalli di percentile: siccit&agrave;
+            moderata tra l'11&deg; e il 20&deg; percentile, severa tra il 6&deg; e il 10&deg;,
+            estrema tra il 3&deg; e il 5&deg;, eccezionale sotto il 2&deg;. La corrispondenza
+            con i tempi di ritorno &egrave; immediata: sotto il 10&deg; percentile significa
+            circa un anno su dieci.
+        </p>
+        <h4 class="sub-title-info">In Italia</h4>
+        <p>
+            L'<strong>ISPRA</strong>, attraverso il sistema <strong>SCIA</strong> (Sistema
+            nazionale per la raccolta, l'elaborazione e la diffusione di dati Climatologici di
+            Interesse Ambientale), calcola e pubblica gli indici di estremi basati sui
+            percentili, R95p e R99p compresi, alimentando il rapporto annuale
+            &ldquo;Il clima in Italia&rdquo; del Sistema Nazionale per la Protezione
+            dell'Ambiente.
+        </p>
+        <div class="note-box">
+            <strong>Una differenza importante da tenere presente.</strong> Gli indici R95p e
+            R99p degli standard citati sono percentili calcolati sulle <em>piogge giornaliere</em>,
+            e servono a isolare gli eventi estremi. I percentili di questa pagina sono invece
+            calcolati sui <em>totali di periodo</em> (mm e giorni di ciascun mese, stagione o
+            anno) e servono a collocare l'annata in corso nella sua distribuzione storica.
+            La logica statistica &egrave; la stessa, l'oggetto misurato no: i valori qui
+            riportati non sono confrontabili con gli R95p pubblicati dagli enti.
+        </div>
+
+        <h3 class="sec-title" id="periodo">Periodo di riferimento e dati incompleti</h3>
+        <p>
+            Sotto ogni zona del grafico &egrave; indicato l'intervallo di anni effettivamente
+            usato per calcolare mediana e percentili, e il tooltip ne riporta anche il numero.
+            Non &egrave; un dettaglio decorativo: un percentile calcolato su pochi anni
+            &egrave; poco robusto, e va guardato con la stessa prudenza con cui si guarda un
+            sondaggio su un campione piccolo.
+        </p>
+        <h4 class="sub-title-info">Anni esclusi</h4>
+        <p>
+            Gli anni con troppe giornate mancanti nella finestra considerata vengono
+            <strong>esclusi</strong> dal calcolo, e il footer del grafico li elenca. Il motivo
+            &egrave; che un anno con molti buchi registra pochi giorni di pioggia e pochi
+            millimetri semplicemente perch&eacute; mancano le misure, non perch&eacute; sia
+            stato secco: tenerlo dentro abbasserebbe artificialmente tutta la distribuzione.
+        </p>
+        <p>
+            &Egrave; lo stesso principio dei criteri di completezza che la <strong>WMO</strong>
+            fissa nelle linee guida per il calcolo dei valori normali (WMO-No. 1203): un valore
+            mensile non andrebbe calcolato quando mancano troppi giorni nel mese o troppi
+            giorni consecutivi, e un valore normale richiede la disponibilit&agrave; di almeno
+            l'80% degli anni del periodo.
+        </p>
+        <div class="note-box">
+            <strong>Sul trentennio.</strong> La WMO fissa in <strong>30 anni</strong> la durata
+            del periodo di riferimento per i valori normali climatici (attualmente
+            1991&ndash;2020). La serie di questa stazione &egrave; pi&ugrave; breve: i valori
+            qui riportati sono quindi una climatologia locale indicativa, utile al confronto
+            interno tra annate, ma non un <em>valore normale</em> nel senso tecnico del termine.
+        </div>
+
+        <!-- ================================================================
+             GRAFICO SPI
+             ================================================================ -->
+        
+        <h2 class="cap-title"><span class="cap-num">Grafico 1</span>Cumulato mm e giorni di pioggia</h2>
+        <p class="cap-intro">Quanta acqua &egrave; caduta finora rispetto alla distribuzione storica, su mese, stagione e anno.</p>
+
+<h3 class="sec-title" id="lettura">Come si legge</h3>
+        <p>
+            Ogni zona del grafico (mese, stagione, anno) contiene <strong>due barre</strong>,
+            lette su due assi diversi: i millimetri sull'asse di sinistra, i giorni di pioggia
+            su quello di destra. Le due grandezze hanno unit&agrave; e ordini di grandezza
+            incompatibili, e per questo non condividono la scala.
+        </p>
+        <div class="legend">
+            <span class="item"><span class="swatch-box" style="background:rgba(55,138,221,0.55);border:1px solid #2b6db3;"></span>mm: mediana storica</span>
+            <span class="item"><span class="swatch-box" style="background:rgba(110,180,110,0.55);border:1px solid #4d8f4d;"></span>giorni di pioggia: mediana storica</span>
+            <span class="item"><span class="swatch-line" style="border-top-color:#555;"></span>p25&ndash;p75</span>
+            <span class="item"><span class="swatch-line" style="border-top-color:#bbb;"></span>p10&ndash;p90</span>
+            <span class="item"><span class="swatch-line" style="border-top:2px dashed #777;"></span>media aritmetica</span>
+            <span class="item"><span class="swatch-line" style="border-top-color:#D62828;"></span>mm attuali</span>
+            <span class="item"><span class="swatch-line" style="border-top:3px dashed #F77F00;"></span>giorni attuali</span>
+        </div>
+        <ul>
+            <li>l'<strong>altezza della barra</strong> &egrave; la mediana storica del periodo:
+                il valore che divide a met&agrave; gli anni osservati;</li>
+            <li>i <strong>baffi</strong> descrivono quanto il dato oscilla da un anno all'altro.
+                Quello scuro racchiude la met&agrave; centrale degli anni (dal 25&deg; al
+                75&deg; percentile), quello chiaro ne racchiude l'80% (dal 10&deg; al 90&deg;);</li>
+            <li>il <strong>trattino grigio tratteggiato</strong> &egrave; la media aritmetica,
+                tenuta come riferimento secondario (v. <a href="#mediana">oltre</a>);</li>
+            <li>la <strong>riga rossa</strong> e la <strong>riga arancione tratteggiata</strong>
+                sono i valori dell'anno in corso: la prima corre sopra la barra dei millimetri,
+                la seconda sopra quella dei giorni, cos&igrave; ciascuna &egrave; confrontabile
+                a colpo d'occhio con la propria distribuzione.</li>
+        </ul>
+        <p>
+            Toccando o passando il mouse su una barra si leggono tutti i valori
+            (p90, p75, mediana, p25, p10, media) e il periodo di anni su cui sono calcolati;
+            sulle righe colorate compare il valore in corso.
+        </p>
+        <div class="note-box">
+            <strong>Come interpretare la posizione della riga.</strong> Se la riga cade
+            <em>dentro</em> il baffo scuro, l'annata &egrave; nella norma. Se supera il baffo
+            chiaro verso l'alto, siamo in un anno tra il 10% dei pi&ugrave; piovosi; se scende
+            sotto, tra il 10% dei pi&ugrave; secchi.
+        </div>
+
+        <h3 class="sec-title" id="modalita">Le due modalit&agrave;</h3>
+        <p>
+            Il selettore in alto al grafico alterna due modi di calcolare la climatologia, e
+            la distinzione &egrave; essenziale per non fare confronti scorretti.
+        </p>
+        <h4 class="sub-title-info"><span class="btn-sample">Fino ad oggi</span> (predefinita)</h4>
+        <p>
+            Le statistiche storiche sono calcolate sulla <strong>stessa finestra parziale</strong>
+            dell'anno in corso. Se oggi &egrave; il 9 settembre, il mese di riferimento va dal
+            1&deg; al 9 settembre <em>di ogni anno passato</em>, la stagione dal 1&deg; al 9
+            settembre e l'anno dal 1&deg; gennaio al 9 settembre. &Egrave; l'unico confronto
+            corretto mentre il periodo &egrave; ancora in corso: paragonare i 500 mm caduti
+            finora con i 900 mm di un anno intero non direbbe nulla.
+        </p>
+        <h4 class="sub-title-info"><span class="btn-sample">Periodo intero</span></h4>
+        <p>
+            Le statistiche coprono il mese completo, la stagione completa e l'anno completo.
+            Serve a rispondere a una domanda diversa: non &ldquo;come sto andando&rdquo;, ma
+            &ldquo;quanto piove di solito qui in un settembre, in un autunno, in un anno&rdquo;.
+            In questa modalit&agrave; le righe dei valori in corso restano quelle parziali, ed
+            &egrave; quindi normale che stiano molto in basso: l'anno non &egrave; finito.
+        </p>
+
+        <h4 class="sub-title-info">Mm e giorni possono avere basi diverse</h4>
+        <p>
+            Nei primi anni della serie il dettaglio giorno per giorno non &egrave; affidabile,
+            pur essendolo il totale complessivo. Di conseguenza, in modalit&agrave;
+            <span class="btn-sample">Periodo intero</span> quegli anni vengono usati per i
+            <strong>millimetri</strong> &mdash; una somma su tutto il periodo non risente di
+            un'attribuzione imprecisa al singolo giorno &mdash; ma <strong>non</strong> per i
+            giorni di pioggia, il cui conteggio dipende proprio dall'attribuzione giornaliera.
+            Per questo le due barre possono dichiarare intervalli di anni diversi, ed &egrave;
+            corretto che sia cos&igrave;.
+        </p>
+        
+        <h2 class="cap-title"><span class="cap-num">Grafico 2</span>Siccit&agrave;: SPI-3 e SPI-6</h2>
+        <p class="cap-intro">Se il periodo in corso sia secco o piovoso rispetto al clima locale, con l'indice standard WMO.</p>
+
+<h3 class="sec-title" id="spi">Cos'&egrave; l'indice</h3>
+        <p>
+            L'<strong>SPI</strong> (<em>Standardized Precipitation Index</em>, indice di
+            precipitazione standardizzato) risponde a una domanda diversa dal primo grafico:
+            non &ldquo;quanta pioggia &egrave; caduta&rdquo;, ma <em>quanto &egrave; raro</em>
+            il totale caduto in un certo numero di mesi, rispetto agli stessi mesi degli anni
+            passati. Il risultato &egrave; un numero su una scala unica: <strong>0</strong>
+            &egrave; la situazione tipica, i valori <strong>negativi</strong> indicano
+            siccit&agrave;, quelli <strong>positivi</strong> un surplus di pioggia.
+        </p>
+        <p>
+            Il vantaggio &egrave; che la scala non dipende dalla stagione: un SPI di
+            &minus;1,5 a luglio e un SPI di &minus;1,5 a gennaio indicano la stessa rarit&agrave;,
+            anche se i millimetri in gioco sono molto diversi. L'indice &egrave; stato proposto
+            da McKee, Doesken e Kleist nel 1993 e la WMO ne raccomanda l'uso ai servizi
+            meteorologici nazionali per il monitoraggio della siccit&agrave;.
+        </p>
+        <p>
+            Il grafico mostra due scale temporali:
+        </p>
+        <ul>
+            <li><strong>SPI-3</strong>: valuta gli ultimi <strong>tre mesi</strong>. Reagisce in
+                fretta a un periodo secco o piovoso, ed &egrave; il pi&ugrave; vicino a ci&ograve;
+                che si vede nei campi e nell'umidit&agrave; del suolo;</li>
+            <li><strong>SPI-6</strong>: valuta gli ultimi <strong>sei mesi</strong>. Ha pi&ugrave;
+                inerzia: un singolo mese anomalo lo sposta meno, e segnala le tendenze che
+                durano una stagione e oltre.</li>
+        </ul>
+
+        <h3 class="sec-title" id="spi-finestra">La finestra di 3 e 6 mesi</h3>
+        <p>
+            Le finestre sono fatte di <strong>mesi di calendario interi</strong> e terminano
+            sempre con il <strong>mese in corso</strong>, che &egrave; quindi l'ultimo dei tre
+            (o dei sei). Il 16 settembre, per esempio, l'SPI-3 valuta luglio + agosto +
+            settembre, questo fino al giorno 16; l'SPI-6 valuta aprile&hellip;settembre.
+        </p>
+        <table class="rif">
+            <thead>
+                <tr>
+                    <th style="width:26%;">Data</th>
+                    <th style="width:38%;">Finestra SPI-3</th>
+                    <th style="width:36%;">Avanzamento</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td data-lbl="Data">16 settembre</td><td data-lbl="Finestra SPI-3">luglio &ndash; agosto &ndash; <strong>settembre</strong></td><td data-lbl="Avanzamento">giorno 78 di 92</td></tr>
+                <tr><td data-lbl="Data">30 settembre</td><td data-lbl="Finestra SPI-3">luglio &ndash; agosto &ndash; <strong>settembre</strong></td><td data-lbl="Avanzamento">giorno 92 di 92: finestra completa</td></tr>
+                <tr><td data-lbl="Data">1&deg; ottobre</td><td data-lbl="Finestra SPI-3">agosto &ndash; settembre &ndash; <strong>ottobre</strong></td><td data-lbl="Avanzamento">giorno 62 di 92</td></tr>
+            </tbody>
+        </table>
+        <p>
+            Il confronto con gli anni passati avviene sempre <strong>alla stessa data</strong>:
+            il 16 settembre la pioggia dal 1&deg; luglio viene confrontata con la pioggia dal
+            1&deg; luglio al 16 settembre di ogni anno storico, come nella modalit&agrave;
+            <span class="btn-sample">Fino ad oggi</span> del primo grafico.
+        </p>
+        <div class="note-box">
+            <strong>Il primo del mese il valore pu&ograve; cambiare di colpo.</strong> Il 1&deg;
+            ottobre esce dalla finestra un mese intero (luglio) ed entra un ottobre di un solo
+            giorno. Se luglio era stato molto secco, l'SPI-3 pu&ograve; migliorare da un giorno
+            all'altro senza che sia caduta una goccia, e viceversa. &Egrave; il comportamento
+            corretto dell'indice, non un errore. Per lo stesso motivo la barra di avanzamento
+            non riparte mai da zero: oscilla fra circa due terzi e il completamento.
+        </div>
+
+        <h3 class="sec-title" id="spi-lettura">Come si legge</h3>
+        <p>
+            Il grafico ha due pannelli, uno per l'SPI-3 e uno per l'SPI-6, costruiti allo
+            stesso modo.
+        </p>
+        <div class="legend">
+            <span class="item"><span class="swatch-box" style="background:rgba(55,138,221,0.24);border:1px solid rgba(55,138,221,0.45);"></span>p10&ndash;p90</span>
+            <span class="item"><span class="swatch-box" style="background:rgba(55,138,221,0.47);"></span>p25&ndash;p75</span>
+            <span class="item"><span class="swatch-line" style="border-top-color:#2B6DB3;"></span>mediana</span>
+            <span class="item"><span class="swatch-line" style="border-top-color:#D62828;"></span>pioggia cumulata attuale</span>
+            <span class="item"><span class="spi-dot"></span>oggi</span>
+            <span class="item"><span class="swatch-line" style="border-top:3px dashed rgba(214,40,40,0.55);"></span>proiezione con pioggia mediana</span>
+        </div>
+        <ul>
+            <li>il <strong>ventaglio blu</strong> mostra, giorno per giorno, la pioggia
+                <em>cumulata dall'inizio della finestra</em> negli anni storici: la banda scura
+                contiene la met&agrave; centrale degli anni, quella chiara l'80%, la linea
+                &egrave; la mediana;</li>
+            <li>la <strong>linea rossa</strong> &egrave; la pioggia cumulata dell'anno in corso
+                e termina nel <strong>pallino pulsante</strong>, che indica la situazione di
+                oggi. Dove il pallino cade dentro il ventaglio si legge a colpo d'occhio se
+                siamo sotto, dentro o sopra la norma;</li>
+            <li>la <strong>zona grigia</strong> a destra del pallino &egrave; la parte di finestra
+                che manca alla chiusura del mese; il <strong>tratteggio rosso</strong> indica dove
+                si arriverebbe se da oggi cadesse la pioggia mediana, e termina con un
+                cerchietto vuoto;</li>
+            <li>il <strong>termometro</strong> a destra riporta la scala SPI con i colori delle
+                classi: il secondo pallino pulsante &egrave; l'SPI di oggi, il cerchietto vuoto
+                quello proiettato a fine mese;</li>
+            <li>il <strong>riquadro colorato</strong> in alto a destra riassume percentile, valore
+                SPI e classe;</li>
+            <li>sotto il grafico, la <strong>barra di avanzamento</strong> indica il giorno della
+                finestra e del mese in corso, e la riga successiva quanta pioggia servirebbe
+                per chiudere il mese alla mediana.</li>
+        </ul>
+        <p>
+            Passando il mouse o toccando il grafico si leggono, per ogni giorno della
+            finestra, la pioggia attuale e i percentili storici; sul pallino e sul termometro
+            compaiono il valore SPI e il periodo di anni usato.
+        </p>
+
+        <h3 class="sec-title" id="spi-celle">La striscia dei mesi: ogni cella &egrave; un trimestre</h3>
+        <p>
+            Sotto ciascun pannello c'&egrave; una striscia di celle colorate, una per mese, su
+            due righe: l'<strong>anno in corso</strong> e l'<strong>anno precedente</strong>,
+            sempre da gennaio a dicembre. Il colore &egrave; quello della classe SPI.
+        </p>
+        <div class="note-box">
+            <strong>Attenzione: la cella di un mese non descrive la pioggia di quel mese.</strong>
+            Descrive la finestra che <em>termina</em> in quel mese. Nel pannello SPI-3 la cella
+            di novembre valuta <strong>settembre + ottobre + novembre</strong>; nel pannello
+            SPI-6 valuta <strong>giugno&hellip;novembre</strong>.
+        </div>
+        <p>
+            Un esempio reale dall'archivio della stazione, autunno 2024:
+        </p>
+        <div class="trim-schema" aria-label="Esempio: la cella SPI-3 di novembre 2024 somma settembre, ottobre e novembre">
+            <div class="trim-grid">
+                <div class="trim-lbl"></div>
+                <div class="trim-mese">lug</div><div class="trim-mese">ago</div><div class="trim-mese">set</div>
+                <div class="trim-mese">ott</div><div class="trim-mese">nov</div><div class="trim-mese">dic</div>
+
+                <div class="trim-lbl">pioggia del mese</div>
+                <div class="trim-mm">2</div><div class="trim-mm">18</div><div class="trim-mm in">162</div>
+                <div class="trim-mm in">344</div><div class="trim-mm in">17</div><div class="trim-mm">83</div>
+
+                <div class="trim-lbl"></div><div></div><div></div>
+                <div class="trim-graffa"></div><div></div>
+
+                <div class="trim-lbl"></div><div></div><div></div>
+                <div class="trim-testo">523 mm in tre mesi</div>
+
+                <div class="trim-lbl"></div><div></div><div></div><div></div><div></div>
+                <div class="trim-freccia">&#9660;</div><div></div>
+
+                <div class="trim-lbl">cella SPI-3</div>
+                <div class="trim-cella" style="background:#D9D9D9;color:#444;">&minus;0,47</div>
+                <div class="trim-cella" style="background:#D95F0E;color:#fff;">&minus;1,66</div>
+                <div class="trim-cella" style="background:#D9D9D9;color:#444;">+0,39</div>
+                <div class="trim-cella" style="background:#08519C;color:#fff;">+2,42</div>
+                <div class="trim-cella focus" style="background:#4292C6;color:#fff;">+1,53</div>
+                <div class="trim-cella" style="background:#D9D9D9;color:#444;">+0,86</div>
+            </div>
+        </div>
+        <p>
+            Novembre 2024 &egrave; stato un mese <strong>secco</strong>: 17 mm, contro una
+            mediana di novembre di circa 130 mm. Eppure la sua cella SPI-3 &egrave;
+            <strong>blu, &ldquo;molto umido&rdquo;</strong>: nel trimestre settembre&ndash;novembre
+            pesano i 344 mm di ottobre, e 523 mm in tre mesi sono un totale raro. Allo stesso
+            modo la cella di agosto &egrave; <strong>arancione</strong> perch&eacute; giugno,
+            luglio e agosto insieme hanno dato meno di 50 mm.
+        </p>
+        <ul>
+            <li>un mese eccezionale <strong>colora pi&ugrave; celle</strong>: tre consecutive
+                nell'SPI-3 (ottobre, novembre e dicembre 2024 contengono tutte i 344 mm di
+                ottobre), sei nell'SPI-6;</li>
+            <li>celle vicine condividono due mesi su tre, quindi i colori
+                <strong>cambiano gradualmente</strong>: &egrave; il senso dell'indice, che guarda
+                all'accumulo e non al singolo mese;</li>
+            <li>il tooltip di ogni cella riporta, oltre a SPI e classe, i
+                <strong>millimetri dell'intera finestra</strong>, non quelli del mese.</li>
+        </ul>
+        <h4 class="sub-title-info">Gli stati delle celle</h4>
+        <div class="legend">
+            <span class="item"><span class="spi-sw" style="background:#4292C6;"></span>mese chiuso: colore della classe SPI</span>
+            <span class="item"><span class="spi-sw corrente"></span>mese in corso: valore di oggi, parziale</span>
+            <span class="item"><span class="spi-sw futuro"></span>mese futuro</span>
+            <span class="item"><span class="spi-sw mancante"></span>dati incompleti</span>
+        </div>
+        <p>
+            Una cella risulta &ldquo;dati incompleti&rdquo; quando in almeno uno dei mesi della
+            sua finestra mancano pi&ugrave; del 10% dei giorni: per l'SPI-3 basta un buco in uno
+            dei tre mesi, per l'SPI-6 in uno dei sei. La cella del mese in corso segue il valore
+            di oggi e cambia colore durante il mese; diventa definitiva quando il mese si chiude.
+        </p>
+
+        <h3 class="sec-title" id="spi-classi">Le classi SPI</h3>
+        <p>
+            Le classi sono quelle proposte da McKee e adottate dalla guida WMO all'SPI. Poich&eacute;
+            la scala &egrave; standard, ogni soglia corrisponde sempre alla stessa frequenza.
+        </p>
+        <table class="rif spi-classi">
+            <thead>
+                <tr>
+                    <th style="width:24%;">SPI</th>
+                    <th style="width:34%;">Classe</th>
+                    <th style="width:18%;">Percentile</th>
+                    <th style="width:24%;">Cos&igrave; o pi&ugrave; estremo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td data-lbl="SPI">&ge; +2,0</td><td data-lbl="Classe"><span class="spi-sw" style="background:#08519C;"></span>estremamente umido</td><td data-lbl="Percentile">oltre p98</td><td data-lbl="Frequenza">circa 1 anno su 44</td></tr>
+                <tr><td data-lbl="SPI">+1,5 &hellip; +2,0</td><td data-lbl="Classe"><span class="spi-sw" style="background:#4292C6;"></span>molto umido</td><td data-lbl="Percentile">p93&ndash;p98</td><td data-lbl="Frequenza">circa 1 anno su 15</td></tr>
+                <tr><td data-lbl="SPI">+1,0 &hellip; +1,5</td><td data-lbl="Classe"><span class="spi-sw" style="background:#9ECAE1;"></span>moderatamente umido</td><td data-lbl="Percentile">p84&ndash;p93</td><td data-lbl="Frequenza">circa 1 anno su 6</td></tr>
+                <tr><td data-lbl="SPI">&minus;1,0 &hellip; +1,0</td><td data-lbl="Classe"><span class="spi-sw" style="background:#D9D9D9;"></span>nella norma</td><td data-lbl="Percentile">p16&ndash;p84</td><td data-lbl="Frequenza">circa 2 anni su 3</td></tr>
+                <tr><td data-lbl="SPI">&minus;1,5 &hellip; &minus;1,0</td><td data-lbl="Classe"><span class="spi-sw" style="background:#FDAE61;"></span>moderatamente siccitoso</td><td data-lbl="Percentile">p7&ndash;p16</td><td data-lbl="Frequenza">circa 1 anno su 6</td></tr>
+                <tr><td data-lbl="SPI">&minus;2,0 &hellip; &minus;1,5</td><td data-lbl="Classe"><span class="spi-sw" style="background:#D95F0E;"></span>severamente siccitoso</td><td data-lbl="Percentile">p2&ndash;p7</td><td data-lbl="Frequenza">circa 1 anno su 15</td></tr>
+                <tr><td data-lbl="SPI">&le; &minus;2,0</td><td data-lbl="Classe"><span class="spi-sw" style="background:#8C2D04;"></span>estremamente siccitoso</td><td data-lbl="Percentile">sotto p2</td><td data-lbl="Frequenza">circa 1 anno su 44</td></tr>
+            </tbody>
+        </table>
+        <p>
+            &ldquo;Cos&igrave; o pi&ugrave; estremo&rdquo; conta i valori oltre il limite interno
+            della classe: un SPI di &minus;1 o inferiore capita circa un anno su sei, di &minus;1,5
+            o inferiore circa uno su quindici. Per la classe &ldquo;nella norma&rdquo; &egrave; la
+            quota di anni compresa fra &minus;1 e +1.
+        </p>
+
+        <h3 class="sec-title" id="spi-calcolo">Come si calcola, in breve</h3>
+        <p>
+            Il calcolo segue la procedura descritta nella guida WMO e si articola in tre passi.
+        </p>
+        <ul>
+            <li><strong>1. Una curva sui dati storici.</strong> Ai totali della stessa finestra
+                negli anni passati si adatta una <strong>distribuzione gamma</strong>, adatta alla
+                pioggia perch&eacute; non scende sotto zero e ammette una coda lunga di anni molto
+                piovosi. I due parametri si stimano con la formula diretta di Thom.</li>
+            <li><strong>2. La probabilit&agrave; di stare sotto.</strong> Dalla curva si ricava la
+                quota di anni con meno pioggia del valore attuale. Gli eventuali anni con zero
+                millimetri nella finestra vengono contati a parte, perch&eacute; la gamma si stima
+                solo sui valori positivi.</li>
+            <li><strong>3. La scala standard.</strong> Quella probabilit&agrave; viene riportata
+                sulla curva normale standard: il punto che lascia sotto di s&eacute; la stessa
+                quota di anni &egrave; l'SPI. Il valore viene limitato fra circa &minus;3 e +3.</li>
+        </ul>
+        <div class="note-box">
+            <strong>Pallino e riquadro possono non coincidere del tutto.</strong> Il ventaglio
+            &egrave; costruito direttamente sugli anni osservati (percentili empirici), mentre SPI e
+            percentile del riquadro vengono dalla curva gamma, che prosegue anche oltre il
+            minimo e il massimo osservati. Quando il valore attuale &egrave; vicino ai bordi del
+            ventaglio, il pallino pu&ograve; stare appena fuori dalla banda p10&ndash;p90 mentre il
+            riquadro indica p90: le due letture sono coerenti, differenze di pochi punti
+            percentuali sono normali.
+        </div>
+        <p>
+            Con <strong>meno di 10 anni</strong> di riferimento la curva non viene stimata, perch&eacute;
+            i suoi parametri cambierebbero troppo aggiungendo o togliendo un solo anno. In quel
+            caso l'SPI si ricava dalla posizione del valore fra gli anni osservati, e il footer
+            del grafico lo segnala con &ldquo;riferimento breve, SPI empirico&rdquo;. &Egrave; una
+            scelta prudente: con pochi anni un valore fuori da tutti quelli osservati resta
+            moderato e non viene mai classificato come estremo.
+        </p>
+
+        <h3 class="sec-title" id="spi-riferimento">Periodo di riferimento e aggiornamenti</h3>
+        <ul>
+            <li>Il riferimento comprende gli anni dall'inizio della serie fino all'<strong>anno
+                precedente</strong>. L'anno in corso non entra mai nel confronto con s&eacute;
+                stesso: le finestre che terminano nel 2026 si aggiungono al riferimento il
+                1&deg; gennaio 2027.</li>
+            <li>Le due righe della striscia usano lo <strong>stesso riferimento</strong>, cos&igrave;
+                l'anno in corso e l'anno precedente si confrontano con lo stesso metro.</li>
+            <li>Per questo, al cambio d'anno, anche le celle dei mesi gi&agrave; chiusi possono
+                variare di qualche centesimo: il riferimento si &egrave; allungato di un anno.
+                Un mese vicino al limite fra due classi pu&ograve; cambiare colore.</li>
+            <li>Ventaglio e parametri della curva cambiano <strong>ogni giorno</strong>, perch&eacute;
+                ogni giorno la finestra si allunga; la pioggia attuale, il pallino e il riquadro
+                si aggiornano a ogni caricamento.</li>
+            <li>Come nel primo grafico, gli anni con pi&ugrave; del 10% di giorni mancanti nella
+                finestra vengono esclusi e sono elencati nel footer. Il ventaglio usa solo gli anni
+                con dettaglio giornaliero affidabile; le celle della striscia, che sommano mesi
+                interi, possono usare anche i primi anni della serie.</li>
+        </ul>
+
+        
+        <h2 class="cap-title"><span class="cap-num">Grafico 3</span>Sequenze secche e piovose</h2>
+        <p class="cap-intro">Come si distribuiscono nel tempo i giorni piovosi e quelli asciutti, mese per mese.</p>
+
+        <h3 class="sec-title" id="seq">Come si legge</h3>
+        <p>
+            Una <strong>sequenza</strong> &egrave; una serie di giorni consecutivi dello stesso
+            tipo: secca se restano sotto la soglia di 1 mm, piovosa se la raggiungono. La soglia
+            &egrave; la stessa usata dal primo grafico, quindi i due blocchi sono coerenti fra
+            loro. Gli indici corrispondenti hanno un nome standard ETCCDI:
+            <strong>CDD</strong> (<em>Consecutive Dry Days</em>) &egrave; la sequenza secca
+            pi&ugrave; lunga di un periodo, <strong>CWD</strong> (<em>Consecutive Wet Days</em>)
+            la pi&ugrave; lunga fra quelle piovose.
+        </p>
+        <p>
+            Ogni pannello mostra dodici colonne, una per mese, e per ciascuna la distribuzione
+            delle durate osservate negli anni passati:
+        </p>
+        <ul>
+            <li>la <strong>fascia pi&ugrave; intensa</strong> va dalla mediana al 75&deg;
+                percentile: &egrave; la zona delle sequenze ordinarie;</li>
+            <li>la <strong>fascia pi&ugrave; chiara</strong> arriva al 90&deg; percentile:
+                uscirne significa trovarsi in una sequenza rara per quel mese;</li>
+            <li>la <strong>linea continua</strong> &egrave; la mediana, la durata che divide a
+                met&agrave; le sequenze osservate;</li>
+            <li>i <strong>pallini grigi</strong> segnano il massimo storico del mese;</li>
+            <li>il <strong>pallino rosso pulsante</strong> &egrave; la sequenza in corso,
+                collocata sul mese in cui &egrave; iniziata.</li>
+        </ul>
+        <p>
+            Le sequenze secche usano toni caldi (ocra e marrone), quelle piovose il blu degli
+            altri grafici. La scala verticale &egrave; <strong>logaritmica</strong>: senza di
+            essa i massimi storici, che superano i due mesi, schiaccerebbero contro l'asse
+            mediane comprese fra due e sei giorni.
+        </p>
+        <div class="note-box">
+            Fuori dalla climatologia della pioggia la sigla CDD indica di solito i
+            <em>Cooling Degree Days</em>, i gradi-giorno per il raffrescamento. Non hanno nulla
+            in comune con le sequenze secche.
+        </div>
+
+        <h4 class="sub-title-info">Perch&eacute; il mese di inizio</h4>
+        <p>
+            Ogni sequenza viene attribuita al mese in cui &egrave; <strong>cominciata</strong>,
+            non a quello in cui finisce n&eacute; a quello che ne contiene pi&ugrave; giorni.
+            Una siccit&agrave; partita il 28 marzo &egrave; figlia del regime di marzo, anche se
+            si esaurisce ad aprile. &Egrave; una convenzione fra le tre possibili: cambiarla
+            sposterebbe qualche sequenza da un mese all'altro, perci&ograve; viene dichiarata
+            esplicitamente.
+        </p>
+
+        <h3 class="sec-title" id="seq-stagione">La stagionalit&agrave; sta nella coda</h3>
+        <p>
+            Il dato pi&ugrave; interessante di questo grafico &egrave; che la
+            <strong>mediana &egrave; quasi piatta</strong> tutto l'anno, fra due e sei giorni:
+            la sequenza secca tipica non ha stagione. A cambiare in modo netto &egrave; il
+            90&deg; percentile, che passa da una decina di giorni in primavera a una trentina a
+            luglio. L'estate non produce sequenze secche <em>sistematicamente</em> pi&ugrave;
+            lunghe, ma produce quelle <em>eccezionalmente</em> lunghe.
+        </p>
+        <div class="note-box">
+            Conseguenza pratica: lo stesso numero di giorni ha significati opposti secondo la
+            stagione. Quindici giorni senza pioggia iniziati a luglio rientrano nella norma,
+            perch&eacute; accadono in due anni su tre; gli stessi quindici giorni iniziati ad
+            aprile superano il 95% delle sequenze di quel mese e capitano circa una volta ogni
+            sei anni. &Egrave; per questo che il riferimento &egrave; mensile e non annuale.
+        </div>
+
+        <h3 class="sec-title" id="seq-corso">La sequenza in corso</h3>
+        <p>
+            Sotto ogni pannello una riga riassume la sequenza attualmente aperta: da quanti
+            giorni dura, quando &egrave; iniziata e quale percentuale delle sequenze storiche di
+            quel mese supera. Il colore dell'etichetta segue la stessa scala del grafico:
+            neutro sotto il 75&deg; percentile, pi&ugrave; intenso oltre il 90&deg;.
+        </p>
+        <p>
+            Compare per&ograve; anche una seconda informazione, meno ovvia e pi&ugrave; utile.
+            Una sequenza ancora aperta &egrave; <strong>censurata</strong>: non si sa quanto
+            durer&agrave;, si sa solo che ha gi&agrave; raggiunto un certo numero di giorni.
+            Confrontarla con tutte le sequenze concluse &egrave; distorto, perch&eacute; quella
+            distribuzione comprende anche le sequenze pi&ugrave; corte, che i fatti hanno
+            gi&agrave; escluso. Il confronto corretto guarda solo alle sequenze storiche
+            arrivate allo stesso punto e dice quanto sono poi durate:
+            <em>delle sequenze arrivate a questo punto, met&agrave; ha superato N giorni</em>.
+        </p>
+
+        <h3 class="sec-title" id="seq-asimmetria">Un'asimmetria fra pioggia e siccit&agrave;</h3>
+        <p>
+            I due pannelli non si comportano allo stesso modo, e la differenza ha un significato
+            fisico. Le sequenze <strong>piovose</strong> seguono bene una distribuzione
+            geometrica: la probabilit&agrave; che la pioggia finisca domani &egrave; circa la
+            stessa ogni giorno, indipendentemente da quanto &egrave; gi&agrave; durata. &Egrave;
+            il comportamento di una perturbazione che transita e si esaurisce, senza memoria.
+        </p>
+        <p>
+            Le sequenze <strong>secche</strong> no: sono pi&ugrave; numerose del previsto sia
+            fra quelle brevissime sia fra quelle molto lunghe, e il massimo storico arriva circa
+            al doppio di quanto un modello senza memoria lascerebbe attendere. La siccit&agrave;
+            tende ad autoalimentarsi, perch&eacute; una figura anticiclonica insediata resiste.
+            Per questo, sulle sequenze secche, il grafico mostra soltanto la distribuzione
+            osservata senza sovrapporre curve teoriche: nessun modello a un parametro la
+            descriverebbe correttamente.
+        </p>
+
+
+        <h2 class="cap-title"><span class="cap-num">In chiusura</span>Fonti e promemoria</h2>
+        <p class="cap-intro">Riferimenti normativi e note rapide di lettura.</p>
+
+<h3 class="sec-title" id="riferimenti">Riferimenti</h3>
+        <table class="rif">
+            <thead>
+                <tr>
+                    <th style="width:26%;">Organismo</th>
+                    <th style="width:36%;">Cosa definisce</th>
+                    <th style="width:38%;">Fonte</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td data-lbl="Organismo"><strong>WMO</strong><br>Organizzazione Meteorologica Mondiale</td>
+                    <td data-lbl="Cosa definisce">Valori normali climatici, trentennio di riferimento, criteri di completezza dei dati (WMO-No. 1203)</td>
+                    <td data-lbl="Fonte"><a href="https://library.wmo.int/idurl/4/55797" target="_blank" rel="noopener">library.wmo.int &ndash; WMO-No. 1203</a></td>
+                </tr>
+                <tr>
+                    <td data-lbl="Organismo"><strong>WMO</strong><br>Guida all'SPI</td>
+                    <td data-lbl="Cosa definisce">Calcolo e interpretazione dello Standardized Precipitation Index, classi di siccit&agrave;, scale temporali (WMO-No. 1090, 2012)</td>
+                    <td data-lbl="Fonte"><a href="https://library.wmo.int/records/item/39629-standardized-precipitation-index-user-guide" target="_blank" rel="noopener">library.wmo.int &ndash; WMO-No. 1090</a></td>
+                </tr>
+                <tr>
+                    <td data-lbl="Organismo"><strong>McKee, Doesken, Kleist</strong><br>Colorado State University, 1993</td>
+                    <td data-lbl="Cosa definisce">Articolo originale che introduce l'SPI e le sue scale temporali (8th Conference on Applied Climatology, AMS)</td>
+                    <td data-lbl="Fonte"><a href="https://www.droughtmanagement.info/literature/AMS_Relationship_Drought_Frequency_Duration_Time_Scales_1993.pdf" target="_blank" rel="noopener">The relationship of drought frequency and duration to time scales (PDF)</a></td>
+                </tr>
+                <tr>
+                    <td data-lbl="Organismo"><strong>ETCCDI</strong><br>Expert Team on Climate Change Detection and Indices</td>
+                    <td data-lbl="Cosa definisce">Definizione di giorno piovoso (&ge; 1 mm), indici percentilici R95p / R99p e indici di durata CDD / CWD</td>
+                    <td data-lbl="Fonte"><a href="https://etccdi.pacificclimate.org/list_27_indices.shtml" target="_blank" rel="noopener">etccdi.pacificclimate.org</a></td>
+                </tr>
+                <tr>
+                    <td data-lbl="Organismo"><strong>IPCC</strong><br>Sesto rapporto di valutazione (AR6)</td>
+                    <td data-lbl="Cosa definisce">Indici di estremi climatici usati nella valutazione internazionale</td>
+                    <td data-lbl="Fonte"><a href="https://www.ipcc.ch/report/ar6/wg1/downloads/report/IPCC_AR6_WGI_AnnexVI.pdf" target="_blank" rel="noopener">IPCC AR6 WGI, Annex VI</a></td>
+                </tr>
+                <tr>
+                    <td data-lbl="Organismo"><strong>U.S. Drought Monitor</strong><br>NOAA / USDA / NDMC</td>
+                    <td data-lbl="Cosa definisce">Classificazione della siccit&agrave; per intervalli di percentile</td>
+                    <td data-lbl="Fonte"><a href="https://droughtmonitor.unl.edu/About/AbouttheData/DroughtClassification.aspx" target="_blank" rel="noopener">droughtmonitor.unl.edu</a></td>
+                </tr>
+                <tr>
+                    <td data-lbl="Organismo"><strong>ISPRA &ndash; SCIA</strong><br>Sistema nazionale dati climatici</td>
+                    <td data-lbl="Cosa definisce">Indicatori climatici italiani, indici di estremi basati sui percentili</td>
+                    <td data-lbl="Fonte"><a href="https://scia.isprambiente.it/" target="_blank" rel="noopener">scia.isprambiente.it</a></td>
+                </tr>
+                <tr>
+                    <td data-lbl="Organismo"><strong>ISPRA</strong><br>Valori climatici normali</td>
+                    <td data-lbl="Cosa definisce">Normali climatiche di temperatura e precipitazione in Italia, calcolate con criteri WMO</td>
+                    <td data-lbl="Fonte"><a href="https://valori-climatici-normali.isprambiente.it/" target="_blank" rel="noopener">valori-climatici-normali.isprambiente.it</a></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 class="sec-title" id="note">Note di lettura</h3>
+        <ul>
+            <li><strong>Mediana (p50)</strong>: met&agrave; degli anni osservati sta sopra,
+                met&agrave; sotto. &Egrave; l'altezza della barra.</li>
+            <li><strong>p25&ndash;p75</strong>: la met&agrave; centrale degli anni. Un valore
+                in questo intervallo &egrave; ordinario.</li>
+            <li><strong>p10&ndash;p90</strong>: l'80% centrale degli anni. Uscirne, in alto o
+                in basso, indica un'annata notevole (circa una su dieci).</li>
+            <li>L'<strong>anno in corso non entra</strong> nel calcolo della climatologia:
+                sarebbe il valore stesso che si sta confrontando.</li>
+            <li>I <strong>valori in corso</strong> (righe rossa e arancione) sono ricalcolati
+                a ogni caricamento e si aggiornano durante la giornata; mediana e percentili,
+                che cambiano al massimo una volta al giorno, sono invece messi in cache.</li>
+            <li>Su finestre molto corte &mdash; per esempio i primi giorni di un mese in
+                modalit&agrave; <span class="btn-sample">Fino ad oggi</span> &mdash; i
+                percentili si appiattiscono su pochi valori interi e diventano poco
+                informativi: &egrave; un limite statistico, non un errore del calcolo.</li>
+            <li><strong>Sequenze</strong>: un giorno mancante interrompe la sequenza e ne
+                genera due pi&ugrave; corte. &Egrave; il comportamento voluto &mdash; unire due
+                tronconi attraverso un buco inventerebbe una siccit&agrave; mai osservata
+                &mdash; ed &egrave; un altro motivo per cui gli anni incompleti sono esclusi in
+                blocco.</li>
+            <li>I <strong>massimi storici</strong> delle sequenze sono singoli episodi, non
+                statistiche: uno solo per mese. Vanno letti come indicazione di quanto
+                pu&ograve; arrivare a durare un caso estremo, non come valori attesi.</li>
+            <li>In fondo a ogni grafico sono riportati il periodo di climatologia, la soglia del
+                giorno di pioggia e gli eventuali anni esclusi.</li>
+        </ul>
+        <h4 class="sub-title-info">Grafico SPI</h4>
+        <ul>
+            <li><strong>SPI 0</strong>: situazione tipica. <strong>Negativo</strong>: pi&ugrave;
+                secco del normale. <strong>Positivo</strong>: pi&ugrave; piovoso.</li>
+            <li>Fra &minus;1 e +1 si &egrave; <strong>nella norma</strong>, dove cadono circa due
+                anni su tre.</li>
+            <li>Ogni <strong>cella della striscia</strong> valuta i tre (SPI-3) o sei (SPI-6) mesi
+                che terminano in quel mese, non il mese da solo.</li>
+            <li>Il <strong>mese in corso</strong> &egrave; sempre l'ultimo della finestra: il primo
+                del mese la finestra scorre e il valore pu&ograve; cambiare anche senza pioggia.</li>
+            <li>SPI-3 e SPI-6 possono dire cose diverse: un mese piovoso dopo una lunga
+                siccit&agrave; riporta l'SPI-3 nella norma prima dell'SPI-6.</li>
+        </ul>
+
+    </main>
+
+    <!-- ====================================================================
+         JAVASCRIPT - toggle menu (identico alle altre pagine)
+         ==================================================================== -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var menuToggle = document.querySelector('.menu-toggle');
+        var submenu    = document.querySelector('.submenu');
+        var autoCloseTimer = null;
+
+        function openMenu() {
+            submenu.classList.add('active');
+            clearTimeout(autoCloseTimer);
+            autoCloseTimer = setTimeout(closeMenu, 5000);
+        }
+        function closeMenu() {
+            submenu.classList.remove('active');
+            clearTimeout(autoCloseTimer);
+            document.querySelectorAll('.submenu-item.has-sub.sub-active')
+                .forEach(function(el) { el.classList.remove('sub-active'); });
+        }
+
+        menuToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (submenu.classList.contains('active')) closeMenu();
+            else openMenu();
+        });
+
+        // Chiude cliccando fuori
+        document.addEventListener('click', function(e) {
+            if (!submenu.contains(e.target) && !menuToggle.contains(e.target)) closeMenu();
+        });
+
+        // Sotto-menu annidato "Statistiche"
+        document.querySelectorAll('.submenu-item.has-sub').forEach(function(item) {
+            item.addEventListener('click', function(e) {
+                if (e.target.closest('.sub-submenu')) return; // click su una voce interna
+                e.stopPropagation();
+                clearTimeout(autoCloseTimer);
+                autoCloseTimer = setTimeout(closeMenu, 5000);
+                item.classList.toggle('sub-active');
+            });
+        });
+    });
+    </script>
+
+</body>
+</html>

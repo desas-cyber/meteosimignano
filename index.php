@@ -569,7 +569,7 @@ require_once __DIR__ . '/camera_config.php';
                     <span class="submenu-item-label">Statistiche &#9658;</span>
                     <div class="sub-submenu">
                         <a href="stat_display.php" class="submenu-item" target="_blank">Tabelle</a>
-                        <a href="lavori_in_corso.html" class="submenu-item" target="_blank">Grafici</a>
+                        <a href="pluvio_stat_display.php" class="submenu-item" target="_blank">Pluvio</a>
                     </div>
                 </div>
                 <a href='grafici_termo_plotly.php?range=24h&visible=' class="submenu-item">Grafici</a>

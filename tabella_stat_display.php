@@ -565,11 +565,13 @@ $copertura = $response['copertura'] ?? ['oggi'=>1.0,'p10'=>1.0,'mese'=>1.0,'anno
         NA<span style="color:#c00;font-size:0.85em;vertical-align:super;">*</span>
         = non calcolabile per dati incompleti
     </div>
-    <?php if ($righe_diff !== null): ?>
-        Differenza: anno corrente &minus; stesso periodo anno precedente
-    <?php else: ?>
-        Differenza: valore selezionato &minus; dato attuale
-    <?php endif; ?>
+        <div style="font-size:10px; color:#777; text-align:center; margin-top:3px;">
+        <?php if ($righe_diff !== null): ?>
+            Differenza: anno corrente &minus; stesso periodo anno precedente
+        <?php else: ?>
+            Differenza: valore selezionato &minus; dato attuale
+        <?php endif; ?>
+    </div>
 </div>
 <div style="font-size:10px; color:#555; margin-top:3px; padding:0 8px; display:flex; flex-wrap:wrap; gap:8px; justify-content:center; box-sizing:border-box;">
     <?php foreach ([2.01, 1.0, 0.0, -1.0, -2.01] as $campione):

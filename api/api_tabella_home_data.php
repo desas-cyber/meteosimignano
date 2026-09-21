@@ -44,6 +44,9 @@ function getMeteoData(PDO $pdo): array {
     $now_1h_plus = $now;
     $now_1h_minus = $now;
     $now_1h_center = $now;
+    $now_3h_plus = $now;
+    $now_3h_minus = $now;
+    $now_3h_center = $now;
     
     
     $today = get_now('Y-m-d');
@@ -103,8 +106,8 @@ SELECT
     SELECT temperatura_C
     FROM $table
     WHERE temperatura_C IS NOT NULL
-      AND data_ora >= DATE_SUB(:now_1h_plus, INTERVAL 120 MINUTE)
-      AND data_ora <  DATE_SUB(:now_1h_minus, INTERVAL 60 MINUTE)
+      AND data_ora >= DATE_SUB(:now_1h_plus, INTERVAL 75 MINUTE)
+      AND data_ora <  DATE_SUB(:now_1h_minus, INTERVAL 45 MINUTE)
     ORDER BY ABS(
       TIME_TO_SEC(
         TIMEDIFF(
@@ -122,9 +125,9 @@ SELECT
   (
     SELECT pressione_hPa
     FROM $table
-    WHERE pressione_hPa IS NOT NULL
-      AND data_ora >= DATE_SUB(:now_1h_plus, INTERVAL 120 MINUTE)
-      AND data_ora <  DATE_SUB(:now_1h_minus, INTERVAL 60 MINUTE)
+        WHERE pressione_hPa IS NOT NULL
+      AND data_ora >= DATE_SUB(:now_1h_plus, INTERVAL 75 MINUTE)
+      AND data_ora <  DATE_SUB(:now_1h_minus, INTERVAL 45 MINUTE)
     ORDER BY ABS(
       TIME_TO_SEC(
         TIMEDIFF(
@@ -137,6 +140,27 @@ SELECT
   ),
   NULL
 ) AS press_1h_ago,
+
+  -- VALORE 3H FA (tendenza barica sinottica)
+  COALESCE(
+  (
+    SELECT pressione_hPa
+    FROM $table
+    WHERE pressione_hPa IS NOT NULL
+      AND data_ora >= DATE_SUB(:now_3h_plus, INTERVAL 195 MINUTE)
+      AND data_ora <  DATE_SUB(:now_3h_minus, INTERVAL 165 MINUTE)
+    ORDER BY ABS(
+      TIME_TO_SEC(
+        TIMEDIFF(
+          data_ora,
+          DATE_SUB(:now_3h_center, INTERVAL 180 MINUTE)
+        )
+      )
+    ) ASC
+    LIMIT 1
+  ),
+  NULL
+) AS press_3h_ago,
 
   -- MAX/MIN OGGI
   (SELECT MAX(temperatura_C) FROM $table WHERE temperatura_C IS NOT NULL AND DATE(data_ora) = :today) AS temp_max_today,
@@ -232,6 +256,9 @@ FROM (
     ':now_1h_plus' => $now_1h_plus,         // ✨ Nuova
     ':now_1h_minus' => $now_1h_minus,       // ✨ Nuova
     ':now_1h_center' => $now_1h_center,       // ✨ Nuova
+    ':now_3h_plus' => $now_3h_plus,
+    ':now_3h_minus' => $now_3h_minus,
+    ':now_3h_center' => $now_3h_center,
     ':today' => $today,
     ':yesterday' => $yesterday
 ]);
@@ -263,9 +290,20 @@ FROM (
         ? round($raw['press_act'] - $raw['press_24h_ago'], 1)
         : null;
     
-    $press_delta_1h = isset($raw['press_act'], $raw['press_1h_ago'])
+       $press_delta_1h = isset($raw['press_act'], $raw['press_1h_ago'])
         ? round($raw['press_act'] - $raw['press_1h_ago'], 1)
         : null;
+    
+        $press_delta_3h = isset($raw['press_act'], $raw['press_3h_ago'])
+        ? round($raw['press_act'] - $raw['press_3h_ago'], 1)
+        : null;
+    
+    // Guardia anti-sentinella: scarta delta fisicamente impossibili.
+    // In archivio esistono valori tipo -1006 hPa/3h, da zeri nella colonna pressione.
+    if ($press_delta_1h  !== null && abs($press_delta_1h)  > 10) { $press_delta_1h  = null; }
+    if ($press_delta_3h  !== null && abs($press_delta_3h)  > 15) { $press_delta_3h  = null; }
+    if ($press_delta_24h !== null && abs($press_delta_24h) > 40) { $press_delta_24h = null; }
+    if ($temp_delta_1h   !== null && abs($temp_delta_1h)   > 20) { $temp_delta_1h   = null; }
     
     // Delta max/min vs ieri
     $temp_max_delta = isset($raw['temp_max_today'], $raw['temp_max_yesterday'])
@@ -288,6 +326,10 @@ FROM (
     $txtDelta1t = ($temp_delta_1h === null)
     ? 'N/A'
     : formatDelta($temp_delta_1h);
+
+    $txtDelta3p = ($press_delta_3h === null)
+    ? 'N/A'
+    : (formatDelta($press_delta_3h) . ' hPa');
     
     // ========================================================================
     // DATI ASTRONOMICI (cache giornaliera)
@@ -304,22 +346,44 @@ FROM (
     // ALERTS / ANOMALIE
     // ========================================================================
     $alerts = [];
-    
-    if ($temp_delta_1h !== null && $temp_delta_1h < -5 || $temp_delta_1h > 5) {
+
+    // ---- LIVELLO A: regole validate su 522 giorni di archivio ----
+
+    // Crollo termico 1h: 13 casi, tutti tra giugno e settembre, 10 seguiti da
+    // pioggia. E' un rilevatore di outflow convettivo, non di fronti.
+    if ($temp_delta_1h !== null && $temp_delta_1h <= -5) {
         $alerts[] = [
-            'type' => 'warning',
+            'type'     => 'warning',
             'severity' => 'high',
-            'metric' => 'temperatura',
-            'message' => "Rapida variazione temperatura: {$temp_delta_24h}°C in 1h"
+            'metric'   => 'temperatura',
+            'delta'    => $temp_delta_1h,
+            'message'  => "Crollo termico: " . formatDelta($temp_delta_1h) . " \u{00B0}C in 1h - probabile outflow temporalesco"
         ];
     }
-    
-    if ($press_delta_1h !== null && abs($press_delta_1h) > 2) {
+
+    // Salto barico 1h: ~15 eventi/anno, 92% con pioggia
+    if ($press_delta_1h !== null && abs($press_delta_1h) >= 2) {
         $alerts[] = [
-            'type' => 'info',
-            'severity' => 'medium',
-            'metric' => 'pressione',
-            'message' => "Rapida variazione pressione: " . ($press_delta_1h > 0 ? '+' : '') . "{$press_delta_1h} hPa in 1h"
+            'type'     => 'warning',
+            'severity' => 'high',
+            'metric'   => 'pressione',
+            'delta'    => $press_delta_1h,
+            'message'  => ($press_delta_1h < 0)
+                ? "Caduta barica rapida: " . formatDelta($press_delta_1h) . " hPa in 1h - peggioramento probabile"
+                : "Rialzo barico rapido: " . formatDelta($press_delta_1h) . " hPa in 1h - outflow temporalesco o rimonta"
+        ];
+    }
+
+        // Tendenza barica 3h in caduta: 19 casi in archivio, 89% seguiti da pioggia
+    // (base 46%), p=0.00007. Il ramo in rialzo e' escluso: 42% di piovosi,
+    // sotto la base, nessun potere predittivo.
+    if ($press_delta_3h !== null && $press_delta_3h <= -3) {
+        $alerts[] = [
+            'type'     => 'warning',
+            'severity' => 'high',
+            'metric'   => 'pressione',
+            'delta'    => $press_delta_3h,
+            'message'  => "Pressione in calo marcato: " . formatDelta($press_delta_3h) . " hPa in 3h - peggioramento probabile"
         ];
     }
     
@@ -492,12 +556,20 @@ FROM (
 
         [
             'type' => 'data',
-            'label' => 'Pressione @lm max e ora',
+            'label' => 'Pressione @lm min e ora',
             'value' => formatValue($raw['press_min_today'], '°C', 1). ' ' . formatTime($raw['press_min_time']),
             'note' => '',
             'separator' => true
         ],
         
+                [
+            'type' => 'data',
+            'label' => "\u{0394}hPa - 3 ore",
+            'value' => $txtDelta3p,
+            'note' => createPressureTrendIndicator($press_delta_3h) . ' tendenza sinottica',
+            'separator' => true
+        ],
+
         // ---- SEZIONE VENTO ----
         [
             'type' => 'data',
@@ -597,6 +669,7 @@ FROM (
             'temp_delta_1h' => $temp_delta_1h,
             'press_delta_24h' => $press_delta_24h,
             'press_delta_1h' => $press_delta_1h,
+            'press_delta_3h' => $press_delta_3h,
             'astro' => $astro,
             'radianza' => $radianza
         ])
