@@ -470,22 +470,34 @@ if (!isset($mainImageDate)) {
                     frameborder="0"
                     title="Soglie termiche"></iframe>
         </div>
+        <!-- BLOCCO 3bis: periodo in corso rispetto al clima -->
+            <div class="stat-section-header">
+                <h2 class="stat-section-title">Pioggia rispetto al clima</h2>
+                <a href="#" class="stat-section-cta" id="btn-grafico-stat3bis" data-iframe="stat-iframe-tab3bis" data-src="grafico_stat3bis_display.php" data-mode="tabella">&#128200;&nbsp;Grafico</a>
+            </div>
+            <div class="stat-table-block">
+                <div id="placeholder-tab3bis" class="stat-table-placeholder">Caricamento dati...</div>
+                <iframe src="tabella_stat_3bis_display.php"
+                        id="stat-iframe-tab3bis"
+                        width="100%"
+                        frameborder="0"
+                        title="Pioggia rispetto al clima"></iframe>
+            </div>
+                    <!-- TABELLA 3: Record pioggia per durata -->
+                    <div class="stat-section-header">
+                        <h2 class="stat-section-title">Record pioggia</h2>
+                        <a href="#" class="stat-section-cta" id="btn-grafico-stat3" data-iframe="stat-iframe-tab3" data-src="grafico_stat3_display.php" data-mode="tabella">&#128200;&nbsp;Grafico</a>
+                    </div>
+                    <div class="stat-table-block">
+                        <div id="placeholder-tab3" class="stat-table-placeholder">Caricamento dati...</div>
+                        <iframe src="tabella_stat3_display.php"
+                                id="stat-iframe-tab3"
+                                width="100%"
+                                frameborder="0"
+                                title="Record pioggia"></iframe>
+                    </div>
 
-        <!-- TABELLA 3: Record pioggia per durata -->
-        <div class="stat-section-header">
-            <h2 class="stat-section-title">Record pioggia</h2>
-            <a href="#" class="stat-section-cta" id="btn-grafico-stat3" data-iframe="stat-iframe-tab3" data-src="grafico_stat3_display.php" data-mode="tabella">&#128200;&nbsp;Grafico</a>
-        </div>
-        <div class="stat-table-block">
-            <div id="placeholder-tab3" class="stat-table-placeholder">Caricamento dati...</div>
-            <iframe src="tabella_stat3_display.php"
-                    id="stat-iframe-tab3"
-                    width="100%"
-                    frameborder="0"
-                    title="Record pioggia"></iframe>
-        </div>
-
-    </main>
+                </main>
 
 
     <!-- JAVASCRIPT -->
@@ -680,6 +692,31 @@ btnDiff.addEventListener('click', function(e) {
             }
         });
     });
+
+    // Toggle grafico/tabella per stat3bis
+    document.addEventListener('DOMContentLoaded', function() {
+        var btn3 = document.getElementById('btn-grafico-stat3bis');
+        if (!btn3) return;
+        btn3.addEventListener('click', function(e) {
+            e.preventDefault();
+            var iframeId = btn3.getAttribute('data-iframe');
+            var src      = btn3.getAttribute('data-src');
+            var mode     = btn3.getAttribute('data-mode');
+            var fr = document.getElementById(iframeId);
+            if (!fr) return;
+            if (mode === 'tabella') {
+                if (!_iframeSrcOriginali[iframeId]) _iframeSrcOriginali[iframeId] = fr.src;
+                fr.src = src;
+                btn3.innerHTML = '&#8592;&nbsp;Tabella';
+                btn3.setAttribute('data-mode', 'grafico');
+            } else {
+                var srcOriginale = _iframeSrcOriginali[iframeId];
+                if (srcOriginale) fr.src = srcOriginale;
+                btn3.innerHTML = '&#128200;&nbsp;Grafico';
+                btn3.setAttribute('data-mode', 'tabella');
+            }
+        });
+    });
     </script>
 
     <script>
@@ -745,6 +782,7 @@ btnDiff.addEventListener('click', function(e) {
         var tabelle_ids = [
             'stat-iframe-tab1',
             'stat-iframe-tab2',
+            'stat-iframe-tab3bis',
             'stat-iframe-tab3'
             /* Aggiungi: 'stat-iframe-tab4', ... */
         ];
