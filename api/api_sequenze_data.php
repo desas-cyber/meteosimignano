@@ -2,6 +2,7 @@
 /**
  * ============================================================================
  * SEQUENZE SECCHE E PIOVOSE - DATA LAYER  api/api_sequenze_data.php
+ * Versione 4.0 - 02/10/2026
  * ============================================================================
  *
  * RESPONSABILITA':
@@ -15,6 +16,15 @@
  *     climatologia del proprio mese, e statistica CONDIZIONATA: fra le
  *     sequenze storiche che hanno raggiunto la stessa durata, quanto sono
  *     poi arrivate a durare.
+ * - SEQUENZE PER ANNO (in cache con la climatologia):
+ *     ogni sequenza conclusa, attribuita all'anno e al giorno in cui INIZIA,
+ *     come voce compatta [mese, giorno, durata, mm]: mm e' la pioggia
+ *     complessiva della sequenza per le piovose, null per le secche.
+ *     Alimenta le barre del
+ *     grafico e il confronto fra anni. La sequenza partita il 26 dicembre
+ *     appartiene a quell'anno anche se prosegue in gennaio.
+ *     Per l'anno in corso la parte in cache viene completata con i dati
+ *     freschi (sequenza in corso e ultime concluse): vedi seqUnisciFreschi().
  * - ULTIMA SEQUENZA CONCLUSA per ciascun tipo (anch'essa fresca):
  *     e' la sequenza chiusa piu' recente di quel tipo. Per il tipo in corso
  *     e' quella che lo precede a parita' di tipo; per l'altro tipo e' quella
@@ -66,7 +76,7 @@ const SEQ_ANNO_MIN       = 2001;
 const SEQ_COPERTURA_MIN  = 0.90;
 const SEQ_MIN_SEQUENZE   = 8;      // sotto questa soglia il mese non ha percentili
 const SEQ_CACHE_ATTIVA   = true;
-const SEQ_CACHE_VERSIONE = 2;      // INCREMENTARE ad ogni modifica del payload
+const SEQ_CACHE_VERSIONE = 4;      // INCREMENTARE ad ogni modifica del payload (v4: mm nelle sequenze di 'anni')
 
 const SEQ_MESI_BREVI = ['', 'gen', 'feb', 'mar', 'apr', 'mag', 'giu',
                         'lug', 'ago', 'set', 'ott', 'nov', 'dic'];
@@ -91,7 +101,9 @@ function seqPdoScrittura(): ?PDO {
 // ---------------------------------------------------------------------------
 /**
  * @param string|null $data_rif 'Y-m-d' (default: oggi via get_now)
- * @return array { success, meta, mesi:{secca:[12], piovosa:[12]}, corrente, ultime }
+ * @return array { success, meta, mesi:{secca:[12], piovosa:[12]}, anni, corrente, ultime }
+ *         anni: { "2025": { secca:[[m,g,n,null],...], piovosa:[[m,g,n,mm],...] }, ... }
+ *               la sequenza in corso porta un quinto elemento: 1
  */
 function getSequenzeData($data_rif = null) {
     $pdo_r = seqPdoLettura();
@@ -119,6 +131,9 @@ function getSequenzeData($data_rif = null) {
     $corr = seqCorrente($pdo_r, $oggi_str, $clima['durate']);
     if (empty($corr['success'])) return $corr;
 
+    // ---- sequenze per anno: cache + dati freschi dell'anno in corso ----
+    $anni = seqUnisciFreschi($clima['anni'] ?? [], $corr['corrente'], $corr['ultime']);
+
     return [
         'success'  => true,
         'meta'     => array_merge($clima['meta'], [
@@ -126,6 +141,7 @@ function getSequenzeData($data_rif = null) {
             'correnti_aggiornati' => get_now('H:i'),
         ]),
         'mesi'     => $clima['mesi'],
+        'anni'     => $anni,
         'corrente' => $corr['corrente'],
         'ultime'   => $corr['ultime'],
     ];
@@ -182,6 +198,8 @@ function seqClimatologia(PDO $pdo_r, string $oggi_str): array {
     // Record del mese: durata massima e data in cui quella sequenza e' iniziata.
     // Serve a mostrare "massimo storico: 7 gg (set 2011)" invece del solo numero.
     $record = ['secca' => [], 'piovosa' => []];
+    // Sequenze per anno di inizio: anno => tipo => [[mese, giorno, durata, mm], ...]
+    $per_anno = [];
     for ($m = 1; $m <= 12; $m++) {
         $durate['secca'][$m] = []; $durate['piovosa'][$m] = [];
         $record['secca'][$m] = null; $record['piovosa'][$m] = null;
@@ -189,10 +207,16 @@ function seqClimatologia(PDO $pdo_r, string $oggi_str): array {
 
     $tipo_cur = null; $len = 0; $mese_ini = null; $data_ini = null; $prec_ts = null;
     $ultimo_ds = null;
+    $mm_cur = 0.0;   // pioggia accumulata dalla sequenza aperta
 
-    $chiudi = function () use (&$tipo_cur, &$len, &$mese_ini, &$data_ini, &$ultimo_ds, &$durate, &$record) {
+    $chiudi = function () use (&$tipo_cur, &$len, &$mese_ini, &$data_ini, &$ultimo_ds, &$durate, &$record, &$per_anno, &$mm_cur) {
         if ($tipo_cur !== null && $len > 0 && $mese_ini !== null) {
             $durate[$tipo_cur][$mese_ini][] = $len;
+            $a = (int)substr($data_ini, 0, 4);
+            if (!isset($per_anno[$a])) $per_anno[$a] = ['secca' => [], 'piovosa' => []];
+            // mm complessivi solo per le piovose: per le secche non servono
+            $per_anno[$a][$tipo_cur][] = [$mese_ini, (int)substr($data_ini, 8, 2), $len,
+                                          $tipo_cur === 'piovosa' ? round($mm_cur, 1) : null];
             $prec = $record[$tipo_cur][$mese_ini];
             // A parita' di durata tiene il primo osservato: il record piu' antico
             if ($prec === null || $len > $prec['len']) {
@@ -203,7 +227,7 @@ function seqClimatologia(PDO $pdo_r, string $oggi_str): array {
                 ];
             }
         }
-        $tipo_cur = null; $len = 0; $mese_ini = null; $data_ini = null;
+        $tipo_cur = null; $len = 0; $mese_ini = null; $data_ini = null; $mm_cur = 0.0;
     };
 
     foreach ($righe as $r) {
@@ -218,9 +242,11 @@ function seqClimatologia(PDO $pdo_r, string $oggi_str): array {
         $tipo = ((float)$r['mm'] >= SEQ_SOGLIA) ? 'piovosa' : 'secca';
         if ($tipo === $tipo_cur) {
             $len++;
+            $mm_cur += (float)$r['mm'];
         } else {
             $chiudi();
             $tipo_cur = $tipo; $len = 1;
+            $mm_cur = (float)$r['mm'];
             $mese_ini = (int)substr($ds, 5, 2);
             $data_ini = $ds;
         }
@@ -258,6 +284,7 @@ function seqClimatologia(PDO $pdo_r, string $oggi_str): array {
             'esclusi'       => $esclusi,
         ],
         'mesi'    => $mesi,
+        'anni'    => $per_anno, // solo sequenze CONCLUSE; l'anno in corso si completa a valle
         'durate'  => $durate,   // serve alla statistica condizionata, non va al display
     ];
 }
@@ -343,9 +370,10 @@ function seqCorrente(PDO $pdo_r, string $oggi_str, array $durate): array {
                 $run[] = $cur;
                 if (count($run) >= 3) { $cur = null; break; }
             }
-            $cur = ['tipo' => $t, 'len' => 0, 'inizio' => $ds, 'fine' => $ds, 'chiusa' => false];
+            $cur = ['tipo' => $t, 'len' => 0, 'mm' => 0.0, 'inizio' => $ds, 'fine' => $ds, 'chiusa' => false];
         }
         $cur['len']++;
+        $cur['mm'] += (float)$r['mm'];   // pioggia complessiva della sequenza
         $cur['inizio'] = $ds;
         $prec_ts = $ts;
     }
@@ -408,6 +436,8 @@ function seqDescrivi(array $r, array $durate): array {
     return [
         'tipo'        => $r['tipo'],
         'giorni'      => $r['len'],
+        // mm complessivi: il display li mostra solo per le sequenze piovose
+        'mm'          => isset($r['mm']) ? round((float)$r['mm'], 1) : null,
         'data_inizio' => $r['inizio'],
         'data_fine'   => $r['fine'],
         'mese_inizio' => $mese_ini,
@@ -415,6 +445,57 @@ function seqDescrivi(array $r, array $durate): array {
         'percentile'  => $perc,
         'n_storiche'  => count($storiche),
     ];
+}
+
+
+// ---------------------------------------------------------------------------
+// SEQUENZE PER ANNO: unione con i dati freschi
+// ---------------------------------------------------------------------------
+/**
+ * La parte in cache contiene solo le sequenze CONCLUSE al momento del
+ * calcolo. Nel corso della giornata puo' cambiare qualcosa:
+ *  - la sequenza aperta non e' mai in cache: arriva da seqCorrente();
+ *  - se oggi la pioggia supera la soglia, la sequenza secca che era aperta
+ *    al momento del calcolo si chiude e diventa l'ULTIMA CONCLUSA: anche lei
+ *    manca in cache.
+ * Si aggiungono quindi corrente e ultime, ciascuna nell'anno in cui inizia.
+ * Chiave di confronto: tipo + giorno di inizio. Se la sequenza c'e' gia',
+ * vale la durata fresca.
+ *
+ * Ogni voce e' [mese, giorno, durata, mm] (mm null per le secche). La
+ * sequenza in corso porta un quinto elemento (1): e' aperta, la sua durata
+ * crescera'.
+ */
+function seqUnisciFreschi(array $anni, ?array $corrente, ?array $ultime): array {
+    $freschi = [];
+    foreach (['secca', 'piovosa'] as $t) {
+        if (!empty($ultime[$t])) $freschi[] = [$ultime[$t], false];
+    }
+    if (!empty($corrente)) $freschi[] = [$corrente, true];
+
+    foreach ($freschi as [$s, $aperta]) {
+        if (empty($s['data_inizio']) || empty($s['giorni'])) continue;
+        $a    = (int)substr($s['data_inizio'], 0, 4);
+        $m    = (int)substr($s['data_inizio'], 5, 2);
+        $g    = (int)substr($s['data_inizio'], 8, 2);
+        $tipo = $s['tipo'];
+        if (!isset($anni[$a])) $anni[$a] = ['secca' => [], 'piovosa' => []];
+
+        $mm   = ($tipo === 'piovosa' && isset($s['mm'])) ? $s['mm'] : null;
+        $voce = $aperta ? [$m, $g, (int)$s['giorni'], $mm, 1] : [$m, $g, (int)$s['giorni'], $mm];
+        $trovata = false;
+        foreach ($anni[$a][$tipo] as $k => $v) {
+            if ($v[0] === $m && $v[1] === $g) { $anni[$a][$tipo][$k] = $voce; $trovata = true; break; }
+        }
+        if (!$trovata) {
+            $anni[$a][$tipo][] = $voce;
+            usort($anni[$a][$tipo], function ($x, $y) {
+                return ($x[0] * 100 + $x[1]) <=> ($y[0] * 100 + $y[1]);
+            });
+        }
+    }
+    ksort($anni);
+    return $anni;
 }
 
 

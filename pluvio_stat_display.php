@@ -284,8 +284,9 @@
                 <div class="submenu-item has-sub">
                     <span class="submenu-item-label">Statistiche &#9658;</span>
                     <div class="sub-submenu">
-                        <a href="stat_display.php" class="submenu-item" >Tabelle</a>
-                        <a href="lavori_in_corso.html" class="submenu-item" >Grafici</a>
+                        <a href="stat_display.php" class="submenu-item" target="_blank">Tabelle</a>
+                        <a href="termo_stat_display.php" class="submenu-item" target="_blank">Termo</a>
+                        <a href="pluvio_stat_display.php" class="submenu-item" target="_blank">Pluvio</a>
                     </div>
                 </div>
                 <a href="#" class="submenu-item" onclick="window.open('classifica_immagini.php?token=', '_blank'); return false;">Admin</a>

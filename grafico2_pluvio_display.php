@@ -358,24 +358,33 @@ var spiPlugin = {
             ctx.stroke();
         }
 
-        // ---- separatori ed etichette dei mesi ----
+                // ---- separatori ed etichette dei mesi (etichetta sul 1° del mese) ----
         var acc = 0;
         ctx.font = 'bold 9px Arial';
-        ctx.textAlign = 'center';
+        ctx.textAlign = 'left';
         ctx.textBaseline = 'top';
         s.mesi.forEach(function(m, k) {
+            var x0 = xp(acc);   // confine = inizio del giorno 1 del mese
             if (k > 0) {
-                ctx.strokeStyle = 'rgba(128,128,128,0.22)';
+                ctx.strokeStyle = 'rgba(128,128,128,0.85)';
                 ctx.lineWidth = 1;
                 ctx.setLineDash([3, 3]);
                 ctx.beginPath();
-                ctx.moveTo(xp(acc), ca.top);
-                ctx.lineTo(xp(acc), ca.bottom);
+                ctx.moveTo(x0, ca.top);
+                ctx.lineTo(x0, ca.bottom);
                 ctx.stroke();
                 ctx.setLineDash([]);
             }
+            // tacca sotto l'asse in corrispondenza del 1° del mese
+            ctx.strokeStyle = 'rgba(128,128,128,0.85)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(x0, ca.bottom);
+            ctx.lineTo(x0, ca.bottom + 4);
+            ctx.stroke();
+
             ctx.fillStyle = (k === s.mesi.length - 1) ? COL.corr : COL.testo;
-            ctx.fillText(m.nome, xp(acc + m.giorni / 2), ca.bottom + 4);
+            ctx.fillText(m.nome, x0 + 2, ca.bottom + 4);
             acc += m.giorni;
         });
 

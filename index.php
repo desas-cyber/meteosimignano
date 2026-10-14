@@ -569,6 +569,7 @@ require_once __DIR__ . '/camera_config.php';
                     <span class="submenu-item-label">Statistiche &#9658;</span>
                     <div class="sub-submenu">
                         <a href="stat_display.php" class="submenu-item" target="_blank">Tabelle</a>
+                        <a href="termo_stat_display.php" class="submenu-item" target="_blank">Termo</a>
                         <a href="pluvio_stat_display.php" class="submenu-item" target="_blank">Pluvio</a>
                     </div>
                 </div>

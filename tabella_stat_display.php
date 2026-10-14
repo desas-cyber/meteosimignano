@@ -11,6 +11,21 @@
  *
  * STRUTTURA COLONNE:
  *   | Parametro | ieri | 10 gg prima | mese | anno |
+ *
+ * BARRA STI (colonna mese, righe T media / Max media / Min media):
+ *   indice termico standardizzato a 1 mese, da api_termo_stat_data.php.
+ *   - mese in corso : stima al giorno corrente (barra tratteggiata, parziale)
+ *   - mese intero   : valore definitivo del mese chiuso
+ *   - mese troncato da una selezione, o modalita' "Delta Anno": nessuna barra
+ *
+ * BARRA ANOMALIA (colonne ieri, 10 gg e anno): scarto in gradi dalla norma
+ *   di quei giorni (termoNormaPeriodo, curva vincolata alle 12 normali mensili).
+ *   - ieri  : solo T media (Max abs e Min abs senza barra, come nelle
+ *             altre colonne)
+ *   - 10 gg : T media, Max media, Min media
+ *   - anno  : T media, Max media, Min media, dal 1 gennaio all'ultimo giorno
+ *             mostrato; solo se quasi tutti i giorni hanno il dato
+ *   Non e' un indice standardizzato: solo gradi, due colori, niente classi.
  */
 
 ini_set('display_errors', 1);
@@ -19,6 +34,7 @@ error_reporting(E_ALL);
 
 require_once __DIR__ . '/../envelop.php';
 require_once __DIR__ . '/api/api_tabella_stat_data.php';
+require_once __DIR__ . '/api/api_termo_stat_data.php';   // indice STI (barra nella colonna mese)
 
 // Cella di raffronto non calcolabile: una delle due parti ha copertura
 // insufficiente. Diverso da 'N/D', che significa valore assente.
@@ -196,6 +212,160 @@ $headers   = $response['headers'];
 $righe     = $response['righe'];
 $meta      = $response['meta'];
 $copertura = $response['copertura'] ?? ['oggi'=>1.0,'p10'=>1.0,'mese'=>1.0,'anno'=>1.0];
+
+// ============================================================================
+// BARRE SOTTO I VALORI TERMICI
+// - mese       : indice STI a 1 mese, scala fissa -3 ... +3
+// - ieri, 10 gg: anomalia in gradi rispetto alla norma di quei giorni
+// Centro della barra = norma del periodo di riferimento.
+// Qualsiasi errore qui lascia la tabella com'e', senza barre.
+// ============================================================================
+const STI_BARRA_RIGHE  = ['T media' => 'media', 'Max media' => 'media_max', 'Min media' => 'media_min'];
+const STI_BARRA_SCALA  = 3.0;
+const STI_BARRA_COLORI = ['E-' => '#2166AC', 'M-' => '#4393C3', 'm-' => '#92C5DE', 'N' => '#8c8c8c',
+                          'm+' => '#F4A582', 'M+' => '#D6604D', 'E+' => '#B2182B'];
+
+// Anomalia: righe per colonna e fondo scala in gradi. Le scale coprono circa
+// il 99% degli scarti osservati nei dati reali apr 2025 - set 2026.
+const ANOM_RIGHE = [
+    'oggi' => ['T media' => 'media'],   // Max abs e Min abs senza barra, come nelle colonne 10 gg e mese
+    'p10'  => ['T media' => 'media', 'Max media' => 'media_max', 'Min media' => 'media_min'],
+    'anno' => ['T media' => 'media', 'Max media' => 'media_max', 'Min media' => 'media_min'],
+];
+// Anno: +/-3 copre il 99% degli scarti da aprile in poi nella serie 2003-2025
+// (a gennaio, con pochi giorni, circa una volta su dieci va a fondo scala).
+const ANOM_SCALA  = ['oggi' => 8.0, 'p10' => 6.0, 'anno' => 3.0];
+// Quota minima di giorni con il dato termico. L'anno e' piu' severo: la norma
+// e' calcolata su tutti i giorni del periodo, e giorni mancanti concentrati in
+// una stagione sposterebbero la media osservata (3% in inverno = circa 0,3 gradi).
+const ANOM_COPERTURA_MIN = ['oggi' => 0.75, 'p10' => 0.75, 'anno' => 0.97];
+const ANOM_COLORI = ['caldo' => '#D6604D', 'freddo' => '#4393C3'];
+
+/** Numero con segno e virgola decimale: +0,85 */
+function statStiNum(float $v, int $dec = 2): string {
+    $segno = $v > 0 ? '+' : ($v < 0 ? "\u{2212}" : '');
+    return $segno . number_format(abs($v), $dec, ',', '');
+}
+
+/**
+ * HTML di una barra centrata sulla norma. Il numero va a destra sulla riga
+ * del valore, la barra occupa tutta la larghezza della cella.
+ * $valore null = traccia vuota.
+ */
+function statBarra(?float $valore, float $scala, string $colore, string $numero, string $titolo, bool $tratteggio = false): string {
+    $t   = htmlspecialchars($titolo, ENT_QUOTES);
+    $num = '<span class="sti-num" title="' . $t . '">' . $numero . '</span>';
+    if ($valore === null) {
+        return $num . '<div class="sti-wrap" title="' . $t . '"><div class="sti-track"></div></div>';
+    }
+    $pct  = max(2.0, min(abs($valore), $scala) / $scala * 50.0);
+    $left = $valore >= 0 ? 50.0 : 50.0 - $pct;
+    return $num . '<div class="sti-wrap" title="' . $t . '">'
+         . '<div class="sti-track"><div class="sti-fill' . ($tratteggio ? ' parz' : '') . '" style="left:'
+         . round($left, 1) . '%;width:' . round($pct, 1) . '%;background-color:' . $colore . ';"></div></div></div>';
+}
+
+/**
+ * Barra dell'indice STI. $sti null = indice non ancora disponibile.
+ * $parziale = mese in corso: riempimento tratteggiato e "~" davanti al numero.
+ */
+function statBarraSti(?float $sti, bool $parziale, string $titolo): string {
+    if ($sti === null) return statBarra(null, STI_BARRA_SCALA, '', 'STI n/d', $titolo);
+    $cl = termoClasse($sti);
+    return statBarra($sti, STI_BARRA_SCALA, STI_BARRA_COLORI[$cl['id']] ?? '#8c8c8c',
+                     ($parziale ? '~' : '') . statStiNum($sti), $titolo, $parziale);
+}
+
+/** Barra dell'anomalia in gradi: valore osservato meno norma del periodo. */
+function statBarraAnomalia(float $anom, float $norma, float $scala): string {
+    $anom = round($anom, 1);
+    return statBarra($anom, $scala, ANOM_COLORI[$anom >= 0 ? 'caldo' : 'freddo'],
+                     statStiNum($anom, 1) . '&#176;',
+                     'Anomalia ' . statStiNum($anom, 1) . ' gradi (norma del periodo '
+                     . number_format($norma, 1, ',', '') . ' gradi)');
+}
+
+$barre     = ['oggi' => [], 'p10' => [], 'mese' => [], 'anno' => []];   // [colonna][label riga] => html
+$sti_nota  = null;    // righe di legenda sotto la tabella
+$anom_nota = null;
+
+if (!$modo_diff) {
+    try {
+        $termo = getTermoStatData(true);
+        if (!empty($termo['success'])) {
+            $mese_col    = substr($meta['mese_inizio'], 0, 7) . '-01';
+            $mese_intero = ($meta['mese_fine'] === date('Y-m-t', strtotime($mese_col)));
+            $ieri_termo  = date('Y-m-d', strtotime($termo['meta']['oggi'] . ' -1 day'));
+            $in_corso    = !$mese_intero
+                        && substr($mese_col, 0, 7) === substr($termo['meta']['oggi'], 0, 7)
+                        && $meta['mese_fine'] === $ieri_termo;
+            $rif = $termo['meta']['periodo_rif'];
+
+            if ($mese_intero) {
+                // Mese chiuso: valore definitivo dalla serie
+                foreach ($termo['serie'] as $r) {
+                    if ($r['mese'] !== $mese_col || !$r['valido']) continue;
+                    foreach (STI_BARRA_RIGHE as $label => $var) {
+                        $sti = $r[$var][1]['sti'] ?? null;
+                        if ($sti === null) continue;
+                        $barre['mese'][$label] = statBarraSti((float)$sti, false,
+                            'STI ' . statStiNum((float)$sti) . ' - ' . $r[$var][1]['classe']['label'] . ' (mese chiuso)');
+                    }
+                    $sti_nota = 'Colonna mese: indice STI (scala &minus;3 &hellip; +3, centro = norma ' . htmlspecialchars($rif) . ')';
+                }
+            } elseif ($in_corso) {
+                $stima = $termo['stima_oggi'];
+                foreach (STI_BARRA_RIGHE as $label => $var) {
+                    $f = $stima['var'][$var]['finestre'][1] ?? null;
+                    if ($f) {
+                        $barre['mese'][$label] = statBarraSti((float)$f['sti'], true,
+                            'STI ' . statStiNum((float)$f['sti']) . ' +/- ' . number_format((float)$f['sig_sti'], 2, ',', '')
+                            . ' - ' . $f['classe']['label'] . ' (stima su ' . $stima['giorni'] . ' giorni di ' . $stima['giorni_mese'] . ')');
+                    } else {
+                        $barre['mese'][$label] = statBarraSti(null, true,
+                            'Stima STI disponibile con almeno ' . TERMO_PROVV_GIORNI_MIN . ' giorni validi del mese');
+                    }
+                }
+                $sti_nota = $stima
+                    ? 'Colonna mese: indice STI (scala &minus;3 &hellip; +3, centro = norma ' . htmlspecialchars($rif)
+                      . '). Tratteggiata = stima parziale su ' . (int)$stima['giorni'] . ' giorni di ' . (int)$stima['giorni_mese']
+                    : 'Colonna mese: stima STI disponibile con almeno ' . TERMO_PROVV_GIORNI_MIN . ' giorni validi';
+            }
+
+            // ---- anomalie in gradi: ieri e 10 giorni ----
+            $periodi_anom = [
+                'oggi' => [$meta['oggi'],       $meta['oggi']],
+                'p10'  => [$meta['p10_inizio'], $meta['p10_fine']],
+                'anno' => [$meta['anno_inizio'], $meta['anno_fine']],
+            ];
+            foreach ($response['righe'] as $r) {
+                foreach ($periodi_anom as $col => [$da, $a]) {
+                    $var = ANOM_RIGHE[$col][$r['label'] ?? ''] ?? null;
+                    $oss = $r['raw'][$col] ?? null;
+                    if ($var === null || $oss === null || !is_numeric($oss)) continue;
+                    // giorni mancanti: la media osservata non copre il periodo della norma
+                    if (($response['copertura_eff']['termica'][$col] ?? 0.0) < ANOM_COPERTURA_MIN[$col]) continue;
+                    $norma = termoNormaPeriodo($termo['normali'], $var, $da, $a);
+                    if ($norma === null) continue;
+                    $barre[$col][$r['label']] = statBarraAnomalia((float)$oss - $norma, $norma, ANOM_SCALA[$col]);
+                }
+            }
+            $col_nota = []; $scale_nota = [];
+            foreach (['oggi' => 'ieri', 'p10' => '10 gg', 'anno' => 'anno'] as $col => $nome) {
+                if (!$barre[$col]) continue;
+                $col_nota[]   = $nome;
+                $scale_nota[] = '&plusmn;' . (int)ANOM_SCALA[$col] . ' &#176;C ' . $nome;
+            }
+            if ($col_nota) {
+                $anom_nota = 'Colonne ' . implode(', ', $col_nota) . ': scarto in &#176;C dalla norma '
+                           . htmlspecialchars($rif) . ' di quei giorni (fondo scala ' . implode(', ', $scale_nota) . ')';
+            }
+        }
+    } catch (Throwable $e) {
+        error_log('tabella_stat_display barra STI: ' . $e->getMessage());
+        $barre = ['oggi' => [], 'p10' => [], 'mese' => [], 'anno' => []]; $sti_nota = null; $anom_nota = null;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -310,6 +480,42 @@ $copertura = $response['copertura'] ?? ['oggi'=>1.0,'p10'=>1.0,'mese'=>1.0,'anno
             }
             tr { height: auto; }
             .stat-data-date { font-size: 12px; }
+        }
+
+        /* ================================================================
+           BARRE STI (mese) E ANOMALIA (ieri, 10 gg, anno)
+        ================================================================ */
+        .sti-wrap {
+            clear: both;
+            margin: 2px 4px 0 0;
+        }
+        .sti-track {
+            position: relative;
+            height: 5px;
+            background: #dcdcdc;
+            border-radius: 2px;
+        }
+        /* tacca centrale = norma */
+        .sti-track::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: -2px;
+            bottom: -2px;
+            width: 1px;
+            background: #444;
+        }
+        .sti-fill { position: absolute; top: 0; bottom: 0; }
+        /* mese in corso: stima parziale */
+        .sti-fill.parz {
+            background-image: repeating-linear-gradient(45deg,
+                rgba(255,255,255,0.6) 0, rgba(255,255,255,0.6) 2px, transparent 2px, transparent 4px);
+        }
+        .sti-num { float: right; font-size: 8px; color: #555; white-space: nowrap; margin: 2px 4px 0 2px; }
+        .sti-nota { font-size: 10px; color: #777; text-align: center; margin-top: 3px; padding: 0 8px; }
+        @media (min-width: 768px) {
+            .sti-track { height: 7px; }
+            .sti-num { font-size: 11px; }
         }
 
         .stat-footer {
@@ -550,10 +756,10 @@ $copertura = $response['copertura'] ?? ['oggi'=>1.0,'p10'=>1.0,'mese'=>1.0,'anno
     ?>
         <tr <?= $cls_str ?>>
             <td><?= $riga['label'] ?></td>
-            <td class="col-oggi"><?= $riga['oggi'] ?></td>
-            <td><?= $riga['p10'] ?></td>
-            <td><?= $riga['mese'] ?></td>
-            <td><?= $riga['anno'] ?></td>
+            <td class="col-oggi"><?= $riga['oggi'] ?><?= $barre['oggi'][$riga['label'] ?? ''] ?? '' ?></td>
+            <td><?= $riga['p10'] ?><?= $barre['p10'][$riga['label'] ?? ''] ?? '' ?></td>
+            <td><?= $riga['mese'] ?><?= $barre['mese'][$riga['label'] ?? ''] ?? '' ?></td>
+            <td><?= $riga['anno'] ?><?= $barre['anno'][$riga['label'] ?? ''] ?? '' ?></td>
         </tr>
     <?php endforeach; ?>
     </tbody>
@@ -583,6 +789,10 @@ $copertura = $response['copertura'] ?? ['oggi'=>1.0,'p10'=>1.0,'mese'=>1.0,'anno
     <?php endforeach; ?>
 </div>
 <?php endif; ?>
+
+<?php foreach (array_filter([$sti_nota, $anom_nota]) as $nota_barre): ?>
+<div class="sti-nota"><?= $nota_barre ?></div>
+<?php endforeach; ?>
 
 <!-- POPUP CALENDARIO - fuori dalla tabella per HTML valido -->
 <div id="cal-oggi" class="cal-popup"></div>

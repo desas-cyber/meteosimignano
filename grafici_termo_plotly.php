@@ -680,10 +680,9 @@ if (!in_array($range, $ranges_validi)) {
                 <a href='grafici_termo_plotly.php?range=24h&visible=' class="submenu-item">Grafici</a>
                 <div class="submenu-item has-sub">
                     <span class="submenu-item-label">Statistiche &#9658;</span>
-                    <div class="sub-submenu">
-                        <a href="stat_display.php" class="submenu-item" target="_blank">Tabelle</a>
-                        <a href="lavori_in_corso.html" class="submenu-item" target="_blank">Grafici</a>
-                    </div>
+                    <a href="stat_display.php" class="submenu-item" target="_blank">Tabelle</a>
+                        <a href="termo_stat_display.php" class="submenu-item" target="_blank">Termo</a>
+                        <a href="pluvio_stat_display.php" class="submenu-item" target="_blank">Pluvio</a>
                 </div>
                 <a href="pluvio.html" class="submenu-item">Pioggia: 24h</a>
                 <a href="pluvio_tab.php" class="submenu-item">Pioggia: tabella</a>
