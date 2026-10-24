@@ -99,7 +99,7 @@ function buildRecord(string $publicBasePath, string $filename, $row): array
     if (is_array($row)) {
         if (!empty($row['DATA_ORA'])) {
             try {
-                $data_ora = (new DateTime((string)$row['DATA_ORA']))->format('d/m/Y H:i');
+                $data_ora = (new DateTime((string)$row['DATA_ORA'], new DateTimeZone('Europe/Rome')))->format('d/m/Y H:i');
             } catch (Throwable $ignored) {}
         }
 
@@ -161,7 +161,8 @@ if (!empty($sorted_desc)) {
     
     $iter = 0;
     $max_iter = 200; // sicurezza anti-loop infinito (36h * 3 foto/ora = 108 slot)
-    
+    $usati = []; // traccia src già inseriti in gallery — evita duplicati
+     
     while ($current_target->getTimestamp() >= $limite_ts && $iter < $max_iter) {
         $iter++;
         $target_ts = (int)floor($current_target->getTimestamp());
@@ -190,8 +191,9 @@ if (!empty($sorted_desc)) {
                 if (in_array($min_foto, [0, 20, 40]) && $distanza <= 60) {
                     $trovata_esatta = true;
                     $full_idx = array_search($foto['src'], array_column($records, 'src'));
-                    if ($full_idx !== false) {
+                    if ($full_idx !== false && !isset($usati[$foto['src']])) {
                         $gallery[] = $foto + ['fullIndex' => $full_idx];
+                        $usati[$foto['src']] = true;
                     }
                     break; // esci dal foreach
                 }
@@ -201,8 +203,9 @@ if (!empty($sorted_desc)) {
         // Se non trovata esatta, usa la migliore entro tolleranza
         if (!$trovata_esatta && $migliore_foto !== null) {
             $full_idx = array_search($migliore_foto['src'], array_column($records, 'src'));
-            if ($full_idx !== false) {
+            if ($full_idx !== false && !isset($usati[$migliore_foto['src']])) {
                 $gallery[] = $migliore_foto + ['fullIndex' => $full_idx];
+                $usati[$migliore_foto['src']] = true;
             }
         }
         
@@ -212,7 +215,11 @@ if (!empty($sorted_desc)) {
 
 // Ordine decrescente finale (piu recente prima)
 usort($gallery, function($a, $b) {
-    return strcmp($b['data_ora'], $a['data_ora']);
+    $dtA = DateTime::createFromFormat('d/m/Y H:i', $a['data_ora'] ?? '');
+    $dtB = DateTime::createFromFormat('d/m/Y H:i', $b['data_ora'] ?? '');
+    $tsA = ($dtA !== false) ? $dtA->getTimestamp() : 0;
+    $tsB = ($dtB !== false) ? $dtB->getTimestamp() : 0;
+    return $tsB - $tsA; // decrescente: piu recente prima
 });
 
 // Array full leggero (solo src + data_ora per time-lapse)
@@ -224,14 +231,15 @@ $full = array_map(function($r) {
 }, $records);
 
 // Output JSON finale
+$debug_sample = array_slice($sorted_desc, 0, 5);
+$debug_null = array_filter($sorted_desc, function($r){ return $r['data_ora'] === null; });
 echo json_encode([
     'full'    => $full,
     'gallery' => $gallery,
-    'stats'   => [
-        'total_full'     => count($full),
-        'gallery_count'  => count($gallery),
-        'generated_at'   => date('c'),
-        'note'           => 'Gallery: foto ogni ~20 min con +/-3 min tolleranza'
+    'debug'   => [
+        'sample_5'     => $debug_sample,
+        'null_data_ora' => count($debug_null),
+        'total_records' => count($sorted_desc),
     ]
 ], JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
 ?>

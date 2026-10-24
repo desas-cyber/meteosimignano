@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<!--
+    previsione.info.html - guida alla lettura della previsione d'insieme (previsione_display.php)
+    Versione 1.0 - 2026-10-24
+    Storico:
+      1.0  2026-10-24  Prima versione: panoramica, meteogramma, ultime 24 ore, tabella, lettura combinata,
+                       corrente a getto, mappe Italia, limiti
+-->
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guida alla previsione - MeteoSimignano</title>
+    <link rel="stylesheet" href="header_shared.css">
+    <style>
+        /* ====================================================================
+           STILI GENERALI (come stat.info.html)
+           ==================================================================== */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+            background: #fff;
+        }
+
+        main {
+            width: 100%;
+            max-width: 860px;
+            box-sizing: border-box;
+            padding: 12px 16px 40px 16px;
+        }
+
+        h1.page-title { font-size: 22px; margin: 10px 0 4px 0; text-align: center; }
+        p.page-subtitle { font-size: 13px; color: #777; text-align: center; margin: 0 0 18px 0; }
+
+        h2.sec-title {
+            font-size: 18px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 4px;
+            margin: 28px 0 10px 0;
+        }
+
+        h3.sub-title-info { font-size: 15px; margin: 18px 0 6px 0; color: #333; }
+
+        p, li { font-size: 14px; line-height: 1.55; color: #222; }
+        ul, ol { padding-left: 22px; margin: 6px 0 12px 0; }
+        li { margin-bottom: 5px; }
+
+        .dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+        .sw {
+            display: inline-block;
+            width: 14px;
+            height: 12px;
+            border-radius: 2px;
+            vertical-align: -1px;
+            margin-right: 4px;
+            border: 1px solid #ccc;
+        }
+        .tri {
+            display: inline-block;
+            width: 0; height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 11px solid #5a4fcf;
+            vertical-align: 0;
+            margin-right: 4px;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 16px;
+            font-size: 13px;
+            background: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin: 8px 0 14px 0;
+        }
+        .legend span.item { white-space: nowrap; }
+
+        .note-box {
+            background: #f2f6fb;
+            border-left: 4px solid #6699cc;
+            border-radius: 0 6px 6px 0;
+            padding: 8px 12px;
+            font-size: 13px;
+            margin: 10px 0;
+        }
+        .note-box p, .note-box li { font-size: 13px; }
+
+        .esempio {
+            background: #fbf8ef;
+            border-left: 4px solid #d9a400;
+            border-radius: 0 6px 6px 0;
+            padding: 8px 12px;
+            font-size: 13px;
+            margin: 10px 0;
+        }
+
+        .toc {
+            background: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 6px;
+        }
+        .toc a { color: #336699; text-decoration: none; }
+        .toc a:hover { text-decoration: underline; }
+
+        .tab-wrap { overflow-x: auto; margin: 8px 0 14px 0; }
+        table.info {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 13px;
+        }
+        table.info th, table.info td {
+            border: 1px solid #ddd;
+            padding: 5px 8px;
+            text-align: left;
+            vertical-align: top;
+            line-height: 1.4;
+        }
+        table.info th { background: #f3f3f3; }
+
+        dfn { font-style: normal; font-weight: bold; }
+
+        /* ---- HEADER MENU (identico alle altre pagine) ---- */
+        .header-menu-container { position: relative; }
+        .menu-toggle { background: none; border: none; cursor: pointer; padding: 0; }
+
+        .submenu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: max-content;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+            z-index: 1000;
+        }
+        .submenu.active { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        .submenu-item {
+            display: block;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .submenu-item:last-child  { border-bottom: none; }
+        .submenu-item:hover       { background-color: #f8f8f8; }
+        .submenu-item:first-child { border-radius: 8px 8px 0 0; }
+        .submenu-item:last-child  { border-radius: 0 0 8px 8px; }
+
+        .submenu-item.has-sub {
+            position: relative;
+            cursor: pointer;
+            padding: 12px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            user-select: none;
+        }
+        .submenu-item.has-sub:hover,
+        .submenu-item.has-sub.sub-active { background-color: #f8f8f8; }
+        .sub-submenu {
+            position: absolute;
+            top: 0;
+            left: 100%;
+            margin-left: 4px;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: max-content;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-6px);
+            transition: all 0.2s ease;
+            z-index: 1100;
+        }
+        .submenu-item.has-sub.sub-active .sub-submenu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+        @media (max-width: 768px) {
+            .sub-submenu {
+                left: auto;
+                right: 0;
+                top: 100%;
+                margin-left: 0;
+                margin-top: 2px;
+                transform: translateY(-6px);
+            }
+            .submenu-item.has-sub.sub-active .sub-submenu { transform: translateY(0); }
+        }
+        .sub-submenu .submenu-item { padding: 6px 16px; }
+    </style>
+</head>
+
+<body>
+
+    <!-- ====================================================================
+         HEADER - come previsione_display.php, con "Indietro" a sinistra
+         ==================================================================== -->
+    <header class="main-header">
+
+        <a href="previsione_display.php" class="header-icon left-icon" title="Torna alla previsione">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span class="icon-label">Indietro</span>
+        </a>
+
+        <div class="header-content">
+            <h1 class="main-title">
+                <a href="index.php" style="text-decoration: none; color: inherit;">MeteoSimignano</a>
+            </h1>
+            <h1 class="sub-title sub-title-row">
+                <span>43&#176;17&#8242;32.5&#8243;N 11&#176;10&#8242;01.49&#8243;E @ 418m slm</span>
+            </h1>
+        </div>
+
+        <div class="header-menu-container">
+            <button class="header-icon right-icon menu-toggle" title="Menu">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+                <span class="icon-label">Menu</span>
+            </button>
+
+            <div class="submenu">
+                <a href="index.php" class="submenu-item">Home</a>
+                <a href="belle.php" class="submenu-item">Diario del cielo</a>
+                <a href='grafici_termo_plotly.php?range=24h&visible=' class="submenu-item">Grafici</a>
+                <a href="pluvio.html" class="submenu-item">Pioggia: 24h</a>
+                <a href="pluvio_tab.php" class="submenu-item">Pioggia: tabella</a>
+                <a href="previsione_display.php" class="submenu-item">Previsione</a>
+                <div class="submenu-item has-sub">
+                    <span class="submenu-item-label">Statistiche &#9658;</span>
+                    <div class="sub-submenu">
+                        <a href="stat_display.php" class="submenu-item">Tabelle</a>
+                        <a href="termo_stat_display.php" class="submenu-item">Termo</a>
+                        <a href="pluvio_stat_display.php" class="submenu-item">Pluvio</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ====================================================================
+         CONTENUTO
+         ==================================================================== -->
+    <main>
+
+        <h1 class="page-title">Guida alla previsione d'insieme</h1>
+        <p class="page-subtitle">Come leggere il meteogramma, la tabella e le mappe dell'Italia</p>
+
+        <div class="toc">
+            <strong>Indice:</strong>
+            <a href="#panoramica">Panoramica</a> &middot;
+            <a href="#meteogramma">Il meteogramma</a> &middot;
+            <a href="#passato">Le ultime 24 ore</a> &middot;
+            <a href="#tabella">La tabella</a> &middot;
+            <a href="#insieme">Leggere il quadro insieme</a> &middot;
+            <a href="#getto">La corrente a getto</a> &middot;
+            <a href="#mappe">Mappe Italia</a> &middot;
+            <a href="#limiti">Limiti e note</a>
+        </div>
+
+        <!-- ================================================================ -->
+        <h2 class="sec-title" id="panoramica">Panoramica</h2>
+        <p>
+            Una previsione "normale" (detta <dfn>deterministica</dfn>) &egrave; un'unica simulazione
+            dell'atmosfera: dice cosa succeder&agrave;, ma non quanto ci si pu&ograve; fidare. Una
+            <dfn>previsione d'insieme</dfn> (in inglese <em>ensemble</em>) fa girare lo stesso modello
+            molte volte, partendo ogni volta da condizioni iniziali leggermente diverse, entro l'incertezza
+            con cui conosciamo lo stato attuale dell'atmosfera. Ogni simulazione si chiama
+            <dfn>membro</dfn>.
+        </p>
+        <ul>
+            <li>Se i membri danno risultati simili, la situazione &egrave; "robusta" e la previsione affidabile.</li>
+            <li>Se divergono, l'atmosfera &egrave; in una fase delicata e la previsione &egrave; incerta:
+                conviene guardare il ventaglio delle possibilit&agrave;, non solo il valore medio.</li>
+        </ul>
+        <p>
+            Qui si usa l'ensemble del centro europeo <strong>ECMWF</strong> (modello IFS) con
+            <strong>51 membri</strong> (uno di controllo e 50 perturbati), sul punto di Simignano.
+            Il modello lavora su una <strong>griglia di 0,25&deg;, cio&egrave; circa 25 km</strong>:
+            ogni valore rappresenta la media di una cella di circa 25&nbsp;&times;&nbsp;20 km, non il punto esatto della stazione.
+            I dati vengono scaricati <strong>ogni 6 ore</strong>; la data di aggiornamento &egrave; scritta in testa alla pagina.
+        </p>
+        <p>La pagina &egrave; composta da tre parti:</p>
+        <ol>
+            <li>il <strong>meteogramma</strong>: un grafico tempo&nbsp;&times;&nbsp;quota con le ultime 24 ore e le prossime 48;</li>
+            <li>la <strong>tabella</strong>: i valori numerici ogni 3 ore, con affidabilit&agrave; e probabilit&agrave;;</li>
+            <li>i link alle <strong>mappe dell'Italia</strong>, per vedere la situazione a grande scala.</li>
+        </ol>
+        <div class="note-box">
+            Passando il mouse (o toccando) quasi ogni elemento del meteogramma e ogni cella della tabella compare
+            un riquadro con il valore esatto e i dettagli.
+        </div>
+
+        <!-- ================================================================ -->
+        <h2 class="sec-title" id="meteogramma">Il meteogramma</h2>
+        <p>
+            Il meteogramma &egrave; una "sezione" dell'atmosfera sopra Simignano: in orizzontale il
+            <strong>tempo</strong> (una colonna ogni 3 ore, le ore in basso sono in ora italiana),
+            in verticale la <strong>quota</strong>, da 0 a 10 km.
+        </p>
+        <ul>
+            <li>La scala delle quote <strong>non &egrave; lineare</strong>: i primi 2 km occupano pi&ugrave; di met&agrave;
+                dell'altezza, perch&eacute; l&igrave; si concentra quello che interessa di pi&ugrave; (temperatura al suolo,
+                vento nei bassi strati, nubi basse). Sopra i 2 km la scala &egrave; compressa (tacche a 3, 5, 6, 9, 10 km).</li>
+            <li>La fascia color terra in basso &egrave; il <strong>suolo</strong>, alla quota della cella del modello (circa 420 m).</li>
+            <li>A sinistra, su <strong>sfondo giallo</strong>, ci sono le <strong>ultime 24 ore</strong>
+                (vedi <a href="#passato">Le ultime 24 ore</a>); la linea verticale <strong>"adesso"</strong> separa il passato dalla previsione.</li>
+            <li>Le colonne sono allineate alle ore 00, 03, 06&hellip; UTC (tempo universale). In ora italiana diventano
+                02, 05, 08&hellip; con l'ora legale e 01, 04, 07&hellip; con l'ora solare.</li>
+            <li>Sul telefono il grafico ha una larghezza minima per restare leggibile: si scorre col dito ed
+                &egrave; gi&agrave; posizionato su "adesso".</li>
+        </ul>
+
+        <h3 class="sub-title-info">Temperature (linee rosse)</h3>
+        <p>
+            Tre linee rosse: <strong>T 2 m</strong> (la temperatura dell'aria a 2 m dal suolo, quella delle stazioni),
+            <strong>T 850</strong> e <strong>T 500</strong>, cio&egrave; la temperatura alle quote dove la pressione vale
+            850 hPa (circa 1500 m) e 500 hPa (circa 5500 m). Ogni linea &egrave; disegnata alla sua quota reale.
+        </p>
+        <ul>
+            <li>I numeri sono i <strong>valori in &deg;C</strong> (media dei membri).</li>
+            <li>La <strong>forma</strong> della linea mostra l'andamento: sale quando si scalda, scende quando si raffredda
+                (5 pixel per grado). La linea tratteggiata indica il valore di adesso, come riferimento.</li>
+            <li>La <strong>T 850</strong> &egrave; il miglior indicatore della <em>massa d'aria</em>: non risente del ciclo
+                giorno-notte del suolo. Un calo di 5&ndash;8 &deg;C in 24 ore indica l'arrivo di aria fredda; valori sopra
+                20 &deg;C d'estate indicano aria africana.</li>
+            <li>La <strong>T 500</strong> serve per l'instabilit&agrave;: aria molto fredda in quota (es. sotto &minus;20 &deg;C
+                d'estate, sotto &minus;30 &deg;C d'inverno) sopra aria tiepida in basso significa atmosfera instabile, con possibili rovesci e temporali.</li>
+        </ul>
+
+        <h3 class="sub-title-info">Nubi (bande grigie)</h3>
+        <p>
+            Tre bande orizzontali rappresentano i tre strati di nubi: <strong>basse</strong> (disegnate a 1,5 km, nubi sotto
+            circa 2 km: strati, nebbie alte, base dei cumuli), <strong>medie</strong> (a 5 km, nubi tra 2 e 6 km: altostrati,
+            altocumuli) e <strong>alte</strong> (a 8 km, sopra 6 km: cirri, cirrostrati).
+        </p>
+        <p>
+            Il grigio non &egrave; la copertura, ma la <strong>probabilit&agrave;</strong>: la percentuale di membri che in quello
+            strato prevedono una copertura di almeno il 50%. Grigio scuro = quasi tutti i membri prevedono cielo coperto in quello strato;
+            bianco = quasi nessuno. Nella parte gialla (passato) il grigio &egrave; invece la copertura stimata dal modello.
+        </p>
+        <div class="note-box">
+            Le nubi alte da sole (cirri) non danno pioggia ma spesso annunciano l'arrivo di una perturbazione nelle 12&ndash;24 ore successive;
+            il "riempimento" progressivo dall'alto verso il basso (prima alte, poi medie, poi basse) &egrave; la sequenza tipica di un fronte caldo.
+        </div>
+
+        <h3 class="sub-title-info">Venti (triangoli colorati)</h3>
+        <p>Il vento &egrave; mostrato a quattro quote:</p>
+        <ul>
+            <li><strong>+300 m</strong>: 300 m sopra la quota della stazione, cio&egrave; circa a 700&ndash;750 m; calcolato
+                interpolando tra i livelli di pressione disponibili. &Egrave; il vento "libero" appena sopra le colline, meno frenato dal suolo.</li>
+            <li><strong>850 hPa</strong> (circa 1500 m): il vento che trasporta la massa d'aria nei bassi strati.
+                Per non coprire la linea della T 850, questa riga di triangoli &egrave; disegnata subito sopra il punto pi&ugrave; alto della linea.</li>
+            <li><strong>500 hPa</strong> (circa 5500 m): il <em>flusso guida</em>, che sposta le perturbazioni.</li>
+            <li><strong>300 hPa</strong> (circa 9000 m): la quota della <a href="#getto">corrente a getto</a>.</li>
+        </ul>
+        <p>
+            Il <strong>triangolo punta nella direzione verso cui va il vento</strong> (un vento da sud-ovest, il libeccio, ha il
+            triangolo che punta a nord-est). Il numero accanto &egrave; la velocit&agrave; in km/h; il colore va dal verde acqua chiaro
+            (vento debole) al celeste, al blu e al viola (oltre 150 km/h).
+        </p>
+        <div class="legend">
+            <span class="item"><span class="sw" style="background:hsl(160,55%,62%)"></span>0&ndash;30 km/h</span>
+            <span class="item"><span class="sw" style="background:hsl(190,59%,57%)"></span>30&ndash;60</span>
+            <span class="item"><span class="sw" style="background:hsl(222,63%,52%)"></span>60&ndash;100</span>
+            <span class="item"><span class="sw" style="background:hsl(255,67%,46%)"></span>100&ndash;150</span>
+            <span class="item"><span class="sw" style="background:hsl(285,70%,40%)"></span>oltre 150</span>
+        </div>
+
+        <h3 class="sub-title-info">Striscia Z500 / Z850 / P msl</h3>
+        <p>
+            Sotto il grafico ci sono tre righe di caselle. Le prime due riportano il <dfn>geopotenziale</dfn>: la quota (in
+            decametri, dam) alla quale si trova la pressione di 500 hPa (<strong>Z500</strong>) e di 850 hPa (<strong>Z850</strong>).
+            Per esempio 576 significa 5760 m. Il geopotenziale si legge come una "pressione in quota": se la superficie dei 500 hPa
+            &egrave; alta, a 5500 m c'&egrave; pressione alta (promontorio, anticiclone); se &egrave; bassa, c'&egrave; pressione bassa
+            (saccatura, goccia fredda). La terza riga, <strong>P msl</strong>, &egrave; la pressione al suolo ridotta al livello del mare, in hPa.
+        </p>
+        <p>Ogni casella porta due informazioni distinte:</p>
+        <ul>
+            <li><strong>Il colore della casella = la tendenza</strong>: quanto &egrave; cambiato il valore rispetto alla colonna precedente,
+                riportato a 3 ore. <span class="sw" style="background:rgba(192,57,43,.6)"></span>rosso = in aumento,
+                <span class="sw" style="background:rgba(43,108,176,.6)"></span>blu = in calo, bianco = stazionario.
+                Il colore &egrave; pieno con &plusmn;40 m in 3 ore per Z500, &plusmn;25 m per Z850 e &plusmn;3 hPa per la pressione.</li>
+            <li><strong>Il colore del numero (Z500 e Z850) = lo scarto dalla norma del mese</strong>: quanto il valore &egrave; lontano da quello
+                tipico per il periodo dell'anno.</li>
+        </ul>
+        <div class="legend">
+            <span class="item"><b style="color:#1a1a1a">nero</b> = nella norma</span>
+            <span class="item"><b style="color:#d32f2f">rosso</b> = sopra la norma</span>
+            <span class="item"><b style="color:#9b0d0d">rosso scuro</b> = molto sopra</span>
+            <span class="item"><b style="color:#1e6fd9">blu</b> = sotto la norma</span>
+            <span class="item"><b style="color:#0b3d91">blu scuro</b> = molto sotto</span>
+        </div>
+        <div class="tab-wrap">
+        <table class="info">
+            <tr><th></th><th>nella norma</th><th>sopra / sotto</th><th>molto sopra / sotto</th></tr>
+            <tr><td><strong>Z850</strong></td><td>entro &plusmn;20 m</td><td>20&ndash;48 m</td><td>oltre 48 m</td></tr>
+            <tr><td><strong>Z500</strong></td><td>entro &plusmn;38 m</td><td>38&ndash;90 m</td><td>oltre 90 m</td></tr>
+        </table>
+        </div>
+        <p>
+            La norma cambia nel corso dell'anno perch&eacute; l'aria calda &egrave; meno densa e "solleva" tutta la colonna d'aria:
+            per Z500 si va da circa 562 dam in inverno a circa 586 dam a luglio e agosto; per Z850 da circa 150 a 154 dam.
+            Sono valori climatologici indicativi per l'Italia centrale.
+        </p>
+        <div class="note-box">
+            <strong>Tendenza e norma dicono cose diverse.</strong> Un Z500 con numero rosso (sopra la norma) ma casella blu
+            (in calo) significa: siamo ancora sotto un promontorio, ma sta cedendo. Un calo della pressione al suolo di
+            1&ndash;3 hPa in 3 ore (caselle P msl blu intenso) annuncia di solito un peggioramento nelle ore successive.
+            <br>Attenzione: il numero di Z500 e Z850 &egrave; arrotondato ai decametri, mentre il colore usa i metri esatti; per questo
+            due passaggi "da 150 a 149" e "da 149 a 148" possono avere colori diversi. Il valore preciso si legge nel riquadro al passaggio del mouse.
+        </div>
+
+        <h3 class="sub-title-info">Pioggia (pannello in basso)</h3>
+        <ul>
+            <li>L'<strong>altezza della barra</strong> sono i millimetri previsti nelle 3 ore precedenti (media dei membri), scritti sopra la barra.</li>
+            <li>Il <strong>colore</strong> &egrave; la probabilit&agrave;: pi&ugrave; scuro = pi&ugrave; membri prevedono almeno 0,2 mm.
+                La percentuale &egrave; scritta sopra i millimetri.</li>
+            <li>La scala si adatta da sola al massimo previsto (fondo scala 1, 2, 5, 10, 20, 50 mm): attenzione a leggere i valori,
+                perch&eacute; una barra alta pu&ograve; essere 0,8 mm in una giornata quasi asciutta.</li>
+        </ul>
+        <div class="note-box">
+            Una barra bassa ma scura = pioggia debole ma quasi certa; una barra alta ma chiara = pochi membri prevedono
+            molta pioggia (tipico dei temporali: possibili, ma non si sa dove cadranno).
+        </div>
+
+        <h3 class="sub-title-info">Link alle mappe</h3>
+        <p>
+            Alle ore delle <a href="#mappe">mappe dell'Italia</a> (00, 06 e 18 UTC) le ore sull'asse sono
+            <span style="color:#0b5cad;text-decoration:underline dotted">sottolineate</span>. In quelle colonne cliccando su
+            una casella Z500 / Z850 / P msl, su una banda di nubi, su un triangolo del vento, su un punto della T 850 o T 500
+            (disegnato pi&ugrave; grande) o su una barra di pioggia si apre la mappa di quel parametro a quell'ora.
+        </p>
+
+        <!-- ================================================================ -->
+        <h2 class="sec-title" id="passato">Le ultime 24 ore (sfondo giallo)</h2>
+        <p>
+            La parte gialla serve a confrontare il modello con quello che &egrave; successo davvero. Contiene 4 colonne, una ogni 6 ore
+            (00, 06, 12, 18 UTC).
+        </p>
+        <ul>
+            <li><strong>&#9675; Cerchi neri vuoti, numero nero</strong>: la temperatura <strong>misurata</strong> dalla stazione di MeteoSimignano.</li>
+            <li><strong>Linea e numero rossi</strong>: la temperatura che l'ensemble aveva previsto per quell'ora, cio&egrave; l'ultima previsione
+                salvata prima che quell'ora arrivasse (fatta qualche ora prima). <strong>Non viene corretta</strong> con i dati reali: la distanza
+                tra punto rosso e cerchio nero &egrave; proprio l'errore del modello.</li>
+            <li><strong>Tutto il resto</strong> (quote, venti, nubi, pioggia, pressione) viene dal modello deterministico, che per le ore passate
+                viene ricalcolato con le corse pi&ugrave; recenti: &egrave; la miglior stima del modello di com'era l'atmosfera, non una previsione fatta il giorno prima.</li>
+        </ul>
+        <div class="note-box">
+            Il modello &egrave; "agganciato" alla realt&agrave; perch&eacute; ogni sua corsa parte da un'<dfn>analisi</dfn>: una fotografia
+            dell'atmosfera costruita con milioni di osservazioni (satelliti, radiosondaggi, aerei, stazioni ufficiali). Le stazioni locali come
+            MeteoSimignano per&ograve; non entrano in questa analisi. Tipicamente il modello sbaglia di pi&ugrave; nelle <strong>notti serene e
+            senza vento</strong>, quando l'aria fredda ristagna nelle valli: la sua cella di 25 km non "vede" l'avvallamento.
+        </div>
+
+        <!-- ================================================================ -->
+        <h2 class="sec-title" id="tabella">La tabella</h2>
+        <p>
+            Una riga ogni 3 ore, da adesso alle prossime 48 ore, con un separatore per ogni giorno.
+            Una colonna (o una coppia di colonne) per ogni grandezza:
+        </p>
+        <div class="tab-wrap">
+        <table class="info">
+            <tr><th>Colonna</th><th>Cosa &egrave;</th></tr>
+            <tr><td>T 2 m</td><td>temperatura dell'aria a 2 m, &deg;C, con la colonna di probabilit&agrave; a soglia libera</td></tr>
+            <tr><td>T 850, T 500</td><td>temperatura a circa 1500 m e 5500 m, &deg;C</td></tr>
+            <tr><td>Quota 850, Quota 500</td><td>geopotenziale, cio&egrave; la quota in metri delle superfici di 850 e 500 hPa</td></tr>
+            <tr><td>Pressione</td><td>pressione al livello del mare, hPa</td></tr>
+            <tr><td>Nuv. totale / bassa / media / alta</td><td>copertura nuvolosa in % (totale e per strato), con la probabilit&agrave; di cielo sereno</td></tr>
+            <tr><td>Pioggia</td><td>mm nelle 3 ore precedenti, con la probabilit&agrave; di almeno 1 mm</td></tr>
+            <tr><td>Vento +300 m, 850, 500, 300</td><td>velocit&agrave; in km/h, con direzione e concordanza dei membri</td></tr>
+        </table>
+        </div>
+
+        <h3 class="sub-title-info">Media e intervallo p10&ndash;p90</h3>
+        <p>
+            In ogni cella il numero grande &egrave; la <strong>media dei 51 membri</strong>. Sotto, in piccolo, c'&egrave; l'intervallo
+            <strong>p10&ndash;p90</strong>: i <dfn>percentili</dfn> 10 e 90. Ordinando i membri dal valore pi&ugrave; basso al pi&ugrave; alto,
+            il 10% dei membri sta sotto p10 e il 10% sta sopra p90: l'intervallo contiene quindi l'<strong>80% dei membri</strong>,
+            esclusi i casi pi&ugrave; estremi.
+        </p>
+        <div class="esempio">
+            <strong>Esempio:</strong> T 2 m <strong>8,4</strong> con intervallo <strong>6,1&ndash;10,2</strong> significa: il valore
+            pi&ugrave; probabile &egrave; intorno a 8 &deg;C, e 8 membri su 10 stanno tra 6 e 10 &deg;C.
+        </div>
+
+        <h3 class="sub-title-info">Pallini di affidabilit&agrave;</h3>
+        <p>
+            Il pallino accanto alla media riassume quanto &egrave; largo l'intervallo p10&ndash;p90, cio&egrave; quanto i membri sono d'accordo:
+        </p>
+        <div class="legend">
+            <span class="item"><span class="dot" style="background:#2e9e5b;"></span>affidabile (intervallo stretto)</span>
+            <span class="item"><span class="dot" style="background:#d9a400;"></span>abbastanza affidabile</span>
+            <span class="item"><span class="dot" style="background:#c0392b;"></span>incerta (intervallo largo)</span>
+        </div>
+        <p>
+            Le soglie sono diverse per ogni grandezza e sono scritte nella legenda sotto la tabella: per esempio per la T 2 m
+            l'intervallo &egrave; "affidabile" fino a 2 &deg;C di ampiezza, "abbastanza" fino a 4 &deg;C, "incerto" oltre.
+            Passando il mouse sulla cella si leggono l'ampiezza esatta, il minimo e il massimo tra tutti i membri.
+        </p>
+        <div class="note-box">
+            &Egrave; normale che l'affidabilit&agrave; peggiori andando avanti nel tempo. Un pallino rosso gi&agrave; nelle prime
+            12&ndash;24 ore indica invece una situazione davvero incerta (per esempio il passaggio di un fronte di cui non si conosce bene l'orario).
+            In quei casi la media pu&ograve; essere fuorviante: se met&agrave; dei membri prevede 2 mm e met&agrave; 20 mm, la media di 11 mm non la prevede nessuno.
+        </div>
+
+        <h3 class="sub-title-info">Colonne di probabilit&agrave;</h3>
+        <p>
+            La probabilit&agrave; &egrave; semplicemente la <strong>percentuale dei membri</strong> in cui l'evento si verifica.
+            Lo sfondo blu &egrave; pi&ugrave; scuro quando la probabilit&agrave; &egrave; pi&ugrave; alta.
+        </p>
+        <ul>
+            <li><strong>T 2 m</strong>: la soglia si sceglie nell'intestazione della colonna, con il verso (&le; o &ge;) e il valore.
+                Per esempio "&le; 0" = probabilit&agrave; di gelo, "&ge; 30" = probabilit&agrave; di caldo intenso,
+                "&le; 3" = rischio di brinate nelle zone pi&ugrave; basse. La scelta resta memorizzata nel browser.</li>
+            <li><strong>Sereno</strong>: nuvolosit&agrave; totale sotto il 20%.</li>
+            <li><strong>Pioggia</strong>: almeno 1 mm nelle 3 ore.</li>
+        </ul>
+
+        <h3 class="sub-title-info">Direzione del vento e concordanza</h3>
+        <p>
+            Per ogni livello di vento, la colonna <strong>Dir.</strong> mostra la direzione di <strong>provenienza</strong> media dei membri
+            (con il punto cardinale: SO = da sud-ovest) e una freccia che indica dove va il vento. Sotto c'&egrave; la
+            <strong>concordanza</strong>: la percentuale di membri con una direzione entro &plusmn;45&deg; da quella media.
+            Concordanza alta = i membri sono d'accordo sulla direzione; bassa = vento variabile o situazione incerta
+            (frequente con vento debole, quando la direzione conta poco). I gradi esatti compaiono passando il mouse.
+        </p>
+
+        <h3 class="sub-title-info">Link alle mappe</h3>
+        <p>
+            Nelle righe delle ore delle mappe (00, 06, 18 UTC) l'ora e i valori di temperatura in quota, geopotenziale, pressione,
+            nubi, pioggia e vento sono <span style="text-decoration:underline dotted">sottolineati</span>: cliccando si apre la
+            mappa dell'Italia di quel parametro.
+        </p>
+
+        <!-- ================================================================ -->
+        <h2 class="sec-title" id="insieme">Leggere il quadro insieme</h2>
+        <p>
+            Il meteogramma mostra un solo punto, ma guardando insieme venti, temperature e geopotenziale si capisce che
+            tipo di situazione sta arrivando.
+        </p>
+
+        <h3 class="sub-title-info">1. La velocit&agrave; a 300 hPa: quanto &egrave; vicina la corrente a getto</h3>
+        <ul>
+            <li><strong>sotto 80&ndash;100 km/h</strong>: lontani dal getto; tipico di anticicloni e promontori, tempo stabile;</li>
+            <li><strong>110&ndash;150 km/h</strong>: margini del getto o getto debole, circolazione attiva;</li>
+            <li><strong>oltre 150&ndash;200 km/h</strong>: il nucleo del getto &egrave; sopra di noi o vicino; tipico del bordo di una saccatura.</li>
+        </ul>
+        <p>
+            Se nelle 48 ore il vento a 300 hPa sale a un massimo e poi cala, quello &egrave; il passaggio del nucleo: le ore prima e
+            dopo il massimo sono spesso quelle del peggioramento pi&ugrave; deciso.
+        </p>
+
+        <h3 class="sub-title-info">2. Come gira il vento salendo: aria calda o fredda in arrivo</h3>
+        <p>Si confrontano le direzioni a 850, 500 e 300 hPa (il +300 m risente troppo dei rilievi):</p>
+        <ul>
+            <li><strong>il vento gira in senso orario salendo</strong> (es. S a 850, SO a 500, O a 300): arriva aria calda nei bassi strati,
+                si parla di <dfn>avvezione calda</dfn> (trasporto orizzontale di aria pi&ugrave; calda). Tipico dell'arrivo di un fronte caldo
+                o della parte anteriore di una saccatura: nubi che si addensano, pioggia estesa e continua;</li>
+            <li><strong>il vento gira in senso antiorario salendo</strong> (es. NO a 850, O a 500, SO a 300): arriva aria fredda
+                (<dfn>avvezione fredda</dfn>). Tipico del dopo-fronte: schiarite, rovesci sparsi, calo della T 850;</li>
+            <li><strong>stessa direzione a tutte le quote</strong>: massa d'aria omogenea, situazione pi&ugrave; stabile e persistente.</li>
+        </ul>
+
+        <h3 class="sub-title-info">3. La differenza di velocit&agrave; tra le quote</h3>
+        <ul>
+            <li><strong>vento debole in basso e forte in quota</strong>: forte <dfn>taglio del vento</dfn> (<em>wind shear</em>).
+                Se l'atmosfera &egrave; anche instabile (T 500 molto fredda, CAPE alto nelle mappe), gli eventuali temporali sono
+                pi&ugrave; organizzati e duraturi;</li>
+            <li><strong>vento debole a tutte le quote</strong>: d'estate temporali di calore brevi e locali; d'inverno, con cielo sereno,
+                notti con <dfn>inversione termica</dfn> (aria pi&ugrave; fredda in basso che in collina) e gelate nei fondovalle;</li>
+            <li><strong>vento forte gi&agrave; a 850 hPa</strong> (oltre 50&ndash;60 km/h): circolazione vigorosa anche in basso,
+                tipica di fronti attivi, libecciate e tramontane forti.</li>
+        </ul>
+
+        <h3 class="sub-title-info">4. Le situazioni tipiche</h3>
+        <div class="tab-wrap">
+        <table class="info">
+            <tr><th>Striscia Z500</th><th>Vento 300 hPa</th><th>Rotazione salendo</th><th>Lettura tipica</th></tr>
+            <tr><td>caselle blu (in calo)</td><td>in aumento</td><td>oraria</td><td>arriva una saccatura: peggioramento in vista</td></tr>
+            <tr><td>valore minimo</td><td>massimo</td><td>da oraria ad antioraria</td><td>passaggio dell'asse della saccatura o del fronte</td></tr>
+            <tr><td>caselle rosse (in aumento)</td><td>in calo</td><td>antioraria, poi uniforme</td><td>rimonta un promontorio: miglioramento</td></tr>
+            <tr><td>alto e stabile, numero rosso</td><td>debole</td><td>uniforme</td><td>anticiclone: tempo stabile, inversioni nelle notti serene</td></tr>
+        </table>
+        </div>
+        <div class="esempio">
+            <strong>Esempio di lettura.</strong> Nel meteogramma Z500 scende da 576 a 558 dam (caselle blu), il vento a 300 hPa sale da
+            90 a 180 km/h da SO, a 850 hPa il vento gira da S a SO, le caselle P msl diventano blu e le bande delle nubi si scuriscono
+            prima in alto e poi in basso. Lettura: arriva una saccatura da ovest, con il getto davanti; pioggia probabile, pi&ugrave; intensa
+            nelle ore in cui il vento a 300 hPa &egrave; vicino al massimo. La conferma va cercata nelle barre della pioggia e nella mappa Z500.
+        </div>
+        <div class="note-box">
+            Sono regole pratiche, non leggi: servono a capire il "perch&eacute;" di quello che il modello prevede, non a sostituirlo.
+        </div>
+
+        <!-- ================================================================ -->
+        <h2 class="sec-title" id="getto">La corrente a getto</h2>
+        <p>
+            La <dfn>corrente a getto</dfn> &egrave; un nastro stretto e lungo di vento molto forte, tra 9 e 12 km di quota, che
+            corre da ovest verso est lungo il confine tra aria polare e aria subtropicale. Per l'Organizzazione Meteorologica Mondiale
+            si parla di getto quando il vento supera i <strong>30 m/s, circa 110 km/h</strong>.
+        </p>
+        <div class="tab-wrap">
+        <table class="info">
+            <tr><th>Velocit&agrave; a 300 hPa</th><th>Significato</th></tr>
+            <tr><td>sotto 100 km/h</td><td>flusso normale in quota</td></tr>
+            <tr><td>110&ndash;150 km/h</td><td>getto debole o margini del getto</td></tr>
+            <tr><td>150&ndash;200 km/h</td><td>getto ben definito</td></tr>
+            <tr><td>oltre 200 km/h</td><td>nucleo del getto (<em>jet streak</em>); d'inverno sull'Atlantico si arriva a 250&ndash;350 km/h</td></tr>
+        </table>
+        </div>
+        <ul>
+            <li>Pi&ugrave; della velocit&agrave; conta la <strong>forma</strong>: una fascia stretta (qualche centinaio di km) e lunga
+                (migliaia di km), con il vento che cala rapidamente ai lati. Si riconosce bene solo sulla <a href="#mappe">mappa del vento a 300 hPa</a>.</li>
+            <li>Il getto segue le isoipse e corre lungo il bordo delle saccature e dei promontori, vicino ai fronti.</li>
+            <li>Nelle zone di <strong>uscita</strong> di un nucleo (a sinistra rispetto alla direzione del vento) e di <strong>ingresso</strong>
+                (a destra) l'aria in quota diverge e "aspira" aria dal basso: si favoriscono le depressioni e le precipitazioni.
+                Un nucleo che arriva dalla Francia con l'uscita sopra la Toscana &egrave; spesso un segnale di peggioramento.</li>
+            <li>D'inverno il getto &egrave; pi&ugrave; forte e pi&ugrave; a sud, spesso sopra l'Italia; d'estate si indebolisce e risale verso il nord Europa.</li>
+            <li>A 300 hPa si vede bene il getto del fronte polare; quello subtropicale sta pi&ugrave; in alto (circa 200 hPa) e qui si vede solo in parte.</li>
+        </ul>
+
+        <!-- ================================================================ -->
+        <h2 class="sec-title" id="mappe">Mappe Italia</h2>
+        <p>
+            Le mappe mostrano la situazione a grande scala sull'Italia e i mari vicini. Vengono dal modello <strong>ECMWF IFS
+            deterministico</strong>, lo stesso del meteogramma, sulla sua griglia di <strong>circa 25 km</strong>; per la mappa si prende
+            un punto ogni 0,5&deg; (circa 50 km), sufficiente per i campi a grande scala come geopotenziale, temperature in quota,
+            venti e pressione. Le mappe sono alle <strong>00, 06 e 18 UTC</strong>, dalle ultime 24 ore alle prossime 48, e vengono
+            aggiornate due volte al giorno.
+        </p>
+        <ul>
+            <li>In alto la fila delle ore (quelle passate su sfondo giallo) e le frecce per passare alla mappa precedente o successiva.</li>
+            <li>A destra la scelta del parametro e il riquadro "Su Simignano" con il valore nel punto della griglia pi&ugrave; vicino.</li>
+            <li>Passando il mouse sulla mappa si legge il valore in ogni punto.</li>
+        </ul>
+        <div class="tab-wrap">
+        <table class="info">
+            <tr><th>Parametro</th><th>Cosa mostra e come leggerlo</th></tr>
+            <tr><td>Geopotenziale 500 hPa e T 500</td><td>colori = temperatura a 5500 m; linee bianche (<dfn>isoipse</dfn>) = geopotenziale ogni 6 dam. Isoipse che si incurvano verso sud = saccatura; verso nord = promontorio. Il vento in quota scorre lungo le linee, pi&ugrave; forte dove sono fitte.</td></tr>
+            <tr><td>Geopotenziale 850 hPa e T 850</td><td>colori = temperatura a 1500 m (la massa d'aria); isoipse ogni 4 dam. Si vedono le "lingue" di aria fredda o calda.</td></tr>
+            <tr><td>Temperatura 850 / 500 hPa</td><td>solo il campo di temperatura, per seguire le masse d'aria.</td></tr>
+            <tr><td>Vento 850 / 500 / 300 hPa</td><td>colori = velocit&agrave;; frecce = verso dove va il vento (una ogni grado). A 300 hPa le zone blu-viola sono il getto.</td></tr>
+            <tr><td>Nuvolosit&agrave; bassa / media / alta</td><td>copertura in %, dal bianco (sereno) al grigio scuro (coperto).</td></tr>
+            <tr><td>Precipitazione 6 ore</td><td>pioggia caduta nelle 6 ore che finiscono all'ora della mappa. La scala dei colori non &egrave; lineare, cos&igrave; si distinguono sia 0,5 mm sia 30 mm.</td></tr>
+            <tr><td>Pressione al livello del mare</td><td>colori e <dfn>isobare</dfn> ogni 4 hPa: si vedono anticicloni, depressioni e fronti al suolo.</td></tr>
+            <tr><td>CAPE</td><td>energia disponibile per la convezione, in J/kg: sopra 500 temporali possibili, sopra 1500 anche forti, se qualcosa li innesca (un fronte, il riscaldamento del suolo, i rilievi).</td></tr>
+        </table>
+        </div>
+
+        <!-- ================================================================ -->
+        <h2 class="sec-title" id="limiti">Limiti e note</h2>
+        <ul>
+            <li><strong>Risoluzione</strong>: il modello lavora su celle di circa 25 km. Colline, valli e versanti sono "levigati":
+                la quota della cella &egrave; circa 420 m, vicina a quella della stazione (418 m), ma il terreno intorno &egrave; molto pi&ugrave; vario.</li>
+            <li><strong>Notti serene e senza vento</strong>: il modello sottostima spesso il raffreddamento nei fondovalle e la formazione di nebbie.
+                Nelle colline le minime possono invece essere pi&ugrave; alte di quelle previste.</li>
+            <li><strong>Temporali</strong>: un modello a 25 km pu&ograve; prevedere che l'atmosfera sia adatta ai temporali, ma non dove cadranno
+                esattamente. Va letta la probabilit&agrave;, non il valore in mm.</li>
+            <li><strong>La media dei membri</strong> &egrave; una buona stima quando i membri sono d'accordo; quando divergono (pallino rosso)
+                &egrave; meglio guardare l'intervallo p10&ndash;p90.</li>
+            <li><strong>Gli estremi</strong>: l'intervallo p10&ndash;p90 esclude per costruzione il 20% dei membri pi&ugrave; estremi. I valori
+                minimo e massimo si leggono nel riquadro al passaggio del mouse.</li>
+            <li><strong>Norme del geopotenziale</strong>: sono valori climatologici indicativi per l'Italia centrale, non medie calcolate su questo punto.</li>
+            <li><strong>Cambio dell'ora</strong>: le colonne sono a passi di 3 ore sul tempo universale; nella notte del cambio dell'ora due colonne
+                consecutive possono essere distanti 2 o 4 ore in ora italiana.</li>
+            <li><strong>Ensemble e mappe</strong>: il meteogramma e la tabella usano la media dell'ensemble, le mappe il modello deterministico.
+                Di solito concordano; quando l'ensemble &egrave; incerto possono differire.</li>
+        </ul>
+
+    </main>
+
+    <!-- ====================================================================
+         JAVASCRIPT - toggle menu (come stat.info.html)
+         ==================================================================== -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var menuToggle = document.querySelector('.menu-toggle');
+        var submenu    = document.querySelector('.submenu');
+        var autoCloseTimer = null;
+
+        function openMenu() {
+            submenu.classList.add('active');
+            clearTimeout(autoCloseTimer);
+            autoCloseTimer = setTimeout(closeMenu, 5000);
+        }
+        function closeMenu() {
+            submenu.classList.remove('active');
+            clearTimeout(autoCloseTimer);
+            document.querySelectorAll('.submenu-item.has-sub.sub-active')
+                .forEach(function(el) { el.classList.remove('sub-active'); });
+        }
+
+        menuToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (submenu.classList.contains('active')) closeMenu();
+            else openMenu();
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!submenu.contains(e.target) && !menuToggle.contains(e.target)) closeMenu();
+        });
+
+        document.querySelectorAll('.submenu-item.has-sub').forEach(function(item) {
+            item.addEventListener('click', function(e) {
+                if (e.target.closest('.sub-submenu')) return;
+                e.stopPropagation();
+                clearTimeout(autoCloseTimer);
+                autoCloseTimer = setTimeout(closeMenu, 5000);
+                item.classList.toggle('sub-active');
+            });
+        });
+    });
+    </script>
+
+</body>
+</html>

@@ -1,6 +1,11 @@
 <?php
 /**
- * GALLERIA METEO SIMIGNANO — v3.0 (solo HTML statico, dati via JS fetch)
+ * GALLERIA METEO SIMIGNANO — v3.1 (solo HTML statico, dati via JS fetch)
+ *
+ * Versione: 3.1 - Data: 2026-10-25
+ * 2026-10-25 v3.1: rimosso echo PHP di $mainImageDate in #date-label
+ *                  (variabile non piu' definita dalla v3.0; il testo viene
+ *                  scritto da renderMainDate() in aggiorna_galleria.js)
  */
 require_once __DIR__ . '/camera_config.php';
 ?>
@@ -576,6 +581,7 @@ require_once __DIR__ . '/camera_config.php';
                 <a href='grafici_termo_plotly.php?range=24h&visible=' class="submenu-item">Grafici</a>
                 <a href="pluvio.html" class="submenu-item">Pioggia: 24h</a>
                 <a href="pluvio_tab.php" class="submenu-item">Pioggia: tabella</a>
+                <a href="previsione_display.php" class="submenu-item">Previsione</a>
                 <a href="#" class="submenu-item" onclick="window.open('classifica_immagini.php?token=', '_blank'); return false;">Admin</a>
             </div>
         </div>
@@ -606,7 +612,7 @@ require_once __DIR__ . '/camera_config.php';
             <h2 class="date-text" id="main-image-date">
                 <!-- Data e ora dell'immagine -->
                 <span id="date-label">
-                    Ultima immagine (dir. NO): <?php echo htmlspecialchars($mainImageDate); ?>
+                    Ultima immagine (dir. NO): 
                 </span>
                 
                 <!-- Temperatura con colore dinamico -->

@@ -1569,6 +1569,7 @@ main {
                 <a href='grafici_termo_plotly.php?range=24h&visible=' class="submenu-item">Grafici</a>
                 <a href="pluvio.html" class="submenu-item">Pioggia: 24h</a>
                 <a href="pluvio_tab.php" class="submenu-item">Pioggia: tabella</a>
+                <a href="previsione_display.php" class="submenu-item">Previsione</a>
             </div>    
          </div>       
     

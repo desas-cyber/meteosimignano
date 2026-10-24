@@ -102,7 +102,7 @@ function reloadIframeMeteo(reason = 'manual') {
   iframe.src = url;
   _lastRefreshAt = Date.now();
 
-  console.log(`🔄 [meteo] Iframe ricaricato (${reason}) → ${url}`);
+  //console.log(`🔄 [meteo] Iframe ricaricato (${reason}) → ${url}`);
 }
 
 /** Avvia il refresh periodico (se non già attivo). */
@@ -112,7 +112,7 @@ function startMeteoAutoRefresh() {
     return;
   }
   _intervalId = setInterval(reloadIframeMeteo, METEO_REFRESH_INTERVAL_MS);
-  console.log(`▶️ [meteo] Auto-refresh avviato ogni ${METEO_REFRESH_INTERVAL_MS / 1000}s`);
+  //console.log(`▶️ [meteo] Auto-refresh avviato ogni ${METEO_REFRESH_INTERVAL_MS / 1000}s`);
 }
 
 /** Ferma il refresh periodico (se attivo). */

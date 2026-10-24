@@ -383,6 +383,7 @@ if (!isset($mainImageDate)) {
                         <a href="pluvio_stat_display.php" class="submenu-item" target="_blank">Pluvio</a>
                     </div>
                 </div>
+                <a href="previsione_display.php" class="submenu-item">Previsione</a>
                 <a href="#" class="submenu-item" onclick="window.open('classifica_immagini.php?token=', '_blank'); return false;">Admin</a>
             </div>
         </div>

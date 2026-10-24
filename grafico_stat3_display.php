@@ -7,7 +7,7 @@
  *   1h / 6h / 12h / 24h
  *
  * Ogni blocco ha 12 barre (gen-dic).
- * Asse Y destra: 0-200 mm.
+ * Asse Y destra: 0-max automatico (record piu' alto dell'anno + 10%).
  * Anno selezionabile con frecce.
  * Tooltip su hover/touch: mm + data del record.
  *
@@ -17,6 +17,10 @@
  * Comunicazione con stat_display.php via postMessage:
  *   - resize       : aggiorna altezza iframe
  *   - tornaTabella : torna a tabella_stat3_display.php
+ *
+ * VERSIONE: 1.2 - 2026-10-24
+ *   - 1.2: asse Y auto-adattato al record massimo dell'anno (step arrotondato),
+ *          calcolo robusto anche con valori stringa / null / mancanti
  */
 
 ini_set('display_errors', 0);
@@ -182,12 +186,47 @@ var MESI    = <?= $mesi_js ?>;
 var ANNO    = <?= $anno_sel ?>;
 var MESI_NOMI = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
 
+// MESI puo' arrivare come oggetto {1:...,2:...} invece che array: normalizza
+if (MESI && !Array.isArray(MESI)) {
+    MESI = Object.keys(MESI).sort(function(a, b) { return a - b; })
+                            .map(function(k) { return MESI[k]; });
+}
+if (!MESI) MESI = [];
+
 var DURATE = [
     { id: 'r1h',  label: '1h',  colore: '#5B9BD5', dataKey: 'd1h'  },
     { id: 'r6h',  label: '6h',  colore: '#70AD47', dataKey: 'd6h'  },
     { id: 'r12h', label: '12h', colore: '#ED7D31', dataKey: 'd12h' },
-    { id: 'r24h', label: '24h', colore: '#A32D2D', dataKey: 'd24h' },
+    { id: 'r24h', label: '24h', colore: '#A32D2D', dataKey: 'd24h' }
 ];
+
+// Converte un valore in numero; null se assente o non valido
+function num(v) {
+    if (v === null || v === undefined || v === '') return null;
+    var n = parseFloat(v);
+    return isNaN(n) ? null : n;
+}
+
+// Calcola massimo asse Y in base alla barra piu' alta (+10% margine)
+function calcolaScalaY() {
+    var maxVal = 0;
+    MESI.forEach(function(m) {
+        if (!m) return;
+        DURATE.forEach(function(d) {
+            var v = num(m[d.id]);
+            if (v !== null && v > maxVal) maxVal = v;
+        });
+    });
+    if (maxVal <= 0) return { max: 10, step: 5 };
+
+    var target = maxVal * 1.10;
+    var passi = [5, 10, 20, 25, 50, 100];
+    var step = passi[passi.length - 1];
+    for (var i = 0; i < passi.length; i++) {
+        if (target / passi[i] <= 5) { step = passi[i]; break; }
+    }
+    return { max: Math.ceil(target / step) * step, step: step };
+}
 
 // Array barre per tooltip: { x1, x2, y1, y2, mm, data, durata }
 var barreTooltip = [];
@@ -209,14 +248,13 @@ var graficoPlugin = {
         var yBase = yp(0);
 
         // Geometria: 4 blocchi (durate), ognuno con 12 barre (mesi)
-        // Asse X virtuale: 0-52, ogni blocco occupa ~12 unità + 1 di gap
         var BLOCCHI = [
             { durata: DURATE[0], xStart: 0  },
             { durata: DURATE[1], xStart: 13 },
             { durata: DURATE[2], xStart: 26 },
-            { durata: DURATE[3], xStart: 39 },
+            { durata: DURATE[3], xStart: 39 }
         ];
-        var barW_u = 0.8; // larghezza barra in unità X
+        var barW_u = 0.8; // larghezza barra in unita' X
 
         BLOCCHI.forEach(function(b) {
             var dur = b.durata;
@@ -231,18 +269,18 @@ var graficoPlugin = {
 
             // 12 barre mensili
             MESI.forEach(function(m, i) {
-                var val = m[dur.id];
+                if (!m) return;
+                var val = num(m[dur.id]);
                 if (val === null) return;
 
-                var xU  = b.xStart + i + 0.1;
-                var x1  = xp(xU);
-                var x2  = xp(xU + barW_u);
-                var yTop = yp(Math.min(val, 200));
+                var xU   = b.xStart + i + 0.1;
+                var x1   = xp(xU);
+                var x2   = xp(xU + barW_u);
+                var yTop = yp(Math.min(val, yS.max));
 
                 ctx.fillStyle = dur.colore;
                 ctx.fillRect(x1, yTop, x2 - x1, yBase - yTop);
 
-                // Salva per tooltip
                 barreTooltip.push({
                     x1: x1, x2: x2, y1: yTop, y2: yBase,
                     mm: val,
@@ -253,14 +291,14 @@ var graficoPlugin = {
             });
 
             // Etichette mesi sotto le barre
-            MESI.forEach(function(m, i) {
+            for (var i = 0; i < 12; i++) {
                 var xU = b.xStart + i + 0.1 + barW_u / 2;
                 ctx.fillStyle = '#aaa';
                 ctx.font = '8px Arial';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'top';
                 ctx.fillText(MESI_NOMI[i], xp(xU), yBase + 3);
-            });
+            }
         });
 
         // Separatori verticali tra blocchi
@@ -280,6 +318,8 @@ var graficoPlugin = {
 function build() {
     if (mainChart) { mainChart.destroy(); mainChart = null; }
 
+    var scalaY = calcolaScalaY();
+
     var W = document.querySelector('.chart-container').offsetWidth || 400;
     var H = Math.max(260, Math.min(Math.round(W * 0.55), 380));
     document.getElementById('mainChart').style.height = H + 'px';
@@ -298,13 +338,14 @@ function build() {
             scales: {
                 x: { min: 0, max: 51, display: false },
                 y: {
-                    min: 0, max: 150,
+                    min: 0,
+                    max: scalaY.max,
                     position: 'right',
                     grid: { color: 'rgba(128,128,128,0.1)' },
                     ticks: {
                         font: { size: 9 },
                         color: '#5B9BD5',
-                        stepSize: 50,
+                        stepSize: scalaY.step,
                         callback: function(v) { return v + ' mm'; }
                     }
                 }
@@ -324,10 +365,9 @@ var tooltipEl = document.getElementById('chart-tooltip');
 
 function fmtData(s) {
     if (!s) return '';
-    var p = s.split(/[-T ]/);
+    var p = String(s).split(/[-T ]/);
     if (p.length < 3) return s;
-    var mm = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
-    return p[2] + ' ' + mm[+p[1]-1] + ' ' + p[0];
+    return p[2] + ' ' + MESI_NOMI[+p[1] - 1] + ' ' + p[0];
 }
 
 function aggiornaTooltip(clientX, clientY) {
