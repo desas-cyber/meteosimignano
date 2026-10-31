@@ -559,32 +559,7 @@ require_once __DIR__ . '/camera_config.php';
 
     
      <!-- Icona Menu/Indice (destra) -->
-        <div class="header-menu-container">
-            <button class="header-icon right-icon menu-toggle" title="Menu">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-                <span class="icon-label">Menu</span>
-            </button>
-            
-            <div class="submenu">
-                <a href="index.php" class="submenu-item">Home</a>
-                <a href="belle.php" class="submenu-item">Diario del cielo</a>
-                <div class="submenu-item has-sub">
-                    <span class="submenu-item-label">Statistiche &#9658;</span>
-                    <div class="sub-submenu">
-                        <a href="stat_display.php" class="submenu-item" target="_blank">Tabelle</a>
-                        <a href="termo_stat_display.php" class="submenu-item" target="_blank">Termo</a>
-                        <a href="pluvio_stat_display.php" class="submenu-item" target="_blank">Pluvio</a>
-                    </div>
-                </div>
-                <a href='grafici_termo_plotly.php?range=24h&visible=' class="submenu-item">Grafici</a>
-                <a href="pluvio.html" class="submenu-item">Pioggia: 24h</a>
-                <a href="pluvio_tab.php" class="submenu-item">Pioggia: tabella</a>
-                <a href="previsione_display.php" class="submenu-item">Previsione</a>
-                <a href="#" class="submenu-item" onclick="window.open('classifica_immagini.php?token=', '_blank'); return false;">Admin</a>
-            </div>
-        </div>
+        <?php $menu_voce_admin = true; include __DIR__ . '/menu_destro.php'; ?>
 </header>
 
     <main>
@@ -918,61 +893,6 @@ require_once __DIR__ . '/camera_config.php';
   init();
 })();
 </script>
-<script>
-
-// Toggle menu in alto a dx
-document.addEventListener('DOMContentLoaded', function() {
-    const menuToggle = document.querySelector('.menu-toggle');
-    const submenu = document.querySelector('.submenu');
-    var autoCloseTimer = null;
-
-    function openMenu() {
-        submenu.classList.add('active');
-        clearTimeout(autoCloseTimer);
-        autoCloseTimer = setTimeout(closeMenu, 5000);
-    }
-
-    function closeMenu() {
-        submenu.classList.remove('active');
-        clearTimeout(autoCloseTimer);
-        // chiudi anche eventuali sub-submenu aperti
-        document.querySelectorAll('.has-sub.sub-active').forEach(function(el) {
-            el.classList.remove('sub-active');
-        });
-    }
-
-    menuToggle.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (submenu.classList.contains('active')) {
-            closeMenu();
-        } else {
-            openMenu();
-        }
-    });
-
-    // Gestione sub-submenu (click su .has-sub)
-    document.querySelectorAll('.has-sub').forEach(function(item) {
-        item.addEventListener('click', function(e) {
-            e.stopPropagation();
-            // resetta timer auto-close: l'utente sta interagendo
-            clearTimeout(autoCloseTimer);
-            autoCloseTimer = setTimeout(closeMenu, 5000);
-            item.classList.toggle('sub-active');
-        });
-    });
-
-    // Chiudi tutto cliccando fuori
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.header-menu-container')) {
-            closeMenu();
-        }
-    });
-});
-</script>
-
-    
-    
     
 </body>
 </html>

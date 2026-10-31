@@ -1,12 +1,18 @@
 <?php
 /**
  * PREVISIONE D'INSIEME METEO SIMIGNANO - previsione_display.php
- * Versione 1.1 - 2026-10-24
+ * Versione 1.7 - 2026-10-27
  * Storico:
  *   1.0  2026-10-24  Prima versione: header + immagine principale come stat_display.php, un solo blocco
  *                    con l'iframe di https://test.meteosimignano.it/previsione_ensemble.php largo fino a 1200 px;
  *                    l'altezza dell'iframe si adatta da sola (la pagina interna la comunica con postMessage)
  *   1.1  2026-10-24  Icona Info in alto a sinistra: apre la guida previsione.info.html
+ *   1.2  2026-10-25  Titoli: "Previsione Ensemble ECMWF 51 membri"
+ *   1.3  2026-10-25  Iframe e "Pagina intera" con ?pubblica=1: la pagina del server di casa non mostra i link interni
+ *   1.4  2026-10-26  "(51 membri)" tra parentesi; indirizzo senza ?pubblica=1 (la versione pubblica e' ora quella predefinita)
+ *   1.5  2026-10-26  "Schermo intero" si apre nella stessa scheda (prima in una nuova scheda, dove Torna indietro non funzionava)
+ *   1.6  2026-10-26  Pulsante "Versione semplice" accanto a "Schermo intero" (porta a previsione_display_sempl.php)
+ *   1.7  2026-10-27  "Schermo intero" passa ?torna= con l'indirizzo di questa pagina (funziona anche nel sito di prova)
  *
  * Struttura analoga a stat_display.php (stesso header, menu, immagine principale e spinner),
  * senza le tabelle statistiche.
@@ -19,7 +25,7 @@ if (!isset($mainImageDate)) {
 }
 
 // Pagina mostrata nell'iframe (server di casa) e origine ammessa per i messaggi di ridimensionamento
-$ENS_URL     = 'https://test.meteosimignano.it/previsione_ensemble.php';
+$ENS_URL     = 'https://test.meteosimignano.it/previsione_ensemble.php';   // versione pubblica (predefinita): senza i link interni
 $ENS_ORIGINE = 'https://test.meteosimignano.it';
 ?>
 <!DOCTYPE html>
@@ -34,7 +40,7 @@ $ENS_ORIGINE = 'https://test.meteosimignano.it';
     <meta http-equiv="Expires" content="0">
 
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <title>MeteoSimignano - Previsione d'insieme</title>
+    <title>MeteoSimignano - Previsione Ensemble ECMWF (51 membri)</title>
 
     <!-- FONDAMENTALE: contiene .temp-red/.temp-orange/.temp-green/ecc. usate da aggiorna_galleria.js -->
     <link rel="stylesheet" href="galleria-lightbox.css">
@@ -213,93 +219,7 @@ $ENS_ORIGINE = 'https://test.meteosimignano.it';
             pointer-events: none;
         }
 
-        /* ---- HEADER MENU (come stat_display.php) ---- */
-        .header-menu-container { position: relative; }
-
-        .menu-toggle { background: none; border: none; cursor: pointer; padding: 0; }
-
-        .submenu {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            margin-top: 10px;
-            background: white;
-            border: 2px solid #333;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            min-width: max-content;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.2s ease;
-            z-index: 1000;
-        }
-
-        .submenu.active { opacity: 1; visibility: visible; transform: translateY(0); }
-
-        .submenu-item {
-            display: block;
-            padding: 12px 20px;
-            color: #333;
-            text-decoration: none;
-            font-size: 14px;
-            transition: background-color 0.2s ease;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .submenu-item:last-child  { border-bottom: none; }
-        .submenu-item:hover       { background-color: #f8f8f8; }
-        .submenu-item:first-child { border-radius: 8px 8px 0 0; }
-        .submenu-item:last-child  { border-radius: 0 0 8px 8px; }
-
-        .submenu-item.has-sub {
-            position: relative;
-            cursor: pointer;
-            padding: 12px 20px;
-            border-bottom: 1px solid #f0f0f0;
-            user-select: none;
-        }
-        .submenu-item.has-sub:hover,
-        .submenu-item.has-sub.sub-active {
-            background-color: #f8f8f8;
-        }
-        .sub-submenu {
-            position: absolute;
-            top: 0;
-            left: 100%;
-            margin-left: 4px;
-            background: white;
-            border: 2px solid #333;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            min-width: max-content;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateX(-6px);
-            transition: all 0.2s ease;
-            z-index: 1100;
-        }
-        .submenu-item.has-sub.sub-active .sub-submenu {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(0);
-        }
-        @media (max-width: 768px) {
-            .sub-submenu {
-                left: auto;
-                right: 0;
-                top: 100%;
-                margin-left: 0;
-                margin-top: 2px;
-                transform: translateY(-6px);
-            }
-            .submenu-item.has-sub.sub-active .sub-submenu {
-                transform: translateY(0);
-            }
-        }
-        .sub-submenu .submenu-item {
-            padding: 6px 16px;
-        }
+        
 
         /* ---- SPINNER ---- */
         .sub-title-row { display: inline-flex; align-items: center; gap: 10px; }
@@ -364,32 +284,7 @@ $ENS_ORIGINE = 'https://test.meteosimignano.it';
             </h1>
         </div>
 
-        <div class="header-menu-container">
-            <button class="header-icon right-icon menu-toggle" title="Menu">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-                <span class="icon-label">Menu</span>
-            </button>
-
-            <div class="submenu">
-                <a href="index.php" class="submenu-item">Home</a>
-                <a href="belle.php" class="submenu-item">Diario del cielo</a>
-                <a href='grafici_termo_plotly.php?range=24h&visible=' class="submenu-item">Grafici</a>
-                <a href="pluvio.html" class="submenu-item">Pioggia: 24h</a>
-                <a href="pluvio_tab.php" class="submenu-item">Pioggia: tabella</a>
-                <a href="previsione_display.php" class="submenu-item">Previsione</a>
-                <div class="submenu-item has-sub">
-                    <span class="submenu-item-label">Statistiche &#9658;</span>
-                    <div class="sub-submenu">
-                        <a href="stat_display.php" class="submenu-item" target="_blank">Tabelle</a>
-                        <a href="termo_stat_display.php" class="submenu-item" target="_blank">Termo</a>
-                        <a href="pluvio_stat_display.php" class="submenu-item" target="_blank">Pluvio</a>
-                    </div>
-                </div>
-                <a href="#" class="submenu-item" onclick="window.open('classifica_immagini.php?token=', '_blank'); return false;">Admin</a>
-            </div>
-        </div>
+        <?php include __DIR__ . '/menu_destro.php'; ?>
     </header>
 
     <main>
@@ -419,8 +314,11 @@ $ENS_ORIGINE = 'https://test.meteosimignano.it';
 
         <!-- PREVISIONE D'INSIEME (pagina del server di casa, in iframe) -->
         <div class="stat-section-header">
-            <h2 class="stat-section-title">Previsione d'insieme</h2>
-            <a href="<?php echo htmlspecialchars($ENS_URL); ?>" class="stat-section-cta" target="_blank" rel="noopener">&#8599;&nbsp;Pagina intera</a>
+            <h2 class="stat-section-title">Previsione Ensemble ECMWF (51 membri)</h2>
+            <div style="display:flex; gap:6px;">
+                <a href="previsione_display_sempl.php" class="stat-section-cta">Versione semplice</a>
+                <a href="<?php echo htmlspecialchars($ENS_URL . '?torna=' . rawurlencode((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . strtok($_SERVER['REQUEST_URI'], '?'))); ?>" class="stat-section-cta">&#8599;&nbsp;Schermo intero</a>
+            </div>
         </div>
         <div class="stat-table-block">
             <div id="placeholder-ens" class="stat-table-placeholder">Caricamento previsione...</div>
@@ -429,7 +327,7 @@ $ENS_ORIGINE = 'https://test.meteosimignano.it';
                     width="100%"
                     frameborder="0"
                     scrolling="no"
-                    title="Previsione d'insieme per Simignano"></iframe>
+                    title="Previsione Ensemble ECMWF (51 membri) a Simignano"></iframe>
         </div>
 
     </main>
@@ -469,54 +367,6 @@ $ENS_ORIGINE = 'https://test.meteosimignano.it';
             if (h > 100 && h < 20000) fr.style.height = (h + 16) + 'px';   // 16 px di margine contro la barra di scorrimento
         });
     })();
-    </script>
-
-    <!-- Toggle menu (come stat_display.php) -->
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const menuToggle = document.querySelector('.menu-toggle');
-        const submenu = document.querySelector('.submenu');
-        var autoCloseTimer = null;
-
-        function openMenu() {
-            submenu.classList.add('active');
-            clearTimeout(autoCloseTimer);
-            autoCloseTimer = setTimeout(closeMenu, 5000);
-        }
-
-        function closeMenu() {
-            submenu.classList.remove('active');
-            clearTimeout(autoCloseTimer);
-            document.querySelectorAll('.has-sub.sub-active').forEach(function(el) {
-                el.classList.remove('sub-active');
-            });
-        }
-
-        menuToggle.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            if (submenu.classList.contains('active')) {
-                closeMenu();
-            } else {
-                openMenu();
-            }
-        });
-
-        document.querySelectorAll('.has-sub').forEach(function(item) {
-            item.addEventListener('click', function(e) {
-                e.stopPropagation();
-                clearTimeout(autoCloseTimer);
-                autoCloseTimer = setTimeout(closeMenu, 5000);
-                item.classList.toggle('sub-active');
-            });
-        });
-
-        document.addEventListener('click', function(e) {
-            if (!e.target.closest('.header-menu-container')) {
-                closeMenu();
-            }
-        });
-    });
     </script>
 
     <!-- SPINNER: attende immagine principale + iframe della previsione -->

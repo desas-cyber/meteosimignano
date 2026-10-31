@@ -1,5 +1,8 @@
-/* ==========================================================================
-   header_shared.css — RESET PULITO (per header MeteoSimignano)
+/* /* ==========================================================================
+   header_shared.css - RESET PULITO (per header MeteoSimignano)
+   Versione: 1.1
+   Data: 2026-10-26
+   - 1.1: aggiunto stile menu destro (prima inline in ogni pagina)
    ========================================================================== */
 
 :root {
@@ -182,4 +185,104 @@ header.main-header .submenu{
     max-width: calc(100vw - 16px);
   }
 }
+/* ====================================================================
+   MENU DESTRO (menu_destro.php) - IN ALTO A DX NELLA PAGINA
+   ==================================================================== */
+.header-menu-container {
+    position: relative;
+}
 
+.menu-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.submenu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 10px;
+    background: white;
+    border: 2px solid #333;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: max-content;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    z-index: 1000;
+}
+
+.submenu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.submenu-item {
+    display: block;
+    padding: 12px 20px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    text-align: left;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.submenu-item:last-child  { border-bottom: none; border-radius: 0 0 8px 8px; }
+.submenu-item:first-child { border-radius: 8px 8px 0 0; }
+.submenu-item:hover       { background-color: #f8f8f8; }
+
+/* Voce con sotto-menu annidato (Statistiche) */
+.submenu-item.has-sub {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+}
+.submenu-item.has-sub:hover,
+.submenu-item.has-sub.sub-active {
+    background-color: #f8f8f8;
+}
+
+.sub-submenu {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    margin-left: 4px;
+    background: white;
+    border: 2px solid #333;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: max-content;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-6px);
+    transition: all 0.2s ease;
+    z-index: 1100;
+}
+.submenu-item.has-sub.sub-active .sub-submenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+.sub-submenu .submenu-item {
+    padding: 6px 16px;
+}
+
+@media (max-width: 768px) {
+    .sub-submenu {
+        left: auto;
+        right: 0;
+        top: 100%;
+        margin-left: 0;
+        margin-top: 2px;
+        transform: translateY(-6px);
+    }
+    .submenu-item.has-sub.sub-active .sub-submenu {
+        transform: translateY(0);
+    }
+}

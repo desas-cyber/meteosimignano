@@ -1,16 +1,27 @@
 <!DOCTYPE html>
 <!--
     previsione.info.html - guida alla lettura della previsione d'insieme (previsione_display.php)
-    Versione 1.0 - 2026-10-24
+    Versione 1.8 - 2026-10-31
     Storico:
       1.0  2026-10-24  Prima versione: panoramica, meteogramma, ultime 24 ore, tabella, lettura combinata,
                        corrente a getto, mappe Italia, limiti
+      1.1  2026-10-25  Anomalie standardizzate (T2m sigma, T850 sigma) nel meteogramma e in tabella;
+                       pannello della pioggia ridotto (probabilita' solo nel colore e nel riquadro)
+      1.2  2026-10-25  Anomalie calcolate con il metodo dei ranghi (percentili climatici), non con media e deviazione standard
+      1.3  2026-10-25  Riga "T2m media" (riferimento climatico) e scritta "24h passate" nel meteogramma
+      1.4  2026-10-25  Nome "Previsione Ensemble ECMWF 51 membri"; riga "T2m x~" (mediana)
+      1.5  2026-10-25  Neve nel pannello della pioggia e zero termico (pallini viola)
+      1.6  2026-10-25  Zero termico senza scritte (quota nel riquadro); scritte del meteogramma senza sovrapposizioni;
+                       mappe: tolte le sole temperature 850/500, aggiunto lo zero termico
+      1.7  2026-10-26  Titolo "(51 membri)" tra parentesi
+      1.8  2026-10-31  Nuova sezione "La cella del modello" con la mappa della cella (mappa_griglia.html in iframe),
+                       bordi, dimensioni, posizione della stazione e cosa vale per tutta la cella
 -->
 <html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guida alla previsione - MeteoSimignano</title>
+    <title>Guida alla previsione Ensemble ECMWF - MeteoSimignano</title>
     <link rel="stylesheet" href="header_shared.css">
     <style>
         /* ====================================================================
@@ -98,6 +109,10 @@
             margin: 10px 0;
         }
         .note-box p, .note-box li { font-size: 13px; }
+
+        /* mappa della cella del modello (mappa_griglia.html?inc=1) */
+        .mappa-cella { width: 100%; height: 500px; border: 0; display: block; margin: 8px 0 14px 0; }
+        @media (max-width: 600px) { .mappa-cella { height: 420px; } }
 
         .esempio {
             background: #fbf8ef;
@@ -274,13 +289,15 @@
          ==================================================================== -->
     <main>
 
-        <h1 class="page-title">Guida alla previsione d'insieme</h1>
+        <h1 class="page-title">Guida alla Previsione Ensemble ECMWF (51 membri)</h1>
         <p class="page-subtitle">Come leggere il meteogramma, la tabella e le mappe dell'Italia</p>
 
         <div class="toc">
             <strong>Indice:</strong>
             <a href="#panoramica">Panoramica</a> &middot;
+            <a href="#cella">La cella del modello</a> &middot;
             <a href="#meteogramma">Il meteogramma</a> &middot;
+            <a href="#anomalie">Anomalie</a> &middot;
             <a href="#passato">Le ultime 24 ore</a> &middot;
             <a href="#tabella">La tabella</a> &middot;
             <a href="#insieme">Leggere il quadro insieme</a> &middot;
@@ -308,7 +325,8 @@
             Qui si usa l'ensemble del centro europeo <strong>ECMWF</strong> (modello IFS) con
             <strong>51 membri</strong> (uno di controllo e 50 perturbati), sul punto di Simignano.
             Il modello lavora su una <strong>griglia di 0,25&deg;, cio&egrave; circa 25 km</strong>:
-            ogni valore rappresenta la media di una cella di circa 25&nbsp;&times;&nbsp;20 km, non il punto esatto della stazione.
+            ogni valore rappresenta la media di una cella di circa 28&nbsp;&times;&nbsp;20 km, non il punto esatto della stazione
+            (vedi <a href="#cella">La cella del modello</a>).
             I dati vengono scaricati <strong>ogni 6 ore</strong>; la data di aggiornamento &egrave; scritta in testa alla pagina.
         </p>
         <p>La pagina &egrave; composta da tre parti:</p>
@@ -319,7 +337,47 @@
         </ol>
         <div class="note-box">
             Passando il mouse (o toccando) quasi ogni elemento del meteogramma e ogni cella della tabella compare
-            un riquadro con il valore esatto e i dettagli.
+            un riquadro con il valore esatto e i dettagli. Le scritte del meteogramma non si sovrappongono mai: quando
+            lo spazio &egrave; poco, i numeri meno importanti (prima i nomi dei livelli, poi le velocit&agrave; del vento, poi T 500
+            e T 850) vengono spostati o omessi, e il valore resta leggibile nel riquadro del simbolo.
+        </div>
+
+        <!-- ================================================================ -->
+        <h3 class="sub-title-info" id="cella">La cella del modello</h3>
+        <p>
+            Il modello non calcola il tempo punto per punto, ma su una <strong>griglia fissa</strong>, uguale per tutto il mondo:
+            un punto ogni 0,25&deg; di latitudine e di longitudine. La griglia non &egrave; centrata su Simignano; per la previsione
+            si usa il <strong>punto di griglia pi&ugrave; vicino</strong>, a <strong>43,25&deg; N &ndash; 11,25&deg; E</strong>,
+            circa <strong>8 km a sud-est</strong> della stazione, e il valore vale per tutta la sua cella (il rettangolo azzurro).
+        </p>
+        <iframe class="mappa-cella" src="mappa_griglia.html?inc=1" title="La cella del modello che rappresenta Simignano" loading="lazy"></iframe>
+        <div class="tab-wrap">
+        <table class="info">
+            <tr><th colspan="2">Cella usata per Simignano</th></tr>
+            <tr><td>Punto di griglia (centro)</td><td>43,25&deg; N &ndash; 11,25&deg; E</td></tr>
+            <tr><td>Bordi</td><td>da 43,125&deg; a 43,375&deg; N; da 11,125&deg; a 11,375&deg; E</td></tr>
+            <tr><td>Dimensioni</td><td>circa 28 km da nord a sud e 20 km da est a ovest (circa 560 km&sup2;): a questa latitudine
+                un grado di longitudine &egrave; pi&ugrave; corto di uno di latitudine</td></tr>
+            <tr><td>Posizione della stazione</td><td>nella parte nord-occidentale della cella, a circa 3,5 km dal bordo ovest e 9 km dal bordo nord;
+                8,2 km dal punto di griglia</td></tr>
+            <tr><td>Territorio compreso</td><td>all'incirca dalla Montagnola Senese e da Sovicille fino a Siena, e verso sud fino alla zona di Monticiano:
+                colline, valli e la citt&agrave;, tutte rappresentate dagli stessi valori</td></tr>
+        </table>
+        </div>
+        <p>Cosa significa in pratica:</p>
+        <ul>
+            <li><strong>Uguali in tutta la cella</strong>: pioggia e neve (e la loro probabilit&agrave;), nuvolosit&agrave;, vento, pressione
+                e tutti i valori in quota (geopotenziale, temperature e venti a 850, 500 e 300 hPa).</li>
+            <li><strong>Corretta per la quota</strong>: la temperatura a 2 m. Il servizio che fornisce i dati (Open-Meteo) la adatta alla quota
+                del punto richiesto, con la diminuzione tipica di circa 0,65 &deg;C ogni 100 m; la posizione dentro la cella invece non conta.</li>
+            <li>Una pioggia prevista "sulla cella" pu&ograve; cadere su Siena e non su Simignano, o viceversa: per questo la
+                <strong>probabilit&agrave;</strong> &egrave; spesso pi&ugrave; utile dei millimetri, soprattutto con i temporali.</li>
+            <li>Le differenze locali (fondovalle pi&ugrave; freddi nelle notti serene, nebbie, vento incanalato nelle valli) sono pi&ugrave;
+                piccole della cella e il modello non le vede: vedi <a href="#limiti">Limiti e note</a>.</li>
+        </ul>
+        <div class="note-box">
+            Anche il clima di riferimento per le anomalie (ERA5 1991&ndash;2020) &egrave; su una griglia di 0,25&deg;: previsione e clima
+            descrivono la stessa area, quindi il confronto &egrave; coerente.
         </div>
 
         <!-- ================================================================ -->
@@ -398,6 +456,15 @@
             <span class="item"><span class="sw" style="background:hsl(285,70%,40%)"></span>oltre 150</span>
         </div>
 
+        <h3 class="sub-title-info">Zero termico (pallini viola)</h3>
+        <p>
+            Un <span class="dot" style="background:#6a3fb5;"></span>pallino viola per colonna indica la <dfn>quota dello zero termico</dfn>, cio&egrave;
+            l'altezza alla quale la temperatura scende a 0 &deg;C; la quota in metri si legge passando il mouse (o toccando) il pallino, e cliccandolo si apre la mappa dello zero termico. Quando i pallini scendono verso il suolo
+            l'aria fredda arriva in basso: con precipitazione in corso, uno zero termico sotto i 700&ndash;800 m rende possibile la neve a Simignano
+            (la neve di solito arriva fino a 200&ndash;400 m sotto lo zero termico). Un pallino <strong>vuoto</strong> ("&le; suolo" nel riquadro)
+            significa che a quella ora si gela gi&agrave; alla quota della stazione.
+        </p>
+
         <h3 class="sub-title-info">Striscia Z500 / Z850 / P msl</h3>
         <p>
             Sotto il grafico ci sono tre righe di caselle. Le prime due riportano il <dfn>geopotenziale</dfn>: la quota (in
@@ -446,13 +513,77 @@
         <ul>
             <li>L'<strong>altezza della barra</strong> sono i millimetri previsti nelle 3 ore precedenti (media dei membri), scritti sopra la barra.</li>
             <li>Il <strong>colore</strong> &egrave; la probabilit&agrave;: pi&ugrave; scuro = pi&ugrave; membri prevedono almeno 0,2 mm.
-                La percentuale &egrave; scritta sopra i millimetri.</li>
+                La percentuale esatta si legge nel riquadro al passaggio del mouse.</li>
             <li>La scala si adatta da sola al massimo previsto (fondo scala 1, 2, 5, 10, 20, 50 mm): attenzione a leggere i valori,
                 perch&eacute; una barra alta pu&ograve; essere 0,8 mm in una giornata quasi asciutta.</li>
+        </ul>
+        <ul>
+            <li><strong>Neve</strong>: lo spazio &egrave; lo stesso, cambia l'aspetto della barra. Se la neve &egrave; almeno il 70% della
+                precipitazione la barra &egrave; <span class="sw" style="background:rgba(106,63,181,.25);border:1px solid #6a3fb5"></span>bianca/viola con
+                il bordo viola e sopra sono scritti i <strong>cm di neve fresca</strong> (in viola); pi&ugrave; &egrave; viola, pi&ugrave; membri
+                prevedono neve. Se pioggia e neve sono mescolate la barra &egrave; <strong>mista</strong>: parte bassa blu (pioggia), parte alta bianca
+                bordata di viola (neve). L'altezza della barra resta sempre l'acqua totale: 1 cm di neve fresca corrisponde a circa 1,4 mm d'acqua.</li>
         </ul>
         <div class="note-box">
             Una barra bassa ma scura = pioggia debole ma quasi certa; una barra alta ma chiara = pochi membri prevedono
             molta pioggia (tipico dei temporali: possibili, ma non si sa dove cadranno).
+        </div>
+
+        <h3 class="sub-title-info" id="anomalie">Anomalie standardizzate (righe T850 &sigma; e T2m &sigma;)</h3>
+        <p>
+            Le ultime due righe della striscia dicono <strong>quanto la temperatura prevista &egrave; insolita</strong> per quel giorno
+            dell'anno e quell'ora. Il numero &egrave; l'<dfn>anomalia standardizzata</dfn>, espressa in <dfn>deviazioni standard</dfn> (&sigma;).
+            Si calcola con il <strong>metodo dei ranghi</strong>, lo stesso degli indici SPI (pioggia) e STI (temperatura):
+        </p>
+        <ol>
+            <li>per quel giorno dell'anno e quell'ora si prendono tutti i valori del clima (per la T 2 m circa 900: 30 anni &times; 31 giorni attorno alla data);</li>
+            <li>si guarda in che <strong>posizione</strong> (rango) cade il valore previsto: per esempio "pi&ugrave; caldo del 93% dei casi climatici";</li>
+            <li>il rango si converte in &sigma; equivalenti con la curva gaussiana: il 50% (la <dfn>mediana</dfn>) vale 0, l'84% vale +1 &sigma;,
+                il 98% circa +2 &sigma;; allo stesso modo verso il freddo.</li>
+        </ol>
+        <p>
+            Rispetto al calcolo con media e deviazione standard, i ranghi non suppongono che le temperature si distribuiscano a campana
+            simmetrica. &Egrave; importante perch&eacute; spesso non &egrave; cos&igrave;: le notti invernali hanno una "coda fredda" (molte notti
+            normali o miti e poche notti molto fredde per inversione), i pomeriggi estivi una coda verso il basso (le giornate temporalesche).
+            Con i ranghi una notte gelida o un pomeriggio torrido hanno sempre il peso giusto. Dividere per la variabilit&agrave; rende inoltre
+            il confronto equo tra stagioni: +4 &deg;C pu&ograve; essere eccezionale a luglio, quando la temperatura varia poco, e quasi normale
+            a gennaio, quando con le inversioni varia molto. L'indice STI vero si usa su mesi e stagioni; qui la stessa idea &egrave; applicata alla singola ora.
+        </p>
+        <p>
+            Sotto l'1% e sopra il 99% dei casi climatici i dati sono troppo pochi per misurare il rango con precisione: il valore viene
+            limitato a circa &plusmn;2,3 &sigma; e scritto con &ge; o &le; (per esempio <strong>&ge;2,3</strong> = pi&ugrave; caldo di quasi tutti i casi climatici).
+        </p>
+        <div class="tab-wrap">
+        <table class="info">
+            <tr><th>Anomalia</th><th>Significato</th><th>Quanto spesso capita (circa)</th></tr>
+            <tr><td>entro &plusmn;0,5 &sigma;</td><td>nella norma</td><td>4 casi su 10</td></tr>
+            <tr><td>&plusmn;0,5 &ndash; 1 &sigma;</td><td>un po' sopra / sotto la norma</td><td>1 caso su 7 per lato</td></tr>
+            <tr><td>&plusmn;1 &ndash; 2 &sigma;</td><td>molto sopra / sotto</td><td>1 caso su 7 per lato</td></tr>
+            <tr><td>oltre &plusmn;2 &sigma;</td><td>eccezionale</td><td>2 casi su 100 per lato</td></tr>
+        </table>
+        </div>
+        <ul>
+            <li><strong>Colori</strong>: <span class="sw" style="background:rgba(192,57,43,.6)"></span>rosso = pi&ugrave; caldo della norma,
+                <span class="sw" style="background:rgba(43,108,176,.6)"></span>blu = pi&ugrave; freddo; il colore &egrave; pieno a &plusmn;2 &sigma;.</li>
+            <li><strong>T2m &sigma;</strong>: il clima di riferimento &egrave; <strong>ERA5 1991&ndash;2020</strong>, la rianalisi di ECMWF
+                (una ricostruzione del tempo passato fatta con lo stesso tipo di modello), sulla stessa cella di circa 25 km e alla stessa ora.
+                Si confronta quindi il modello con il clima "visto dal modello": l'effetto della cella e della quota si annulla. I casi climatici di ogni giorno e ora sono quelli di una finestra
+                di &plusmn;15 giorni in 30 anni (circa 900 valori).</li>
+            <li><strong>T850 &sigma;</strong>: per la quota di 850 hPa non esistono 30 anni di dati liberamente disponibili. Il clima
+                &egrave; ricavato dalle previsioni passate dal 2021 ("clima breve", pochi anni): il valore &egrave; <strong>solo indicativo</strong>.
+                Per ricordarlo la riga &egrave; disegnata con <span class="sw" style="background:repeating-linear-gradient(45deg,rgba(120,128,138,.45) 0 1px,transparent 1px 4px),rgba(192,57,43,.25)"></span>
+                colori tenui su una griglia grigia.</li>
+            <li>Nel riquadro al passaggio del mouse ci sono anche il rango ("pi&ugrave; caldo del 93% dei casi climatici"), la mediana climatica e, per le ore future, la
+                percentuale di membri sopra +1 &sigma; e sotto &minus;1 &sigma;: per esempio "membri sopra +1&sigma;: 70%" significa che 7
+                membri su 10 prevedono una temperatura nettamente sopra la norma.</li>
+            <li>Nella parte gialla l'anomalia della T 2 m &egrave; calcolata sulla temperatura del modello, non su quella misurata.</li>
+            <li><strong>T2m x&#771;</strong> (il simbolo x&#771; indica la mediana): l'ultima riga, senza colori, riporta la temperatura di riferimento per quel giorno e
+                quell'ora (la mediana del clima ERA5 1991&ndash;2020): &egrave; il valore "normale" con cui viene confrontata la T 2 m prevista.</li>
+        </ul>
+        <div class="note-box">
+            Un'anomalia di T 850 forte e persistente (es. oltre +1,5 &sigma; per pi&ugrave; giorni) indica una massa d'aria davvero insolita
+            per il periodo (ondata di calore o irruzione fredda). L'anomalia della T 2 m pu&ograve; invece cambiare molto tra giorno e notte:
+            con cielo sereno le minime possono essere "sotto la norma" anche dentro una massa d'aria calda.
         </div>
 
         <h3 class="sub-title-info">Link alle mappe</h3>
@@ -506,7 +637,8 @@
         <h3 class="sub-title-info">Media e intervallo p10&ndash;p90</h3>
         <p>
             In ogni cella il numero grande &egrave; la <strong>media dei 51 membri</strong>. Sotto, in piccolo, c'&egrave; l'intervallo
-            <strong>p10&ndash;p90</strong>: i <dfn>percentili</dfn> 10 e 90. Ordinando i membri dal valore pi&ugrave; basso al pi&ugrave; alto,
+            <strong>p10&ndash;p90</strong>: i <dfn>percentili</dfn> 10 e 90 (nelle colonne T 2 m e T 850 c'&egrave; anche
+            l'<a href="#anomalie">anomalia</a> in &sigma;, con lo stesso significato e gli stessi colori del meteogramma). Ordinando i membri dal valore pi&ugrave; basso al pi&ugrave; alto,
             il 10% dei membri sta sotto p10 e il 10% sta sopra p90: l'intervallo contiene quindi l'<strong>80% dei membri</strong>,
             esclusi i casi pi&ugrave; estremi.
         </p>
@@ -670,7 +802,7 @@
             <tr><th>Parametro</th><th>Cosa mostra e come leggerlo</th></tr>
             <tr><td>Geopotenziale 500 hPa e T 500</td><td>colori = temperatura a 5500 m; linee bianche (<dfn>isoipse</dfn>) = geopotenziale ogni 6 dam. Isoipse che si incurvano verso sud = saccatura; verso nord = promontorio. Il vento in quota scorre lungo le linee, pi&ugrave; forte dove sono fitte.</td></tr>
             <tr><td>Geopotenziale 850 hPa e T 850</td><td>colori = temperatura a 1500 m (la massa d'aria); isoipse ogni 4 dam. Si vedono le "lingue" di aria fredda o calda.</td></tr>
-            <tr><td>Temperatura 850 / 500 hPa</td><td>solo il campo di temperatura, per seguire le masse d'aria.</td></tr>
+            <tr><td>Zero termico</td><td>quota alla quale la temperatura scende a 0 &deg;C, con isolinee ogni 500 m. Le zone viola sono quelle con lo zero termico basso: con precipitazione, la neve pu&ograve; scendere di solito fino a 200&ndash;400 m sotto questa quota. Calcolata punto per punto dal profilo di temperatura del modello.</td></tr>
             <tr><td>Vento 850 / 500 / 300 hPa</td><td>colori = velocit&agrave;; frecce = verso dove va il vento (una ogni grado). A 300 hPa le zone blu-viola sono il getto.</td></tr>
             <tr><td>Nuvolosit&agrave; bassa / media / alta</td><td>copertura in %, dal bianco (sereno) al grigio scuro (coperto).</td></tr>
             <tr><td>Precipitazione 6 ore</td><td>pioggia caduta nelle 6 ore che finiscono all'ora della mappa. La scala dei colori non &egrave; lineare, cos&igrave; si distinguono sia 0,5 mm sia 30 mm.</td></tr>
@@ -692,6 +824,7 @@
                 &egrave; meglio guardare l'intervallo p10&ndash;p90.</li>
             <li><strong>Gli estremi</strong>: l'intervallo p10&ndash;p90 esclude per costruzione il 20% dei membri pi&ugrave; estremi. I valori
                 minimo e massimo si leggono nel riquadro al passaggio del mouse.</li>
+            <li><strong>Anomalia della T 850</strong>: calcolata su pochi anni, &egrave; indicativa; quella della T 2 m usa 30 anni.</li>
             <li><strong>Norme del geopotenziale</strong>: sono valori climatologici indicativi per l'Italia centrale, non medie calcolate su questo punto.</li>
             <li><strong>Cambio dell'ora</strong>: le colonne sono a passi di 3 ore sul tempo universale; nella notte del cambio dell'ora due colonne
                 consecutive possono essere distanti 2 o 4 ore in ora italiana.</li>

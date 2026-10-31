@@ -1,8 +1,13 @@
 <?php
 /**
  * GRAFICO TERMO-IGROMETRICO - VERSIONE PLOTLY.JS (OTTIMIZZATO)
+ *
+ * Versione: 1.1.0
+ * Data:     2026-10-31
  * 
  * Changelog:
+ * - 1.1.0 (2026-10-31): dew point segmentato usa point.index per la X
+ *   (l'API ora salta i punti mancanti invece di mandarli a 0)
  * - Rimossa ridondanza funzioni (clamp, y2LayoutFor, applyVisibility)
  * - Fix bug rangeslider: mantiene stato visibilità durante zoom/reload
  * - Gestione stato centralizzata in STATE object
@@ -491,155 +496,6 @@ if (!in_array($range, $ranges_validi)) {
     transform: translateY(0);
 }
 
-/* ====================================================================
-   VOCI DEL SOTTO MENU - IN ALTO A DX NELLA PAGINA
-   ==================================================================== */
-
-
-
-/* Pulsante menu */
-.menu-toggle {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-}
-
-/* Sottomenu */
-.submenu {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    margin-top: 10px;
-    background: white;
-    border: 2px solid #333;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    min-width: max-content;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.2s ease;
-    z-index: 1000;
-}
-
-/* Sottomenu visibile */
-.submenu.active {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
-
-/* Voci del sottomenu */
-.submenu-item {
-    display: block;
-    padding: 12px 16px;
-    color: #333;
-    text-decoration: none;
-    font-size: 14px;
-    text-align: left;
-    transition: background-color 0.2s ease;
-    border-bottom: 1px solid #ddd;
-}
-
-.submenu-item:last-child {
-    border-bottom: none;
-}
-
-.submenu-item:hover {
-    background-color: #f0f0f0;
-}
-
-.submenu-item:first-child {
-    border-radius: 6px 6px 0 0;
-}
-
-.submenu-item:last-child {
-    border-radius: 0 0 6px 6px;
-}
-
-
-   .submenu-item {
-    display: block;
-    padding: 12px 20px;
-    color: #333;
-    text-decoration: none;
-    font-size: 14px;
-    transition: background-color 0.2s ease;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.submenu-item:last-child {
-    border-bottom: none;
-}
-
-.submenu-item:hover {
-    background-color: #f8f8f8;
-}
-
-.submenu-item:first-child {
-    border-radius: 8px 8px 0 0;
-}
-
-.submenu-item:last-child {
-    border-radius: 0 0 8px 8px;
-}
-/*=================================
-* VOCE CON SOTTO MENU ANNIDIATO *
-=================================*/
-.submenu-item.has-sub {
-    position: relative;
-    cursor: pointer;
-    padding: 12px 20px;
-    border-bottom: 1px solid #f0f0f0;
-    user-select: none;
-}
-.submenu-item.has-sub:hover,
-.submenu-item.has-sub.sub-active {
-    background-color: #f8f8f8;
-}
-.sub-submenu {
-    position: absolute;
-    top: 0;
-    left: 100%;
-    margin-left: 4px;
-    background: white;
-    border: 2px solid #333;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    min-width: max-content;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateX(-6px);
-    transition: all 0.2s ease;
-    z-index: 1100;
-}
-.submenu-item.has-sub.sub-active .sub-submenu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(0);
-}
-@media (max-width: 768px) {
-    .sub-submenu {
-        left: auto;
-        right: 0;
-        top: 100%;
-        margin-left: 0;
-        margin-top: 2px;
-        transform: translateY(-6px);
-    }
-    .submenu-item.has-sub.sub-active .sub-submenu {
-        transform: translateY(0);
-    }
-}
-.submenu-item.has-sub.sub-active .sub-submenu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(0);
-}
-.sub-submenu .submenu-item {
-    padding: 6px 16px;
-}
     </style>
 </head>
 <body>
@@ -663,31 +519,8 @@ if (!in_array($range, $ranges_validi)) {
     </h1>
     </div>
    
-
-    
-     <!-- Icona Menu/Indice (destra) -->
-        <div class="header-menu-container">
-            <button class="header-icon right-icon menu-toggle" title="Menu">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-                <span class="icon-label">Menu</span>
-            </button>
-            
-            <div class="submenu">
-                <a href="index.php" class="submenu-item">Home</a>
-                <a href="belle.php" class="submenu-item">Diario del cielo</a>
-                <a href='grafici_termo_plotly.php?range=24h&visible=' class="submenu-item">Grafici</a>
-                <div class="submenu-item has-sub">
-                    <span class="submenu-item-label">Statistiche &#9658;</span>
-                    <a href="stat_display.php" class="submenu-item" target="_blank">Tabelle</a>
-                        <a href="termo_stat_display.php" class="submenu-item" target="_blank">Termo</a>
-                        <a href="pluvio_stat_display.php" class="submenu-item" target="_blank">Pluvio</a>
-                </div>
-                <a href="pluvio.html" class="submenu-item">Pioggia: 24h</a>
-                <a href="pluvio_tab.php" class="submenu-item">Pioggia: tabella</a>
-            </div>
-        </div>
+   
+     <?php include __DIR__ . '/menu_destro.php'; ?>
     </header>
     
     <!-- Container -->
@@ -1210,12 +1043,14 @@ function replaceDewpointWithSegments(traces, dewpointSegments) {
     if (!current || current.color !== point.color) {
       if (current) segments.push(current);
 
-      const startX = current ? [current.x[current.x.length - 1], original.x[idx]] : [original.x[idx]];
+      // usa point.index: l'API salta i punti mancanti, quindi idx != indice originale
+      const xi = (point.index !== undefined) ? point.index : idx;
+      const startX = current ? [current.x[current.x.length - 1], original.x[xi]] : [original.x[xi]];
       const startY = current ? [current.y[current.y.length - 1], point.value] : [point.value];
 
       current = { color: point.color, x: startX, y: startY };
     } else {
-      current.x.push(original.x[idx]);
+      current.x.push(original.x[(point.index !== undefined) ? point.index : idx]);
       current.y.push(point.value);
     }
   });
@@ -2054,57 +1889,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-
-/* Toggle menu in alto DX */
-    
-    document.addEventListener('DOMContentLoaded', function() {
-    const menuToggle = document.querySelector('.menu-toggle');
-    const submenu = document.querySelector('.submenu');
-    var autoCloseTimer = null;
-
-    function openMenu() {
-        submenu.classList.add('active');
-        clearTimeout(autoCloseTimer);
-        autoCloseTimer = setTimeout(closeMenu, 5000);
-    }
-
-    function closeMenu() {
-        submenu.classList.remove('active');
-        clearTimeout(autoCloseTimer);
-        // chiudi anche eventuali sub-submenu aperti
-        document.querySelectorAll('.has-sub.sub-active').forEach(function(el) {
-            el.classList.remove('sub-active');
-        });
-    }
-
-    menuToggle.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (submenu.classList.contains('active')) {
-            closeMenu();
-        } else {
-            openMenu();
-        }
-    });
-
-    // Gestione sub-submenu (click su .has-sub)
-    document.querySelectorAll('.has-sub').forEach(function(item) {
-        item.addEventListener('click', function(e) {
-            e.stopPropagation();
-            // resetta timer auto-close: l'utente sta interagendo
-            clearTimeout(autoCloseTimer);
-            autoCloseTimer = setTimeout(closeMenu, 5000);
-            item.classList.toggle('sub-active');
-        });
-    });
-
-    // Chiudi tutto cliccando fuori
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.header-menu-container')) {
-            closeMenu();
-        }
-    });
-});
 
     </script>
 </body>

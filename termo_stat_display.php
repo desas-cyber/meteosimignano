@@ -129,97 +129,7 @@
             pointer-events: none;
         }
 
-        /* ---- HEADER MENU ---- */
-        .header-menu-container { position: relative; }
-
-        .menu-toggle { background: none; border: none; cursor: pointer; padding: 0; }
-
-        .submenu {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            margin-top: 10px;
-            background: white;
-            border: 2px solid #333;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            min-width: max-content;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.2s ease;
-            z-index: 1000;
-        }
-
-        .submenu.active { opacity: 1; visibility: visible; transform: translateY(0); }
-
-        .submenu-item {
-            display: block;
-            padding: 12px 20px;
-            color: #333;
-            text-decoration: none;
-            font-size: 14px;
-            transition: background-color 0.2s ease;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .submenu-item:last-child  { border-bottom: none; }
-        .submenu-item:hover       { background-color: #f8f8f8; }
-        .submenu-item:first-child { border-radius: 8px 8px 0 0; }
-        .submenu-item:last-child  { border-radius: 0 0 8px 8px; }
-
-/*=================================
-* VOCE CON SOTTO MENU ANNIDIATO *
-=================================*/
-.submenu-item.has-sub {
-    position: relative;
-    cursor: pointer;
-    padding: 12px 20px;
-    border-bottom: 1px solid #f0f0f0;
-    user-select: none;
-}
-.submenu-item.has-sub:hover,
-.submenu-item.has-sub.sub-active {
-    background-color: #f8f8f8;
-}
-.sub-submenu {
-    position: absolute;
-    top: 0;
-    left: 100%;
-    margin-left: 4px;
-    background: white;
-    border: 2px solid #333;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    min-width: max-content;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateX(-6px);
-    transition: all 0.2s ease;
-    z-index: 1100;
-}
-.submenu-item.has-sub.sub-active .sub-submenu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(0);
-}
-@media (max-width: 768px) {
-    .sub-submenu {
-        left: auto;
-        right: 0;
-        top: 100%;
-        margin-left: 0;
-        margin-top: 2px;
-        transform: translateY(-6px);
-    }
-    .submenu-item.has-sub.sub-active .sub-submenu {
-        transform: translateY(0);
-    }
-}
-.sub-submenu .submenu-item {
-    padding: 6px 16px;
-}
-
+        
         /* ---- SPINNER ---- */
         .sub-title-row { display: inline-flex; align-items: center; gap: 10px; }
 
@@ -246,7 +156,7 @@
     <!-- HEADER -->
     <header class="main-header">
 
-        <a href="stat.info.html" class="header-icon left-icon" title="">
+        <a href="termo_stat_info.html" class="header-icon left-icon" title="">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"></circle>
                 <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -265,31 +175,7 @@
             </h1>
         </div>
 
-        <div class="header-menu-container">
-            <button class="header-icon right-icon menu-toggle" title="Menu">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-                <span class="icon-label">Menu</span>
-            </button>
-
-            <div class="submenu">
-                <a href="index.php" class="submenu-item">Home</a>
-                <a href="belle.php" class="submenu-item">Diario del cielo</a>
-                <a href='grafici_termo_plotly.php?range=24h&visible=' class="submenu-item">Grafici</a>
-                <a href="pluvio.html" class="submenu-item">Pioggia: 24h</a>
-                <a href="pluvio_tab.php" class="submenu-item">Pioggia: tabella</a>
-                <div class="submenu-item has-sub">
-                    <span class="submenu-item-label">Statistiche &#9658;</span>
-                    <div class="sub-submenu">
-                        <a href="stat_display.php" class="submenu-item" >Tabelle</a>
-                        <a href="pluvio_stat_display.php" class="submenu-item" >Pioggia</a>
-                        <a href="termo_stat_display.php" class="submenu-item" >Temperatura</a>
-                    </div>
-                </div>
-                <a href="#" class="submenu-item" onclick="window.open('classifica_immagini.php?token=', '_blank'); return false;">Admin</a>
-            </div>
-        </div>
+        <?php include __DIR__ . '/menu_destro.php'; ?>
     </header>
 
     <main>
@@ -418,55 +304,7 @@
     });
     </script>
 
-    <!-- Toggle menu -->
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    const menuToggle = document.querySelector('.menu-toggle');
-    const submenu = document.querySelector('.submenu');
-    var autoCloseTimer = null;
-
-    function openMenu() {
-        submenu.classList.add('active');
-        clearTimeout(autoCloseTimer);
-        autoCloseTimer = setTimeout(closeMenu, 5000);
-    }
-
-    function closeMenu() {
-        submenu.classList.remove('active');
-        clearTimeout(autoCloseTimer);
-        // chiudi anche eventuali sub-submenu aperti
-        document.querySelectorAll('.has-sub.sub-active').forEach(function(el) {
-            el.classList.remove('sub-active');
-        });
-    }
-
-    menuToggle.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (submenu.classList.contains('active')) {
-            closeMenu();
-        } else {
-            openMenu();
-        }
-    });
-
-    // Gestione sub-submenu (click su .has-sub)
-    document.querySelectorAll('.has-sub').forEach(function(item) {
-        item.addEventListener('click', function(e) {
-            e.stopPropagation();
-            clearTimeout(autoCloseTimer);
-            autoCloseTimer = setTimeout(closeMenu, 5000);
-            item.classList.toggle('sub-active');
-        });
-    });
-
-    // Chiudi tutto cliccando fuori
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.header-menu-container')) {
-            closeMenu();
-        }
-    });
-});</script>
+   
 
     <!-- SPINNER
          Attende i soli iframe (qui non c'e' immagine principale).

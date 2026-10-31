@@ -3,6 +3,34 @@
  * ============================================================================
  * STATISTICA TERMICA (STI) - grafico_termo_display.php
  * ============================================================================
+ * Versione: 1.5 - 25/10/2026
+ *
+ * Storico versioni:
+ *   1.5 (25/10/2026) Anomalia scritta in °C. Legenda della tabella
+ *       Situazione in forma di tabella a una riga: ogni cella ha colore,
+ *       intervallo di STI e frequenza attesa (1/N, distribuzione normale),
+ *       cosi' sul telefono le corrispondenze restano allineate.
+ *   1.4 (25/10/2026) Tabella Situazione: accanto allo STI, tra parentesi,
+ *       l'anomalia in °C rispetto alla media di riferimento della stessa
+ *       finestra (valore − media). Sul telefono va a capo sotto lo STI.
+ *   1.3 (25/10/2026) Zoom a finestra come in Plotly: col mouse si trascina sul
+ *       grafico e si disegna il periodo da ingrandire (rettangolo azzurro);
+ *       al rilascio il grafico mostra solo quel periodo. Shift + trascina =
+ *       spostamento nel tempo; doppio clic o ✕ = serie intera. Tolto lo zoom
+ *       con la rotellina: la rotellina torna a scorrere la pagina.
+ *   1.2 (25/10/2026) Zoom solo col mouse, senza pulsanti: rotellina sul
+ *       grafico = zoom attorno al cursore; trascinamento = spostamento;
+ *       doppio clic = ingrandisci / torna alla serie intera. Quando c'e'
+ *       zoom compare in alto a destra nel grafico un'etichetta col periodo
+ *       visibile e una ✕ per tornare alla serie intera. Due dita sul telefono.
+ *   1.1 (25/10/2026) Zoom orizzontale del grafico Andamento (vista Indice STI):
+ *       pulsanti ◀ − + ▶ Tutto; Ctrl/Cmd + rotellina o pizzico del trackpad;
+ *       due dita sul telefono; trascinamento col mouse per spostarsi;
+ *       doppio clic per ingrandire / tornare alla serie intera.
+ *       Con lo zoom l'asse Y si adatta ai dati visibili e compaiono le
+ *       righe verticali di gennaio. Tooltip a un dito solo (due dita = zoom).
+ *   1.0 prima versione.
+ *
  * Iframe di termo_stat_display.php: indice termico standardizzato di
  * Simignano, analogo all'SPI della pioggia (grafico2_pluvio_display.php).
  *
@@ -15,6 +43,7 @@
  *   2. Andamento: serie dello STI oppure percentili mese per mese
  *      (p10-p90, p25-p75, mediana) con l'anno in corso sovrapposto.
  *      PALLINO PULSANTE = stima al giorno corrente, con barretta d'incertezza.
+ *      Vista STI zoommabile sull'asse del tempo (v1.1).
  *   3. Confronto Theil-Sen: anomalie per anno di un periodo a scelta (anno,
  *      stagione, mese) con tendenza di Theil-Sen e test di Mann-Kendall;
  *      classifiche (anno fino all'ultimo mese chiuso, ultima stagione completa)
@@ -79,6 +108,7 @@ $oggi_disp = (new DateTime($meta['oggi']))->format('d/m/Y');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- grafico_termo_display.php v1.5 - 25/10/2026 -->
     <title>Indice termico STI</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -140,6 +170,28 @@ $oggi_disp = (new DateTime($meta['oggi']))->format('d/m/Y');
         .btn:hover { border-color: #3366cc; color: #3366cc; }
         .btn.attivo, .btn.attivo:hover { background: #333; border-color: #333; color: #fff; }
         .btn:focus-visible { outline: 2px solid #3366cc; outline-offset: 1px; }
+        .btn:disabled, .btn:disabled:hover { opacity: .3; cursor: default; border-color: #000; color: #000; }
+
+        /* ---- zoom del grafico Andamento (v1.1) ---- */
+        .zoom-reset {
+            position: absolute; top: 4px; right: 26px; z-index: 3;
+            display: none; align-items: center; gap: 5px;
+            font-family: Arial, sans-serif; font-size: 10px; font-weight: bold;
+            color: #333; background: rgba(255,255,255,0.88);
+            border: 1px solid #bbb; border-radius: 3px; padding: 2px 6px;
+            cursor: pointer; white-space: nowrap;
+        }
+        .zoom-reset:hover { border-color: #3366cc; color: #3366cc; }
+        .zoom-reset:focus-visible { outline: 2px solid #3366cc; }
+        .zoom-reset .x { font-size: 12px; line-height: 1; }
+        #chart-and { touch-action: none; }          /* due dita = zoom del grafico, non della pagina */
+        #chart-and.seleziona { cursor: crosshair; }
+        #chart-and.trascinando { cursor: grabbing; }
+        .zoom-sel {
+            position: absolute; display: none; pointer-events: none; z-index: 2;
+            background: rgba(51,102,204,0.12);
+            border-left: 1px solid #3366cc; border-right: 1px solid #3366cc;
+        }
 
         /* ---- tabelle (stile tabella_stat_display) ---- */
         table {
@@ -154,6 +206,15 @@ $oggi_disp = (new DateTime($meta['oggi']))->format('d/m/Y');
         th:first-child, td:first-child { text-align: left; padding-left: 4px; }
         .t-sti td { font-weight: bold; font-size: 12px; line-height: 1.2; }
         .t-sti td small { display: block; font-size: 9px; font-weight: normal; opacity: .9; }
+        .leg-tab { width: 100%; flex: 1 1 100%; table-layout: fixed; border-collapse: collapse; }
+        .leg-tab td, .leg-tab td:first-child {
+            text-align: center; padding: 3px 1px; border: 1px solid #fff;
+            font-size: 9px; font-weight: bold; line-height: 1.25; vertical-align: middle;
+        }
+        .leg-tab td small { display: block; font-size: 9px; font-weight: normal; }
+        .leg-tab td small.nome { font-size: 8px; opacity: .9; }
+        .leg-tab-nota { font-size: 9px; color: #999; margin-top: 2px; }
+        .t-sti td .anom { font-size: 10px; font-weight: normal; white-space: nowrap; }
         .t-sti td:first-child { font-weight: bold; font-size: 11px; background: #f4f4f4; color: #333; }
         .t-clima td { font-variant-numeric: tabular-nums; }
         .t-clima th button {
@@ -253,6 +314,7 @@ $oggi_disp = (new DateTime($meta['oggi']))->format('d/m/Y');
             table { font-size: 10px; }
             .t-sti td { font-size: 11px; }
             .t-sti td small { font-size: 8px; }
+            .t-sti td .anom { display: block; font-size: 9px; }
             .t-clima th, .t-clima td { padding: 3px 1px; }
             .btn { padding: 3px 6px; }
         }
@@ -305,6 +367,8 @@ $oggi_disp = (new DateTime($meta['oggi']))->format('d/m/Y');
     <div class="chart-container" id="cont-and">
         <canvas id="chart-and" role="img" aria-label="Andamento dell'indice termico"></canvas>
         <div class="pulse" id="pulse-and"></div>
+        <div class="zoom-sel" id="zoom-sel"></div>
+        <button type="button" class="zoom-reset" id="zoom-reset" title="Torna alla serie intera" aria-label="Torna alla serie intera"></button>
     </div>
     <div class="legend" id="leg-and"></div>
     <div class="pan-nota" id="nota-and"></div>
@@ -434,6 +498,25 @@ function legendaClassi(a) {
              + (MOBILE ? lab[k][0] : lab[k][0] + ' ' + lab[k][1]) + '</span>';
     }).join('');
 }
+// Funzione di ripartizione normale per ogni z (phi() vale per z >= 0)
+function cdfNorm(z) { return z >= 0 ? phi(z) : 1 - phi(-z); }
+// Legenda della tabella Situazione: una riga, una cella per classe con
+// colore, intervallo e frequenza attesa (in media 1 mese su N).
+function legendaTabella() {
+    var lim = [-99, -2, -1.5, -1, 1, 1.5, 2, 99];
+    var lab = ['\u2264 \u22122', '\u22122 \u00f7 \u22121,5', '\u22121,5 \u00f7 \u22121', '\u22121 \u00f7 +1',
+               '+1 \u00f7 +1,5', '+1,5 \u00f7 +2', '\u2265 +2'];
+    var h = '<table class="leg-tab" aria-label="Classi dello STI e frequenza attesa"><tr>';
+    CLASSI.forEach(function(cl, k) {
+        var p = cdfNorm(Math.min(lim[k + 1], 8)) - cdfNorm(Math.max(lim[k], -8));
+        var freq = k === 3 ? '2/3' : '1/' + Math.round(1 / p);
+        h += '<td style="background:' + cl[2] + ';color:' + cl[3] + ';">' + lab[k]
+           + '<small>' + freq + '</small>'
+           + (MOBILE ? '' : '<small class="nome">' + cl[4] + '</small>') + '</td>';
+    });
+    return h + '</tr></table>'
+         + '<div class="leg-tab-nota">sotto l\u2019intervallo: frequenza attesa, in media 1 caso su N mesi (distribuzione normale)</div>';
+}
 function fmt(v, d) {
     if (v == null) return '–';
     return (v < 0 ? '−' : '') + Math.abs(v).toFixed(d == null ? 1 : d).replace('.', ',');
@@ -509,6 +592,19 @@ function gruppoBottoni(id, voci, chiave, dopo) {
 // ---------------------------------------------------------------------------
 // 1. Situazione
 // ---------------------------------------------------------------------------
+function indiceMese(ym) {
+    ym = ym.slice(0, 7);
+    for (var i = MESI.length - 1; i >= 0; i--) if (MESI[i][0] === ym) return i;
+    return -1;
+}
+// Anomalia in °C della finestra che termina nel mese ym: valore − media di
+// riferimento. Senza valore si ricava dallo STI (STI × deviazione standard).
+function anomaliaGradi(v, w, ym, valore, sti) {
+    var p = PAR[v] && PAR[v][w] && PAR[v][w][+ym.slice(5, 7) - 1];
+    if (!p) return null;
+    if (valore != null) return valore - p[0];
+    return sti == null ? null : sti * p[1];
+}
 function disegnaSituazione() {
     var oggi = ST.sit === 'oggi' && STIMA;
     document.getElementById('sit-tit').textContent = oggi
@@ -520,16 +616,22 @@ function disegnaSituazione() {
     VARS.forEach(function(v) {
         h += '<tr><td>' + VLAB[v] + '</td>';
         FIN.forEach(function(w) {
-            var s = null, extra = '';
+            var s = null, extra = '', an = null;
             if (oggi) {
                 var f = STIMA.var[v] && STIMA.var[v].finestre[w];
-                if (f) { s = f.sti; extra = '±' + fmt(f.sig_sti, 1); }
+                if (f) {
+                    s = f.sti; extra = '±' + fmt(f.sig_sti, 1);
+                    an = anomaliaGradi(v, w, STIMA.mese, f.valore, s);
+                }
             } else if (ULT && ULT[v] && ULT[v][w]) {
                 s = ULT[v][w].sti;
+                var i = indiceMese(ULT.mese);
+                an = anomaliaGradi(v, w, ULT.mese, i >= 0 ? finestre(VARS.indexOf(v), w)[i] : null, s);
             }
             var cl = classe(s);
             if (!cl) { h += '<td style="background:#f4f4f4;color:#999;">n/d</td>'; return; }
             h += '<td style="background:' + cl[2] + ';color:' + cl[3] + ';">' + fmtSti(s)
+               + (an == null ? '' : ' <span class="anom">(' + (an > 0 ? '+' : '') + fmt(an, 1) + ' °C)</span>')
                + '<small>' + (MOBILE ? (extra || cl[4].split(' ')[0]) : cl[4] + (extra ? ' ' + extra : '')) + '</small></td>';
         });
         h += '</tr>';
@@ -543,9 +645,11 @@ function disegnaSituazione() {
         nota = 'Stima su ' + STIMA.giorni + ' giorni validi di ' + STIMA.giorni_mese + '. '
              + 'La media dei giorni disponibili (' + fmt(sm.parziale) + ' °C) è riportata al mese intero '
              + 'togliendo ' + fmt(sm.delta) + ' °C di effetto stagionale. '
-             + 'Il valore ± è l’incertezza in unità di STI dovuta ai giorni che mancano.';
+             + 'Il valore ± è l’incertezza in unità di STI dovuta ai giorni che mancano. '
+             + 'Tra parentesi lo scarto in °C dalla media di riferimento ' + META.periodo_rif + ' della stessa finestra.';
     } else {
         nota = 'Valori del mese chiuso: definitivi.';
+        nota += ' Tra parentesi lo scarto in °C dalla media di riferimento ' + META.periodo_rif + ' della stessa finestra.';
         if (!STIMA) {
             // mese in corso senza stima: servono almeno 5 giorni validi (TERMO_PROVV_GIORNI_MIN nell'API)
             var gg = +META.oggi.slice(8, 10), mm = +META.oggi.slice(5, 7);
@@ -556,13 +660,189 @@ function disegnaSituazione() {
         }
     }
     document.getElementById('sit-nota').textContent = nota;
-    document.getElementById('leg-sti').innerHTML = legendaClassi();
+    document.getElementById('leg-sti').innerHTML = legendaTabella();
 }
 
 // ---------------------------------------------------------------------------
 // 2. Andamento (Chart.js + plugin di disegno, come grafico2_pluvio)
 // ---------------------------------------------------------------------------
 var chartAnd = null, chartAnni = null;
+
+// ---- Zoom orizzontale (v1.1), solo vista Indice STI ----
+// ZOOM = { a, b } in indici di MESI (asse x del grafico); null = serie intera.
+// L'asse x va da 0 a MESI.length: l'ultima posizione e' la stima di oggi.
+var ZOOM = null;
+var ZOOM_MIN = 12;   // ampiezza minima visibile: 12 mesi
+function xMaxAnd() { return MESI.length; }
+function rangeX() { return ZOOM ? [ZOOM.a, ZOOM.b] : [0, xMaxAnd()]; }
+
+// Limiti dell'asse Y sui soli dati visibili (con lo zoom la base e' piu' stretta)
+function limitiYSti(d, a, b) {
+    var base = ZOOM ? 2.2 : 3.2, top = base, bot = -base;
+    var i0 = Math.max(0, Math.floor(a)), i1 = Math.min(d.sti.length - 1, Math.ceil(b));
+    for (var i = i0; i <= i1; i++) {
+        var s = d.sti[i];
+        if (s != null) { top = Math.max(top, s + 0.3); bot = Math.min(bot, s - 0.3); }
+    }
+    if (d.stima && b >= xMaxAnd() - 0.5) {
+        top = Math.max(top, d.stima.sti + d.stima.sig_sti + 0.3);
+        bot = Math.min(bot, d.stima.sti - d.stima.sig_sti - 0.3);
+    }
+    return [Math.floor(bot), Math.ceil(top)];
+}
+
+function impostaZoom(a, b) {
+    var full = xMaxAnd(), span = b - a;
+    if (span >= full - 0.01) {
+        ZOOM = null;
+    } else {
+        span = Math.max(ZOOM_MIN, span);
+        if (a < 0) a = 0;
+        if (a + span > full) a = full - span;
+        ZOOM = { a: a, b: a + span };
+    }
+    aggiornaZoom();
+}
+// f < 1 ingrandisce, f > 1 riduce; c = indice che resta fermo
+function zoomIntorno(c, f) {
+    var r = rangeX(), span = r[1] - r[0];
+    var ns = Math.max(ZOOM_MIN, Math.min(xMaxAnd(), span * f));
+    var a = c - (c - r[0]) * ns / span;
+    impostaZoom(a, a + ns);
+}
+function spostaZoom(delta) {
+    if (!ZOOM) return;
+    var r = rangeX();
+    impostaZoom(r[0] + delta, r[1] + delta);
+}
+
+// Applica il range al grafico gia' costruito, senza ricrearlo
+function aggiornaZoom() {
+    if (!chartAnd || ST.vista !== 'sti') { statoZoom(); return; }
+    var d = chartAnd.options.plugins.andPlugin.d, r = rangeX(), y = limitiYSti(d, r[0], r[1]);
+    var sc = chartAnd.options.scales;
+    sc.x.min = r[0]; sc.x.max = r[1];
+    sc.y.min = y[0]; sc.y.max = y[1];
+    chartAnd.update('none');
+    statoZoom();
+}
+
+// Etichetta nel grafico: periodo visibile + ✕ per tornare alla serie intera
+function statoZoom() {
+    var bt = c$('zoom-reset');
+    if (!bt) return;
+    var sti = ST.vista === 'sti';
+    if (sti && ZOOM) {
+        var r = rangeX();
+        var i0 = Math.min(MESI.length - 1, Math.max(0, Math.ceil(r[0])));
+        var i1 = Math.min(MESI.length - 1, Math.max(0, Math.floor(r[1])));
+        bt.innerHTML = nomeMese(MESI[i0][0]) + ' – ' + nomeMese(MESI[i1][0]) + '<span class="x">\u2715</span>';
+        bt.style.display = 'inline-flex';
+    } else {
+        bt.style.display = 'none';
+    }
+    var cv = c$('chart-and');
+    if (cv) cv.classList.toggle('seleziona', sti);
+}
+if (c$('zoom-reset')) c$('zoom-reset').addEventListener('click', function() { impostaZoom(0, xMaxAnd()); });
+
+// Gesti sul canvas (v1.3):
+//   trascina col mouse      = disegna la finestra da ingrandire (come Plotly)
+//   Shift + trascina        = sposta il periodo visibile (se c'e' zoom)
+//   scorrimento orizzontale = sposta (trackpad), la rotellina scorre la pagina
+//   doppio clic             = torna alla serie intera
+//   due dita sul telefono   = pizzico/spostamento
+// Il canvas sopravvive ai destroy: i listener si aggiungono una volta sola.
+function abilitaZoomCanvas(cv) {
+    if (cv.$zoomOk) return;
+    cv.$zoomOk = true;
+    function attivo() { return chartAnd && ST.vista === 'sti'; }
+    function idxDaPx(px) { return chartAnd.scales.x.getValueForPixel(px); }
+    function larghezza() { var ca = chartAnd.chartArea; return Math.max(1, ca.right - ca.left); }
+    function pxCanvas(clientX) {
+        var ca = chartAnd.chartArea, x = clientX - cv.getBoundingClientRect().left;
+        return Math.max(ca.left, Math.min(ca.right, x));
+    }
+    var sel = c$('zoom-sel');
+
+    // solo lo scorrimento orizzontale del trackpad sposta; quello verticale resta alla pagina
+    cv.addEventListener('wheel', function(e) {
+        if (!attivo() || !ZOOM || Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+        e.preventDefault();
+        var r = rangeX();
+        spostaZoom(e.deltaX * (r[1] - r[0]) / larghezza());
+    }, { passive: false });
+
+    var drag = null;   // { modo: 'sel' | 'pan', x0, ... }
+    cv.addEventListener('mousedown', function(e) {
+        if (!attivo() || e.button !== 0) return;
+        var ca = chartAnd.chartArea, x = e.clientX - cv.getBoundingClientRect().left;
+        if (x < ca.left || x > ca.right) return;
+        e.preventDefault();
+        nascondiTooltip();
+        if (e.shiftKey && ZOOM) {
+            drag = { modo: 'pan', x: e.clientX, r: rangeX() };
+            cv.classList.add('trascinando');
+        } else {
+            drag = { modo: 'sel', x0: pxCanvas(e.clientX), x1: pxCanvas(e.clientX) };
+            sel.style.top = ca.top + 'px';
+            sel.style.height = (ca.bottom - ca.top) + 'px';
+        }
+    });
+    window.addEventListener('mousemove', function(e) {
+        if (!drag) return;
+        nascondiTooltip();
+        if (drag.modo === 'pan') {
+            var span = drag.r[1] - drag.r[0];
+            var dI = -(e.clientX - drag.x) * span / larghezza();
+            impostaZoom(drag.r[0] + dI, drag.r[1] + dI);
+            return;
+        }
+        drag.x1 = pxCanvas(e.clientX);
+        var l = Math.min(drag.x0, drag.x1), w = Math.abs(drag.x1 - drag.x0);
+        sel.style.left = l + 'px';
+        sel.style.width = w + 'px';
+        sel.style.display = w > 2 ? 'block' : 'none';
+    });
+    window.addEventListener('mouseup', function() {
+        if (!drag) return;
+        var d = drag;
+        drag = null;
+        cv.classList.remove('trascinando');
+        sel.style.display = 'none';
+        if (d.modo !== 'sel' || Math.abs(d.x1 - d.x0) < 6) return;   // un clic semplice non zooma
+        var a = idxDaPx(Math.min(d.x0, d.x1)), b = idxDaPx(Math.max(d.x0, d.x1));
+        if (b - a < ZOOM_MIN) { var c = (a + b) / 2; a = c - ZOOM_MIN / 2; b = c + ZOOM_MIN / 2; }
+        impostaZoom(a, b);
+    });
+    cv.addEventListener('dblclick', function() {
+        if (attivo() && ZOOM) impostaZoom(0, xMaxAnd());
+    });
+
+    // Due dita: pizzico = zoom, spostamento delle dita = scorrimento
+    var pz = null;
+    function distX(t) { return Math.max(30, Math.abs(t[0].clientX - t[1].clientX)); }
+    function medioX(t) { return (t[0].clientX + t[1].clientX) / 2 - cv.getBoundingClientRect().left; }
+    cv.addEventListener('touchstart', function(e) {
+        if (!attivo() || e.touches.length !== 2) return;
+        e.preventDefault();
+        pz = { d: distX(e.touches), r: rangeX(), c: idxDaPx(medioX(e.touches)) };
+        nascondiTooltip();
+    }, { passive: false });
+    cv.addEventListener('touchmove', function(e) {
+        if (!pz || e.touches.length !== 2) return;
+        e.preventDefault();
+        var span = (pz.r[1] - pz.r[0]) * pz.d / distX(e.touches);
+        span = Math.max(ZOOM_MIN, Math.min(xMaxAnd(), span));
+        var ca = chartAnd.chartArea;
+        var frac = (medioX(e.touches) - ca.left) / larghezza();
+        var a = pz.c - frac * span;
+        impostaZoom(a, a + span);
+        nascondiTooltip();
+    }, { passive: false });
+    cv.addEventListener('touchend', function(e) { if (e.touches.length < 2) pz = null; });
+    cv.addEventListener('touchcancel', function() { pz = null; });
+}
 
 function datiAndamento() {
     var v = ST.v, vi = VARS.indexOf(v), w = ST.w;
@@ -608,12 +888,15 @@ var andPlugin = {
             [v + sig, v - sig].forEach(function(e) { ctx.beginPath(); ctx.moveTo(x - 4, yp(e)); ctx.lineTo(x + 4, yp(e)); ctx.stroke(); });
         }
         function mettiPulse(x, y) {
+            // con lo zoom il punto puo' essere fuori dall'area visibile
+            if (x < ca.left - 1 || x > ca.right + 1) return;
             pulse.style.left = x + 'px'; pulse.style.top = y + 'px'; pulse.style.display = 'block';
             hit.dot = { x: x, y: y };
         }
 
         if (ST.vista === 'sti') {
             var yMax = chart.scales.y.max, yMin = chart.scales.y.min;
+            var r = rangeX(), span = r[1] - r[0], full = xMaxAnd();
             // fasce caldo (> +1) e freddo (< -1)
             // bande delle classi (come il termometro SPI): colori delle classi, schiariti
             CLASSI.forEach(function(cl, k) {
@@ -626,16 +909,43 @@ var andPlugin = {
             ctx.strokeStyle = 'rgba(128,128,128,0.55)'; ctx.lineWidth = 1;
             ctx.beginPath(); ctx.moveTo(ca.left, yp(0)); ctx.lineTo(ca.right, yp(0)); ctx.stroke();
 
-            // anni sotto l'asse
-            ctx.font = '9px Arial'; ctx.fillStyle = COL.testo; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+            // anni sotto l'asse: passo scelto sullo spazio disponibile quando c'e' lo zoom
             var passo = MOBILE ? 5 : 3;
+            if (ZOOM) {
+                var anniVis = span / 12, maxEt = Math.max(2, (ca.right - ca.left) / (MOBILE ? 30 : 34));
+                passo = [1, 2, 3, 5, 10].filter(function(p) { return anniVis / p <= maxEt; })[0] || 10;
+            }
+            ctx.font = '9px Arial'; ctx.fillStyle = COL.testo; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
             MESI.forEach(function(m, i) {
+                var x = xp(i);
+                if (x < ca.left - 0.5 || x > ca.right + 0.5) return;
+                if (ZOOM && span <= 48) {
+                    // tacche dei mesi quando lo zoom e' stretto
+                    ctx.fillRect(x - 0.5, ca.bottom, 1, 3);
+                }
+                if (m[0].slice(5, 7) !== '01') return;
                 var y = +m[0].slice(0, 4);
-                if (m[0].slice(5, 7) === '01' && y % passo === 0) ctx.fillText(y, xp(i), ca.bottom + 4);
+                if (ZOOM) {
+                    // righe verticali leggere a gennaio, per orientarsi
+                    ctx.save();
+                    ctx.strokeStyle = 'rgba(128,128,128,0.22)'; ctx.lineWidth = 1;
+                    ctx.beginPath(); ctx.moveTo(x, ca.top); ctx.lineTo(x, ca.bottom); ctx.stroke();
+                    ctx.restore();
+                }
+                if (y % passo === 0) ctx.fillText(y, x, ca.bottom + 4);
             });
 
+            // da qui in poi si disegna solo dentro l'area del grafico
+            // (a destra si lascia il margine per la barretta della stima di oggi)
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(ca.left - 1, ca.top - 2, ca.right - ca.left + 2 + (r[1] >= full - 0.01 ? 20 : 0), ca.bottom - ca.top + 4);
+            ctx.clip();
+
             // serie
-            ctx.strokeStyle = COL.serie; ctx.lineWidth = d.w === 1 ? 1.1 : 1.8; ctx.lineJoin = 'round';
+            ctx.strokeStyle = COL.serie;
+            ctx.lineWidth = d.w === 1 ? (ZOOM && span <= 60 ? 1.6 : 1.1) : 1.8;
+            ctx.lineJoin = 'round';
             ctx.beginPath();
             var penna = false, ultimo = null;
             d.sti.forEach(function(s, i) {
@@ -644,6 +954,16 @@ var andPlugin = {
                 penna = true; ultimo = i;
             });
             ctx.stroke();
+
+            // con lo zoom stretto si vedono anche i singoli mesi
+            if (ZOOM && span <= 60) {
+                ctx.fillStyle = COL.serie;
+                var i0 = Math.max(0, Math.floor(r[0])), i1 = Math.min(d.sti.length - 1, Math.ceil(r[1]));
+                for (var k = i0; k <= i1; k++) {
+                    if (d.sti[k] == null) continue;
+                    ctx.beginPath(); ctx.arc(xp(k), yp(d.sti[k]), 2, 0, Math.PI * 2); ctx.fill();
+                }
+            }
 
             if (ultimo != null) {
                 ctx.beginPath(); ctx.arc(xp(ultimo), yp(d.sti[ultimo]), 3.5, 0, Math.PI * 2);
@@ -663,6 +983,7 @@ var andPlugin = {
             } else if (ultimo != null) {
                 mettiPulse(xp(ultimo), yp(d.sti[ultimo]));
             }
+            ctx.restore();
         } else {
             // ventaglio dei percentili
             function banda(a, b, colore) {
@@ -728,11 +1049,9 @@ function costruisciAndamento(W) {
 
     var xs, ys;
     if (ST.vista === 'sti') {
-        var top = 3.2, bot = -3.2;
-        d.sti.forEach(function(s) { if (s != null) { top = Math.max(top, s + 0.3); bot = Math.min(bot, s - 0.3); } });
-        if (d.stima) { top = Math.max(top, d.stima.sti + d.stima.sig_sti + 0.3); bot = Math.min(bot, d.stima.sti - d.stima.sig_sti - 0.3); }
-        xs = { min: 0, max: MESI.length, display: false };
-        ys = { min: Math.floor(bot), max: Math.ceil(top),
+        var r = rangeX(), yl = limitiYSti(d, r[0], r[1]);
+        xs = { min: r[0], max: r[1], display: false };
+        ys = { min: yl[0], max: yl[1],
                grid: { color: 'rgba(128,128,128,0.1)' },
                ticks: { stepSize: 1, font: { size: MOBILE ? 8 : 9 }, color: '#666',
                         callback: function(v) { return Number.isInteger(v) ? (v > 0 ? '+' : '') + v : ''; } } };
@@ -760,7 +1079,9 @@ function costruisciAndamento(W) {
         plugins: [andPlugin]
     });
     tooltipCanvas(chartAnd, testoAndamento);
+    abilitaZoomCanvas(chartAnd.canvas);
     legendaAndamento(d);
+    statoZoom();
 }
 
 function legendaAndamento(d) {
@@ -780,7 +1101,13 @@ function legendaAndamento(d) {
     if (ST.vista === 'perc') nota += ' che termina nel mese indicato; percentili ' + META.periodo_rif;
     if (d.stima) nota += '. Oggi: ' + (ST.vista === 'sti' ? 'STI ' + fmtSti(d.stima.sti) + ' ± ' + fmt(d.stima.sig_sti, 2) : fmt(d.stima.valore) + ' ± ' + fmt(d.stima.sig_t) + ' °C')
                      + ', stima su ' + STIMA.giorni + ' giorni al ' + giornoIt(STIMA.fino_al);
-    document.getElementById('nota-and').textContent = nota + '.';
+    nota += '.';
+    if (ST.vista === 'sti') {
+        nota += MOBILE
+            ? ' Zoom: due dita sul grafico.'
+            : ' Zoom: trascina sul grafico per scegliere il periodo; Shift + trascina per spostarti; doppio clic per tornare alla serie intera.';
+    }
+    document.getElementById('nota-and').textContent = nota;
 }
 
 function testoAndamento(ch, mx, my) {
@@ -1105,11 +1432,12 @@ function tooltipCanvas(ch, fn) {
     }
     canvas.addEventListener('mousemove', function(e) { aggiorna(e.clientX, e.clientY); });
     canvas.addEventListener('mouseleave', nascondiTooltip);
+    // un dito = tooltip; due dita sono riservate allo zoom (v1.1)
     canvas.addEventListener('touchmove', function(e) {
-        if (e.touches.length > 0) { e.preventDefault(); aggiorna(e.touches[0].clientX, e.touches[0].clientY); }
+        if (e.touches.length === 1) { e.preventDefault(); aggiorna(e.touches[0].clientX, e.touches[0].clientY); }
     }, { passive: false });
     canvas.addEventListener('touchstart', function(e) {
-        if (e.touches.length > 0) aggiorna(e.touches[0].clientX, e.touches[0].clientY);
+        if (e.touches.length === 1) aggiorna(e.touches[0].clientX, e.touches[0].clientY);
     }, { passive: true });
     canvas.addEventListener('touchend', function() { setTimeout(nascondiTooltip, 1200); });
 }
