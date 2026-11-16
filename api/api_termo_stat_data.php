@@ -2,6 +2,10 @@
 /**
  * ============================================================================
  * STATISTICA TERMICA (STI) - DATA LAYER  api/api_termo_stat_data.php
+ * Versione: 1.1 - 15/11/2026
+ *   1.1 (15/11/2026) Estremi assoluti mensili (termoEstremiMensili): massima
+ *       e minima assoluta di ogni mese con il giorno, dalla tabella giornaliera
+ *       della stazione (dati dal 15/04/2025). Chiave 'estremi' del payload.
  * ============================================================================
  *
  * RESPONSABILITA':
@@ -62,6 +66,9 @@ const TERMO_TAB_RIF           = 'termo_stat_riferimento';
 const TERMO_TAB_VERSIONE      = 'termo_stat_versione';
 const TERMO_COL_DATA          = 'data_ora';
 const TERMO_COL_TEMP          = 'temperatura_C';
+// Estremi assoluti (v1.1): tabella giornaliera della stazione
+const TERMO_TAB_GIORNALIERO   = 'dati_meteo_giornaliero_simignano';
+const TERMO_ESTREMI_DAL       = '2025-01-01';   // i dati termici giornalieri partono dal 15/04/2025
 
 const TERMO_TEMP_MIN          = -30.0;  // range fisico plausibile (come le altre API)
 const TERMO_TEMP_MAX          = 50.0;
@@ -192,6 +199,9 @@ function getTermoStatData(bool $con_serie = true): array {
         $normali[] = $riga;
     }
 
+    // ---- 6. estremi assoluti mensili (v1.1): un errore qui non blocca la pagina ----
+    $estremi = termoEstremiMensili($pdo_r, $oggi->format('Y-m-d'));
+
     $out = [
         'success'     => true,
         'meta'        => [
@@ -211,6 +221,8 @@ function getTermoStatData(bool $con_serie = true): array {
         'provvisorio' => $provvisorio,
         'normali'     => $normali,
         'stima_oggi'  => $stima_oggi,
+        // 'YYYY-MM' => [max, data_max, min, data_min, giorni_validi] (v1.1)
+        'estremi'     => $estremi,
         // parametri compatti: [variabile][finestra] = 12 coppie [media_rif, sd_rif]
         'parametri'   => termoParametriCompatti($rif),
     ];
@@ -452,6 +464,56 @@ function termoScriviMese(PDO $pdo_w, array $r): void {
         if ($e->getCode() !== '23000') throw $e;  // non e' una chiave duplicata
         $pdo_w->prepare($sql_update)->execute($par);
     }
+}
+
+
+// ---------------------------------------------------------------------------
+// ESTREMI ASSOLUTI MENSILI (v1.1)
+// ---------------------------------------------------------------------------
+/**
+ * Massima e minima assoluta di ogni mese, con il giorno in cui sono state
+ * misurate, dalla tabella giornaliera (temp_max_abs / temp_min_abs).
+ * Valori fuori da TERMO_TEMP_MIN..MAX (sentinelle 999 ecc.) e NULL ignorati.
+ * Il mese in corso arriva fino a ieri. A parita' di valore vale il primo giorno.
+ * La serie ricostruita 2003-2024 ha solo medie mensili: niente estremi.
+ *
+ * @return array 'YYYY-MM' => [max, 'Y-m-d', min, 'Y-m-d', giorni_validi]
+ *               (max/min e le loro date null se il mese non ha valori)
+ */
+function termoEstremiMensili(PDO $pdo_r, string $oggi): array {
+    $tab = table_name(TERMO_TAB_GIORNALIERO);
+    try {
+        $stmt = $pdo_r->prepare("
+            SELECT data_giorno AS g,
+                   CASE WHEN temp_max_abs BETWEEN :a1 AND :b1 THEN temp_max_abs END AS tx,
+                   CASE WHEN temp_min_abs BETWEEN :a2 AND :b2 THEN temp_min_abs END AS tn
+            FROM $tab
+            WHERE data_giorno >= :da AND data_giorno < :oggi
+            ORDER BY data_giorno");
+        $stmt->execute([
+            ':a1' => TERMO_TEMP_MIN, ':b1' => TERMO_TEMP_MAX,
+            ':a2' => TERMO_TEMP_MIN, ':b2' => TERMO_TEMP_MAX,
+            ':da' => TERMO_ESTREMI_DAL, ':oggi' => $oggi,
+        ]);
+        $righe = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log('termoEstremiMensili: ' . $e->getMessage());
+        return [];
+    }
+
+    $out = [];
+    foreach ($righe as $r) {
+        $g  = substr((string)$r['g'], 0, 10);
+        $ym = substr($g, 0, 7);
+        if (!isset($out[$ym])) $out[$ym] = [null, null, null, null, 0];
+        $e = &$out[$ym];
+        if ($r['tx'] !== null || $r['tn'] !== null) $e[4]++;
+        if ($r['tx'] !== null && ($e[0] === null || (float)$r['tx'] > $e[0])) { $e[0] = round((float)$r['tx'], 1); $e[1] = $g; }
+        if ($r['tn'] !== null && ($e[2] === null || (float)$r['tn'] < $e[2])) { $e[2] = round((float)$r['tn'], 1); $e[3] = $g; }
+        unset($e);
+    }
+    // mesi senza alcun valore valido: fuori
+    return array_filter($out, fn($e) => $e[0] !== null || $e[2] !== null);
 }
 
 

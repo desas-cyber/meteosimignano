@@ -1,6 +1,10 @@
 <?php
 /**
  * STATISTICHE PLUVIOMETRICHE - pluvio_stat_display.php
+ * Versione 1.1 - 14/11/2026
+ *   1.1 (14/11/2026) Nuovo blocco "Tendenza della pioggia (Theil-Sen)"
+ *       (grafico4_pluvio_display.php, iframe stat-iframe-pluvio4), inserito
+ *       prima delle sequenze secche e piovose.
  * Pagina statistiche pioggia: header + blocchi modulari impilabili.
  * Struttura analoga a stat_display.php, SENZA immagine principale.
  *
@@ -204,7 +208,7 @@
                             frameborder="0"></iframe>
                 </div>
 
-             2. Sostituisci N con il numero progressivo (4, 5, ...)
+             2. Sostituisci N con il numero progressivo (5, 6, ...)
              3. Aggiungi 'stat-iframe-pluvioN' all'array blocchi_ids nello
                 script dello spinner in fondo alla pagina
              4. L'iframe deve inviare postMessage {action:'resize', iframeId,
@@ -235,6 +239,20 @@
                     width="100%"
                     frameborder="0"
                     title="Siccità: SPI-3 e SPI-6"></iframe>
+        </div>
+
+        <!-- BLOCCO 4: tendenza della pioggia (Theil-Sen) e classifiche.
+             Numerato 4 perche' aggiunto dopo, ma sta prima delle sequenze. -->
+        <div class="stat-section-header centrato">
+            <h2 class="stat-section-title">Tendenza della pioggia (Theil&ndash;Sen)</h2>
+        </div>
+        <div class="stat-table-block">
+            <div id="placeholder-pluvio4" class="stat-table-placeholder">Caricamento dati...</div>
+            <iframe src="grafico4_pluvio_display.php"
+                    id="stat-iframe-pluvio4"
+                    width="100%"
+                    frameborder="0"
+                    title="Tendenza della pioggia (Theil-Sen)"></iframe>
         </div>
 
         <!-- BLOCCO 3: sequenze secche e piovose -->
@@ -310,8 +328,9 @@
         var blocchi_ids = [
             'stat-iframe-pluvio1',
             'stat-iframe-pluvio2',
-            'stat-iframe-pluvio3'
-            /* Aggiungi: 'stat-iframe-pluvio4', ... */
+            'stat-iframe-pluvio3',
+            'stat-iframe-pluvio4'
+            /* Aggiungi: 'stat-iframe-pluvio5', ... */
         ];
 
         var state = {};

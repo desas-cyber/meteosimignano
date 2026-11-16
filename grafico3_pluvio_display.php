@@ -429,7 +429,7 @@ function fmtRientra(s) {
     // "nell'8%", "nell'11%", "nell'80%": davanti a otto, undici, ottanta
     var prep = (q === 1 || q === 8 || q === 11 || (q >= 80 && q <= 89)) ? "nell'" : 'nel ';
     return 'per ' + s.nome_mese +' rientra ' + prep + q
-         + '% delle sequenze di durata >=' ;
+         + '% delle sequenze di durata >=';
 }
 /** Pioggia di una sequenza piovosa (CORR / ULTIME) preceduta dal separatore. */
 function suffMm(s) {

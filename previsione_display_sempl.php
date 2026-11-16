@@ -1,13 +1,15 @@
 <?php
 /**
  * PREVISIONE SEMPLICE METEO SIMIGNANO - previsione_display_sempl.php
- * Versione 1.2 - 2026-10-27
+ * Versione 1.4 - 2026-11-15
  * Storico:
  *   1.0  2026-10-26  Prima versione, copia di previsione_display.php 1.4: stesso header, menu, immagine e spinner;
  *                    l'iframe mostra la previsione semplice dei prossimi 4 giorni
  *                    (https://test.meteosimignano.it/previsione_semplice.php), largo fino a 1200 px
  *   1.1  2026-10-26  "Schermo intero" si apre nella stessa scheda (prima in una nuova scheda, dove Torna indietro non funzionava)
  *   1.2  2026-10-27  "Schermo intero" passa ?torna= con l'indirizzo di questa pagina (funziona anche nel sito di prova)
+ *   1.3  2026-11-15  Pulsante rinominato "Versione tecnica 48h"
+ *   1.4  2026-11-15  Pulsante "Mappe Italia" (mappa_italia.php sul server di casa) accanto agli altri
  *
  * L'altezza dell'iframe si adatta da sola: la pagina interna la comunica con postMessage.
  */
@@ -21,6 +23,7 @@ if (!isset($mainImageDate)) {
 // Pagina mostrata nell'iframe (server di casa) e origine ammessa per i messaggi di ridimensionamento
 $ENS_URL     = 'https://test.meteosimignano.it/previsione_semplice.php';    // previsione semplice, 4 giorni
 $ENS_ORIGINE = 'https://test.meteosimignano.it';
+$MAPPE_URL   = 'https://test.meteosimignano.it/mappa_italia.php';      // mappe dell'Italia (pulsante Mappe Italia)
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -311,7 +314,8 @@ $ENS_ORIGINE = 'https://test.meteosimignano.it';
         <div class="stat-section-header">
             <h2 class="stat-section-title">Il tempo nei prossimi 4 giorni</h2>
             <div style="display:flex; gap:6px;">
-                <a href="previsione_display.php" class="stat-section-cta">Versione tecnica</a>
+                <a href="previsione_display.php" class="stat-section-cta">Versione tecnica 48h</a>
+                <a href="<?php echo htmlspecialchars($MAPPE_URL); ?>" class="stat-section-cta">Mappe Italia</a>
                 <a href="<?php echo htmlspecialchars($ENS_URL . '?torna=' . rawurlencode((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . strtok($_SERVER['REQUEST_URI'], '?'))); ?>" class="stat-section-cta">&#8599;&nbsp;Schermo intero</a>
             </div>
         </div>

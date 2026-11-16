@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
     previsione.info.html - guida alla lettura della previsione d'insieme (previsione_display.php)
-    Versione 1.8 - 2026-10-31
+    Versione 1.13 - 2026-11-16
     Storico:
       1.0  2026-10-24  Prima versione: panoramica, meteogramma, ultime 24 ore, tabella, lettura combinata,
                        corrente a getto, mappe Italia, limiti
@@ -16,6 +16,13 @@
       1.7  2026-10-26  Titolo "(51 membri)" tra parentesi
       1.8  2026-10-31  Nuova sezione "La cella del modello" con la mappa della cella (mappa_griglia.html in iframe),
                        bordi, dimensioni, posizione della stazione e cosa vale per tutta la cella
+      1.9  2026-11-15  Nuova sezione "CAPE": riga della striscia (casella = probabilita', numero = media), CAPE con pioggia,
+                       fulmine della versione semplice; aggiornati striscia, anomalie, link alle mappe, lettura combinata e limiti
+      1.10 2026-11-16  CAPE: soglie dalla letteratura (temporale = CAPE >= 150 con pioggia; temporale forte = WMAXSHEAR >= 500),
+                       taglio del vento e perche' rende i temporali piu' forti, temporali invernali, bordo porpora, riferimenti
+      1.11 2026-11-16  Riga "Taglio" della striscia, sotto CAPE: classi sotto 10, 10-20, oltre 20 m/s
+      1.12 2026-11-16  Mappe: CAPE con le soglie nuove e pallini del taglio del vento 850-500 hPa
+      1.13 2026-11-16  Riga Taglio: azzurro e blu scuro, come i pallini della mappa CAPE
 -->
 <html lang="it">
 <head>
@@ -297,6 +304,7 @@
             <a href="#panoramica">Panoramica</a> &middot;
             <a href="#cella">La cella del modello</a> &middot;
             <a href="#meteogramma">Il meteogramma</a> &middot;
+            <a href="#cape">CAPE e temporali</a> &middot;
             <a href="#anomalie">Anomalie</a> &middot;
             <a href="#passato">Le ultime 24 ore</a> &middot;
             <a href="#tabella">La tabella</a> &middot;
@@ -467,7 +475,7 @@
 
         <h3 class="sub-title-info">Striscia Z500 / Z850 / P msl</h3>
         <p>
-            Sotto il grafico ci sono tre righe di caselle. Le prime due riportano il <dfn>geopotenziale</dfn>: la quota (in
+            Sotto il grafico c'&egrave; una striscia di caselle, una riga per grandezza. Le prime due riportano il <dfn>geopotenziale</dfn>: la quota (in
             decametri, dam) alla quale si trova la pressione di 500 hPa (<strong>Z500</strong>) e di 850 hPa (<strong>Z850</strong>).
             Per esempio 576 significa 5760 m. Il geopotenziale si legge come una "pressione in quota": se la superficie dei 500 hPa
             &egrave; alta, a 5500 m c'&egrave; pressione alta (promontorio, anticiclone); se &egrave; bassa, c'&egrave; pressione bassa
@@ -509,6 +517,117 @@
             due passaggi "da 150 a 149" e "da 149 a 148" possono avere colori diversi. Il valore preciso si legge nel riquadro al passaggio del mouse.
         </div>
 
+        <h3 class="sub-title-info" id="cape">CAPE e temporali (riga CAPE)</h3>
+        <p>
+            Il <dfn>CAPE</dfn> (<em>Convective Available Potential Energy</em>, energia potenziale disponibile per la convezione) misura,
+            in J/kg, quanta energia avrebbe una bolla d'aria che sale dal basso, pi&ugrave; calda e leggera dell'aria intorno.
+            &Egrave; la "benzina" del temporale: pi&ugrave; &egrave; alto, pi&ugrave; le correnti ascendenti possono essere violente.
+        </p>
+        <p>Per prevedere un temporale per&ograve; il CAPE non basta. Gli studi su fulmini e rianalisi in Europa dicono tre cose:</p>
+        <ol>
+            <li><strong>Basta poco CAPE, se c'&egrave; l'innesco.</strong> La frequenza dei fulmini cresce quando il CAPE sale da 0 a circa
+                200 J/kg, poi non cresce pi&ugrave;: oltre quella soglia conta se qualcosa fa partire la convezione (un fronte, una saccatura,
+                il riscaldamento del suolo, i rilievi), non quanta energia in pi&ugrave; c'&egrave;.</li>
+            <li><strong>D'estate tanto CAPE e poco vento, d'inverno il contrario.</strong> I temporali estivi nascono con CAPE alto e vento debole;
+                quelli della stagione fredda, frequenti con le perturbazioni dal mare, con poco CAPE ma vento forte che cambia molto con la quota.</li>
+            <li><strong>La forza del temporale dipende da CAPE e taglio del vento insieme</strong> (vedi sotto).</li>
+        </ol>
+
+        <h3 class="sub-title-info">Il taglio del vento</h3>
+        <p>
+            Il <dfn>taglio del vento</dfn> (<em>wind shear</em>) &egrave; quanto il vento cambia, in velocit&agrave; e direzione, salendo di quota.
+            In un temporale ci sono due correnti: quella che sale (aria calda e umida che alimenta la nube) e quella che scende (aria fredda
+            portata gi&ugrave; dalla pioggia).
+        </p>
+        <ul>
+            <li><strong>Senza taglio</strong> la pioggia cade dentro la corrente che sale, la raffredda e la spegne: il temporale dura 30&ndash;60 minuti
+                e muore da solo (il temporale di calore estivo, breve e locale).</li>
+            <li><strong>Con molto taglio</strong> la nube si inclina, la pioggia cade a lato e la corrente ascendente continua a ricevere aria calda:
+                il temporale si alimenta da solo per ore, si organizza in linee o supercelle e pu&ograve; dare grandine grossa, raffiche e trombe d'aria.</li>
+        </ul>
+        <p>
+            Qui il taglio &egrave; la differenza (vettoriale: contano velocit&agrave; e direzione) tra il vento a 500 hPa, circa 5,5 km, e quello a
+            +300 m, circa 700 m, calcolata membro per membro. Gli studi usano lo strato dal suolo a 6 km: il nostro &egrave; un'approssimazione.
+            Per combinare energia e taglio si usa il <dfn>WMAXSHEAR</dfn> = &radic;(2&nbsp;&times;&nbsp;CAPE)&nbsp;&times;&nbsp;taglio (in m/s): il primo
+            fattore &egrave; la velocit&agrave; massima teorica della corrente ascendente, il secondo quanto il vento la organizza.
+        </p>
+        <p>
+            Il taglio si legge nella riga <strong>Taglio</strong>, sotto la riga CAPE: il numero &egrave; il taglio in m/s (media dei membri; nella parte gialla
+            dal modello deterministico), il colore della casella la classe:
+        </p>
+        <div class="tab-wrap">
+        <table class="info">
+            <tr><th>Taglio</th><th>Tipo di temporale che pu&ograve; formarsi, se c'&egrave; CAPE</th></tr>
+            <tr><td><span class="sw" style="background:#fff"></span>sotto 10 m/s (36 km/h)</td><td>celle singole: brevi, nascono e muoiono in meno di un'ora</td></tr>
+            <tr><td><span class="sw" style="background:#7fb8e6;border-color:#7fb8e6"></span>10&ndash;20 m/s</td><td>temporali organizzati (multicelle, linee), pi&ugrave; duraturi</td></tr>
+            <tr><td><span class="sw" style="background:#08306b;border-color:#08306b"></span>oltre 20 m/s (72 km/h)</td><td>ambiente adatto anche alle supercelle: grandine grossa, raffiche forti</td></tr>
+        </table>
+        </div>
+        <div class="note-box">
+            La riga Taglio da sola non prevede temporali: d'inverno, con la corrente a getto vicina, &egrave; spesso azzurra o blu anche con cielo sereno.
+            Conta quando &egrave; colorata <strong>insieme</strong> alla casella CAPE sopra: in quel caso, se il WMAXSHEAR supera la soglia, la casella
+            CAPE ha il bordo porpora. Al passaggio del mouse ci sono anche l'intervallo p10&ndash;p90 e la percentuale di membri con almeno 10 m/s;
+            alle ore delle mappe un clic apre la mappa del vento a 500 hPa.
+        </div>
+
+        <h3 class="sub-title-info">Le soglie usate</h3>
+        <p>Valgono tutto l'anno e vengono dalla letteratura (vedi i riferimenti in fondo alla sezione). Sono controllate <strong>membro per membro</strong>:</p>
+        <div class="tab-wrap">
+        <table class="info">
+            <tr><th></th><th>Condizione, nello stesso membro e nella stessa ora</th></tr>
+            <tr><td><strong>Temporale</strong></td><td>CAPE &ge; 150 J/kg <em>e</em> pioggia &ge; 0,5 mm (la pioggia del membro fa da indicatore dell'innesco)</td></tr>
+            <tr><td><strong>Temporale forte</strong></td><td>temporale <em>e</em> taglio del vento &ge; 10 m/s <em>e</em> WMAXSHEAR &ge; 500 m&sup2;/s&sup2;</td></tr>
+        </table>
+        </div>
+        <p>
+            Il confronto membro per membro &egrave; importante: se un membro ha l'energia e un altro la pioggia, non conta. Con queste soglie la stagione
+            "si aggiusta da sola": d'inverno bastano 200&ndash;300 J/kg se il vento in quota &egrave; forte; d'estate, con vento debole, anche 2000 J/kg
+            danno temporali intensi ma brevi, non "forti" nel senso di organizzati.
+        </p>
+
+        <h3 class="sub-title-info">Come si legge la riga CAPE</h3>
+        <ul>
+            <li><strong>Il colore della casella = la probabilit&agrave; di temporale</strong>: la percentuale di membri con temporale (CAPE &ge; 150 e pioggia).
+                Bianco sotto il 10%, poi sfumato <span class="sw" style="width:70px;background:linear-gradient(90deg,#fff3a3,#ffb347,#f0506e,#d0179b)"></span>
+                dal giallo (10%) all'arancio (40%), al rosa (70%) e al fucsia (100%).</li>
+            <li><strong>Il bordo porpora</strong> <span class="sw" style="background:#fff;border:2px solid #8b0a50"></span>: almeno il 20% dei membri
+                prevede un <strong>temporale forte</strong>.</li>
+            <li><strong>Il numero = la media del CAPE</strong> dei membri, in J/kg, su un'etichetta bianca; il suo colore indica quanta energia c'&egrave;:</li>
+        </ul>
+        <div class="legend">
+            <span class="item"><span style="color:#8a8f98">grigio</span> = sotto 150 (non basta per un temporale)</span>
+            <span class="item"><b style="color:#a66a00">ambra</b> = 150&ndash;1000</span>
+            <span class="item"><b style="color:#d32f2f">rosso</b> = 1000&ndash;2000</span>
+            <span class="item"><b style="color:#8b0a50">porpora</b> = oltre 2000</span>
+        </div>
+        <p>
+            Il numero da solo pu&ograve; ingannare, perch&eacute; il CAPE &egrave; spesso "tutto o niente": se un quarto dei membri prevede 1000 J/kg e
+            gli altri quasi zero, la media &egrave; circa 250. Per questo la casella mostra la probabilit&agrave;, e nel riquadro al passaggio del mouse
+            ci sono anche l'intervallo p10&ndash;p90 del CAPE, le percentuali di membri con temporale e con temporale forte e il taglio del vento medio.
+        </p>
+        <div class="esempio">
+            <strong>Esempi di lettura.</strong>
+            Casella gialla, numero ambra 250: in pochi membri piove con un po' di energia; qualche tuono possibile.
+            Casella fucsia, numero porpora 2700, senza bordo: pomeriggio estivo con temporali quasi certi, intensi ma di calore, poco organizzati.
+            Casella rosa con bordo porpora e numero ambra 300: perturbazione con vento forte in quota; poca energia, ma i temporali
+            che si formano possono essere organizzati e dare raffiche: tipico dell'autunno e dell'inverno.
+        </div>
+        <ul>
+            <li>Nella parte gialla (ultime 24 ore) il CAPE viene dal modello deterministico: c'&egrave; solo il numero, la casella resta bianca.</li>
+            <li>Alle ore delle mappe (00, 06, 18 UTC) un clic sulla casella apre la mappa del CAPE.</li>
+        </ul>
+        <div class="note-box">
+            Nella <strong>versione semplice</strong> (96 ore) le stesse informazioni diventano un fulmine dentro la nuvoletta, al posto della gocciolina
+            della pioggia: <strong style="color:#b8860b">giallo</strong> se almeno il 20% dei membri prevede un temporale,
+            <strong style="color:#c0392b">arancio con bordo rosso</strong> se almeno il 20% prevede un temporale forte.
+        </div>
+        <p style="font-size:12px;color:#555">
+            Riferimenti: A. T. Westermayer et al., <em>Identification of favorable environments for thunderstorms in reanalysis data</em>,
+            Meteorologische Zeitschrift, 2017; M. Taszarek et al., <em>Severe convective storms across Europe and the United States.
+            Part II: ERA5 environments associated with lightning, large hail, severe wind, and tornadoes</em>, Journal of Climate, 2020;
+            D. Morgenstern et al., <em>Thunderstorm environments in Europe</em>, Weather and Climate Dynamics, 2023.
+        </p>
+
         <h3 class="sub-title-info">Pioggia (pannello in basso)</h3>
         <ul>
             <li>L'<strong>altezza della barra</strong> sono i millimetri previsti nelle 3 ore precedenti (media dei membri), scritti sopra la barra.</li>
@@ -531,7 +650,7 @@
 
         <h3 class="sub-title-info" id="anomalie">Anomalie standardizzate (righe T850 &sigma; e T2m &sigma;)</h3>
         <p>
-            Le ultime due righe della striscia dicono <strong>quanto la temperatura prevista &egrave; insolita</strong> per quel giorno
+            Le righe T850 &sigma; e T2m &sigma; della striscia, sotto la riga CAPE, dicono <strong>quanto la temperatura prevista &egrave; insolita</strong> per quel giorno
             dell'anno e quell'ora. Il numero &egrave; l'<dfn>anomalia standardizzata</dfn>, espressa in <dfn>deviazioni standard</dfn> (&sigma;).
             Si calcola con il <strong>metodo dei ranghi</strong>, lo stesso degli indici SPI (pioggia) e STI (temperatura):
         </p>
@@ -590,7 +709,7 @@
         <p>
             Alle ore delle <a href="#mappe">mappe dell'Italia</a> (00, 06 e 18 UTC) le ore sull'asse sono
             <span style="color:#0b5cad;text-decoration:underline dotted">sottolineate</span>. In quelle colonne cliccando su
-            una casella Z500 / Z850 / P msl, su una banda di nubi, su un triangolo del vento, su un punto della T 850 o T 500
+            una casella Z500 / Z850 / P msl / CAPE, su una banda di nubi, su un triangolo del vento, su un punto della T 850 o T 500
             (disegnato pi&ugrave; grande) o su una barra di pioggia si apre la mappa di quel parametro a quell'ora.
         </p>
 
@@ -728,7 +847,7 @@
         <h3 class="sub-title-info">3. La differenza di velocit&agrave; tra le quote</h3>
         <ul>
             <li><strong>vento debole in basso e forte in quota</strong>: forte <dfn>taglio del vento</dfn> (<em>wind shear</em>).
-                Se l'atmosfera &egrave; anche instabile (T 500 molto fredda, CAPE alto nelle mappe), gli eventuali temporali sono
+                Se l'atmosfera &egrave; anche instabile (T 500 molto fredda, <a href="#cape">riga CAPE</a> colorata), gli eventuali temporali sono
                 pi&ugrave; organizzati e duraturi;</li>
             <li><strong>vento debole a tutte le quote</strong>: d'estate temporali di calore brevi e locali; d'inverno, con cielo sereno,
                 notti con <dfn>inversione termica</dfn> (aria pi&ugrave; fredda in basso che in collina) e gelate nei fondovalle;</li>
@@ -807,7 +926,7 @@
             <tr><td>Nuvolosit&agrave; bassa / media / alta</td><td>copertura in %, dal bianco (sereno) al grigio scuro (coperto).</td></tr>
             <tr><td>Precipitazione 6 ore</td><td>pioggia caduta nelle 6 ore che finiscono all'ora della mappa. La scala dei colori non &egrave; lineare, cos&igrave; si distinguono sia 0,5 mm sia 30 mm.</td></tr>
             <tr><td>Pressione al livello del mare</td><td>colori e <dfn>isobare</dfn> ogni 4 hPa: si vedono anticicloni, depressioni e fronti al suolo.</td></tr>
-            <tr><td>CAPE</td><td>energia disponibile per la convezione, in J/kg: sopra 500 temporali possibili, sopra 1500 anche forti, se qualcosa li innesca (un fronte, il riscaldamento del suolo, i rilievi).</td></tr>
+            <tr><td>CAPE e taglio del vento</td><td>colori = energia disponibile per la convezione, in J/kg: da 150 basta per i temporali, se qualcosa li innesca (un fronte, il riscaldamento del suolo, i rilievi); vedi <a href="#cape">CAPE e temporali</a>. Pallini, uno per punto di griglia = taglio del vento tra 850 e 500 hPa: <span class="sw" style="background:#fff;border-radius:50%"></span>sotto 10 m/s, <span class="sw" style="background:#7fb8e6;border-radius:50%"></span>10&ndash;20, <span class="sw" style="background:#08306b;border-radius:50%"></span>da 20. Le zone con colori caldi <em>e</em> pallini blu sono quelle dove i temporali, se si formano, possono essere organizzati. Il taglio 850&ndash;500 hPa &egrave; un po' pi&ugrave; basso di quello dal suolo a 6 km usato negli studi, perch&eacute; manca il primo chilometro e mezzo (la riga Taglio del meteogramma parte invece da +300 m).</td></tr>
         </table>
         </div>
 
@@ -819,7 +938,8 @@
             <li><strong>Notti serene e senza vento</strong>: il modello sottostima spesso il raffreddamento nei fondovalle e la formazione di nebbie.
                 Nelle colline le minime possono invece essere pi&ugrave; alte di quelle previste.</li>
             <li><strong>Temporali</strong>: un modello a 25 km pu&ograve; prevedere che l'atmosfera sia adatta ai temporali, ma non dove cadranno
-                esattamente. Va letta la probabilit&agrave;, non il valore in mm.</li>
+                esattamente. Va letta la probabilit&agrave; (colore della <a href="#cape">riga CAPE</a>, probabilit&agrave; di temporale nel riquadro),
+                non il valore in mm. Il modello non vede i singoli temporali: li &quot;rappresenta&quot; con una pioggia media sulla cella.</li>
             <li><strong>La media dei membri</strong> &egrave; una buona stima quando i membri sono d'accordo; quando divergono (pallino rosso)
                 &egrave; meglio guardare l'intervallo p10&ndash;p90.</li>
             <li><strong>Gli estremi</strong>: l'intervallo p10&ndash;p90 esclude per costruzione il 20% dei membri pi&ugrave; estremi. I valori

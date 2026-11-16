@@ -3,9 +3,23 @@
  * ============================================================================
  * STATISTICA TERMICA (STI) - grafico_termo_display.php
  * ============================================================================
- * Versione: 1.5 - 25/10/2026
+ * Versione: 1.8 - 15/11/2026
  *
  * Storico versioni:
+ *   1.8 (15/11/2026) Clima mese per mese: selettore dell'anno (menu e frecce),
+ *       intestazione a due righe con quattro colonne nuove: massima e minima
+ *       assoluta del mese nell'anno scelto (con il giorno) e record assoluti
+ *       del mese (con giorno e anno), dai dati giornalieri della stazione
+ *       (dal 15/04/2025, chiave 'estremi' dell'API v1.1). Sul telefono la
+ *       tabella scorre in orizzontale col dito, la colonna Mese resta fissa.
+ *   1.7 (15/11/2026) Classifiche: barre su scala comune alle due tabelle.
+ *       Barra piena = periodo piu' caldo di tutti gli anni, quasi vuota = il
+ *       piu' freddo; nella tabella dei freddi la barra non e' piu' rovesciata.
+ *   1.6 (14/11/2026) Classifiche sotto il Theil-Sen: seguono periodo e
+ *       variabile scelti per il Theil-Sen; a sinistra i piu' caldi, a destra
+ *       i piu' freddi. Tolti il selettore Variabile delle classifiche, i
+ *       pulsanti Piu' caldi / Piu' freddi e le classifiche fisse
+ *       (gennaio-ultimo mese chiuso, ultima stagione completa).
  *   1.5 (25/10/2026) Anomalia scritta in °C. Legenda della tabella
  *       Situazione in forma di tabella a una riga: ogni cella ha colore,
  *       intervallo di STI e frequenza attesa (1/N, distribuzione normale),
@@ -46,8 +60,8 @@
  *      Vista STI zoommabile sull'asse del tempo (v1.1).
  *   3. Confronto Theil-Sen: anomalie per anno di un periodo a scelta (anno,
  *      stagione, mese) con tendenza di Theil-Sen e test di Mann-Kendall;
- *      classifiche (anno fino all'ultimo mese chiuso, ultima stagione completa)
- *      calde o fredde.
+ *      classifiche dello stesso periodo e variabile: piu' caldi a sinistra,
+ *      piu' freddi a destra (v1.6).
  *   4. Clima mese per mese: normali, record e anno in corso, ordinabile.
  *
  * Dati: api/api_termo_stat_data.php (getTermoStatData). La pagina riceve i
@@ -101,6 +115,8 @@ $par_js    = json_encode($response['parametri'], JSON_UNESCAPED_UNICODE);
 $ult_js    = json_encode($response['ultimo'], JSON_UNESCAPED_UNICODE);
 $stima_js  = json_encode($response['stima_oggi'], JSON_UNESCAPED_UNICODE);
 $meta_js   = json_encode($meta, JSON_UNESCAPED_UNICODE);
+// v1.8: estremi assoluti mensili; (object) cosi' anche vuoto e' un oggetto JS
+$est_js    = json_encode((object)($response['estremi'] ?? []), JSON_UNESCAPED_UNICODE);
 $oggi_disp = (new DateTime($meta['oggi']))->format('d/m/Y');
 ?>
 <!DOCTYPE html>
@@ -108,7 +124,7 @@ $oggi_disp = (new DateTime($meta['oggi']))->format('d/m/Y');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- grafico_termo_display.php v1.5 - 25/10/2026 -->
+    <!-- grafico_termo_display.php v1.8 - 15/11/2026 -->
     <title>Indice termico STI</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -226,7 +242,23 @@ $oggi_disp = (new DateTime($meta['oggi']))->format('d/m/Y');
         .t-clima tr.riga-anno td { background: rgba(200,200,200,0.5); font-weight: bold; }
         .t-clima td.caldo { color: #B2182B; font-weight: bold; }
         .t-clima td.freddo { color: #2166AC; font-weight: bold; }
-        .tab-scroll { overflow-x: auto; }
+        .tab-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        /* v1.8: la tabella clima si allarga quanto serve e scorre col dito;
+           la colonna Mese resta ferma a sinistra */
+        .t-clima { table-layout: auto; border-collapse: separate; border-spacing: 0; }
+        .t-clima th, .t-clima td { white-space: nowrap; padding: 4px 5px; border: 0; border-right: 1px solid #bbb; border-bottom: 1px solid #bbb; }
+        .t-clima thead tr:first-child th { border-top: 1px solid #bbb; }
+        .t-clima td { background: #fff; }
+        .t-clima th:first-child, .t-clima td:first-child {
+            position: sticky; left: 0; z-index: 1; border-left: 1px solid #bbb; box-shadow: 2px 0 0 rgba(0,0,0,0.08);
+        }
+        .t-clima td:first-child { background: #f4f4f4; font-weight: bold; }
+        .t-clima th:first-child { background: #c3c3c3; }   /* pieno: la colonna fissa copre quelle che scorrono */
+        .t-clima th.grp { font-size: 10px; color: #444; }
+        .t-clima th.ass { background-color: rgba(102,153,204,0.45); }
+        .t-clima td .data { font-size: 9px; color: #777; }
+        .sel-anno-clima { display: inline-flex; align-items: center; gap: 3px; }
+        .scorri-hint { display: none; font-size: 9px; color: #999; text-align: right; margin-top: 2px; }
 
         .classifiche { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
         .t-rank td { text-align: left; padding: 3px 4px; }
@@ -403,17 +435,14 @@ $oggi_disp = (new DateTime($meta['oggi']))->format('d/m/Y');
         <canvas id="chart-anni" role="img" aria-label="Anomalie per anno con tendenza di Theil-Sen"></canvas>
     </div>
     <div class="pan-nota" id="nota-anni"></div>
-    <!-- classifiche: variabile propria, caldi/freddi per riquadro -->
-    <div class="sel-riga" style="margin-top:10px;">
-        <span class="sel-gruppo" id="sel-var-anni"><span class="sel-lab">Variabile</span></span>
-    </div>
-    <div class="classifiche">
+    <!-- classifiche (v1.6): periodo e variabile del Theil-Sen; sinistra caldi, destra freddi -->
+    <div class="classifiche" style="margin-top:12px;">
         <div>
-            <div class="rank-head"><span class="t-rank-tit" id="rank1-tit"></span><span class="sel-gruppo" id="sel-ord1"></span></div>
+            <div class="rank-head"><span class="t-rank-tit" id="rank1-tit"></span></div>
             <table class="t-rank" id="rank1"></table>
         </div>
         <div>
-            <div class="rank-head"><span class="t-rank-tit" id="rank2-tit"></span><span class="sel-gruppo" id="sel-ord2"></span></div>
+            <div class="rank-head"><span class="t-rank-tit" id="rank2-tit"></span></div>
             <table class="t-rank" id="rank2"></table>
         </div>
     </div>
@@ -423,9 +452,18 @@ $oggi_disp = (new DateTime($meta['oggi']))->format('d/m/Y');
 <!-- 4. CLIMA MESE PER MESE -->
 <?php if ($mostra('clima')): ?>
 <div class="pannello">
-    <div class="sel-riga"><span class="sel-gruppo" id="sel-var-clima"><span class="sel-lab">Variabile</span></span></div>
-    <div class="tab-scroll"><table class="t-clima" id="tab-clima"></table></div>
-    <div class="pan-nota">Tocca l'intestazione di una colonna per ordinarla; un secondo tocco inverte l'ordine.</div>
+    <div class="sel-riga">
+        <span class="sel-gruppo" id="sel-var-clima"><span class="sel-lab">Variabile</span></span>
+        <!-- v1.8: anno scelto -->
+        <span class="sel-gruppo sel-anno-clima"><span class="sel-lab">Anno</span>
+            <button type="button" class="btn" id="anno-clima-prec" aria-label="Anno precedente">&lsaquo;</button>
+            <select id="anno-clima" class="sel-periodo" aria-label="Anno"></select>
+            <button type="button" class="btn" id="anno-clima-succ" aria-label="Anno successivo">&rsaquo;</button>
+        </span>
+    </div>
+    <div class="tab-scroll" id="scroll-clima"><table class="t-clima" id="tab-clima"></table></div>
+    <div class="scorri-hint" id="hint-clima">&larr; scorri col dito &rarr;</div>
+    <div class="pan-nota" id="nota-clima"></div>
 </div>
 <?php endif; ?>
 
@@ -438,6 +476,7 @@ var PAR   = <?= $par_js ?>;
 var ULT   = <?= $ult_js ?>;
 var STIMA = <?= $stima_js ?>;
 var META  = <?= $meta_js ?>;
+var EST   = <?= $est_js ?>;   // 'YYYY-MM' => [max, data_max, min, data_min, giorni_validi] (v1.8)
 var IFRAME_ID = '<?= $iframe_id ?>';
 function c$(id) { return document.getElementById(id); }   // null se la sezione non e' in pagina
 
@@ -568,7 +607,9 @@ function mediana(arr) { return quantile(arr, 0.5); }
 // ---------------------------------------------------------------------------
 // Stato dei selettori
 // ---------------------------------------------------------------------------
-var ST = { sit: STIMA ? 'oggi' : 'chiuso', vista: 'sti', w: 12, v: 'media', vAnni: 'media', vTrend: 'media', per: 'anno', ord1: 'caldi', ord2: 'caldi', vClima: 'media', sortK: 'mese', sortDir: 1 };
+var ST = { sit: STIMA ? 'oggi' : 'chiuso', vista: 'sti', w: 12, v: 'media', vTrend: 'media', per: 'anno', vClima: 'media', sortK: 'mese', sortDir: 1,
+           // v1.8: anno della tabella clima; all'apertura quello in corso
+           annoClima: STIMA ? +STIMA.mese.slice(0, 4) : +MESI[MESI.length - 1][0].slice(0, 4) };
 
 function gruppoBottoni(id, voci, chiave, dopo) {
     var g = document.getElementById(id);
@@ -1143,22 +1184,6 @@ function testoAndamento(ch, mx, my) {
 // ---------------------------------------------------------------------------
 // 3. Anni a confronto
 // ---------------------------------------------------------------------------
-function medieAnnue(vi, mesiSel) {
-    var per = {};
-    MESI.forEach(function(m) {
-        var y = +m[0].slice(0, 4), mo = +m[0].slice(5, 7);
-        if (mesiSel.indexOf(mo) < 0) return;
-        (per[y] = per[y] || []).push(m[1][vi]);
-    });
-    var out = [];
-    Object.keys(per).forEach(function(y) {
-        var a = per[y];
-        if (a.length === mesiSel.length && a.every(function(x) { return x != null; })) {
-            out.push({ y: +y, v: a.reduce(function(s, x) { return s + x; }, 0) / a.length });
-        }
-    });
-    return out;
-}
 function theilSen(pts) {
     var sl = [];
     for (var i = 0; i < pts.length; i++) for (var j = i + 1; j < pts.length; j++) sl.push((pts[j].v - pts[i].v) / (pts[j].y - pts[i].y));
@@ -1242,7 +1267,7 @@ function costruisciAnni(W) {
     var nota = document.getElementById('nota-anni');
     if (anni.length < 5) {
         nota.textContent = 'Dati insufficienti per questo periodo.';
-        disegnaClassifiche(VARS.indexOf(ST.vAnni));
+        disegnaClassifiche();
         return;
     }
     var rif = anni.filter(function(a) { return a.y <= ANNO_RIF_FINE; });
@@ -1290,64 +1315,81 @@ function costruisciAnni(W) {
         + ' °C per decennio</b>, ' + giudizio + ' (Mann–Kendall, ' + anni.length + ' anni). '
         + 'Barre: scarto dalla normale ' + rif[0].y + '–' + rif[rif.length - 1].y + ' (' + fmt(norm) + ' °C); '
         + 'tratteggio: retta di Theil–Sen, mediana delle pendenze fra tutte le coppie di anni.';
-    disegnaClassifiche(VARS.indexOf(ST.vAnni));
+    disegnaClassifiche();
 }
 
-// Ultima stagione completa dato l'ultimo mese chiuso (1-12):
-// feb-apr -> inverno, mag-lug -> primavera, ago-ott -> estate, nov-gen -> autunno
-function ultimaStagione(m) {
-    if (m >= 2 && m <= 4) return 'inv';
-    if (m >= 5 && m <= 7) return 'pri';
-    if (m >= 8 && m <= 10) return 'est';
-    return 'aut';
-}
-
-function disegnaClassifiche(vi) {
-    // anno in corso: da gennaio all'ultimo mese chiuso
-    var ultimo = MESI[MESI.length - 1][0], meseUlt = +ultimo.slice(5, 7);
-    var p1 = []; for (var m = 1; m <= meseUlt; m++) p1.push(m);
+// Classifiche (v1.6): stesso periodo e stessa variabile del Theil-Sen.
+// A sinistra i periodi piu' caldi, a destra i piu' freddi. In rosso l'ultimo
+// anno disponibile per quel periodo; se e' fuori dai primi, riga aggiuntiva.
+function disegnaClassifiche() {
+    var vi = VARS.indexOf(ST.vTrend), P = PERIODI[ST.per];
+    var righe = valoriPeriodo(vi, ST.per);
+    var nome = P.nome.split(' (')[0];
+    nome = nome.charAt(0).toUpperCase() + nome.slice(1);
+    // anno intero e mesi: "i piu' caldi"; stagioni: "le piu' calde"
+    var stag = ['inv', 'pri', 'est', 'aut'].indexOf(ST.per) >= 0;
+    var suffVar = ST.vTrend === 'media' ? '' : ' \u00b7 ' + VLAB[ST.vTrend].toLowerCase();
     var tabs = [
-        { id: 'rank1', ord: 'ord1', mesi: p1, tit: (meseUlt === 1 ? 'Gennaio' : 'Gennaio\u2013' + MESI_BREVI[meseUlt - 1]), f: 'o' },
-        { id: 'rank2', ord: 'ord2', stag: ultimaStagione(meseUlt), f: 'e' }
+        { id: 'rank1', freddi: false, suff: stag ? ', le pi\u00f9 calde'  : ', i pi\u00f9 caldi' },
+        { id: 'rank2', freddi: true,  suff: stag ? ', le pi\u00f9 fredde' : ', i pi\u00f9 freddi' }
     ];
-    var annoCorr = +ultimo.slice(0, 4);
-    // anno "di etichetta" dell'ultima stagione chiusa (l'inverno prende l'anno di gennaio;
-    // a gennaio l'ultima stagione chiusa e' l'autunno dell'anno prima)
-    var annoStag = (meseUlt === 1) ? annoCorr - 1 : annoCorr;
-    tabs[1].tit = PERIODI[tabs[1].stag].nome.charAt(0).toUpperCase() + PERIODI[tabs[1].stag].nome.slice(1);
     tabs.forEach(function(t) {
-        var freddi = ST[t.ord] === 'freddi';
-        var righe = t.stag ? valoriPeriodo(vi, t.stag) : medieAnnue(vi, t.mesi);
-        var evid = t.stag ? annoStag : annoCorr;
+        document.getElementById(t.id + '-tit').textContent = nome + t.suff + suffVar;
+        if (!righe.length) {
+            document.getElementById(t.id).innerHTML = '<tbody><tr class="sep"><td colspan="4">dati insufficienti</td></tr></tbody>';
+            return;
+        }
+        var evid = righe[righe.length - 1].y;   // valoriPeriodo restituisce gli anni in ordine crescente
         var tutti = righe.map(function(r) { return r.v; });
         var hi = Math.max.apply(null, tutti), lo = Math.min.apply(null, tutti), span = hi - lo + 0.6;
-        righe.sort(function(a, b) { return freddi ? a.v - b.v : b.v - a.v; });
+        var ord = righe.slice().sort(function(a, b) { return t.freddi ? a.v - b.v : b.v - a.v; });
         var nMax = MOBILE ? 5 : 6;
         var riga = function(r, i) {
-            var w = freddi ? (hi + 0.6 - r.v) / span : (r.v - lo + 0.6) / span;
+            // v1.7: scala comune alle due tabelle, barra piena = periodo piu' caldo
+            // di tutti gli anni; i piu' freddi hanno le barre piu' corte
+            var w = (r.v - lo + 0.6) / span;
             return '<tr class="' + (r.y === evid ? 'corr' : '') + '"><td class="pos">' + (i + 1) + '</td><td class="anno">'
-               + (t.stag === 'inv' ? (r.y - 1) + '/' + String(r.y).slice(2) : r.y) + '</td>'
-               + '<td><div class="barra" style="width:' + Math.round(w * 100) + '%;background:' + (freddi ? '#4393C3' : '#D6604D') + ';"></div></td>'
+               + (ST.per === 'inv' ? (r.y - 1) + '/' + String(r.y).slice(2) : r.y) + '</td>'
+               + '<td><div class="barra" style="width:' + Math.round(w * 100) + '%;background:' + (t.freddi ? '#4393C3' : '#D6604D') + ';"></div></td>'
                + '<td class="val">' + fmt(r.v, 2) + '</td></tr>';
         };
-        var h = righe.slice(0, nMax).map(riga).join('');
-        // anno/stagione corrente fuori dai primi: riga aggiuntiva con la sua posizione
-        var iEv = righe.findIndex(function(r) { return r.y === evid; });
+        var h = ord.slice(0, nMax).map(riga).join('');
+        var iEv = ord.findIndex(function(r) { return r.y === evid; });
         if (iEv >= nMax) {
-            h += '<tr class="sep"><td colspan="4">&middot;&middot;&middot; su ' + righe.length + ' anni</td></tr>' + riga(righe[iEv], iEv);
+            h += '<tr class="sep"><td colspan="4">&middot;&middot;&middot; su ' + ord.length + ' anni</td></tr>' + riga(ord[iEv], iEv);
         }
         document.getElementById(t.id).innerHTML = '<tbody>' + h + '</tbody>';
-        var suff = t.f === 'e' ? (freddi ? ', le più fredde' : ', le più calde') : (freddi ? ', i più freddi' : ', i più caldi');
-        document.getElementById(t.id + '-tit').textContent = t.tit + suff + (ST.vAnni === 'media' ? '' : ' · ' + VLAB[ST.vAnni].toLowerCase());
     });
 }
 
 // ---------------------------------------------------------------------------
 // 4. Clima mese per mese (ordinabile)
 // ---------------------------------------------------------------------------
+// v1.8: anni della tabella clima (dal piu' recente) e scelta dell'anno
+function anniClima() {
+    var y0 = +MESI[0][0].slice(0, 4), y1 = +MESI[MESI.length - 1][0].slice(0, 4), out = [];
+    Object.keys(EST).forEach(function(k) { y1 = Math.max(y1, +k.slice(0, 4)); });
+    for (var y = y1; y >= y0; y--) out.push(y);
+    return out;
+}
+function impostaAnnoClima(y) {
+    var anni = anniClima();
+    y = Math.max(anni[anni.length - 1], Math.min(anni[0], y));
+    ST.annoClima = y;
+    var sel = c$('anno-clima');
+    if (sel) sel.value = String(y);
+    if (c$('anno-clima-prec')) c$('anno-clima-prec').disabled = y <= anni[anni.length - 1];
+    if (c$('anno-clima-succ')) c$('anno-clima-succ').disabled = y >= anni[0];
+}
+// Giorno di una data 'Y-m-d': "14/8", con l'anno breve se richiesto ("14/8/'25")
+function giornoBreve(d, conAnno) {
+    var p = d.split('-');
+    return +p[2] + '/' + +p[1] + (conAnno ? "/'" + p[0].slice(2) : '');
+}
+
 function righeClima() {
     var v = ST.vClima, vi = VARS.indexOf(v);
-    var annoCorr = STIMA ? +STIMA.mese.slice(0, 4) : +MESI[MESI.length - 1][0].slice(0, 4);
+    var anno = ST.annoClima;
     var righe = [];
     for (var mo = 1; mo <= 12; mo++) {
         var p = PAR[v][1][mo - 1];
@@ -1358,16 +1400,28 @@ function righeClima() {
             var y = +m[0].slice(0, 4);
             if (!hi || x > hi.v) hi = { v: x, y: y };
             if (!lo || x < lo.v) lo = { v: x, y: y };
-            if (y === annoCorr) corr = x;
+            if (y === anno) corr = x;
+        });
+        // estremi assoluti: mese dell'anno scelto e record su tutti gli anni
+        var mm2 = (mo < 10 ? '0' : '') + mo;
+        var ea = EST[anno + '-' + mm2] || null;
+        var rMx = null, rMn = null;
+        Object.keys(EST).forEach(function(k) {
+            if (k.slice(5, 7) !== mm2) return;
+            var e = EST[k];
+            if (e[0] != null && (!rMx || e[0] > rMx.v)) rMx = { v: e[0], d: e[1] };
+            if (e[2] != null && (!rMn || e[2] < rMn.v)) rMn = { v: e[2], d: e[3] };
         });
         righe.push({ mese: mo, norm: p ? p[0] : null, sd: p ? p[1] : null, hi: hi ? hi.v : null, hiY: hi ? hi.y : null,
-                     lo: lo ? lo.v : null, loY: lo ? lo.y : null, corr: corr, sti: stiDi(v, 1, mo, corr) });
+                     lo: lo ? lo.v : null, loY: lo ? lo.y : null, corr: corr, sti: stiDi(v, 1, mo, corr),
+                     mxA: ea ? ea[0] : null, mxAd: ea ? ea[1] : null, mnA: ea ? ea[2] : null, mnAd: ea ? ea[3] : null,
+                     rMx: rMx ? rMx.v : null, rMxD: rMx ? rMx.d : null, rMn: rMn ? rMn.v : null, rMnD: rMn ? rMn.d : null });
     }
-    return { righe: righe, anno: annoCorr };
+    return { righe: righe, anno: anno };
 }
 
 function disegnaClima() {
-    var dati = righeClima(), righe = dati.righe.slice();
+    var dati = righeClima(), righe = dati.righe.slice(), A = dati.anno;
     var k = ST.sortK, dir = ST.sortDir;
     righe.sort(function(a, b) {
         var x = a[k], y = b[k];
@@ -1376,19 +1430,40 @@ function disegnaClima() {
         if (y == null) return -1;
         return (x - y) * dir || a.mese - b.mese;
     });
-    var col = [['mese', 'Mese'], ['norm', MOBILE ? 'Norm.' : 'Normale'], ['sd', 'σ'], ['hi', MOBILE ? 'Max' : 'Più caldo'],
-               ['lo', MOBILE ? 'Min' : 'Più freddo'], ['corr', String(dati.anno)], ['sti', 'STI']];
-    var h = '<thead><tr>' + col.map(function(c) {
-        var on = k === c[0];
-        return '<th aria-sort="' + (on ? (dir > 0 ? 'ascending' : 'descending') : 'none') + '"><button type="button" data-k="' + c[0] + '">'
-             + c[1] + '<span class="ar">' + (on ? (dir > 0 ? '▲' : '▼') : '') + '</span></button></th>';
-    }).join('') + '</tr></thead><tbody>';
+    function intest(key, testo, cls, rowspan) {
+        var on = k === key;
+        return '<th' + (rowspan ? ' rowspan="2"' : '') + (cls ? ' class="' + cls + '"' : '')
+             + ' aria-sort="' + (on ? (dir > 0 ? 'ascending' : 'descending') : 'none') + '"><button type="button" data-k="' + key + '">'
+             + testo + '<span class="ar">' + (on ? (dir > 0 ? '\u25b2' : '\u25bc') : '') + '</span></button></th>';
+    }
+    var h = '<thead><tr>'
+          + intest('mese', 'Mese', '', true)
+          + intest('norm', MOBILE ? 'Norm.' : 'Normale', '', true)
+          + intest('sd', '\u03c3', '', true)
+          + '<th class="grp" colspan="2">' + (MOBILE ? 'Record medie' : 'Record del mese (medie)') + '</th>'
+          + '<th class="grp" colspan="2">Anno ' + A + '</th>'
+          + '<th class="grp ass" colspan="2">Assolute ' + A + '</th>'
+          + '<th class="grp ass" colspan="2">Record assoluti</th>'
+          + '</tr><tr>'
+          + intest('hi', MOBILE ? 'Max' : 'Pi\u00f9 caldo') + intest('lo', MOBILE ? 'Min' : 'Pi\u00f9 freddo')
+          + intest('corr', 'Valore') + intest('sti', 'STI')
+          + intest('mxA', 'Max', 'ass') + intest('mnA', 'Min', 'ass')
+          + intest('rMx', 'Max', 'ass') + intest('rMn', 'Min', 'ass')
+          + '</tr></thead><tbody>';
+    function cellaEstremo(v, d, conAnno, cls) {
+        if (v == null) return '<td>\u2013</td>';
+        return '<td class="' + (cls || '') + '">' + fmt(v) + ' <span class="data">' + giornoBreve(d, conAnno) + '</span></td>';
+    }
     righe.forEach(function(r) {
         var cls = r.sti == null ? '' : (r.sti >= 1 ? 'caldo' : r.sti <= -1 ? 'freddo' : '');
         h += '<tr><td>' + MESI_BREVI[r.mese - 1] + '</td><td>' + fmt(r.norm) + '</td><td>' + fmt(r.sd) + '</td>'
-           + '<td class="' + (r.hiY === dati.anno ? 'caldo' : '') + '">' + fmt(r.hi) + ' <span class="anno">' + (r.hiY ? "'" + String(r.hiY).slice(2) : '') + '</span></td>'
-           + '<td class="' + (r.loY === dati.anno ? 'freddo' : '') + '">' + fmt(r.lo) + ' <span class="anno">' + (r.loY ? "'" + String(r.loY).slice(2) : '') + '</span></td>'
-           + '<td class="' + cls + '">' + fmt(r.corr) + '</td><td class="' + cls + '">' + (r.sti == null ? '–' : fmtSti(r.sti)) + '</td></tr>';
+           + '<td class="' + (r.hiY === A ? 'caldo' : '') + '">' + fmt(r.hi) + ' <span class="anno">' + (r.hiY ? "'" + String(r.hiY).slice(2) : '') + '</span></td>'
+           + '<td class="' + (r.loY === A ? 'freddo' : '') + '">' + fmt(r.lo) + ' <span class="anno">' + (r.loY ? "'" + String(r.loY).slice(2) : '') + '</span></td>'
+           + '<td class="' + cls + '">' + fmt(r.corr) + '</td><td class="' + cls + '">' + (r.sti == null ? '\u2013' : fmtSti(r.sti)) + '</td>'
+           + cellaEstremo(r.mxA, r.mxAd, false) + cellaEstremo(r.mnA, r.mnAd, false)
+           + cellaEstremo(r.rMx, r.rMxD, true, r.rMxD && +r.rMxD.slice(0, 4) === A ? 'caldo' : '')
+           + cellaEstremo(r.rMn, r.rMnD, true, r.rMnD && +r.rMnD.slice(0, 4) === A ? 'freddo' : '')
+           + '</tr>';
     });
     h += '</tbody>';
     var t = document.getElementById('tab-clima');
@@ -1403,6 +1478,21 @@ function disegnaClima() {
             if (nb) nb.focus();
         });
     });
+
+    // indicazione di scorrimento solo se la tabella non ci sta
+    var sc = c$('scroll-clima'), hint = c$('hint-clima');
+    if (sc && hint) hint.style.display = sc.scrollWidth > sc.clientWidth + 2 ? 'block' : 'none';
+
+    var nEst = Object.keys(EST).sort();
+    c$('nota-clima').textContent =
+        'Record del mese: la media mensile pi\u00f9 alta e pi\u00f9 bassa della serie, con l\u2019anno. '
+        + 'Assolute ' + A + ': temperatura pi\u00f9 alta e pi\u00f9 bassa misurate in quel mese, con il giorno. '
+        + 'Record assoluti: le pi\u00f9 alte e pi\u00f9 basse mai misurate in quel mese, con giorno e anno. '
+        + 'Le assolute vengono dai dati giornalieri della stazione'
+        + (nEst.length ? ' (da ' + nomeMese(nEst[0]) + ')' : ', al momento non disponibili')
+        + ': per gli anni precedenti compare \u2013. Il mese in corso arriva fino a ieri. '
+        + 'In colore i record che appartengono all\u2019anno scelto. '
+        + 'Tocca l\u2019intestazione di una colonna per ordinarla; un secondo tocco inverte l\u2019ordine.';
 }
 
 // ---------------------------------------------------------------------------
@@ -1484,12 +1574,22 @@ gruppoBottoni('sel-sit',  voci_sit, 'sit', function() { disegnaSituazione(); sen
 gruppoBottoni('sel-vista', [['sti', 'Indice STI'], ['perc', 'Percentili']], 'vista', soloAndamento);
 gruppoBottoni('sel-fin',   [[1, '1'], [3, '3'], [6, '6'], [12, '12']].map(function(x) { return [x[0], x[1] + ' m']; }), 'w', soloAndamento);
 gruppoBottoni('sel-var',   VARS.map(function(v) { return [v, VLAB[v]]; }), 'v', soloAndamento);
-gruppoBottoni('sel-var-anni', VARS.map(function(v) { return [v, VLAB[v]]; }), 'vAnni', function() { disegnaClassifiche(VARS.indexOf(ST.vAnni)); sendResize(); });
 gruppoBottoni('sel-var-trend', VARS.map(function(v) { return [v, VLAB[v]]; }), 'vTrend', soloAnni);
 if (document.getElementById('sel-periodo')) document.getElementById('sel-periodo').addEventListener('change', function() { ST.per = this.value; soloAnni(); });
-gruppoBottoni('sel-ord1',  [['caldi', 'Pi\u00f9 caldi'], ['freddi', 'Pi\u00f9 freddi']], 'ord1', function() { disegnaClassifiche(VARS.indexOf(ST.vAnni)); sendResize(); });
-gruppoBottoni('sel-ord2',  [['caldi', 'Pi\u00f9 caldi'], ['freddi', 'Pi\u00f9 freddi']], 'ord2', function() { disegnaClassifiche(VARS.indexOf(ST.vAnni)); sendResize(); });
 gruppoBottoni('sel-var-clima', VARS.map(function(v) { return [v, VLAB[v]]; }), 'vClima', function() { disegnaClima(); sendResize(); });
+// v1.8: anno della tabella clima (menu + frecce: sinistra = indietro nel tempo)
+if (c$('anno-clima')) {
+    var selAnno = c$('anno-clima');
+    anniClima().forEach(function(y) {
+        var o = document.createElement('option');
+        o.value = String(y); o.textContent = String(y);
+        selAnno.appendChild(o);
+    });
+    impostaAnnoClima(ST.annoClima);
+    selAnno.addEventListener('change', function() { impostaAnnoClima(+this.value); disegnaClima(); sendResize(); });
+    c$('anno-clima-prec').addEventListener('click', function() { impostaAnnoClima(ST.annoClima - 1); disegnaClima(); sendResize(); });
+    c$('anno-clima-succ').addEventListener('click', function() { impostaAnnoClima(ST.annoClima + 1); disegnaClima(); sendResize(); });
+}
 
 var resizeTimer = null, ultimaW = 0;
 window.addEventListener('resize', function() {

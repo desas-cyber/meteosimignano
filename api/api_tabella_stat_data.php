@@ -803,7 +803,25 @@ function getStatData(?string $data_forzata = null, bool $ignora_altri_get = fals
 
 // ============================================================================
 // SOGLIE TERMICHE (tabella 2)
+// Versione: 2.1 - 2026-11-13
+// ----------------------------------------------------------------------------
+// - Tabella unica: per ogni soglia stagione in corso + stagione di riferimento
+// - Stagioni: calda dal 15 gen al 14 gen, fredda dal 15 lug al 14 lug.
+//   Il tipo di stagione si sceglie dall'OPERATORE, non dal valore:
+//     >  / >=  -> evento "caldo"  (compare in primavera)  -> stagione calda
+//     <  / <=  -> evento "freddo" (compare in autunno)    -> stagione fredda
+// - "Oggi virtuale": ieri, oppure ?ref_data=YYYY-MM-DD se indicato.
+//   Con ref_data la tabella mostra la situazione come se fossimo quel giorno.
+// - Stagione in corso: dall'inizio stagione all'oggi virtuale
+// - Riferimento: ultima stagione completa rispetto all'oggi virtuale
+// - Periodo "parziale" (sia in corso sia riferimento) se inizia prima del
+//   primo dato termico valido o se la copertura del campo e' < STAT2_COPERTURA_MIN
 // ============================================================================
+ 
+const STAT2_INIZIO_CALDO  = '01-15';
+const STAT2_INIZIO_FREDDO = '07-15';
+const STAT2_COPERTURA_MIN = 0.90;
+ 
 function stat2FmtDataEstesa(?string $data_sql): string
 {
     if (!$data_sql) return 'N/D';
@@ -815,275 +833,222 @@ function stat2FmtDataEstesa(?string $data_sql): string
         return 'N/D';
     }
 }
-
+ 
+/** Data compatta: "28 mag 26" */
+function stat2FmtDataBreve(?string $data_sql): string
+{
+    if (!$data_sql) return '&mdash;';
+    $mesi = ['','gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+    $y = substr($data_sql, 2, 2);
+    $m = (int)substr($data_sql, 5, 2);
+    $d = (int)substr($data_sql, 8, 2);
+    return $d . ' ' . $mesi[$m] . ' ' . $y;
+}
+ 
+/** Inizio della stagione (calda o fredda) che contiene $data */
+function stat2InizioStagione(string $data, bool $caldo): string
+{
+    $md_inizio = $caldo ? STAT2_INIZIO_CALDO : STAT2_INIZIO_FREDDO;
+    $y = (int)substr($data, 0, 4);
+    if (substr($data, 5, 5) < $md_inizio) $y--;
+    return sprintf('%04d-%s', $y, $md_inizio);
+}
+ 
+/** Etichetta stagione: "2026" (calda) o "2025/26" (fredda) */
+function stat2LabelStagione(string $inizio, bool $caldo): string
+{
+    $y = (int)substr($inizio, 0, 4);
+    return $caldo ? (string)$y : $y . '/' . substr((string)($y + 1), 2);
+}
+ 
+/** Etichetta soglia: "Max &ge; 35&#176;C" */
+function stat2LabelSoglia(string $campo, string $op, float $val): string
+{
+    $ops = ['>=' => '&ge;', '>' => '&gt;', '<=' => '&le;', '<' => '&lt;'];
+    $v   = (floor($val) == $val) ? (string)(int)$val : number_format($val, 1, '.', '');
+    return ($campo === 'temp_max_abs' ? 'Max' : 'Min') . ' ' . $ops[$op] . ' ' . $v . '&#176;C';
+}
+ 
+/**
+ * Primo giorno, ultimo giorno e numero di giorni che superano la soglia
+ * in [$inizio, $fine]. 'validi' = giorni con il campo valido nel periodo.
+ * $campo e $op devono essere gia' validati (whitelist) dal chiamante.
+ */
+function stat2Periodo(PDO $pdo, string $table, string $campo, string $op,
+                      float $val, string $inizio, string $fine): array
+{
+    $stmt = $pdo->prepare(
+        "SELECT
+            MIN(CASE WHEN $campo $op :s1 THEN data_giorno END) AS primo,
+            MAX(CASE WHEN $campo $op :s2 THEN data_giorno END) AS ultimo,
+            SUM(CASE WHEN $campo $op :s3 THEN 1 ELSE 0 END)    AS n,
+            COUNT(*)                                            AS validi
+         FROM $table
+         WHERE data_giorno BETWEEN :i AND :f
+           AND $campo BETWEEN -30 AND 50"
+    );
+    $stmt->execute([':s1' => $val, ':s2' => $val, ':s3' => $val, ':i' => $inizio, ':f' => $fine]);
+    $r = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+    return [
+        'primo'  => $r['primo']  ?? null,
+        'ultimo' => $r['ultimo'] ?? null,
+        'n'      => (int)($r['n'] ?? 0),
+        'validi' => (int)($r['validi'] ?? 0),
+    ];
+}
+ 
+/** Valori di cella formattati per un periodo */
+function stat2FmtPeriodo(array $p, string $inizio): array
+{
+    if ($p['validi'] === 0) {
+        return ['primo' => '&mdash;', 'ultimo' => '&mdash;', 'n' => '&mdash;'];
+    }
+    if ($p['n'] === 0) {
+        return ['primo' => '&mdash;', 'ultimo' => '&mdash;', 'n' => '0'];
+    }
+    // Soglia gia' superata il primo giorno di stagione: la data non e' informativa
+    $primo = ($p['primo'] === $inizio)
+        ? '<span class="da-inizio" title="Soglia gia\' superata all\'inizio della stagione">da inizio stag.</span>'
+        : stat2FmtDataBreve($p['primo']);
+    return [
+        'primo'  => $primo,
+        'ultimo' => stat2FmtDataBreve($p['ultimo']),
+        'n'      => (string)$p['n'],
+    ];
+}
+ 
 function getStat2Data(): array
 {
     global $pdo_lettura;
     if (!($pdo_lettura instanceof PDO)) {
         return ['success' => false, 'error' => 'Connessione database non disponibile'];
     }
-
+ 
     $table_g    = table_name('dati_meteo_giornaliero_simignano');
     $oggi_reale = get_now('Y-m-d');
-
-    // ref_data: data di riferimento per sezione A (primo/ultimo giorno)
-    $ref_data = $oggi_reale;
+    // I dati giornalieri aggregati si completano a fine giornata: ci si ferma a ieri
+    $ieri       = date('Y-m-d', strtotime($oggi_reale . ' -1 day'));
+ 
+    // ------------------------------------------------------------------------
+    // Data di riferimento (opzionale)
+    // ------------------------------------------------------------------------
+    $ref_data = null;
     if (!empty($_GET['ref_data'])) {
         $rd = DateTime::createFromFormat('Y-m-d', $_GET['ref_data']);
-        if ($rd && $rd->format('Y-m-d') <= $oggi_reale) {
-            $ref_data = $rd->format('Y-m-d');
+        if ($rd && $rd->format('Y-m-d') === $_GET['ref_data'] && $_GET['ref_data'] <= $ieri) {
+            $ref_data = $_GET['ref_data'];
         }
     }
+    // Oggi virtuale: tutta la tabella e' calcolata come se fossimo a questa data
+    $oggi_virt = $ref_data ?? $ieri;
 
-    $anno_oggi  = (new DateTime($oggi_reale))->format('Y');
-    $anno_int   = (int)$anno_oggi;
-    $md_oggi    = (int)(new DateTime($oggi_reale))->format('md');
-
-    // ========================================================================
-    // FINESTRE STAGIONALI per sezione A
-    // Caldo: dal 15 gen anno corrente (o precedente se prima del 15gen)
-    // Freddo: dal 15 lug anno precedente
-    // ========================================================================
-    $y_caldo       = ($md_oggi >= 115) ? $anno_int : $anno_int - 1;
-    $caldo_inizio  = $y_caldo . '-01-15';
-    $caldo_fine    = $oggi_reale;
-    $freddo_inizio = ($anno_int - 1) . '-07-15';
-    $freddo_fine   = $oggi_reale;
-
-    // ========================================================================
-    // PERIODO per sezione B (conteggi)
-    // ========================================================================
-    $modo = 'anno';
-
-    if (!empty($_GET['mese'])) {
-        $dm = DateTime::createFromFormat('Y-m', $_GET['mese']);
-        if ($dm) {
-            $modo      = 'mese';
-            $inizio    = $dm->format('Y-m-01');
-            $fine_raw  = $dm->format('Y-m-t');
-            $fine      = ($fine_raw > $oggi_reale) ? date('Y-m-d', strtotime($oggi_reale . ' -1 day')) : $fine_raw;
-            $mesi_long = ['','gennaio','febbraio','marzo','aprile','maggio','giugno',
-                          'luglio','agosto','settembre','ottobre','novembre','dicembre'];
-            $label_col = $mesi_long[(int)$dm->format('n')] . ' ' . $dm->format('Y');
-        } else {
-            $modo = 'anno';
-        }
-    }
-
-    if ($modo === 'anno') {
-        $anno_sel  = $anno_oggi;
-        if (!empty($_GET['anno'])) {
-            $a = (int)$_GET['anno'];
-            if ($a >= 2020 && $a <= (int)$anno_oggi) $anno_sel = (string)$a;
-        }
-        $inizio    = $anno_sel . '-01-01';
-        $fine_raw  = $anno_sel . '-12-31';
-        $fine      = ($fine_raw > $oggi_reale) ? date('Y-m-d', strtotime($oggi_reale . ' -1 day')) : $fine_raw;
-        $label_col = $anno_sel;
-    }
-
-    // ========================================================================
-    // COPERTURA sul periodo B
-    // ========================================================================
-    if ($modo === 'mese') {
-        $fine_raw_cov = date('Y-m-t', strtotime($inizio));
-    } else {
-        $fine_raw_cov = substr($inizio, 0, 4) . '-12-31';
-    }
-    $giorni_attesi = (int)((new DateTime($inizio))->diff(new DateTime($fine_raw_cov))->days) + 1;
-    try {
-        $stmt = $pdo_lettura->prepare("SELECT COUNT(*) FROM $table_g WHERE data_giorno BETWEEN :i AND :f");
-        $stmt->execute([':i' => $inizio, ':f' => $fine]);
-        $copertura = $giorni_attesi > 0 ? (int)$stmt->fetchColumn() / $giorni_attesi : 0.0;
-    } catch (PDOException $e) {
-        return ['success' => false, 'error' => 'Errore DB: ' . $e->getMessage()];
-    }
-
-    // ========================================================================
-    // SEZIONE A: primo e ultimo giorno nella finestra stagionale
-    // ========================================================================
-    try {
-        $ultimoGiorno = function(string $campo, string $op, float $soglia)
-            use ($pdo_lettura, $table_g, $ref_data): ?string
-        {
-            $stmt = $pdo_lettura->prepare(
-                "SELECT MAX(data_giorno) FROM $table_g
-                 WHERE $campo $op :s
-                   AND $campo BETWEEN -30 AND 50
-                   AND data_giorno <= :rif"
-            );
-            $stmt->execute([':s' => $soglia, ':rif' => $ref_data]);
-            return $stmt->fetchColumn() ?: null;
-        };
-
-        $primoGiorno = function(string $campo, string $op, float $soglia, string $fin_inizio)
-            use ($pdo_lettura, $table_g, $ref_data): ?string
-        {
-            $stmt = $pdo_lettura->prepare(
-                "SELECT MIN(data_giorno) FROM $table_g
-                 WHERE $campo $op :s
-                   AND $campo BETWEEN -30 AND 50
-                   AND data_giorno BETWEEN :i AND :f"
-            );
-            $stmt->execute([':s' => $soglia, ':i' => $fin_inizio, ':f' => $ref_data]);
-            $val = $stmt->fetchColumn() ?: null;
-            if ($val === null) {
-                $i2 = date('Y-m-d', strtotime($fin_inizio . ' -1 year'));
-                $f2 = $fin_inizio;
-                $stmt->execute([':s' => $soglia, ':i' => $i2, ':f' => $f2]);
-                $val = $stmt->fetchColumn() ?: null;
-            }
-            return $val;
-        };
-
-        $r_sopra35 = ['primo' => $primoGiorno('temp_max_abs', '>=', 35.0, $caldo_inizio),  'ultimo' => $ultimoGiorno('temp_max_abs', '>=', 35.0)];
-        $r_sopra30 = ['primo' => $primoGiorno('temp_max_abs', '>',  30.0, $caldo_inizio),  'ultimo' => $ultimoGiorno('temp_max_abs', '>',  30.0)];
-        $r_sopra20 = ['primo' => $primoGiorno('temp_max_abs', '>',  20.0, $caldo_inizio),  'ultimo' => $ultimoGiorno('temp_max_abs', '>',  20.0)];
-        $r_sotto8  = ['primo' => $primoGiorno('temp_min_abs', '<=',  5.0, $freddo_inizio), 'ultimo' => $ultimoGiorno('temp_min_abs', '<=',  5.0)];
-        $r_sotto0  = ['primo' => $primoGiorno('temp_min_abs', '<=',  0.0, $freddo_inizio), 'ultimo' => $ultimoGiorno('temp_min_abs', '<=',  0.0)];
-        $r_sottoM5 = ['primo' => $primoGiorno('temp_min_abs', '<=', -5.0, $freddo_inizio), 'ultimo' => $ultimoGiorno('temp_min_abs', '<=', -5.0)];
-
-        $r_custom_a = null;
-        if (!empty($_GET['custom_campo']) && !empty($_GET['custom_op']) && isset($_GET['custom_val'])) {
-            $c_campo = $_GET['custom_campo'];
-            $c_op    = $_GET['custom_op'];
-            $c_val   = $_GET['custom_val'];
-            $c_ok    = in_array($c_campo, ['temp_min_abs', 'temp_max_abs'])
-                    && in_array($c_op,    ['>=', '>', '<=', '<'])
-                    && is_numeric($c_val)
-                    && (float)$c_val >= -30
-                    && (float)$c_val <= 50;
-            if ($c_ok) {
-                $c_num = (float)$c_val;
-                $c_fi  = ($c_num > 10) ? $caldo_inizio : $freddo_inizio;
-                $r_custom_a = [
-                    'primo'  => $primoGiorno($c_campo, $c_op, $c_num, $c_fi),
-                    'ultimo' => $ultimoGiorno($c_campo, $c_op, $c_num),
-                ];
-            }
-        }
-
-    } catch (PDOException $e) {
-        return ['success' => false, 'error' => 'Errore sezione A: ' . $e->getMessage()];
-    }
-
-    // ========================================================================
-    // SEZIONE B: conteggi giorni nel periodo selezionato
-    // ========================================================================
-    try {
-        $contaGiorni = function(string $campo, string $op, float $soglia)
-            use ($pdo_lettura, $table_g, $inizio, $fine): int
-        {
-            $stmt = $pdo_lettura->prepare(
-                "SELECT COUNT(*) FROM $table_g
-                 WHERE data_giorno BETWEEN :i AND :f
-                   AND $campo $op :s
-                   AND $campo BETWEEN -30 AND 50"
-            );
-            $stmt->execute([':i' => $inizio, ':f' => $fine, ':s' => $soglia]);
-            return (int)$stmt->fetchColumn();
-        };
-
-        $gg_sopra35     = $contaGiorni('temp_max_abs', '>=', 35.0);
-        $gg_sopra30     = $contaGiorni('temp_max_abs', '>',  30.0);
-        $gg_min_sotto20 = $contaGiorni('temp_min_abs', '>',  18.0);
-        $gg_sotto0      = $contaGiorni('temp_min_abs', '<=',  0.0);
-        $gg_sottoM5     = $contaGiorni('temp_min_abs', '<=', -5.0);
-
-        $gg_custom = null;
-        if (!empty($_GET['custom_campo']) && !empty($_GET['custom_op']) && isset($_GET['custom_val'])) {
-            $c_campo = $_GET['custom_campo'];
-            $c_op    = $_GET['custom_op'];
-            $c_val   = $_GET['custom_val'];
-            $c_ok    = in_array($c_campo, ['temp_min_abs', 'temp_max_abs'])
-                    && in_array($c_op,    ['>=', '>', '<=', '<'])
-                    && is_numeric($c_val)
-                    && (float)$c_val >= -30
-                    && (float)$c_val <= 50;
-            if ($c_ok) {
-                $gg_custom = $contaGiorni($c_campo, $c_op, (float)$c_val);
-            }
-        }
-
-    } catch (PDOException $e) {
-        return ['success' => false, 'error' => 'Errore sezione B: ' . $e->getMessage()];
-    }
-
-    // ========================================================================
-    // COSTRUZIONE RIGHE A e B
-    // ========================================================================
-    $custom_label_a = 'personalizzata';
-    if ($r_custom_a !== null && !empty($_GET['custom_campo'])) {
-        $cs = ($_GET['custom_campo'] === 'temp_max_abs') ? 'Max' : 'Min';
-        $co = htmlspecialchars($_GET['custom_op']);
-        $cv = number_format((float)$_GET['custom_val'], 1, '.', '') . '&#176;C';
-        $custom_label_a = $cs . ' ' . $co . ' ' . $cv;
-    }
-
-    $custom_label_b = 'personalizzata';
-    if ($gg_custom !== null && !empty($_GET['custom_campo'])) {
-        $cs = ($_GET['custom_campo'] === 'temp_max_abs') ? 'Max' : 'Min';
-        $co = htmlspecialchars($_GET['custom_op']);
-        $cv = number_format((float)$_GET['custom_val'], 1, '.', '') . '&#176;C';
-        $custom_label_b = 'Gg ' . $cs . ' ' . $co . ' ' . $cv;
-    }
-
-    $righe_a = [
-        ['label' => 'Max &ge; 35&#176;C', 'grigio' => false,
-         'primo'  => stat2FmtDataEstesa($r_sopra35['primo']),
-         'ultimo' => stat2FmtDataEstesa($r_sopra35['ultimo'])],
-        ['label' => 'Max &gt; 30&#176;C', 'grigio' => true,
-         'primo'  => stat2FmtDataEstesa($r_sopra30['primo']),
-         'ultimo' => stat2FmtDataEstesa($r_sopra30['ultimo'])],
-        ['label' => 'Max &gt; 20&#176;C', 'grigio' => false,
-         'primo'  => stat2FmtDataEstesa($r_sopra20['primo']),
-         'ultimo' => stat2FmtDataEstesa($r_sopra20['ultimo'])],
-        ['label' => 'Min &le; 5&#176;C',  'grigio' => true,
-         'primo'  => stat2FmtDataEstesa($r_sotto8['primo']),
-         'ultimo' => stat2FmtDataEstesa($r_sotto8['ultimo'])],
-        ['label' => 'Min &le; 0&#176;C',  'grigio' => false,
-         'primo'  => stat2FmtDataEstesa($r_sotto0['primo']),
-         'ultimo' => stat2FmtDataEstesa($r_sotto0['ultimo'])],
-        ['label' => 'Min &le; -5&#176;C', 'grigio' => true,
-         'primo'  => stat2FmtDataEstesa($r_sottoM5['primo']),
-         'ultimo' => stat2FmtDataEstesa($r_sottoM5['ultimo'])],
-        ['label' => $custom_label_a,       'grigio' => false,
-         'primo'  => ($r_custom_a ? stat2FmtDataEstesa($r_custom_a['primo'])  : '&mdash;'),
-         'ultimo' => ($r_custom_a ? stat2FmtDataEstesa($r_custom_a['ultimo']) : '&mdash;')],
+    // ------------------------------------------------------------------------
+    // Elenco soglie (unione delle vecchie tabelle A e B)
+    // ------------------------------------------------------------------------
+    $soglie = [
+        ['campo' => 'temp_max_abs', 'op' => '>=', 'val' =>  35.0],
+        ['campo' => 'temp_max_abs', 'op' => '>',  'val' =>  30.0],
+        ['campo' => 'temp_max_abs', 'op' => '>',  'val' =>  20.0],
+        ['campo' => 'temp_min_abs', 'op' => '>',  'val' =>  18.0],
+        ['campo' => 'temp_min_abs', 'op' => '<=', 'val' =>   5.0],
+        ['campo' => 'temp_min_abs', 'op' => '<=', 'val' =>   0.0],
+        ['campo' => 'temp_min_abs', 'op' => '<=', 'val' =>  -5.0],
     ];
+ 
+    // Soglia personalizzata (whitelist su campo e operatore)
+    if (!empty($_GET['custom_campo']) && !empty($_GET['custom_op']) && isset($_GET['custom_val'])) {
+        $c_campo = $_GET['custom_campo'];
+        $c_op    = $_GET['custom_op'];
+        $c_val   = $_GET['custom_val'];
+        if (in_array($c_campo, ['temp_min_abs', 'temp_max_abs'], true)
+            && in_array($c_op, ['>=', '>', '<=', '<'], true)
+            && is_numeric($c_val)
+            && (float)$c_val >= -30 && (float)$c_val <= 50) {
+            $soglie[] = ['campo' => $c_campo, 'op' => $c_op, 'val' => (float)$c_val, 'custom' => true];
+        }
+    }
+ 
+    try {
+        // Primo giorno con dati termici validi (per marcare il riferimento parziale)
+        $stmt = $pdo_lettura->prepare(
+            "SELECT MIN(data_giorno) FROM $table_g
+             WHERE temp_max_abs BETWEEN -30 AND 50
+                OR temp_min_abs BETWEEN -30 AND 50"
+        );
+        $stmt->execute();
+        $primo_dato = $stmt->fetchColumn() ?: null;
+ 
+        $righe = [];
+        foreach ($soglie as $idx => $s) {
+            $caldo = in_array($s['op'], ['>', '>='], true);
+ 
+            // Stagione in corso all'oggi virtuale
+            $att_i = stat2InizioStagione($oggi_virt, $caldo);
+            $att_f = $oggi_virt;
 
-    $righe_b = [
-        ['label' => 'Gg Max &ge; 35&#176;C', 'valore' => (string)$gg_sopra35,     'scarso' => true, 'grigio' => false],
-        ['label' => 'Gg Max &gt; 30&#176;C', 'valore' => (string)$gg_sopra30,     'scarso' => true, 'grigio' => true],
-        ['label' => 'Gg Min &gt; 18&#176;C', 'valore' => (string)$gg_min_sotto20, 'scarso' => true, 'grigio' => false],
-        ['label' => 'Gg Min &le; 0&#176;C',  'valore' => (string)$gg_sotto0,      'scarso' => true, 'grigio' => true],
-        ['label' => 'Gg Min &le; -5&#176;C', 'valore' => (string)$gg_sottoM5,     'scarso' => true, 'grigio' => false],
-        ['label' => $custom_label_b,
-         'valore' => ($gg_custom !== null ? (string)$gg_custom : '&mdash;'),
-         'scarso' => true, 'grigio' => true],
-    ];
+            // Stagione di riferimento: ultima stagione completa prima di quella in corso
+            $rif_i = ((int)substr($att_i, 0, 4) - 1) . substr($att_i, 4);
+            $rif_f = date('Y-m-d', strtotime($att_i . ' -1 day'));
 
+            $p_att = stat2Periodo($pdo_lettura, $table_g, $s['campo'], $s['op'], $s['val'], $att_i, $att_f);
+            $p_rif = stat2Periodo($pdo_lettura, $table_g, $s['campo'], $s['op'], $s['val'], $rif_i, $rif_f);
+
+            $gg_att       = (int)((new DateTime($att_i))->diff(new DateTime($att_f))->days) + 1;
+            $cop_att      = $gg_att > 0 ? $p_att['validi'] / $gg_att : 0.0;
+            $parziale_att = ($primo_dato === null) || ($att_i < $primo_dato) || ($cop_att < STAT2_COPERTURA_MIN);
+
+            $gg_rif    = (int)((new DateTime($rif_i))->diff(new DateTime($rif_f))->days) + 1;
+            $cop_rif   = $gg_rif > 0 ? $p_rif['validi'] / $gg_rif : 0.0;
+            $parziale  = ($primo_dato === null) || ($rif_i < $primo_dato) || ($cop_rif < STAT2_COPERTURA_MIN);
+ 
+            $righe[] = [
+                'label'   => stat2LabelSoglia($s['campo'], $s['op'], $s['val']),
+                'tipo'    => $caldo ? 'caldo' : 'freddo',
+                'custom'  => !empty($s['custom']),
+                'grigio'  => ($idx % 2 === 1),
+                'attuale' => array_merge(
+                    [
+                        'stagione'  => stat2LabelStagione($att_i, $caldo),
+                        'inizio'    => $att_i,
+                        'fine'      => $att_f,
+                        'parziale'  => $parziale_att,
+                        'copertura' => round($cop_att, 3),
+                    ],
+                    stat2FmtPeriodo($p_att, $att_i)
+                ),
+                'rif'     => array_merge(
+                    [
+                        'stagione'  => stat2LabelStagione($rif_i, $caldo),
+                        'inizio'    => $rif_i,
+                        'fine'      => $rif_f,
+                        'parziale'  => $parziale,
+                        'copertura' => round($cop_rif, 3),
+                    ],
+                    stat2FmtPeriodo($p_rif, $rif_i)
+                ),
+            ];
+        }
+    } catch (PDOException $e) {
+        error_log('getStat2Data: ' . $e->getMessage());
+        return ['success' => false, 'error' => 'Errore DB soglie: ' . $e->getMessage()];
+    }
+ 
     return [
-        'success'   => true,
-        'righe_a'   => $righe_a,
-        'righe_b'   => $righe_b,
-        'copertura' => $copertura,
-        'meta'      => [
-            'label_col'     => $label_col,
-            'inizio'        => $inizio,
-            'fine'          => $fine,
-            'modo'          => $modo,
-            'anno_rif'      => isset($anno_sel) ? $anno_sel : (new DateTime($inizio))->format('Y'),
-            'oggi_reale'    => $oggi_reale,
-            'generato_il'   => get_now(),
-            'ref_data'      => $ref_data,
-            'caldo_inizio'  => $caldo_inizio,
-            'caldo_fine'    => $caldo_fine,
-            'freddo_inizio' => $freddo_inizio,
-            'freddo_fine'   => $freddo_fine,
+        'success' => true,
+        'righe'   => $righe,
+        'meta'    => [
+            'oggi_reale'      => $oggi_reale,
+            'ieri'            => $ieri,
+            'oggi_virt'       => $oggi_virt,
+            'ref_data'        => $ref_data,
+            'ref_label'       => $ref_data !== null ? stat2FmtDataEstesa($ref_data) : null,
+            'primo_dato'      => $primo_dato,
+            'primo_dato_label'=> $primo_dato ? stat2FmtDataEstesa($primo_dato) : null,
+            'generato_il'     => get_now(),
         ],
     ];
 }
+ 
 
 // ============================================================================
 // RECORD PIOGGIA (tabella 3)

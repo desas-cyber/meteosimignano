@@ -2,6 +2,12 @@
 /**
  * ============================================================================
  * GRAFICO STATISTICHE PLUVIO - grafico_pluvio_display.php
+ * Versione 1.1 - 15/11/2026
+ *   1.1 (15/11/2026) Touch mobile: il trascinamento VERTICALE sul grafico ora
+ *       scorre la pagina (prima touchmove + preventDefault bloccava lo scroll
+ *       e, con i tre grafici impilati, non restava spazio libero per il dito).
+ *       Tooltip: tocco singolo oppure trascinamento ORIZZONTALE.
+ *       CSS touch-action: pan-y sui canvas.
  * ============================================================================
  * TRE GRAFICI SEPARATI: MESE corrente | STAGIONE corrente | ANNO
  * Ognuno ha le proprie scale (mm a sinistra, gg a destra) calcolate solo sui
@@ -114,7 +120,15 @@ $oggi_disp   = (new DateTime($meta['oggi']))->format('d/m/Y');
             min-width: 0;
             position: relative;
         }
-        canvas { display: block; width: 100% !important; }
+        /* touch-action: pan-y -> lo scroll verticale lo gestisce il browser
+           anche col dito sul grafico; i gesti orizzontali restano al JS
+           (tooltip). */
+        canvas {
+            display: block;
+            width: 100% !important;
+            touch-action: pan-y;
+            -webkit-tap-highlight-color: transparent;
+        }
         .legend {
             display: flex;
             gap: 12px;
@@ -636,28 +650,83 @@ function aggiornaTooltip(canvas, clientX, clientY) {
     if (trovato) {
         tooltipEl.innerHTML = trovato.testo;
         tooltipEl.style.display = 'block';
-        tooltipEl.style.left = (clientX - tooltipEl.offsetWidth / 2) + 'px';
-        tooltipEl.style.top  = (clientY - tooltipEl.offsetHeight - 10) + 'px';
+        var left = clientX - tooltipEl.offsetWidth / 2;
+        left = Math.max(4, Math.min(left, window.innerWidth - tooltipEl.offsetWidth - 4));
+        tooltipEl.style.left = left + 'px';
+        tooltipEl.style.top  = Math.max(4, clientY - tooltipEl.offsetHeight - 10) + 'px';
     } else {
         tooltipEl.style.display = 'none';
     }
 }
 
-function nascondiTooltip() { tooltipEl.style.display = 'none'; }
+var timerNascondi = null;
+function nascondiTooltip() {
+    clearTimeout(timerNascondi);
+    tooltipEl.style.display = 'none';
+}
 
 // I listener stanno sul canvas, che non viene ricreato da build():
 // vanno aggiunti una sola volta, altrimenti si accumulano ad ogni resize.
+//
+// TOUCH (v1.1): il gesto si classifica dopo i primi pixel di movimento.
+//   - prevalentemente VERTICALE  -> scroll della pagina (nessun preventDefault)
+//   - prevalentemente ORIZZONTALE -> tooltip che segue il dito
+//   - tocco senza movimento       -> tooltip per 2,5 s
+// Prima ogni touchmove chiamava preventDefault: col dito sui grafici (che su
+// mobile riempiono lo schermo) la pagina non scorreva piu'.
+var SOGLIA_GESTO_PX = 8;
+
 function aggiungiListenerTooltip(cv) {
     cv.addEventListener('mousemove', function(e) { aggiornaTooltip(cv, e.clientX, e.clientY); });
     cv.addEventListener('mouseleave', nascondiTooltip);
+
+    var t0 = null;        // punto iniziale del tocco
+    var gesto = null;     // null | 'scroll' | 'tooltip'
+
+    cv.addEventListener('touchstart', function(e) {
+        if (e.touches.length !== 1) { t0 = null; return; }
+        t0 = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        gesto = null;
+        clearTimeout(timerNascondi);
+    }, { passive: true });
+
     cv.addEventListener('touchmove', function(e) {
-        if (e.touches.length > 0) {
-            e.preventDefault();
-            aggiornaTooltip(cv, e.touches[0].clientX, e.touches[0].clientY);
+        if (!t0 || e.touches.length !== 1) return;
+        var tx = e.touches[0].clientX, ty = e.touches[0].clientY;
+
+        if (gesto === null) {
+            var dx = Math.abs(tx - t0.x), dy = Math.abs(ty - t0.y);
+            if (dx < SOGLIA_GESTO_PX && dy < SOGLIA_GESTO_PX) return;
+            gesto = (dy >= dx) ? 'scroll' : 'tooltip';
+            if (gesto === 'scroll') nascondiTooltip();
+        }
+        if (gesto === 'tooltip') {
+            if (e.cancelable) e.preventDefault();
+            aggiornaTooltip(cv, tx, ty);
         }
     }, { passive: false });
-    cv.addEventListener('touchend', nascondiTooltip);
+
+    cv.addEventListener('touchend', function() {
+        if (t0 && gesto === null) {
+            // tocco singolo: mostra il tooltip e lo lascia leggere
+            aggiornaTooltip(cv, t0.x, t0.y);
+            clearTimeout(timerNascondi);
+            timerNascondi = setTimeout(nascondiTooltip, 2500);
+        } else if (gesto === 'tooltip') {
+            nascondiTooltip();
+        }
+        t0 = null; gesto = null;
+    });
+
+    cv.addEventListener('touchcancel', function() {
+        t0 = null; gesto = null;
+        nascondiTooltip();
+    });
 }
+
+// Lo scroll della pagina madre non arriva all'iframe: chiude il tooltip
+// rimasto aperto quando si scorre la pagina interna.
+window.addEventListener('scroll', nascondiTooltip, { passive: true });
 
 var resizeTimer = null;
 window.addEventListener('resize', function() {

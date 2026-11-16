@@ -1,7 +1,7 @@
 <?php
 /**
  * PREVISIONE D'INSIEME METEO SIMIGNANO - previsione_display.php
- * Versione 1.7 - 2026-10-27
+ * Versione 1.9 - 2026-11-15
  * Storico:
  *   1.0  2026-10-24  Prima versione: header + immagine principale come stat_display.php, un solo blocco
  *                    con l'iframe di https://test.meteosimignano.it/previsione_ensemble.php largo fino a 1200 px;
@@ -13,6 +13,8 @@
  *   1.5  2026-10-26  "Schermo intero" si apre nella stessa scheda (prima in una nuova scheda, dove Torna indietro non funzionava)
  *   1.6  2026-10-26  Pulsante "Versione semplice" accanto a "Schermo intero" (porta a previsione_display_sempl.php)
  *   1.7  2026-10-27  "Schermo intero" passa ?torna= con l'indirizzo di questa pagina (funziona anche nel sito di prova)
+ *   1.8  2026-11-15  Pulsante rinominato "Versione semplice 96h"
+ *   1.9  2026-11-15  Pulsante "Mappe Italia" (mappa_italia.php sul server di casa) accanto agli altri
  *
  * Struttura analoga a stat_display.php (stesso header, menu, immagine principale e spinner),
  * senza le tabelle statistiche.
@@ -27,6 +29,7 @@ if (!isset($mainImageDate)) {
 // Pagina mostrata nell'iframe (server di casa) e origine ammessa per i messaggi di ridimensionamento
 $ENS_URL     = 'https://test.meteosimignano.it/previsione_ensemble.php';   // versione pubblica (predefinita): senza i link interni
 $ENS_ORIGINE = 'https://test.meteosimignano.it';
+$MAPPE_URL   = 'https://test.meteosimignano.it/mappa_italia.php';      // mappe dell'Italia (pulsante Mappe Italia)
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -316,7 +319,8 @@ $ENS_ORIGINE = 'https://test.meteosimignano.it';
         <div class="stat-section-header">
             <h2 class="stat-section-title">Previsione Ensemble ECMWF (51 membri)</h2>
             <div style="display:flex; gap:6px;">
-                <a href="previsione_display_sempl.php" class="stat-section-cta">Versione semplice</a>
+                <a href="previsione_display_sempl.php" class="stat-section-cta">Versione semplice 96h</a>
+                <a href="<?php echo htmlspecialchars($MAPPE_URL); ?>" class="stat-section-cta">Mappe Italia</a>
                 <a href="<?php echo htmlspecialchars($ENS_URL . '?torna=' . rawurlencode((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . strtok($_SERVER['REQUEST_URI'], '?'))); ?>" class="stat-section-cta">&#8599;&nbsp;Schermo intero</a>
             </div>
         </div>

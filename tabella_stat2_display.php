@@ -2,13 +2,16 @@
 /**
  * ============================================================================
  * TABELLA SOGLIE TERMICHE - DISPLAY LAYER
+ * Versione: 2.1 - 2026-11-13
  * ============================================================================
- * Struttura: 2 sezioni
- *   A) Primo/Ultimo giorno nella finestra stagionale (3 colonne)
- *   B) Conteggio giorni nel periodo selezionato (2 colonne)
+ * Tabella unica, due righe per soglia:
+ *   - riga principale : stagione in corso (primo giorno, ultimo giorno, n. giorni)
+ *   - sotto-riga      : ultima stagione completa
+ * Con ref_data la tabella mostra la situazione come se fossimo quel giorno:
+ * stagione in corso fino a ref_data e ultima stagione completa a quella data.
  *
  * PARAMETRI GET:
- *   ?anno=YYYY | ?mese=YYYY-MM
+ *   ?ref_data=YYYY-MM-DD
  *   ?custom_campo=temp_min_abs|temp_max_abs
  *   ?custom_op=>=|>|<=|<
  *   ?custom_val=NUM
@@ -30,17 +33,14 @@ if (!$response['success']) {
     exit;
 }
 
-$righe_a     = $response['righe_a'];
-$righe_b     = $response['righe_b'];
-$meta        = $response['meta'];
-$copertura   = $response['copertura'] ?? 1.0;
-$scarso      = ($copertura < 0.75);
+$righe = $response['righe'];
+$meta  = $response['meta'];
 
 $cur_campo     = isset($_GET['custom_campo']) ? $_GET['custom_campo'] : 'temp_min_abs';
 $cur_op        = isset($_GET['custom_op'])    ? $_GET['custom_op']    : '<=';
 $cur_val       = isset($_GET['custom_val'])   ? $_GET['custom_val']   : '';
 $custom_attivo = ($cur_val !== '');
-$ref_data      = isset($_GET['ref_data']) ? $_GET['ref_data'] : $meta['oggi_reale'];
+$ref_data      = $meta['ref_data'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -152,7 +152,7 @@ $ref_data      = isset($_GET['ref_data']) ? $_GET['ref_data'] : $meta['oggi_real
         .btn-reset { border-color: #c00 !important; background: #fff0f0 !important; color: #c00 !important; }
         .btn-reset:hover { background: #c00 !important; color: #fff !important; }
 
-        /* ---- titoli sezione ---- */
+        /* ---- titolo ---- */
         .sez-title {
             font-size: 10px;
             font-weight: bold;
@@ -161,14 +161,13 @@ $ref_data      = isset($_GET['ref_data']) ? $_GET['ref_data'] : $meta['oggi_real
             margin: 8px auto 2px auto;
             max-width: 95%;
             letter-spacing: 0.03em;
-            text-transform: uppercase;
         }
+        .sez-title .rif-info { font-weight: normal; color: #6699cc; text-transform: none; }
 
-        /* ---- tabelle ---- */
+        /* ---- tabella ---- */
         table {
             border-collapse: collapse;
             font-family: Arial, sans-serif;
-            font-size: 11px;
             max-width: 95%;
             margin: 0 auto;
             width: 100%;
@@ -180,57 +179,49 @@ $ref_data      = isset($_GET['ref_data']) ? $_GET['ref_data'] : $meta['oggi_real
             overflow: hidden;
             white-space: normal;
             font-size: 13px;
+            border-left: 1px solid #000;
+            border-right: 1px solid #000;
         }
-        tr { height: 3.1em; }
         th {
             background-color: rgba(173,173,173,0.8);
             font-weight: bold;
             text-align: center;
+            border: 1px solid #000;
         }
         th:first-child, td:first-child { text-align: left; }
+        th:nth-child(1), td:nth-child(1) { width: 34%; }
+        th:nth-child(2), td:nth-child(2),
+        th:nth-child(3), td:nth-child(3) { width: 23%; text-align: center; }
+        th:nth-child(4), td:nth-child(4) { width: 20%; text-align: center; }
 
-        table.tab-a th:first-child,
-        table.tab-a td:first-child { width: 38%; }
-        table.tab-a th:nth-child(2),
-        table.tab-a td:nth-child(2),
-        table.tab-a th:nth-child(3),
-        table.tab-a td:nth-child(3) { width: 31%; text-align: center; }
+        /* riga principale: stagione in corso */
+        tr.riga-att td { border-top: 1px solid #000; padding-top: 4px; padding-bottom: 1px; }
+        /* sotto-riga: stagione di riferimento */
+        tr.riga-rif td {
+            border-bottom: 1px solid #000;
+            font-size: 11px;
+            color: #666;
+            padding-top: 0;
+            padding-bottom: 4px;
+        }
+        tr.riga-rif td:first-child { padding-left: 12px; }
 
-        table.tab-b th:first-child,
-        table.tab-b td:first-child { width: 75%; }
-        table.tab-b th:nth-child(2),
-        table.tab-b td:nth-child(2) { width: 25%; text-align: center; }
-
-        tr.riga-grigia td { background-color: rgba(200,200,200,0.5); color: #444; }
+        tr.riga-grigia td { background-color: rgba(200,200,200,0.5); }
         tr.riga-custom td { background-color: rgba(180,210,255,0.4); }
-        td.col-val { text-align: center; }
 
-        .dato-scarso::after {
-            content: '*';
-            color: #c00;
-            font-size: 0.85em;
-            vertical-align: super;
-            margin-left: 1px;
+        .stag { font-size: 10px; color: #888; font-weight: normal; white-space: nowrap; }
+        .parziale {
+            font-size: 9px;
+            color: #b36b00;
+            border: 1px solid #e0b060;
+            border-radius: 3px;
+            padding: 0 3px;
+            white-space: nowrap;
+            cursor: help;
         }
+        .da-inizio { font-size: 10px; font-style: italic; cursor: help; }
 
-        /* ---- calendario giorno (griglia) ---- */
-        .cal-days-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
-            margin-top: 3px;
-        }
-        .cal-day-head { font-size: 9px; color: #888; text-align: center; padding: 1px 0; }
-        .cal-day {
-            font-size: 9px; text-align: center; padding: 2px 1px;
-            cursor: pointer; border-radius: 2px;
-        }
-        .cal-day:hover { background: #dde8f5; }
-        .cal-day.empty { cursor: default; }
-        .cal-day.selected-day { background: #6699cc; color: #fff; border-radius: 2px; }
-        .cal-day.today-day { font-weight: bold; color: #c00; }
-
-        /* ---- popup calendario ---- */
+        /* ---- calendario giorno ---- */
         .cal-popup {
             display: none;
             position: fixed;
@@ -247,14 +238,21 @@ $ref_data      = isset($_GET['ref_data']) ? $_GET['ref_data'] : $meta['oggi_real
             white-space: nowrap;
         }
         .cal-popup.open { display: block; }
-        .cal-mesi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 3px; margin-top: 4px; }
-        .cal-btn {
-            padding: 3px 2px; cursor: pointer;
-            border: 1px solid #ccc; border-radius: 3px;
-            background: #f5f5f5; font-size: 10px; text-align: center;
+        .cal-days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            margin-top: 3px;
         }
-        .cal-btn:hover { background: #dde8f5; border-color: #6699cc; }
-        .cal-btn.selected { background: #6699cc; color: #fff; border-color: #4477aa; }
+        .cal-day-head { font-size: 9px; color: #888; text-align: center; padding: 1px 0; }
+        .cal-day {
+            font-size: 9px; text-align: center; padding: 2px 1px;
+            cursor: pointer; border-radius: 2px;
+        }
+        .cal-day:hover { background: #dde8f5; }
+        .cal-day.empty { cursor: default; }
+        .cal-day.selected-day { background: #6699cc; color: #fff; }
+        .cal-day.today-day { font-weight: bold; color: #c00; }
         .cal-nav { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 4px; }
         .cal-nav-btn { cursor: pointer; font-weight: bold; font-size: 13px; padding: 0 4px; color: #555; user-select: none; }
         .cal-nav-btn:hover { color: #000; }
@@ -275,15 +273,13 @@ $ref_data      = isset($_GET['ref_data']) ? $_GET['ref_data'] : $meta['oggi_real
         }
 
         /* ---- responsive ---- */
-        @media (max-width: 480px) {
-            table { font-size: 9px; }
-            th, td { padding: 2px 1px; }
-            .stat-data-date { font-size: 8px; }
-        }
         @media (min-width: 768px) {
-            table { font-size: 16px; width: 85%; max-width: 75%; }
-            th, td { padding: 5px 1px 5px 5px; }
-            tr { height: auto; }
+            table { width: 85%; max-width: 75%; }
+            th, td { font-size: 16px; padding: 5px 1px 5px 5px; }
+            tr.riga-rif td { font-size: 13px; }
+            .stag { font-size: 12px; }
+            .parziale { font-size: 11px; }
+            .da-inizio { font-size: 13px; }
             .sez-title { font-size: 13px; }
             .custom-trigger { font-size: 13px; padding: 3px 10px; }
             .custom-popup { font-size: 13px; min-width: 260px; }
@@ -337,119 +333,97 @@ $ref_data      = isset($_GET['ref_data']) ? $_GET['ref_data'] : $meta['oggi_real
 </div>
 
 <!-- ============================================================
-     SEZIONE A: Primo e Ultimo giorno
+     TITOLO + DATA DI RIFERIMENTO
      ============================================================ -->
 <div class="sez-title">
-    Primo e ultimo giorno stagionale
-    <span class="cal-icon" data-cal="cal-rif" title="Seleziona data di riferimento">&#128197;</span><?php if ($ref_data !== $meta['oggi_reale']): ?><span class="refresh-icon" onclick="resetRefData()" title="Torna a oggi" style="opacity:0.7;font-size:0.9em;">&#8635;</span><span style="font-size:9px;color:#6699cc;font-weight:normal;">(al <?= htmlspecialchars($ref_data) ?>)</span><?php endif; ?>
+    SOGLIE TERMICHE
+    <span class="cal-icon" data-cal="cal-rif" title="Mostra la situazione a una data passata">&#128197;</span>
+    <?php if ($ref_data !== ''): ?>
+        <span class="rif-info">(situazione al <?= htmlspecialchars($meta['ref_label']) ?>)</span>
+        <span class="refresh-icon" onclick="resetRefData()" title="Torna alla situazione attuale" style="opacity:0.7;font-size:0.9em;">&#8635;</span>
+    <?php else: ?>
+        <span class="rif-info">(confronto: ultima stagione completa)</span>
+    <?php endif; ?>
 </div>
-<table class="tab-a" border="1" cellpadding="10" cellspacing="0">
+
+<!-- ============================================================
+     TABELLA UNICA
+     ============================================================ -->
+<table>
     <thead>
         <tr>
             <th>Soglia</th>
             <th>Primo giorno</th>
             <th>Ultimo giorno</th>
-        </tr>
-    </thead>
-    <tbody>
-    <?php foreach ($righe_a as $i => $riga): ?>
-        <?php
-            $is_custom = ($i === count($righe_a) - 1);
-            if ($is_custom && !$custom_attivo) continue;
-            $cls = $is_custom ? 'riga-custom' : (($riga['grigio'] ?? false) ? 'riga-grigia' : '');
-        ?>
-        <tr<?= $cls ? ' class="'.$cls.'"' : '' ?>>
-            <td><?= $riga['label'] ?></td>
-            <td class="col-val"><?= $riga['primo'] ?></td>
-            <td class="col-val"><?= $riga['ultimo'] ?></td>
-        </tr>
-    <?php endforeach; ?>
-    </tbody>
-</table>
-
-<!-- ============================================================
-     SEZIONE B: Conteggio giorni nel periodo
-     ============================================================ -->
-<div class="sez-title" style="margin-top:12px;">
-    Giorni nel periodo &mdash; <?= htmlspecialchars($meta['label_col']) ?>
-    <span class="cal-icon" data-cal="cal-periodo">&#128197;</span><span class="refresh-icon" onclick="navigaA2({})" title="Ripristina periodo">&#8635;</span>
-</div>
-<table class="tab-b" border="1" cellpadding="10" cellspacing="0">
-    <thead>
-        <tr>
-            <th>Soglia</th>
             <th>N&#176; giorni</th>
         </tr>
     </thead>
     <tbody>
-    <?php foreach ($righe_b as $i => $riga): ?>
-        <?php
-            $is_custom = ($i === count($righe_b) - 1);
-            if ($is_custom && !$custom_attivo) continue;
-            $cls_val = ($riga['scarso'] && $scarso) ? ' dato-scarso' : '';
-            $cls_tr  = $is_custom ? 'riga-custom' : (($riga['grigio'] ?? false) ? 'riga-grigia' : '');
-        ?>
-        <tr<?= $cls_tr ? ' class="'.$cls_tr.'"' : '' ?>>
-            <td><?= $riga['label'] ?></td>
-            <td class="col-val<?= $cls_val ?>"><?= $riga['valore'] ?></td>
+    <?php foreach ($righe as $r):
+        $cls = $r['custom'] ? ' riga-custom' : ($r['grigio'] ? ' riga-grigia' : '');
+        $a   = $r['attuale'];
+        $p   = $r['rif'];
+        $tip_parz = 'Stagione con dati incompleti'
+                  . ($meta['primo_dato_label'] ? ' (dati termici dal ' . $meta['primo_dato_label'] . ')' : '');
+    ?>
+        <tr class="riga-att<?= $cls ?>">
+            <td><?= $r['label'] ?> <span class="stag"><?= htmlspecialchars($a['stagione']) ?></span><?php if (!empty($a['parziale'])): ?> <span class="parziale" title="<?= htmlspecialchars($tip_parz) ?>">parziale</span><?php endif; ?></td>
+            <td><?= $a['primo'] ?></td>
+            <td><?= $a['ultimo'] ?></td>
+            <td><?= $a['n'] ?></td>
+        </tr>
+        <tr class="riga-rif<?= $cls ?>">
+            <td>&#8627; <?= htmlspecialchars($p['stagione']) ?><?php if ($p['parziale']): ?> <span class="parziale" title="<?= htmlspecialchars($tip_parz) ?>">parziale</span><?php endif; ?></td>
+            <td><?= $p['primo'] ?></td>
+            <td><?= $p['ultimo'] ?></td>
+            <td><?= $p['n'] ?></td>
         </tr>
     <?php endforeach; ?>
     </tbody>
 </table>
 
-<!-- Popup calendari -->
-<div id="cal-rif"     class="cal-popup"></div>
-<div id="cal-periodo" class="cal-popup"></div>
+<!-- Popup calendario -->
+<div id="cal-rif" class="cal-popup"></div>
 
 <div class="stat-footer">
-    aggiornato: <?= htmlspecialchars($meta['generato_il']) ?>
-    <?php if ($scarso): ?>
-    &nbsp;<span style="color:#c00;">* copertura &lt;75%</span>
-    <?php endif; ?>
+    stagione calda dal 15 gen, fredda dal 15 lug &middot; aggiornato: <?= htmlspecialchars($meta['generato_il']) ?>
 </div>
 
 <script>
 var CTX2 = {
     oggi_reale:   '<?= $meta['oggi_reale'] ?>',
-    modo:         '<?= $meta['modo'] ?>',
-    anno_rif:     '<?= $meta['anno_rif'] ?>',
-    inizio:       '<?= $meta['inizio'] ?>',
+    ieri:         '<?= $meta['ieri'] ?>',
     ref_data:     '<?= htmlspecialchars($ref_data) ?>',
     custom_campo: '<?= htmlspecialchars($cur_campo) ?>',
     custom_op:    '<?= htmlspecialchars($cur_op) ?>',
-    custom_val:   '<?= htmlspecialchars($cur_val) ?>',
+    custom_val:   '<?= htmlspecialchars($cur_val) ?>'
 };
 
-var MESI_IT2   = ['','gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
 var CAL2_STATE = {};
 
-function parseDate2(s) { var p=s.split('-'); return {y:+p[0],m:+p[1],d:+p[2]}; }
-function daysInMonth2(y,m){ return new Date(y,m,0).getDate(); }
-function isoDate2(y,m,d){ return y+'-'+(m<10?'0'+m:m)+'-'+(d<10?'0'+d:d); }
-function zeroPad2(n)   { return n<10?'0'+n:''+n; }
+function parseDate2(s) { var p = s.split('-'); return {y:+p[0], m:+p[1], d:+p[2]}; }
+function daysInMonth2(y, m) { return new Date(y, m, 0).getDate(); }
+function isoDate2(y, m, d) { return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d); }
 
 function buildUrl(params) {
     var base = window.location.pathname;
     var parts = [];
     for (var k in params)
         if (params[k] !== null && params[k] !== undefined && params[k] !== '')
-            parts.push(encodeURIComponent(k)+'='+encodeURIComponent(params[k]));
-    return base + (parts.length ? '?'+parts.join('&') : '');
+            parts.push(encodeURIComponent(k) + '=' + encodeURIComponent(params[k]));
+    return base + (parts.length ? '?' + parts.join('&') : '');
 }
 
-// Naviga preservando i parametri custom
-function navigaA2(params) {
-    var all = {};
-    if (CTX2.custom_val !== '') {
-        all['custom_campo'] = CTX2.custom_campo;
-        all['custom_op']    = CTX2.custom_op;
-        all['custom_val']   = CTX2.custom_val;
+// Parametri correnti: soglia custom (se attiva) e data di riferimento (se impostata)
+function paramsCorrenti(conCustom, conRif) {
+    var p = {};
+    if (conCustom && CTX2.custom_val !== '') {
+        p['custom_campo'] = CTX2.custom_campo;
+        p['custom_op']    = CTX2.custom_op;
+        p['custom_val']   = CTX2.custom_val;
     }
-    if (CTX2.ref_data !== CTX2.oggi_reale) {
-        all['ref_data'] = CTX2.ref_data;
-    }
-    for (var k in params) all[k] = params[k];
-    window.location.href = buildUrl(all);
+    if (conRif && CTX2.ref_data !== '') p['ref_data'] = CTX2.ref_data;
+    return p;
 }
 
 function applicaCustom() {
@@ -459,19 +433,16 @@ function applicaCustom() {
     if (val === '' || isNaN(parseFloat(val))) { alert('Inserire un valore numerico'); return; }
     var f = parseFloat(val);
     if (f < -30 || f > 50) { alert('Valore fuori range (-30 / +50)'); return; }
-    var params = { custom_campo: campo, custom_op: op, custom_val: val };
-    if (CTX2.modo === 'mese') params['mese'] = CTX2.inizio.substring(0,7);
-    else                      params['anno'] = CTX2.anno_rif;
+    var params = paramsCorrenti(false, true);
+    params['custom_campo'] = campo;
+    params['custom_op']    = op;
+    params['custom_val']   = val;
     document.getElementById('custom-popup').classList.remove('open');
     window.location.href = buildUrl(params);
 }
 
-function resetCustom() {
-    var params = {};
-    if (CTX2.modo === 'mese') params['mese'] = CTX2.inizio.substring(0,7);
-    else                      params['anno'] = CTX2.anno_rif;
-    window.location.href = buildUrl(params);
-}
+function resetCustom()  { window.location.href = buildUrl(paramsCorrenti(false, true)); }
+function resetRefData() { window.location.href = buildUrl(paramsCorrenti(true, false)); }
 
 // ---- toggle popup personalizza ----
 document.getElementById('custom-trigger').addEventListener('click', function(e) {
@@ -493,7 +464,7 @@ document.getElementById('f-val').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') applicaCustom();
 });
 
-// ---- click fuori chiude tutto ----
+// ---- click: apertura calendario / chiusura popup ----
 document.addEventListener('click', function(e) {
     if (!e.target.closest('#custom-popup') && !e.target.closest('#custom-trigger'))
         document.getElementById('custom-popup').classList.remove('open');
@@ -507,17 +478,18 @@ document.addEventListener('click', function(e) {
         var isOpen = popup.classList.contains('open');
         document.querySelectorAll('.cal-popup.open').forEach(function(p){ p.classList.remove('open'); });
         if (isOpen) return;
-        if (!CAL2_STATE[id]) initCal2State(id);
+        if (!CAL2_STATE[id]) {
+            var r0 = parseDate2(CTX2.ref_data !== '' ? CTX2.ref_data : CTX2.ieri);
+            CAL2_STATE[id] = { y: r0.y, m: r0.m, sel: CTX2.ref_data };
+        }
         renderCal2(id);
         var r = icon.getBoundingClientRect();
-        // posiziona centrato orizzontalmente nella viewport
         popup.style.visibility = 'hidden';
         popup.style.display = 'block';
         var pw = popup.offsetWidth;
         popup.style.display = '';
         popup.style.visibility = '';
-        var left = Math.max(4, Math.round((window.innerWidth - pw) / 2));
-        popup.style.left = left + 'px';
+        popup.style.left = Math.max(4, Math.round((window.innerWidth - pw) / 2)) + 'px';
         popup.style.top  = (r.bottom + 4) + 'px';
         popup.classList.add('open');
     } else if (!e.target.closest('.cal-popup')) {
@@ -525,72 +497,34 @@ document.addEventListener('click', function(e) {
     }
 });
 
-function initCal2State(id) {
-    if (id === 'cal-rif') {
-        var r = parseDate2(CTX2.ref_data);
-        CAL2_STATE[id] = { tipo:'giorno', y:r.y, m:r.m, sel:CTX2.ref_data };
-    } else {
-        var ref = parseDate2(CTX2.inizio);
-        CAL2_STATE[id] = { livello:'mese', y:ref.y, selY:ref.y, selM: CTX2.modo==='mese' ? ref.m : null };
-    }
-}
-
 function renderCal2(id) {
     var popup = document.getElementById(id);
     var st    = CAL2_STATE[id];
-    var oggi  = parseDate2(CTX2.oggi_reale);
-    var html  = '';
-
-    if (st.tipo === 'giorno') {
-        // Calendario giorno per cal-rif
-        var y=st.y, m=st.m;
-        var primo = (new Date(y,m-1,1).getDay()+6)%7;
-        var ngg   = daysInMonth2(y,m);
-        var mesi_long = ['','Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno',
-                         'Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
-        html += '<div class="cal-nav">'
-              + '<span class="cal-nav-btn" data-cal2="'+id+'" data-nav2="mese:-1">&#8249;</span>'
-              + '<span class="cal-nav-year">'+mesi_long[m]+' '+y+'</span>'
-              + '<span class="cal-nav-btn" data-cal2="'+id+'" data-nav2="mese:1">&#8250;</span>'
-              + '</div><div class="cal-days-grid">';
-        ['L','M','M','G','V','S','D'].forEach(function(g){ html+='<span class="cal-day-head">'+g+'</span>'; });
-        for (var i=0;i<primo;i++) html+='<span class="cal-day empty"></span>';
-        for (var d=1;d<=ngg;d++) {
-            var ds = isoDate2(y,m,d);
-            var futuro = new Date(y,m-1,d) > new Date(oggi.y,oggi.m-1,oggi.d);
-            if (futuro) {
-                html += '<span class="cal-day empty" style="color:#ccc;">'+d+'</span>';
-            } else {
-                var cls = 'cal-day'+(ds===st.sel?' selected-day':'')+(y===oggi.y&&m===oggi.m&&d===oggi.d?' today-day':'');
-                html += '<span class="'+cls+'" data-cal2="'+id+'" data-rif="'+ds+'">'+d+'</span>';
-            }
+    var lim   = parseDate2(CTX2.ieri);
+    var limD  = new Date(lim.y, lim.m - 1, lim.d);
+    var y = st.y, m = st.m;
+    var primo = (new Date(y, m - 1, 1).getDay() + 6) % 7;
+    var ngg   = daysInMonth2(y, m);
+    var mesi_long = ['','Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno',
+                     'Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+    var html = '<div class="cal-nav">'
+             + '<span class="cal-nav-btn" data-cal2="' + id + '" data-nav2="-1">&#8249;</span>'
+             + '<span class="cal-nav-year">' + mesi_long[m] + ' ' + y + '</span>'
+             + '<span class="cal-nav-btn" data-cal2="' + id + '" data-nav2="1">&#8250;</span>'
+             + '</div><div class="cal-days-grid">';
+    ['L','M','M','G','V','S','D'].forEach(function(g){ html += '<span class="cal-day-head">' + g + '</span>'; });
+    for (var i = 0; i < primo; i++) html += '<span class="cal-day empty"></span>';
+    for (var d = 1; d <= ngg; d++) {
+        var ds = isoDate2(y, m, d);
+        if (new Date(y, m - 1, d) > limD) {
+            html += '<span class="cal-day empty" style="color:#ccc;">' + d + '</span>';
+        } else {
+            var cls = 'cal-day' + (ds === st.sel ? ' selected-day' : '') + (ds === CTX2.ieri ? ' today-day' : '');
+            html += '<span class="' + cls + '" data-cal2="' + id + '" data-rif="' + ds + '">' + d + '</span>';
         }
-        html += '</div>';
-        // Link reset a oggi
-        html += '<div style="margin-top:5px;font-size:9px;cursor:pointer;color:#6699cc;text-align:center;" data-cal2="'+id+'" data-rif="reset">&#8635; oggi</div>';
-
-    } else if (st.livello === 'mese') {
-        html += '<div class="cal-nav">'
-              + '<span class="cal-nav-btn" data-cal2="'+id+'" data-nav2="-1">&#8249;</span>'
-              + '<span class="cal-nav-year" data-cal2="'+id+'" data-switch2="anno" style="cursor:pointer;text-decoration:underline;font-size:10px;">'+st.y+'</span>'
-              + '<span class="cal-nav-btn" data-cal2="'+id+'" data-nav2="1">&#8250;</span>'
-              + '</div><div class="cal-mesi-grid">';
-        for (var m=1; m<=12; m++) {
-            var futuro = (st.y > oggi.y) || (st.y === oggi.y && m > oggi.m);
-            var sel    = (st.y === st.selY && m === st.selM);
-            html += futuro
-                ? '<span class="cal-btn" style="opacity:0.35;">'+MESI_IT2[m]+'</span>'
-                : '<span class="cal-btn'+(sel?' selected':'')+'" data-cal2="'+id+'" data-sel2="mese:'+st.y+'-'+zeroPad2(m)+'">'+MESI_IT2[m]+'</span>';
-        }
-        html += '</div><div style="margin-top:5px;font-size:9px;cursor:pointer;color:#6699cc;" data-cal2="'+id+'" data-switch2="anno">Seleziona anno &rarr;</div>';
-    } else {
-        html += '<div style="font-size:10px;margin-bottom:3px;">Seleziona anno</div><div class="cal-mesi-grid">';
-        for (var y=oggi.y; y>=2020; y--) {
-            var sel = (y === st.selY && st.selM === null);
-            html += '<span class="cal-btn'+(sel?' selected':'')+'" data-cal2="'+id+'" data-sel2="anno:'+y+'">'+y+'</span>';
-        }
-        html += '</div><div style="margin-top:5px;font-size:9px;cursor:pointer;color:#6699cc;" data-cal2="'+id+'" data-switch2="mese">&#8592; Per mese</div>';
     }
+    html += '</div>';
+    html += '<div style="margin-top:5px;font-size:9px;cursor:pointer;color:#6699cc;" data-cal2="' + id + '" data-rif="reset">&#8635; torna a oggi</div>';
     popup.innerHTML = html;
 }
 
@@ -602,55 +536,22 @@ document.addEventListener('click', function(e) {
     if (!st) return;
     e.stopPropagation();
     if (el.dataset.nav2 !== undefined) {
-        var nav = el.dataset.nav2;
-        if (nav.indexOf('mese:') === 0) {
-            // navigazione mese per calendario giorno
-            st.m += parseInt(nav.split(':')[1]);
-            if (st.m > 12) { st.m = 1;  st.y++; }
-            if (st.m < 1)  { st.m = 12; st.y--; }
-        } else {
-            st.y += parseInt(nav);
-        }
-        renderCal2(id); return;
-    }
-    if (el.dataset.switch2 !== undefined) { st.livello = el.dataset.switch2;  renderCal2(id); return; }
-    if (el.dataset.rif !== undefined) {
-        // selezione giorno per cal-rif
-        var val = el.dataset.rif;
-        var params = {};
-        if (CTX2.custom_val !== '') {
-            params['custom_campo'] = CTX2.custom_campo;
-            params['custom_op']    = CTX2.custom_op;
-            params['custom_val']   = CTX2.custom_val;
-        }
-        if (CTX2.modo === 'mese') params['mese'] = CTX2.inizio.substring(0,7);
-        else                      params['anno'] = CTX2.anno_rif;
-        if (val !== 'reset') params['ref_data'] = val;
-        window.location.href = buildUrl(params);
+        st.m += parseInt(el.dataset.nav2, 10);
+        if (st.m > 12) { st.m = 1;  st.y++; }
+        if (st.m < 1)  { st.m = 12; st.y--; }
+        renderCal2(id);
         return;
     }
-    if (el.dataset.sel2 !== undefined) {
-        var parts = el.dataset.sel2.split(':');
-        if (parts[0] === 'mese') navigaA2({mese: parts[1]});
-        else                     navigaA2({anno: parts[1]});
+    if (el.dataset.rif !== undefined) {
+        var params = paramsCorrenti(true, false);
+        if (el.dataset.rif !== 'reset') params['ref_data'] = el.dataset.rif;
+        window.location.href = buildUrl(params);
     }
 });
-function resetRefData() {
-    var params = {};
-    if (CTX2.custom_val !== '') {
-        params['custom_campo'] = CTX2.custom_campo;
-        params['custom_op']    = CTX2.custom_op;
-        params['custom_val']   = CTX2.custom_val;
-    }
-    if (CTX2.modo === 'mese') params['mese'] = CTX2.inizio.substring(0,7);
-    else                      params['anno'] = CTX2.anno_rif;
-    window.location.href = buildUrl(params);
-}
 
-// ---- pulsante grafico: apre stat2_grafico.php nel padre ----
+// ---- pulsante grafico: apre grafico_stat2_display.php nel padre ----
 document.getElementById('btn-grafico').addEventListener('click', function() {
-    // Calcola i default: se c'e' una soglia custom attiva, usala
-    // altrimenti usa i default standard 30/35/5/0
+    // Se c'e' una soglia custom attiva la usa, altrimenti default 30/35/5/0
     var s1 = 30, s2 = 35, s3 = 5, s4 = 0;
     if (CTX2.custom_val !== '') {
         var v = parseFloat(CTX2.custom_val);
